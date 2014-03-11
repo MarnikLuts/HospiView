@@ -2027,7 +2027,7 @@ select.select-xl {
   font-weight: normal;
   line-height: 1.42857143;
   text-align: center;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   vertical-align: middle;
   cursor: pointer;
   -webkit-user-select: none;
@@ -2417,6 +2417,15 @@ fieldset[disabled] .btn-link:focus {
   color: #000;
   margin-top:0.5%; 
   margin-left:0.5%;
+}
+.btn-sm-menu,
+.btn-group-sm-menu > .btn {
+  padding: 5px 20px;
+  font-size: 15px;
+  line-height: 1.5;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #000;
 }
 .btn-xs,
 .btn-group-xs > .btn {

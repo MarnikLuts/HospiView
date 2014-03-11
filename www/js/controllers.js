@@ -258,60 +258,6 @@ angular.module('myApp.controllers', []).
                         alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                     });
 
-            $scope.loadDep = function(shortcut) {
-                switch (shortcut)
-                {
-                    case 1:
-                        if (!(angular.isUndefined($scope.server.shortcut1.unit))) {
-                            if ($scope.server.shortcut1.unit == null || $scope.server.shortcut1.unit.type == "groepen")
-                                $scope.disableS1 = true;
-                            else {
-                                $scope.disableS1 = false;
-                                for (var i = 0; i < $scope.server.shortcut1.unit.Detail.Dep.length; i++) {
-                                    if ($scope.server.shortcut1.unit.Detail.Dep[i].dep_name === "") {
-                                        $scope.server.shortcut1.unit.Detail.Dep[i].dep_name = "Allemaal";
-                                        break;
-                                    }
-                                }
-                                $scope.departments1 = $scope.server.shortcut1.unit.Detail;
-                            }
-                        }
-                        break;
-                    case 2:
-                        if (!(angular.isUndefined($scope.server.shortcut2.unit))) {
-                            if ($scope.server.shortcut2.unit == null || $scope.server.shortcut2.unit.type == "groepen")
-                                $scope.disableS2 = true;
-                            else {
-                                $scope.disableS2 = false;
-                                for (var i = 0; i < $scope.server.shortcut2.unit.Detail.Dep.length; i++) {
-                                    if ($scope.server.shortcut2.unit.Detail.Dep[i].dep_name === "") {
-                                        $scope.server.shortcut2.unit.Detail.Dep[i].dep_name = "Allemaal";
-                                        break;
-                                    }
-                                }
-                                $scope.departments2 = $scope.server.shortcut2.unit.Detail;
-                            }
-                        }
-                        break;
-                    case 3:
-                        if (!(angular.isUndefined($scope.server.shortcut3.unit))) {
-                            if ($scope.server.shortcut3.unit == null || $scope.server.shortcut3.unit.type == "groepen")
-                                $scope.disableS3 = true;
-                            else {
-                                $scope.disableS3 = false;
-                                for (var i = 0; i < $scope.server.shortcut3.unit.Detail.Dep.length; i++) {
-                                    if ($scope.server.shortcut3.unit.Detail.Dep[i].dep_name === "") {
-                                        $scope.server.shortcut3.unit.Detail.Dep[i].dep_name = "Allemaal";
-                                        break;
-                                    }
-                                }
-                                $scope.departments3 = $scope.server.shortcut3.unit.Detail;
-                            }
-                        }
-                        break;
-                }
-            };
-
             $scope.disable = true;
 
             $scope.loadDep = function() {
@@ -320,6 +266,12 @@ angular.module('myApp.controllers', []).
                         $scope.disable = true;
                     else {
                         $scope.disable = false;
+                        for (var i = 0; i < $scope.unit.Detail.Dep.length; i++) {
+                            if ($scope.unit.Detail.Dep[i].dep_name === "") {
+                                $scope.unit.Detail.Dep[i].dep_name = "Allemaal";
+                                break;
+                            }
+                        }
                         $scope.departments = $scope.unit.Detail;
                     }
                 }
@@ -329,7 +281,38 @@ angular.module('myApp.controllers', []).
                 $location.path('/mainmenu');
             };
 
-            $scope.search = function(unit_id, dep_id) {
+            $scope.search = function(type) {
+                var searchUnitIds = [];
+                var searchDepIds = [];
+                if (type === "shortcut1") {
+                    searchUnitIds.push($scope.server.shortcut1.unit.Header.unit_id);
+                    searchDepIds.push($scope.server.shortcut1.department.dep_id);
+                }
+                if (type === "shortcut2") {
+                    searchUnitIds.push($scope.server.shortcut2.unit.Header.unit_id);
+                    searchDepIds.push($scope.server.shortcut2.department.dep_id);
+                }
+                if (type === "shortcut3") {
+                    searchUnitIds.push($scope.server.shortcut3.unit.Header.unit_id);
+                    searchDepIds.push($scope.server.shortcut3.department.dep_id);
+                }
+                if (type === "manual") {
+                    if ($scope.unit.type == "groepen") {
+                        for (var i = 0; i < $scope.unit.Detail.UnitAndDep.length; i++) {
+                            searchUnitIds.push($scope.unit.Detail.UnitAndDep[i].unit_id);
+                            searchDepIds.push($scope.unit.Detail.UnitAndDep[i].dep_id);
+                        }
+                    } else {
+                        searchUnitIds.push($scope.unit.Header.unit_id);
+                        searchDepIds.push($scope.department.dep_id);
+                    }
+                }
+
+                $rootScope.searchUnit = searchUnitIds;
+                $rootScope.searchDepartment = searchDepIds;
+
+                console.log($rootScope.searchUnit);
+                console.log($rootScope.searchDepartment);
                 var start_date = new Date();
                 /*$rootScope.end_date = formatDate(new Date(start_date.getFullYear(), start_date.getMonth(), start_date.getDate() + 31));
                  $rootScope.start_date = formatDate(start_date);
@@ -337,16 +320,8 @@ angular.module('myApp.controllers', []).
                 $rootScope.start_date = formatDate(new Date(2000, 2, 1));
                 $rootScope.end_date = formatDate(new Date(2015, 2, 1));
 
-                $rootScope.currentdate = formatDate(new Date(2009, 11, 10));
+                $rootScope.currentdate = formatDate(new Date(2014, 2, 12));
 
-                $rootScope.searchUnit = unit_id;
-                $rootScope.searchDepartment = dep_id;
-
-                console.log($rootScope.currentServer.uuid);
-                console.log($rootScope.searchUnit);
-                console.log($rootScope.searchDepartment);
-                console.log($rootScope.start_date);
-                console.log($rootScope.end_date);
                 $location.path('/doctor/appointmentsView');
             };
 
@@ -357,58 +332,66 @@ angular.module('myApp.controllers', []).
             $scope.showDate = formatShowDate($scope.date);
             var cell = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.cellcontent = cell.cellcontent;
-            console.log($scope.cellcontent);
 
+            if (angular.isUndefined($rootScope.montResrvations)) {
+                var reservations = [];
+                console.log($rootScope.searchUnit.length);
+                for (var i = 0; i < $rootScope.searchUnit.length; i++) {
+                    var unit = $rootScope.searchUnit[i];
+                    var dep = $rootScope.searchDepartment[i];
+                    console.log(unit);
+                    console.log(dep);
+                    hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unit, dep, $rootScope.start_date, $rootScope.end_date, $rootScope.currentServer.hosp_url).
+                            success(function(data) {
+                                var json = parseJson(data);
+                                if (json.ReservationsOnUnit.Header.StatusCode == 1) {
+                                    for (var j = 0; j < json.ReservationsOnUnit.Detail.Reservation.length; j++) {
+                                        reservations.push(json.ReservationsOnUnit.Detail.Reservation[j]);
+                                    }
+                                    console.log(reservations);
+                                } else {
+                                    $scope.error = true;
+                                    $scope.errormessage = "Fout in de ingegeven gegevens.";
+                                }
+                            }).
+                            error(function() {
+                                alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                            });
+                }
+                $rootScope.monthReservations = reservations;
+                $scope.reservations = $rootScope.monthReservations;
 
-            hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, $rootScope.searchUnit, $rootScope.searchDepartment, $rootScope.start_date, $rootScope.end_date, $rootScope.currentServer.hosp_url).
-                    success(function(data) {
-                        var json = parseJson(data);
-                        if (json.ReservationsOnUnit.Header.StatusCode == 1) {
-                            console.log($rootScope.currentServer.uuid);
-                            console.log($rootScope.searchUnit);
-                            console.log($rootScope.searchDepartment);
-                            console.log($rootScope.start_date);
-                            console.log($rootScope.end_date);
-                            console.log(json);
-                            $scope.reservations = json.ReservationsOnUnit.Detail.Reservation;
-                            $rootScope.monthReservations = json.ReservationsOnUnit.Detail.Reservation;
-                        } else {
-                            $scope.error = true;
-                            $scope.errormessage = "Fout in de ingegeven gegevens.";
-                        }
-                    }).
-                    error(function() {
-                        alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                    });
-
-
+            } else {
+                $scope.reservations = $rootScope.monthReservations;
+            }
 
             $scope.nextDay = function() {
                 var newDate = new Date($scope.date);
                 newDate.setDate(newDate.getDate() + 1);
                 $scope.date = formatDate(newDate);
                 $scope.showDate = formatShowDate($scope.date);
-                console.log($scope.date);
             };
             $scope.previousDay = function() {
                 var newDate = new Date($scope.date);
                 newDate.setDate(newDate.getDate() - 1);
                 $scope.date = formatDate(newDate);
                 $scope.showDate = formatShowDate($scope.date);
-                console.log($scope.date);
             };
             $scope.back = function() {
                 $location.path('/doctor/appointmentsSearch');
             };
             $scope.details = function(reservation) {
                 $rootScope.reservationDetail = reservation;
-                console.log(reservation);
                 $location.path('/doctor/appointmentDetail');
             };
             $scope.calendarView = function() {
                 $rootScope.monthDate = $scope.date;
                 $location.path('/appointmentsCalendar');
             };
+            $scope.style = function(value) {
+                var color = '#' + value;
+                return {"background-color": color};
+            }
         }).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
             $scope.reservation = $rootScope.reservationDetail;
@@ -427,7 +410,6 @@ angular.module('myApp.controllers', []).
             var gotoDate = new Date($rootScope.monthDate);
             gotoDate.setMonth(gotoDate.getMonth() - 1);
             gotoDate = gotoDate.toUTCString();
-            console.log(gotoDate);
 
             $scope.back = function() {
                 $location.path('/doctor/appointmentsView');
@@ -452,9 +434,7 @@ angular.module('myApp.controllers', []).
                         day: 'd/m'
                     },
                     eventClick: function(calEvent, jsEvent, view) {
-                        console.log($rootScope.currentdate);
                         $rootScope.currentdate = calEvent.start.toString;
-                        console.log($rootScope.currentdate);
                         window.location.href = 'index.html#/doctor/appointmentsView';
                     }
                 }
@@ -473,7 +453,6 @@ angular.module('myApp.controllers', []).
                 {title: 'test', start: new Date("March 23, 2014 00:00:00"), end: new Date("February 25, 2014 23:59:00"), allDay: false, className: 'holiday'}
             ];
             var eventss = $rootScope.monthReservations;
-            console.log(eventss);
             var j = 0;
             var count = 0;
             var countEvent = [];
@@ -580,7 +559,6 @@ angular.module('myApp.controllers', []).
                 {
                     case 1:
                         if (!(angular.isUndefined($scope.server.shortcut1.unit))) {
-                            console.log($scope.server.shortcut1.unit);
                             if ($scope.server.shortcut1.unit == null || $scope.server.shortcut1.unit.type == "groepen")
                                 $scope.disableS1 = true;
                             else {
@@ -778,7 +756,6 @@ angular.module('myApp.controllers', []).
                                 }
                             }).
                             error(function() {
-                                console.log($scope.server);
                                 alert("Data kon niet worden opgehaald, probeer later opnieuw.");
                             });
                 }
@@ -870,6 +847,5 @@ function formatShowDate(date) {
     var month = monthNames[newDate.getMonth()];
 
     newDate = day + " " + date + " " + month;
-    console.log(newDate);
     return newDate;
 }
