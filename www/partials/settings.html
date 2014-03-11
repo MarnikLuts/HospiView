@@ -1,0 +1,71 @@
+<div class="col-md-12 page-header-red">
+    <button type="submit" class="btn btn-sm-back" ng-click="save()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        opslaan
+    </button>
+    <h1>Instellingen</h1>
+</div>
+<div>
+    <div class="form-group">
+        <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers">
+        </select>
+    </div>
+    <div class="col-md-12">
+        <button type="button" class="btn btn-primary input-lg" ng-click="addOrEditServer('add')">
+            <span class="glyphicon glyphicon-plus"></span>
+            voeg server toe
+        </button>
+        <button type="button" class="btn btn-primary input-lg float-right" ng-click="addOrEditServer('edit',server)">
+            <span class="glyphicon glyphicon-transfer"></span>
+            wijzig server
+        </button>
+    </div></br>
+    <div class="col-md-12">
+        <div class="well">
+            <div class="input-group form-group">
+                <span class="input-group-addon width-custom">Gebruiker:</span>
+                <input id="username" class="form-control input-lg" type="text" ng-model="server.user_login" ng-disabled="true"/>
+            </div>
+            <div class="input-group form-group">
+                <span class="input-group-addon width-custom">Paswoord:</span>
+                <input id="password" class="form-control input-lg" type="password" ng-model="server.user_password" ng-disabled="true"/>
+            </div>
+            <div class="input-group form-group">
+                <span class="input-group-addon width-custom">Verversing:</span>
+                <input id="refresh" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg"/>
+            </div>
+            <div class="input-group">
+                <span type="button" class="input-group-addon" ng-disabled="true">Cell inhoud:</span>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" ng-model="selectedUser.cellcontent" ng-click="cellcontentchange('patient')" btn-radio="'patient'">Patiënt</button>
+                    <button type="button" class="btn btn-primary" ng-model="selectedUser.cellcontent" ng-click="cellcontentchange('title')" btn-radio="'title'">Titel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="well">
+            Snelkoppeling 1:
+            <select class="form-control input-xl" ng-model="server.shortcut1.unit" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in unitsandgroups" ng-change="loadDep(1)">
+                <option value="">- Selecteer een dokter -</option>
+            </select></br>
+            <select class="form-control input-xl" ng-model="server.shortcut1.department" ng-options="dep as dep.dep_name for dep in departments1.Dep" ng-hide="disableS1">
+                <option value="">- Selecteer een departement -</option>
+            </select></br>
+            Snelkoppeling 2:
+            <select class="form-control input-xl" ng-model="server.shortcut2.unit" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in unitsandgroups" ng-change="loadDep(2)">
+                <option value="">- Selecteer een dokter -</option>
+            </select></br>
+            <select class="form-control input-xl" ng-model="server.shortcut2.department" ng-options="dep as dep.dep_name for dep in departments2.Dep" ng-hide="disableS2">
+                <option value="">- Selecteer een departement -</option>
+            </select></br>
+            Snelkoppeling 3:
+            <select class="form-control input-xl" ng-model="server.shortcut3.unit" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in unitsandgroups" ng-change="loadDep(3)">
+                <option value="">- Selecteer een dokter -</option>
+            </select></br>
+            <select class="form-control input-xl" ng-model="server.shortcut3.department" ng-options="dep as dep.dep_name for dep in departments3.Dep" ng-hide="disableS3">
+                <option value="">- Selecteer een departement -</option>
+            </select></br>
+        </div>
+    </div>
+</div>

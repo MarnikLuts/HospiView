@@ -1,0 +1,30 @@
+<div class="col-md-12 page-header-red">
+    <button type="submit" class="btn btn-sm-back" ng-click="backToMainMenu()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        terug
+    </button>
+    <h1>Afspraken</h1>
+</div>
+<div>
+    <div class="form-group">
+        <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers">
+        </select>
+    </div>
+    <hr>
+    <div class="shortcutButtons">
+        <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-click="search(server.shortcut1.unit.Header.unit_id, server.shortcut1.department.dep_id)">{{server.shortcut1.unit.Header.name}}<br/>&nbsp{{server.shortcut1.department.dep_name}}</button>
+        <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-click="search(server.shortcut2.unit.Header.unit_id, server.shortcut2.department.dep_id)">{{server.shortcut2.unit.Header.name}}<br/>&nbsp{{server.shortcut2.department.dep_name}}</button>
+        <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-click="search(server.shortcut3.unit.Header.unit_id, server.shortcut3.department.dep_id)">{{server.shortcut3.unit.Header.name}}<br/>&nbsp{{server.shortcut3.department.dep_name}}</button>
+    </div>
+</div>
+<div class=" col-md-8">
+    <div class="well">
+        <select class="form-control input-xl" ng-model="unit" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in unitsandgroups" ng-change="loadDep()">
+            <option value="">- Selecteer een dokter -</option>
+        </select></br>
+        <select class="form-control input-xl" ng-model="department" ng-options="dep as dep.dep_name for dep in departments.Dep" ng-hide="disable">
+            <option value="">- Selecteer een departement -</option>
+        </select></br>
+        <button class="btn btn-primary btn-lg center-block" ng-click="search(unit.Header.unit_id, department.dep_id)">Zoek reservaties</button>
+    </div>
+</div>

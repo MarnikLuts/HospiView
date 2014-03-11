@@ -1,0 +1,61 @@
+<div class="col-md-12 page-header-red">
+    <button type="submit" class="btn btn-sm-back" ng-click="cancel()" ng-hide="firsttime">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        terug
+    </button>
+    <h1>Servers</h1>
+</div>
+<div class="col-md-12">
+    <div class="alert alert-info" ng-show="showmessage"><span class="glyphicon glyphicon-info-sign"></span>{{errormessage}}</div>
+    <ul class="list list_overflow_y list-unstyled" ng-hide="showmessage">
+        <li ng-repeat="server in servers| orderBy:'name'">
+            <div class="btn-group btn-group-justified form-group">
+                <a class="btn btn-default btn-lg" ng-model="server" ng-click="selectserver(server.name)">{{server.name}}</a>
+            </div>
+        </li>
+    </ul>
+
+    <script type="text/ng-template" id="loginmodal">
+        <div class="modal-header">
+            <h3>Aanmelden op {{server}}</h3>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                    <input type="text" id="username" class="form-control input-lg" placeholder="Gebruikersnaam" ng-model="modalInput.username">
+                </div></br>
+                <div class="input-group">
+                    <span class="input-group-addon btn" ng-click="showpassword()"><span class="glyphicon glyphicon-eye-close"></span></span>
+                    <input type="password" id="password" class="form-control input-lg" placeholder="Paswoord" ng-model="modalInput.password" ng-hide="showPasswordBoolean">
+                    <input type="text" id="password" class="form-control input-lg" placeholder="Paswoord" ng-model="modalInput.password" ng-show="showPasswordBoolean">
+                </div>
+            </div>
+            <div class="alert alert-danger" ng-show="error">{{errormessage}}</div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-xl" ng-click="login()">Log in</button>
+                <button type="submit" class="btn btn-xl" ng-click="cancelModal()">annuleer</button>
+            </div>
+        </div>    
+    </script>
+
+    <div class="well">
+        <p>{{server.tekst1}}</p>
+        <p>{{server.tekst2}}</p>
+    </div>
+    <div>
+        <button ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span></button>
+    </div>
+
+    <div class="modal fade" id="contact" role="dialog">
+        <div class="modal-dialog">
+            <div clas="modal-content">
+                <div class="modal-header">
+                    <p>login</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

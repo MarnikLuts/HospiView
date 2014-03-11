@@ -1,0 +1,35 @@
+<div class="col-md-12 page-header-red">
+    <button type="submit" class="btn btn-sm-back" ng-click="back()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        terug
+    </button>
+    <h1>Afspraken</h1>
+</div>
+<div class="height80Percent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
+    <div class="alert alert-info" ng-show="showmessage"><span class="glyphicon glyphicon-info-sign"></span>{{errormessage}}</div>
+    <button class="btn btn-primary float-right" ng-click="calendarView()">maand overzicht</button>
+    <h3>{{showDate}}</h3>
+    <div class="well heightPerscent">
+        <ul class="list list_overflow_y_500 list-unstyled heightPercent" ng-hide="showmessage">
+            <li class="text-left" ng-repeat="reservation in reservations| orderBy:'time_from' | filter:{the_date:date}">
+                <a ng-click="details(reservation)">
+                    <div class="btn btn-default btn-lg btn-group-justified">
+                        <div class="float-right"><a class="" ng-click="delete(reservation.id)"><span class="glyphicon glyphicon-remove-circle"></span></a></div>         
+                        <div class="float-comment">
+                            <div ng-switch on="reservation.the_comment">
+                                <div ng-switch-when=""></div>
+                                <div ng-switch-default><b>C</b></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-left" ng-switch on="cellcontent">
+                                <div ng-switch-when="patient">{{reservation.time_from}} {{reservation.name}}</div>
+                                <div ng-switch-default>{{reservation.time_from}} {{reservation.title}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

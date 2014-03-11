@@ -1,0 +1,137 @@
+<div class="col-md-12 page-header-red">
+    <button type="submit" class="btn btn-sm-back" ng-click="cancel()" ng-hide="newBoolean">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        annuleer
+    </button>
+    <h1>Hospiview</h1>
+</div>
+<div class="col-md-12">
+    <div class="well">
+        <h2>Welkom bij Hospiview</h2>
+        <div class="form-group">
+            <p>Selecteer het ziekenhuis waarmee u connectie wil maken: </p>
+            <div class="input-group">
+                <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers" ng-change="serverSelected = true;
+                        accountRadio = null"></select>
+                <span class="input-group-addon btn" ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span></span>
+            </div>      
+        </div>
+        <br>
+        <div class="form-group" ng-show="serverSelected">
+            <p>Heeft u een account bij dit ziekenhuis?</p>
+            <div class="input-lg">
+                <div class="btn-group btn-group-lg btn-block">
+                    <button type="button" class="btn btn-width btn-primary btn-large" ng-model="accountRadio" ng-click="accountTrue = true;
+                        accountFalse = false" btn-radio="'ja'">Ja</button>
+                    <button type="button" class="btn btn-width btn-primary btn-large" ng-model="accountRadio" ng-click="accountFalse = true;
+                        accountTrue = false" btn-radio="'nee'">Nee</button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="form-group" ng-show="accountTrue">
+            <p>{{requestMessage}}Geef uw login gegevens in:</p>
+            <form name="loginForm" novalidate ng-submit="login()">
+                <div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                            <input type="text" id="username" class="form-control input-lg" placeholder="Gebruikersnaam" ng-model="username">
+                        </div>
+                    </div>
+                    <div class="form-group" ng-hide="showPasswordBoolean">
+                        <div class="input-group">
+                            <span class="input-group-addon btn" ng-click="showpassword()" ng-hide="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
+                            <input type="password" id="password" class="form-control input-lg" placeholder="Paswoord" ng-model="password" required>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-show="showPasswordBoolean">
+                        <div class="input-group">
+                            <span class="input-group-addon btn" ng-click="showpassword()" ng-show="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
+                            <input type="text" id="password" class="form-control input-lg" placeholder="Paswoord" ng-model="password" required>
+                        </div>
+                    </div>
+                    <div class="checkbox">         
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="savePassword" ng-click="savePasswordWarning()">Paswoord automatisch invullen?    
+                        </label>
+                    </div>
+                    <div class="alert alert-danger" ng-show="error">{{errormessage}}</div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-xl" ng-disabled="loginForm.$invalid">Log in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="form-group" ng-show="accountFalse">
+            <p>Geef volgende gegevens in om een account aan te vragen:</p>
+            <form name="createAccountForm" novalidate ng-submit="requestAccount()">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.firstName.$valid"></span></span>
+                        <input type="text" name="firstName" class="form-control input-lg" placeholder="Voornaam" ng-model="firstName" required>
+                    </div>
+                    <div class="alert alert-danger" ng-show="createAccountForm.firstName.$dirty && createAccountForm.firstName.$invalid">
+                        <span ng-show="createAccountForm.firstName.$error.required">Voornaam is verplicht.</span>
+                    </div> 
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.lastName.$valid"></span></span>
+                        <input type="text" name="lastName" class="form-control input-lg" placeholder="Achternaam" ng-model="lastName" required>
+                    </div>
+                    <div class="alert alert-danger" ng-show="createAccountForm.lastName.$dirty && createAccountForm.lastName.$invalid">
+                        <span ng-show="createAccountForm.lastName.$error.required">Achternaam is verplicht.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.dateOfBirth.$valid"></span></span>
+                        <input type="text" id="dateOfBirth" name="dateOfBirth" class="form-control input-lg" placeholder="Geboortedatum" ng-model="dateOfBirth" required ng-pattern="/^([0-9]{2})/([0-9]{2})/([0-9]{4})$/">
+                    </div>
+                    <div class="alert alert-danger" ng-show="createAccountForm.dateOfBirth.$dirty && createAccountForm.dateOfBirth.$invalid">
+                        <span ng-show="createAccountForm.dateOfBirth.$error.required">Geboortedatum is verplicht.</span>
+                        <span ng-show="createAccountForm.dateOfBirth.$error.pattern">Geboortedatum moet volgend formaat hebben: dd/mm/yyyy.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.nationalRegister.$valid"></span></span>
+                        <input type="text" id="nationalRegister" name="nationalRegister" class="form-control input-lg" placeholder="Rijksregisternummer" ng-model="nationalRegister" checknational required>
+                    </div>
+                    <div class="alert alert-danger" ng-show="createAccountForm.nationalRegister.$dirty && createAccountForm.nationalRegister.$invalid">
+                        <span ng-show="createAccountForm.nationalRegister.$error.number">Rijksregisternummer moet een nummer van 11 tekens zijn.</span>
+                        <span ng-show="createAccountForm.nationalRegister.$error.required">Rijksregisternummer is verplicht en moet een nummer zijn.</span>
+                        <span ng-show="createAccountForm.nationalRegister.$error.checknational">Rijksregisternummer is niet correct.</span>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.emailAddress.$valid"></span></span>
+                        <input type="email" id="emailAddress" name="emailAddress" class="form-control input-lg" placeholder="E-mailadres" ng-model="emailAddress" required>
+                    </div>
+                    <div class="alert alert-danger" ng-show="createAccountForm.emailAddress.$dirty && createAccountForm.emailAddress.$invalid">
+                        <span ng-show="createAccountForm.emailAddress.$error.required">E-mailadres is verplicht.</span>
+                        <span ng-show="createAccountForm.emailAddress.$error.email">E-mailadres heeft een fout formaat.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.confirmEmailAddress.$valid"></span></span>
+                        <input type="email" id="confirmEmailAddress" name="confirmEmailAddress" class="form-control input-lg" placeholder="Bevestig uw e-mailadres" ng-model="confirmEmailAddress" confirmemail="emailAddress" required>
+                    </div>
+                    <div class="alert alert-danger" ng-show="createAccountForm.confirmEmailAddress.$dirty && createAccountForm.confirmEmailAddress.$invalid">
+                        <span ng-show="createAccountForm.confirmEmailAddress.$error.required">Bevestiging van het e-mailadres is verplicht.</span>
+                        <span ng-show="createAccountForm.confirmEmailAddress.$error.emailmatch">E-mailadressen komen niet overeen.</span>
+                    </div>
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" ng-disabled="createAccountForm.$invalid" class="btn btn-xl">Vraag account aan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

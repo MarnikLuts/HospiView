@@ -1,0 +1,36 @@
+<div class="col-md-12 page-header-red">
+    <button type="submit" class="btn btn-sm-back" ng-click="back()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        terug
+    </button>
+    <h1>Afspraken</h1>
+</div>
+<div class="well" ng-swipe-left="nextAppointment()" ng-swipe-right="previousAppointment()">
+    <table class="table">
+        <tr>
+            <td>Reservatie: </td><td>{{reservation.id}}</td>
+        </tr>
+        <tr>
+            <td>Titel: </td><td>{{reservation.title}}</td>
+        </tr>
+        <tr ng-switch on="reservation.rstatus">
+            <td>Type: </td><td ng-switch-when="1">definitief</td>
+            <td ng-switch-default>voorstel</td>
+        </tr>
+        <tr>
+            <td>Gereserveerd door: </td><td>{{reservation.user_name}}</td>
+        </tr>
+        <tr>
+            <td>Id: </td><td>{{reservation.unique_pid}}</td>
+        </tr>
+        <tr>
+            <td>Naam: </td><td>{{reservation.name}}</td>
+        </tr>
+        <tr>
+            <td>Rijksregisternummer: </td><td>{{reservation.reg_no}}</td>
+        </tr>
+        <tr>
+            <td>Comentaar: </td><td>{{reservation.the_comment}}</td>
+        </tr>
+    </table>
+</div>
