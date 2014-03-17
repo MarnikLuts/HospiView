@@ -203,21 +203,40 @@ angular.module('myApp.controllers', []).
                 $location.path('/settings');
             };
         }).
-        controller('DoctorSearchAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
+        controller('DoctorSearchAppointmentsCtrl', function($scope, $location, $rootScope, $parse, hospiviewFactory) {
 
             /*!!!*/
             $rootScope.user = "Stijn";
             /*!!!*/
-            
+
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user))
 
             /*!!!*/
             $rootScope.currentServer = $scope.selectedUser.servers[0];
             /*!!!*/
-            
+
             $scope.servers = $scope.selectedUser.servers;
             $scope.server = $rootScope.currentServer;
 
+            console.log($scope.server.shortcut1.unit);
+            console.log($scope.server.shortcut2.unit);
+            console.log($scope.server.shortcut3.unit);
+
+            if ($scope.server.shortcut1.unit === "") {
+                $scope.shortcut1Saved = false;
+            } else {
+                $scope.shortcut1Saved = true;
+            }
+            if ($scope.server.shortcut2.unit === "") {
+                $scope.shortcut2Saved = false;
+            } else {
+                $scope.shortcut2Saved = true;
+            }
+            if ($scope.server.shortcut3.unit === "") {
+                $scope.shortcut3Saved = false;
+            } else {
+                $scope.shortcut3Saved = true;
+            }
             var unitsandgroups = [];
             hospiviewFactory.getUnitAndDepList($scope.server.uuid, $scope.server.hosp_url).
                     success(function(data) {
@@ -282,30 +301,25 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.search = function(type) {
+
                 var searchUnitIds = [];
                 var searchDepIds = [];
-                if (type === "shortcut1") {
-                    searchUnitIds.push($scope.server.shortcut1.unit.Header.unit_id);
-                    searchDepIds.push($scope.server.shortcut1.department.dep_id);
+
+                $scope.searchStrings = {
+                    shortcut1: $scope.server.shortcut1,
+                    shortcut2: $scope.server.shortcut2,
+                    shortcut3: $scope.server.shortcut3,
+                    manual: $scope.manual
                 }
-                if (type === "shortcut2") {
-                    searchUnitIds.push($scope.server.shortcut2.unit.Header.unit_id);
-                    searchDepIds.push($scope.server.shortcut2.department.dep_id);
-                }
-                if (type === "shortcut3") {
-                    searchUnitIds.push($scope.server.shortcut3.unit.Header.unit_id);
-                    searchDepIds.push($scope.server.shortcut3.department.dep_id);
-                }
-                if (type === "manual") {
-                    if ($scope.unit.type == "groepen") {
-                        for (var i = 0; i < $scope.unit.Detail.UnitAndDep.length; i++) {
-                            searchUnitIds.push($scope.unit.Detail.UnitAndDep[i].unit_id);
-                            searchDepIds.push($scope.unit.Detail.UnitAndDep[i].dep_id);
-                        }
-                    } else {
-                        searchUnitIds.push($scope.unit.Header.unit_id);
-                        searchDepIds.push($scope.department.dep_id);
+
+                if ($scope.server.shortcut1.unit.type == "groepen") {
+                    for (var i = 0; i < $scope.searchStrings[type].unit.Detail.UnitAndDep.length; i++) {
+                        searchUnitIds.push($scope.searchStrings[type].unit.Detail.UnitAndDep[i].unit_id);
+                        searchDepIds.push($scope.searchStrings[type].unit.Detail.UnitAndDep[i].dep_id);
                     }
+                } else {
+                    searchUnitIds.push($scope.searchStrings[type].unit.Header.unit_id);
+                    searchDepIds.push($scope.searchStrings[type].department.dep_id);
                 }
 
                 $rootScope.searchUnit = searchUnitIds;
@@ -459,7 +473,7 @@ angular.module('myApp.controllers', []).
                 start.setDate(start.getDate() + 1);
             }
             $scope.eventSources = [countEvent];
-            
+
             /*
              $scope.holidays = [
              {start: new Date("February 27, 2014"),
@@ -815,7 +829,7 @@ function formatDate(date) {
 function formatShowDate(date) {
     var newDate = new Date(date);
     var dayNames = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'];
-    var monthNames = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'july', 'augustus', 'september', 'oktober', 'november', 'december'];
+    var monthNames = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
     var day = dayNames[newDate.getDay()];
     var date = newDate.getDate();
     var month = monthNames[newDate.getMonth()];
