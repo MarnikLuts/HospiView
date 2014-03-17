@@ -646,6 +646,15 @@ angular.module('myApp.controllers', []).
             $scope.requestMessage;
             $scope.datenr = {nr: $scope.nationalRegister, date: $scope.dateOfBirth};
 
+            $scope.userFunctionList = ["Patiënt", "Vertegenwoordiger", "Huisarts", "Arts"];
+            $scope.userFunctionSelected = false;
+            $scope.needsNationalReg = function(userFunction) {
+                return userFunction==='Patiënt' || userFunction==='Vertegenwoordiger';
+            };
+            $scope.needsRiziv = function(userFunction) {
+                return userFunction==='Arts' || userFunction==='Huisarts';
+            };
+
             $scope.requestAccount = function() {
                 $scope.requestMessage = "U ontvangt dadelijk een email met uw logingegevens. ";
                 $scope.accountRadio = "ja";
