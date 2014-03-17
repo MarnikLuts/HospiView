@@ -206,15 +206,15 @@ angular.module('myApp.controllers', []).
         controller('DoctorSearchAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
 
             /*!!!*/
-            $rootScope.user = "Stijn en Frank";
+            $rootScope.user = "Stijn";
             /*!!!*/
-
+            
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user))
 
             /*!!!*/
             $rootScope.currentServer = $scope.selectedUser.servers[0];
             /*!!!*/
-
+            
             $scope.servers = $scope.selectedUser.servers;
             $scope.server = $rootScope.currentServer;
 
@@ -311,8 +311,6 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchUnit = searchUnitIds;
                 $rootScope.searchDepartment = searchDepIds;
 
-                console.log($rootScope.searchUnit);
-                console.log($rootScope.searchDepartment);
                 var start_date = new Date();
                 /*$rootScope.end_date = formatDate(new Date(start_date.getFullYear(), start_date.getMonth(), start_date.getDate() + 31));
                  $rootScope.start_date = formatDate(start_date);
@@ -335,12 +333,9 @@ angular.module('myApp.controllers', []).
 
             if (angular.isUndefined($rootScope.montResrvations)) {
                 var reservations = [];
-                console.log($rootScope.searchUnit.length);
                 for (var i = 0; i < $rootScope.searchUnit.length; i++) {
                     var unit = $rootScope.searchUnit[i];
                     var dep = $rootScope.searchDepartment[i];
-                    console.log(unit);
-                    console.log(dep);
                     hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unit, dep, $rootScope.start_date, $rootScope.end_date, $rootScope.currentServer.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
@@ -348,7 +343,6 @@ angular.module('myApp.controllers', []).
                                     for (var j = 0; j < json.ReservationsOnUnit.Detail.Reservation.length; j++) {
                                         reservations.push(json.ReservationsOnUnit.Detail.Reservation[j]);
                                     }
-                                    console.log(reservations);
                                 } else {
                                     $scope.error = true;
                                     $scope.errormessage = "Fout in de ingegeven gegevens.";
@@ -425,6 +419,7 @@ angular.module('myApp.controllers', []).
                     year: start.getFullYear(),
                     firstDay: 1,
                     resources: $scope.appointmentsCalendar,
+                    weekNumbers: true,
                     header: {
                         left: 'today prev,next',
                         center: '',
@@ -434,24 +429,12 @@ angular.module('myApp.controllers', []).
                         day: 'd/m'
                     },
                     eventClick: function(calEvent, jsEvent, view) {
-                        $rootScope.currentdate = calEvent.start.toString;
+                        var getClickedDay = calEvent.start;
+                        $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
                         window.location.href = 'index.html#/doctor/appointmentsView';
                     }
                 }
             };
-            /* event source that contains custom events on the scope */
-            var events = [
-                {title: 'test', start: new Date("March 7, 2014 11:15:00"), end: new Date("February 24, 2014 11:45:00"), allDay: false},
-                {title: 'test', start: new Date("March 7, 2014 11:45:00"), end: new Date("February 24, 2014 12:15:00"), allDay: false},
-                {title: 'test', start: new Date("March 10, 2014 12:15:00"), end: new Date("February 24, 2014 12:45:00"), allDay: false},
-                {title: 'test', start: new Date("March 15, 2014 12:45:00"), end: new Date("February 24, 2014 13:15:00"), allDay: false},
-                {title: 'test', start: new Date("March 15, 2014 13:15:00"), end: new Date("February 24, 2014 13:45:00"), allDay: false},
-                {title: 'test', start: new Date("March 15, 2014 13:45:00"), end: new Date("February 24, 2014 14:15:00"), allDay: false},
-                {title: 'test', start: new Date("March 18, 2014 14:15:00"), end: new Date("February 24, 2014 14:45:00"), allDay: false},
-                {title: 'test', start: new Date("March 18, 2014 14:45:00"), end: new Date("February 24, 2014 15:15:00"), allDay: false},
-                {title: 'test', start: new Date("March 19, 2014 15:15:00"), end: new Date("February 24, 2014 15:45:00"), allDay: false, className: 'holiday'},
-                {title: 'test', start: new Date("March 23, 2014 00:00:00"), end: new Date("February 25, 2014 23:59:00"), allDay: false, className: 'holiday'}
-            ];
             var eventss = $rootScope.monthReservations;
             var j = 0;
             var count = 0;
@@ -476,9 +459,7 @@ angular.module('myApp.controllers', []).
                 start.setDate(start.getDate() + 1);
             }
             $scope.eventSources = [countEvent];
-
-
-
+            
             /*
              $scope.holidays = [
              {start: new Date("February 27, 2014"),
@@ -495,16 +476,9 @@ angular.module('myApp.controllers', []).
 
             };
         }).
-        controller('SettingsCtrl', function($scope, $location, $rootScope, $parse, hospiviewFactory) {
-
-            /*!!!*/
-            $rootScope.user = "Stijn en Frank";
-            /*!!!*/
+        controller('SettingsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
 
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-            /*!!!*/
-            $rootScope.currentServer = $scope.selectedUser.servers[0];
-            /*!!!*/
 
             $scope.servers = $scope.selectedUser.servers;
             $scope.server = $rootScope.currentServer;

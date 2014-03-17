@@ -401,6 +401,8 @@ table.fc-border-separate {
 
 .fc .fc-week-number div {
 	padding: 0 2px;
+        font-weight: bold;
+        font-size: 15px;
 	}
 	
 .fc-grid .fc-day-number {

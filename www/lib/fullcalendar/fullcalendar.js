@@ -61,10 +61,10 @@ var defaults = {
 	// locale
 	isRTL: false,
 	firstDay: 0,
-	monthNames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-	monthNamesShort: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-	dayNames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-	dayNamesShort: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+	monthNames: ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'],
+	monthNamesShort: ['jan','feb','mrt','apr','mei','jun','jul','aug','sept','okt','nov','dec'],
+	dayNames: ['zondag','maandag','disndag','woensdag','donderdag','vrijdag','zaterdag'],
+	dayNamesShort: ['zo','ma','di','wo','do','vr','za'],
 	buttonText: {
 		prev: "<span class='fc-text-arrow'>&lsaquo;</span>",
 		next: "<span class='fc-text-arrow'>&rsaquo;</span>",
@@ -1312,7 +1312,7 @@ fc.formatDates = formatDates;
 /* Date Math
 -----------------------------------------------------------------------------*/
 
-var dayIDs = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+var dayIDs = ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
 	DAY_MS = 86400000,
 	HOUR_MS = 3600000,
 	MINUTE_MS = 60000;
