@@ -65,13 +65,13 @@
         </div>
         
         <div class="form-group" ng-show="accountFalse">
-            <select class="form-control input-xl" ng-model="userFunctionSelect" ng-options="userFunction for userFunction in userFunctionList" ng-change="userFunctionSelected = true;
+            <select name="userFunctionSelect" class="form-control input-xl" ng-model="userFunctionSelect" ng-options="userFunction for userFunction in userFunctionList" ng-change="userFunctionSelected = true;
                 accountRadio = null">
                 <option value="">- Selecteer een functie -</option>
             </select>
         </div>
         
-        <div class="form-group" ng-show="userFunctionSelected">
+        <div class="form-group" ng-show="userFunctionSelected&&accountFalse">
             <p>Geef volgende gegevens in om een account aan te vragen:</p>
             <form name="createAccountForm" novalidate ng-submit="requestAccount()">
                 <div class="form-group">
@@ -126,7 +126,7 @@
                 
                 <div class="form-group" ng-show="needsNationalReg(userFunctionSelect)">
                     <div class="input-group">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.nationalRegister.$valid"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.nationalRegister.$valid" ></span></span>
                         <input type="text" id="nationalRegister" name="nationalRegister" class="form-control input-lg" placeholder="Rijksregisternummer" ng-model="nationalRegister" checknational ng-required="needsNationalReg(userFunctionSelect)">
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.nationalRegister.$dirty && createAccountForm.nationalRegister.$invalid">
@@ -142,7 +142,7 @@
                         <input type="text" id="rizivNumber" name="rizivNumber" class="form-control input-lg" placeholder="RIZIV Nummer" ng-model="rizivNumber" ng-required="needsRiziv(userFunctionSelect)">
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.rizivNumber.$dirty && createAccountForm.rizivNumber.$invalid">
-                        <span ng-show="createAccountForm.nationalRegister.$error.required">RIZIV nummer is verplicht en moet een nummer zijn.</span>
+                        <span ng-show="createAccountForm.rizivNumber.$error.required">RIZIV nummer is verplicht en moet een nummer zijn.</span>
                     </div>
                 </div>
                 
@@ -152,7 +152,7 @@
                         <input type="text" id="firmName" name="firmName" class="form-control input-lg" placeholder="Firma" ng-model="firmName" ng-required="userFunctionSelect==='Vertegenwoordiger'">
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.firmName.$dirty && createAccountForm.firmName.$invalid">
-                        <span ng-show="createAccountForm.nationalRegister.$error.required">Firma is verplicht.</span>
+                        <span ng-show="createAccountForm.firmName.$error.required">Firma is verplicht.</span>
                     </div>
                 </div>
                

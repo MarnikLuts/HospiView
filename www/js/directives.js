@@ -9,10 +9,14 @@ angular.module('myApp.directives', []).
                 restrict: 'A',
                 require: 'ngModel',
                 link: function(scope, elm, attrs, ctrl) {
+                    scope.$watch('userFunctionSelect', validate);
                     scope.$watch('dateOfBirth', validate);
                     scope.$watch('nationalRegister', validate);
                     function validate(value) {
-                        if (typeof scope.dateOfBirth !== "undefined") {
+                        var userFunction = scope.userFunctionSelect;
+                        if(!scope.needsNationalReg(userFunction)){
+                            ctrl.$setValidity('checknational', true);
+                        }else if (typeof scope.dateOfBirth !== "undefined") {
                             var nationalRegisterNumber = scope.nationalRegister;
                             var dateOfBirth = scope.dateOfBirth;
                             var nrYear = dateOfBirth.toString().substr(6, 4);
