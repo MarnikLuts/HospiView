@@ -18,13 +18,13 @@
     </div>
 </div>
 <div class=" col-md-12">
-    <div class="well">
+    <div class="well text-center">
         <select class="form-control input-xl" ng-model="manual.unit" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in unitsandgroups" ng-change="loadDep()">
             <option value="">- Selecteer een dokter -</option>
         </select></br>
         <select class="form-control input-xl" ng-model="manual.department" ng-options="dep as dep.dep_name for dep in departments.Dep" ng-hide="disable">
             <option value="">- Selecteer een departement -</option>
         </select></br>
-        <button class="btn btn-primary btn-lg center-block" ng-click="search('manual')">Zoek reservaties</button>
+        <button class="btn btn-primary btn-lg" ng-click="search('manual')">Zoek reservaties</button>
     </div>
 </div>

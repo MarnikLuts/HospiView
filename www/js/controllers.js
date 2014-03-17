@@ -218,10 +218,6 @@ angular.module('myApp.controllers', []).
             $scope.servers = $scope.selectedUser.servers;
             $scope.server = $rootScope.currentServer;
 
-            console.log($scope.server.shortcut1.unit);
-            console.log($scope.server.shortcut2.unit);
-            console.log($scope.server.shortcut3.unit);
-
             if ($scope.server.shortcut1.unit === "") {
                 $scope.shortcut1Saved = false;
             } else {
@@ -280,18 +276,18 @@ angular.module('myApp.controllers', []).
             $scope.disable = true;
 
             $scope.loadDep = function() {
-                if (!(angular.isUndefined($scope.unit))) {
-                    if ($scope.unit == null || $scope.unit.type == "groepen")
+                if (!(angular.isUndefined($scope.manual.unit))) {
+                    if ($scope.manual.unit == null || $scope.manual.unit.type == "groepen")
                         $scope.disable = true;
                     else {
                         $scope.disable = false;
-                        for (var i = 0; i < $scope.unit.Detail.Dep.length; i++) {
-                            if ($scope.unit.Detail.Dep[i].dep_name === "") {
-                                $scope.unit.Detail.Dep[i].dep_name = "Allemaal";
+                        for (var i = 0; i < $scope.manual.unit.Detail.Dep.length; i++) {
+                            if ($scope.manual.unit.Detail.Dep[i].dep_name === "") {
+                                $scope.manual.unit.Detail.Dep[i].dep_name = "Allemaal";
                                 break;
                             }
                         }
-                        $scope.departments = $scope.unit.Detail;
+                        $scope.departments = $scope.manual.unit.Detail;
                     }
                 }
             };
@@ -312,7 +308,7 @@ angular.module('myApp.controllers', []).
                     manual: $scope.manual
                 }
 
-                if ($scope.server.shortcut1.unit.type == "groepen") {
+                if ($scope.searchStrings[type].unit.type == "groepen") {
                     for (var i = 0; i < $scope.searchStrings[type].unit.Detail.UnitAndDep.length; i++) {
                         searchUnitIds.push($scope.searchStrings[type].unit.Detail.UnitAndDep[i].unit_id);
                         searchDepIds.push($scope.searchStrings[type].unit.Detail.UnitAndDep[i].dep_id);
@@ -325,14 +321,10 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchUnit = searchUnitIds;
                 $rootScope.searchDepartment = searchDepIds;
 
-                var start_date = new Date();
-                /*$rootScope.end_date = formatDate(new Date(start_date.getFullYear(), start_date.getMonth(), start_date.getDate() + 31));
-                 $rootScope.start_date = formatDate(start_date);
-                 */
-                $rootScope.start_date = formatDate(new Date(2000, 2, 1));
-                $rootScope.end_date = formatDate(new Date(2015, 2, 1));
-
-                $rootScope.currentdate = formatDate(new Date(2014, 2, 12));
+                var today = new Date();
+                $rootScope.start_date = formatDate(new Date(today.setDate(today.getDate() - 31)));
+                $rootScope.end_date = formatDate(new Date(today.setDate(today.getDate() + 31)));
+                $rootScope.currentdate = formatDate(today);
 
                 $location.path('/doctor/appointmentsView');
             };
@@ -345,7 +337,7 @@ angular.module('myApp.controllers', []).
             var cell = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.cellcontent = cell.cellcontent;
 
-            if (angular.isUndefined($rootScope.montResrvations)) {
+            if (angular.isUndefined($rootScope.monthReservations)) {
                 var reservations = [];
                 for (var i = 0; i < $rootScope.searchUnit.length; i++) {
                     var unit = $rootScope.searchUnit[i];
@@ -353,13 +345,15 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unit, dep, $rootScope.start_date, $rootScope.end_date, $rootScope.currentServer.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
-                                if (json.ReservationsOnUnit.Header.StatusCode == 1) {
-                                    for (var j = 0; j < json.ReservationsOnUnit.Detail.Reservation.length; j++) {
-                                        reservations.push(json.ReservationsOnUnit.Detail.Reservation[j]);
+                                if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
+                                    if (json.ReservationsOnUnit.Header.StatusCode == 1) {
+                                        for (var j = 0; j < json.ReservationsOnUnit.Detail.Reservation.length; j++) {
+                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation[j]);
+                                        }
+                                    } else {
+                                        $scope.error = true;
+                                        $scope.errormessage = "Fout in de ingegeven gegevens.";
                                     }
-                                } else {
-                                    $scope.error = true;
-                                    $scope.errormessage = "Fout in de ingegeven gegevens.";
                                 }
                             }).
                             error(function() {
@@ -390,10 +384,10 @@ angular.module('myApp.controllers', []).
             };
             $scope.details = function(reservation) {
                 $rootScope.reservationDetail = reservation;
+                $rootScope.currentdate = reservation.the_date;
                 $location.path('/doctor/appointmentDetail');
             };
             $scope.calendarView = function() {
-                $rootScope.monthDate = $scope.date;
                 $location.path('/appointmentsCalendar');
             };
             $scope.style = function(value) {
@@ -409,14 +403,13 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope) {
-            /*$rootScope.start_date = "2014-03-06";*/
-            /*$rootScope.end_date = "2014-04-06";*/
-            var start = new Date($rootScope.monthDate);
+            var start = new Date($rootScope.start_date);
             var end = new Date($rootScope.end_date);
+            var current = new Date($rootScope.currentdate)
             start.setHours(0, 0, 0);
             end.setHours(0, 0, 0);
-            var gotoDate = new Date($rootScope.monthDate);
-            gotoDate.setMonth(gotoDate.getMonth() - 1);
+            var gotoDate = new Date($rootScope.currentdate);
+            /*gotoDate.setMonth(gotoDate.getMonth() - 1);*/
             gotoDate = gotoDate.toUTCString();
 
             $scope.back = function() {
@@ -429,8 +422,8 @@ angular.module('myApp.controllers', []).
                     editable: false,
                     defaultView: 'month',
                     timeFormat: 'H:mm',
-                    month: start.getMonth(),
-                    year: start.getFullYear(),
+                    month: current.getMonth(),
+                    year: current.getFullYear(),
                     firstDay: 1,
                     resources: $scope.appointmentsCalendar,
                     weekNumbers: true,
@@ -649,10 +642,10 @@ angular.module('myApp.controllers', []).
             $scope.userFunctionList = ["Patiënt", "Vertegenwoordiger", "Huisarts", "Arts"];
             $scope.userFunctionSelected = false;
             $scope.needsNationalReg = function(userFunction) {
-                return userFunction==='Patiënt' || userFunction==='Vertegenwoordiger';
+                return userFunction === 'Patiënt' || userFunction === 'Vertegenwoordiger';
             };
             $scope.needsRiziv = function(userFunction) {
-                return userFunction==='Arts' || userFunction==='Huisarts';
+                return userFunction === 'Arts' || userFunction === 'Huisarts';
             };
 
             $scope.requestAccount = function() {
