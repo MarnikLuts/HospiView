@@ -67,5 +67,33 @@ angular.module('myApp.directives', []).
             oncheck: '='
         }
     };
+}).directive('riziv', function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope, elm, attrs, ctrl){
+            scope.$watch('userFunctionSelect', validate);
+            scope.$watch('rizivNumber', validate);
+            function validate(value){
+                var userFunction = scope.userFunctionSelect;
+                if(!scope.needsRiziv(userFunction)){
+                    ctrl.$setValidity('riziv', true);
+                }else{
+                    var rizivNumber = scope.rizivNumber;
+                    var isNum = /^\d+$/.test(rizivNumber);
+                    var isValid = false;
+                    
+                    if(isNum && rizivNumber.toString().length===11)
+                        isValid = true;
+                    else
+                        isValid = false;
+                    
+                    ctrl.$setValidity('riziv', isValid);
+                    
+                }
+                
+            }
+        }
+    }
 });
 

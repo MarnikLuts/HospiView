@@ -127,7 +127,7 @@
                 <div class="form-group" ng-show="needsNationalReg(userFunctionSelect)">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.nationalRegister.$valid" ></span></span>
-                        <input type="text" id="nationalRegister" name="nationalRegister" class="form-control input-lg" placeholder="Rijksregisternummer" ng-model="nationalRegister" checknational ng-required="needsNationalReg(userFunctionSelect)">
+                        <input type="number" id="nationalRegister" name="nationalRegister" class="form-control input-lg" placeholder="Rijksregisternummer" ng-model="nationalRegister" checknational ng-required="needsNationalReg(userFunctionSelect)">
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.nationalRegister.$dirty && createAccountForm.nationalRegister.$invalid">
                         <span ng-show="createAccountForm.nationalRegister.$error.number">Rijksregisternummer moet een nummer van 11 tekens zijn.</span>
@@ -139,10 +139,11 @@
                 <div class="form-group" ng-show="needsRiziv(userFunctionSelect)" >
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.rizivNumber.$valid"></span></span>
-                        <input type="text" id="rizivNumber" name="rizivNumber" class="form-control input-lg" placeholder="RIZIV Nummer" ng-model="rizivNumber" ng-required="needsRiziv(userFunctionSelect)">
+                        <input type="number" id="rizivNumber" name="rizivNumber" class="form-control input-lg" placeholder="RIZIV Nummer" ng-model="rizivNumber" riziv ng-required="needsRiziv(userFunctionSelect)">
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.rizivNumber.$dirty && createAccountForm.rizivNumber.$invalid">
                         <span ng-show="createAccountForm.rizivNumber.$error.required">RIZIV nummer is verplicht en moet een nummer zijn.</span>
+                        <span ng-show="createAccountForm.rizivNumber.$error.riziv">RIZIV nummer is niet correct.</span>
                     </div>
                 </div>
                 
