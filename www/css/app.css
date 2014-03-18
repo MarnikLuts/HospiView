@@ -146,3 +146,14 @@
 .detailTable{
     display: table;
 }
+
+.todayWrapper{
+    text-align: center;
+    float:right;
+}
+
+/*http://stackoverflow.com/questions/15305914/bootstrap-buttons-get-stuck-down-on-mobile-devices*/
+.mobileHoverFix:hover,
+.mobileHoverFix.hover{
+    background-position: 0 0px;
+}

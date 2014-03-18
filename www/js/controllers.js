@@ -203,7 +203,7 @@ angular.module('myApp.controllers', []).
                 $location.path('/settings');
             };
         }).
-        controller('DoctorSearchAppointmentsCtrl', function($scope, $location, $rootScope, $parse, hospiviewFactory) {
+        controller('DoctorSearchAppointmentsCtrl', function($scope, $location, $rootScope, $modal, $parse, hospiviewFactory) {
 
             /*!!!*/
             $rootScope.user = "Stijn";
@@ -321,51 +321,93 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchUnit = searchUnitIds;
                 $rootScope.searchDepartment = searchDepIds;
 
-                var today = new Date();
-                $rootScope.start_date = formatDate(new Date(today.setDate(today.getDate() - 31)));
-                $rootScope.end_date = formatDate(new Date(today.setDate(today.getDate() + 31)));
+                var today = new Date(2013, 12, 1);
+                $rootScope.startDate = formatDate(today);
+                $rootScope.endDate = formatDate(new Date(today.setDate(today.getDate() + 14)));
                 $rootScope.currentdate = formatDate(today);
 
-                $location.path('/doctor/appointmentsView');
-            };
-
-        }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, hospiviewFactory) {
-
-            $scope.date = $rootScope.currentdate;
-            $scope.showDate = formatShowDate($scope.date);
-            var cell = JSON.parse(localStorage.getItem($rootScope.user));
-            $scope.cellcontent = cell.cellcontent;
-
-            if (angular.isUndefined($rootScope.monthReservations)) {
-                var reservations = [];
+                if (angular.isUndefined($rootScope.currentReservations)) {
+                    searchReservations();
+                }
+                else {
+                    $scope.reservations = $rootScope.currentReservations;
+                }
+            }
+            var reservations = [];
+            function searchReservations() {
                 for (var i = 0; i < $rootScope.searchUnit.length; i++) {
                     var unit = $rootScope.searchUnit[i];
                     var dep = $rootScope.searchDepartment[i];
-                    hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unit, dep, $rootScope.start_date, $rootScope.end_date, $rootScope.currentServer.hosp_url).
+                    hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unit, dep, $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
                                 if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
                                     if (json.ReservationsOnUnit.Header.StatusCode == 1) {
-                                        for (var j = 0; j < json.ReservationsOnUnit.Detail.Reservation.length; j++) {
-                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation[j]);
+                                        if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
+                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation);
+                                        } else {
+                                            for (var j = 0; j < json.ReservationsOnUnit.Detail.Reservation.length; j++) {
+                                                reservations.push(json.ReservationsOnUnit.Detail.Reservation[j]);
+                                            }
                                         }
                                     } else {
                                         $scope.error = true;
                                         $scope.errormessage = "Fout in de ingegeven gegevens.";
                                     }
+
                                 }
                             }).
                             error(function() {
                                 alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                             });
                 }
-                $rootScope.monthReservations = reservations;
-                $scope.reservations = $rootScope.monthReservations;
-
-            } else {
-                $scope.reservations = $rootScope.monthReservations;
+                $rootScope.currentReservations = reservations;
+                
+                if ($rootScope.currentReservations.length === 0) {
+                    callModal();
+                } else {
+                    $location.path('/doctor/appointmentsView');
+                }
             }
+            function callModal() {
+                var modalInstance = $modal.open({
+                    templateUrl: 'searchModal',
+                    controller: ModalInstance,
+                });
+
+                modalInstance.result.then(function(answer) {
+                    if (answer === true) {
+                        var newStartDate = new Date($rootScope.startDate);
+                        newStartDate.setDate(newStartDate.getDate() + 14);
+                        var newEndDate = new Date($rootScope.endDate);
+                        newEndDate.setDate(newEndDate.getDate() + 14);
+                        $rootScope.startDate = formatDate(newStartDate);
+                        $rootScope.endDate = formatDate(newEndDate);
+                        searchReservations();
+                    } else {
+
+                    }
+                }, function() {
+                    console.log("error")
+                });
+            }
+        }).
+        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, hospiviewFactory) {
+
+            var lowestDate = new Date(2500,1,1);
+            console.log($rootScope.currentReservations);
+            for(var i = 0; i < $rootScope.currentReservations.length; i++){
+                var compareDate = new Date($rootScope.currentReservations[i].the_date);
+                if(compareDate < lowestDate){
+                    lowestDate = compareDate;
+                }
+            }
+            
+            $scope.reservations = $rootScope.currentReservations;
+            $scope.date = formatDate(lowestDate);
+            $scope.showDate = formatShowDate($scope.date);
+            var cell = JSON.parse(localStorage.getItem($rootScope.user));
+            $scope.cellcontent = cell.cellcontent;
 
             $scope.nextDay = function() {
                 var newDate = new Date($scope.date);
@@ -403,8 +445,8 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope) {
-            var start = new Date($rootScope.start_date);
-            var end = new Date($rootScope.end_date);
+            var start = new Date($rootScope.startDate);
+            var end = new Date($rootScope.endDate);
             var current = new Date($rootScope.currentdate)
             start.setHours(0, 0, 0);
             end.setHours(0, 0, 0);
@@ -427,10 +469,17 @@ angular.module('myApp.controllers', []).
                     firstDay: 1,
                     resources: $scope.appointmentsCalendar,
                     weekNumbers: true,
+                    monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
+                    monthNamesShort: ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sept', 'okt', 'nov', 'dec'],
+                    dayNames: ['zondag', 'maandag', 'disndag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
+                    dayNamesShort: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
                     header: {
-                        left: 'today prev,next',
+                        left: '',
                         center: '',
                         right: 'title'
+                    },
+                    buttonText: {
+                        today: 'vandaag',
                     },
                     titleFormat: {
                         day: 'd/m'
@@ -442,7 +491,7 @@ angular.module('myApp.controllers', []).
                     }
                 }
             };
-            var eventss = $rootScope.monthReservations;
+            var eventss = $rootScope.currentReservations;
             var j = 0;
             var count = 0;
             var countEvent = [];
@@ -467,6 +516,16 @@ angular.module('myApp.controllers', []).
             }
             $scope.eventSources = [countEvent];
 
+            $scope.next = function() {
+                $('#doctorCalendar').fullCalendar('next');
+            }
+            $scope.prev = function() {
+                $('#doctorCalendar').fullCalendar('prev');
+            }
+            $scope.today = function() {
+                $('#doctorCalendar').fullCalendar('today');
+            }
+
             /*
              $scope.holidays = [
              {start: new Date("February 27, 2014"),
@@ -474,6 +533,20 @@ angular.module('myApp.controllers', []).
              cls: 'open',
              color: '#777777',
              background: '#eeeeff'}];*/
+
+
+            /*Change CSS of the buttons
+             * http://stackoverflow.com/questions/11279394/fullcalendar-with-twitter-bootstrap 
+             
+             var $fcButtons = $('[class*="fc-button"]').addClass('btn')
+             , $oldTable = $('.fc-header-right > table');
+             
+             $('<div>')
+             .addClass('btn-group')
+             .appendTo('.fc-header-right')
+             .append($fcButtons);
+             
+             $oldTable.remove();*/
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location) {
             $scope.backToMainMenu = function() {
@@ -773,6 +846,18 @@ angular.module('myApp.controllers', []).
             };
         });
 
+var ModalInstance = function($scope, $modalInstance) {
+
+    $scope.ok = function() {
+        $scope.continue = true;
+        $modalInstance.close($scope.continue);
+    };
+
+    $scope.cancel = function() {
+        $scope.continue = false;
+        $modalInstance.close($scope.continue);
+    };
+};
 
 function addToLocalStorage(lsKey, data) {
     if (localStorage.getItem(lsKey) !== null) {
