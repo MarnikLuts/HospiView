@@ -17,7 +17,7 @@ angular.module('myApp.controllers', []).
             } else {
                 $scope.users = JSON.parse(localStorage.getItem("users"));
             }
-            
+
             /**
              * showPasswordBoolean and savePassword will be set to false.
              * 
@@ -210,7 +210,7 @@ angular.module('myApp.controllers', []).
             /*!!!*/
 
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-            
+
             /*!!!*/
             $rootScope.currentServer = $scope.selectedUser.servers[0];
             /*!!!*/
@@ -362,7 +362,7 @@ angular.module('myApp.controllers', []).
                             });
                 }
                 $rootScope.currentReservations = reservations;
-                
+
                 if ($rootScope.currentReservations.length === 0) {
                     callModal();
                 } else {
@@ -394,15 +394,15 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, hospiviewFactory) {
 
-            var lowestDate = new Date(2500,1,1);
+            var lowestDate = new Date(2500, 1, 1);
             console.log($rootScope.currentReservations);
-            for(var i = 0; i < $rootScope.currentReservations.length; i++){
+            for (var i = 0; i < $rootScope.currentReservations.length; i++) {
                 var compareDate = new Date($rootScope.currentReservations[i].the_date);
-                if(compareDate < lowestDate){
+                if (compareDate < lowestDate) {
                     lowestDate = compareDate;
                 }
             }
-            
+
             $scope.reservations = $rootScope.currentReservations;
             $scope.date = formatDate(lowestDate);
             $scope.showDate = formatShowDate($scope.date);
@@ -562,7 +562,7 @@ angular.module('myApp.controllers', []).
 
             $scope.servers = $scope.selectedUser.servers;
             $scope.server = $rootScope.currentServer;
-            
+
             var unitsandgroups = [];
             hospiviewFactory.getUnitAndDepList($scope.server.uuid, $scope.server.hosp_url).
                     success(function(data) {
@@ -573,32 +573,42 @@ angular.module('myApp.controllers', []).
                                 units[i].type = "dokters";
                                 units[i].Header.name = units[i].Header.unit_name;
                                 unitsandgroups.push(units[i]);
-                                
-                                if($scope.server.shortcut1.unit.type==="dokters"){
-                                    if(units[i].Header.unit_id===$scope.server.shortcut1.unit.Header.unit_id){
-                                       $scope.server.shortcut1.unit = units[i];
-                                       $scope.loadDep(1);
-                                       $scope.server.shortcut1.department = $scope.server.shortcut1.unit.Detail[0];
-                                       
+
+                                if ($scope.server.shortcut1.unit.type === "dokters") {
+                                    if (units[i].Header.unit_id === $scope.server.shortcut1.unit.Header.unit_id) {
+                                        $scope.server.shortcut1.unit = units[i];
+                                        $scope.loadDep(1);
+                                        for (var j = 0; j < $scope.server.shortcut1.unit.Detail.Dep.length; j++) {
+                                            if (units[i].Detail.Dep[j].dep_id === $scope.server.shortcut1.department.dep_id)
+                                                $scope.server.shortcut1.department = units[i].Detail.Dep[j];
+                                        }
                                     }
                                 }
-                                
-                                if($scope.server.shortcut2.unit.type==="dokters"){
-                                    if(units[i].Header.unit_id===$scope.server.shortcut2.unit.Header.unit_id){
-                                       $scope.server.shortcut2.unit = units[i];
-                                       $scope.loadDep(2);
+
+                                if ($scope.server.shortcut2.unit.type === "dokters") {
+                                    if (units[i].Header.unit_id === $scope.server.shortcut2.unit.Header.unit_id) {
+                                        $scope.server.shortcut2.unit = units[i];
+                                        $scope.loadDep(2);
+                                        for (var j = 0; j < $scope.server.shortcut2.unit.Detail.Dep.length; j++) {
+                                            if (units[i].Detail.Dep[j].dep_id === $scope.server.shortcut2.department.dep_id)
+                                                $scope.server.shortcut2.department = units[i].Detail.Dep[j];
+                                        }
                                     }
                                 }
-                                
-                                if($scope.server.shortcut3.unit.type==="dokters"){
-                                    if(units[i].Header.unit_id===$scope.server.shortcut3.unit.Header.unit_id){
-                                       $scope.server.shortcut3.unit = units[i];
-                                       $scope.loadDep(3);
+
+                                if ($scope.server.shortcut3.unit.type === "dokters") {
+                                    if (units[i].Header.unit_id === $scope.server.shortcut3.unit.Header.unit_id) {
+                                        $scope.server.shortcut3.unit = units[i];
+                                        $scope.loadDep(3);
+                                        for (var j = 0; j < $scope.server.shortcut3.unit.Detail.Dep.length; j++) {
+                                            if (units[i].Detail.Dep[j].dep_id === $scope.server.shortcut3.department.dep_id)
+                                                $scope.server.shortcut3.department = units[i].Detail.Dep[j];
+                                        }
                                     }
                                 }
                             }
                         } else {
-                            
+
                             $scope.error = true;
                             $scope.errormessage = "Fout in de gegevens.";
                         }
@@ -615,27 +625,27 @@ angular.module('myApp.controllers', []).
                                 groups[i].type = "groepen";
                                 groups[i].Header.name = groups[i].Header.group_name;
                                 unitsandgroups.push(groups[i]);
-                                
-                                
-                                if($scope.server.shortcut1.unit.type==="groepen"){
-                                    if(groups[i].Header.group_id===$scope.server.shortcut1.unit.Header.group_id){
+
+
+                                if ($scope.server.shortcut1.unit.type === "groepen") {
+                                    if (groups[i].Header.group_id === $scope.server.shortcut1.unit.Header.group_id) {
                                         $scope.server.shortcut1.unit = groups[i];
                                     }
                                 }
-                                
-                                if($scope.server.shortcut2.unit.type==="groepen"){
-                                    if(groups[i].Header.group_id===$scope.server.shortcut2.unit.Header.group_id){
+
+                                if ($scope.server.shortcut2.unit.type === "groepen") {
+                                    if (groups[i].Header.group_id === $scope.server.shortcut2.unit.Header.group_id) {
                                         $scope.server.shortcut2.unit = groups[i];
                                     }
                                 }
-                                
-                                if($scope.server.shortcut3.unit.type==="groepen"){
-                                    if(groups[i].Header.group_id===$scope.server.shortcut3.unit.Header.group_id){
+
+                                if ($scope.server.shortcut3.unit.type === "groepen") {
+                                    if (groups[i].Header.group_id === $scope.server.shortcut3.unit.Header.group_id) {
                                         $scope.server.shortcut3.unit = groups[i];
                                     }
                                 }
-                                
-                                
+
+
                             }
                             $scope.unitsandgroups = unitsandgroups;
                         } else {
@@ -651,7 +661,7 @@ angular.module('myApp.controllers', []).
             $scope.disableS1 = true;
             $scope.disableS2 = true;
             $scope.disableS3 = true;
-            
+
             $scope.loadDep = function(shortcut) {
                 switch (shortcut)
                 {
