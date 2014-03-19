@@ -164,7 +164,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = 'all';
 
-                
+
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
                         success(function(data) {
                             var json = parseJson(data);
@@ -183,9 +183,10 @@ angular.module('myApp.controllers', []).
                         error(function() {
                             alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                         });
-            };
-            
-            function setData(){
+            }
+            ;
+
+            function setData() {
                 var today = new Date();
                 $rootScope.startDate = formatDate(today);
                 $rootScope.endDate = formatDate(new Date(today.setDate(today.getDate() + 14)));
@@ -270,6 +271,25 @@ angular.module('myApp.controllers', []).
                     console.log("error")
                 });
             }
+            
+            /*function setSearchDates(startDate, endDate){
+                if(startDate < $rootScope.searchRangeStart)
+                    
+            }*/
+
+            function ModalInstance($scope, $modalInstance) {
+                //Don't use $scope.continue, 'continue' is a reserved keyword
+                $scope.ok = function() {
+                    $scope.continuee = true;
+                    $modalInstance.close($scope.continuee);
+                };
+
+                $scope.cancel = function() {
+                    $scope.continuee = false;
+                    $modalInstance.close($scope.continuee);
+                };
+            }
+            ;
         }).
         controller('MainmenuCtrl', function($scope, $location, $rootScope) {
 
@@ -508,8 +528,9 @@ angular.module('myApp.controllers', []).
                 }, function() {
                     console.log("error")
                 });
-            };
-            
+            }
+            ;
+
             function ModalInstance($scope, $modalInstance) {
                 //Don't use $scope.continue, 'continue' is a reserved keyword
                 $scope.ok = function() {
@@ -521,7 +542,8 @@ angular.module('myApp.controllers', []).
                     $scope.continuee = false;
                     $modalInstance.close($scope.continuee);
                 };
-            };
+            }
+            ;
 
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location) {
@@ -628,7 +650,7 @@ angular.module('myApp.controllers', []).
                     }
                 }
             };
-            var eventss = $rootScope.currentReservations;
+            var eventss = $rootScope[$rootScope.searchString];
             var j = 0;
             var count = 0;
             var countEvent = [];
