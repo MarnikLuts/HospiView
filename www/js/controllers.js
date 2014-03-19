@@ -270,19 +270,6 @@ angular.module('myApp.controllers', []).
                     console.log("error")
                 });
             }
-            function ModalInstance($scope, $modalInstance) {
-
-                $scope.ok = function() {
-                    $scope.continue = true;
-                    $modalInstance.close($scope.continue);
-                };
-
-                $scope.cancel = function() {
-                    $scope.continue = false;
-                    $modalInstance.dismiss('cancel');
-                };
-            }
-            ;
         }).
         controller('MainmenuCtrl', function($scope, $location, $rootScope) {
 
@@ -521,20 +508,21 @@ angular.module('myApp.controllers', []).
                 }, function() {
                     console.log("error")
                 });
-            }
+            };
+            
             function ModalInstance($scope, $modalInstance) {
-
+                //Don't use $scope.continue, 'continue' is a reserved keyword
                 $scope.ok = function() {
-                    $scope.continue = true;
-                    $modalInstance.close($scope.continue);
+                    $scope.continuee = true;
+                    $modalInstance.close($scope.continuee);
                 };
 
                 $scope.cancel = function() {
-                    $scope.continue = false;
-                    $modalInstance.dismiss('cancel');
+                    $scope.continuee = false;
+                    $modalInstance.close($scope.continuee);
                 };
-            }
-            ;
+            };
+
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location) {
 
@@ -700,9 +688,6 @@ angular.module('myApp.controllers', []).
         controller('PatientViewAppointmentsCtrl', function($scope, $location) {
             $scope.backToMainMenu = function() {
                 $location.path('/mainmenu');
-            };
-            $scope.delete = function(id) {
-
             };
         }).
         controller('SettingsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
@@ -1049,6 +1034,7 @@ angular.module('myApp.controllers', []).
                 }
             };
         });
+
 
 function addToLocalStorage(lsKey, data) {
     if (localStorage.getItem(lsKey) !== null) {

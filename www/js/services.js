@@ -35,6 +35,12 @@ angular.module('myApp.services', []).
                 },
                 getReservationsOnPatient: function(uuid, pid_or_regno, patsearchvar, start_date, end_date, server_url) {
                     return $http.post(server_url + base_url + "method=GetReservationsOnPatient&UUID=" + uuid + "&pid_or_regno=" + pid_or_regno + "&patsearchvar=" + patsearchvar + "&start_date=" + start_date + "&end_date=" + end_date);
+                },
+                getPublicHolidays: function(Language_Id, year, month, server_url) {
+                    return $http.post(server_url + base_url + "method=GetPublicHolidays&Language_Id=" + Language_Id + "&Year=" + year + "&Month=" + month);
+                },
+                getUnitAbsentDays: function(uuid, year, month, unit_id, server_url){
+                    return $http.post(server_url + base_url + "method=GetUnitAbsentDays&UUID=" + uuid + "&Year=" + year + "&Month=" + month + "&Unit_Id=" + unit_id);
                 }
                 
             };
