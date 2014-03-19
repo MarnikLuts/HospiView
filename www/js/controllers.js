@@ -340,7 +340,7 @@ angular.module('myApp.controllers', []).
         controller('DoctorSearchAppointmentsCtrl', function($scope, $location, $rootScope, $modal, $parse, hospiviewFactory) {
 
             /*!!!*/
-//            $rootScope.user = "Stijn";
+            $rootScope.user = "Frank";
             /*!!!*/
 
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
@@ -348,10 +348,24 @@ angular.module('myApp.controllers', []).
             /*!!!*/
             $rootScope.currentServer = $scope.selectedUser.servers[0];
             /*!!!*/
-
+ 
             $scope.servers = $scope.selectedUser.servers;
             $scope.server = $rootScope.currentServer;
-
+ 
+            hospiviewFactory.getPublicHolidays('1', '2012', '00', $scope.server.hosp_url).
+                success(function(data){
+                    var json = parseJson(data);
+                    if(json.PublicHolidays.Header.StatusCode == 1){
+                        $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
+//                        for(var i=0; i<$rootScope.publicHolidays.length; i++){
+//                            alert($rootScope.publicHolidays[i].memo);
+//                        }
+//                        alert($rootScope.publicHolidays.length);
+                    }
+                }).error(function(){
+                    alert("De datums van feestdagen konden niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                });
+            
             if ($scope.server.shortcut1.unit === "") {
                 $scope.shortcut1Saved = false;
             } else {
@@ -606,13 +620,13 @@ angular.module('myApp.controllers', []).
         controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope) {
             var start = new Date($rootScope.startDate);
             var end = new Date($rootScope.endDate);
-            var current = new Date($rootScope.currentdate)
+            var current = new Date($rootScope.currentdate);
             start.setHours(0, 0, 0);
             end.setHours(0, 0, 0);
             var gotoDate = new Date($rootScope.currentdate);
             /*gotoDate.setMonth(gotoDate.getMonth() - 1);*/
             gotoDate = gotoDate.toUTCString();
-
+            
             $scope.back = function() {
                 $location.path('/doctor/appointmentsView');
             };
@@ -673,6 +687,14 @@ angular.module('myApp.controllers', []).
                 }
                 start.setDate(start.getDate() + 1);
             }
+            
+            var holidays = $rootScope.publicHolidays;
+            for(var i=0; i<holidays.length; i++){
+                var holiday_date = new Date(holidays[0].the_date);
+                var holiday_date_end = holiday_date.addHours(1);
+                countEvent.push({title: count, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true});
+            }
+            
             $scope.eventSources = [countEvent];
 
             $scope.next = function() {
