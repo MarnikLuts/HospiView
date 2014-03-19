@@ -2,7 +2,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-        controller('LoginCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
+        controller('LoginCtrl', function($scope, $location, $rootScope, $modal, hospiviewFactory) {
 
             /**
              * Check if the localStorage item "users" exists. If is doesn't,
@@ -75,6 +75,7 @@ angular.module('myApp.controllers', []).
              * filled out and the savePassword checkbox will be checked.
              */
             $scope.getLoginUser = function() {
+                console.log($scope.selectedUser);
                 if (!(angular.isUndefined($scope.server))) {
                     $scope.username = $scope.server.user_login;
                     if ($scope.selectedUser.save_password === true) {
@@ -136,16 +137,18 @@ angular.module('myApp.controllers', []).
                                 for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                                     if ($scope.selectedUser.servers[i].id === $scope.server.id)
                                         $scope.selectedUser.servers[i].uuid = json.Authentication.Detail.uuid;
+                                    $rootScope.currentServer = $scope.selectedUser.servers[i];
                                 }
                                 localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
                                 $rootScope.user = $scope.user;
-                                $rootScope.currentServer = $scope.server;
                                 if (json.Authentication.Detail.isexternal == 0) {
                                     $rootScope.type = 0;
                                 } else {
                                     $rootScope.type = 1;
                                 }
-                                $location.path('/mainmenu');
+                                /*$location.path('/mainmenu');*/
+                                console.log("search");
+                                search();
                             } else {
                                 $scope.error = true;
                                 $scope.errormessage = "Fout in de ingevoerde login gegevens.";
@@ -156,6 +159,130 @@ angular.module('myApp.controllers', []).
                             alert("Data kon niet worden opgehaald, probeer later opnieuw.");
                         });
             };
+
+            function search() {
+                $rootScope.searchUnits = [];
+                $rootScope.searchString = 'all';
+
+                
+                hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
+                        success(function(data) {
+                            var json = parseJson(data);
+                            if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                                var units = json.UnitsAndDeps.Detail.Unit;
+                                for (var i = 0; i < units.length; i++) {
+                                    $rootScope.searchUnits.push(units[i]);
+                                }
+                                console.log($rootScope.searchUnits);
+                                setData();
+                            } else {
+                                $scope.error = true;
+                                $scope.errormessage = "Fout in de gegevens.";
+                            }
+                        }).
+                        error(function() {
+                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                        });
+            };
+            
+            function setData(){
+                var today = new Date();
+                $rootScope.startDate = formatDate(today);
+                $rootScope.endDate = formatDate(new Date(today.setDate(today.getDate() + 14)));
+                $rootScope.currentdate = formatDate(today);
+
+                console.log($rootScope.searchUnits);
+                if (angular.isUndefined($rootScope[$rootScope.searchString]) || $rootScope[$rootScope.searchString] === 0) {
+                    searchReservations();
+                }
+                else {
+                    $scope.reservations = $rootScope[$rootScope.searchString];
+                    $location.path('/doctor/appointmentsView');
+                }
+            }
+
+            var reservations = [];
+            function searchReservations() {
+                console.log("before");
+                console.log($rootScope.searchUnits);
+                for (var i = 0; i < $rootScope.searchUnits.length; i++) {
+                    console.log("in for");
+                    var depIds = [];
+                    var unitId = $rootScope.searchUnits[i].Header.unit_id;
+                    console.log(unitId);
+                    if ($rootScope.searchUnits[i].Header.perm === "1") {
+                        depIds.push($rootScope.searchUnits[i].Detail.Dep[0].dep_id);
+                    } else {
+                        for (var j = 0; j < $rootScope.searchUnits[i].Detail.Dep.length; j++) {
+                            depIds.push($rootScope.searchUnits[i].Detail.Dep[j].dep_id);
+                        }
+                    }
+                    for (var k = 0; k < depIds.length; k++) {
+                        hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url).
+                                success(function(data) {
+                                    var json = parseJson(data);
+                                    console.log(json);
+                                    if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
+                                        if (json.ReservationsOnUnit.Header.StatusCode === "1") {
+                                            if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
+                                                reservations.push(json.ReservationsOnUnit.Detail.Reservation);
+                                            } else {
+                                                for (var j = 0; j < json.ReservationsOnUnit.Detail.Reservation.length; j++) {
+                                                    reservations.push(json.ReservationsOnUnit.Detail.Reservation[j]);
+                                                }
+                                            }
+                                        } else {
+                                            $scope.error = true;
+                                            $scope.errormessage = "Fout in de ingegeven gegevens.";
+                                        }
+
+                                    }
+                                }).
+                                error(function() {
+                                    alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                                });
+                    }
+                }
+                $rootScope[$rootScope.searchString] = reservations;
+                if ($rootScope[$rootScope.searchString].length === 0) {
+                    callModal();
+                } else {
+                    $location.path('/doctor/appointmentsView');
+                }
+            }
+            function callModal() {
+                var modalInstance = $modal.open({
+                    templateUrl: 'searchModal',
+                    controller: ModalInstance,
+                });
+
+                modalInstance.result.then(function(answer) {
+                    if (answer === true) {
+                        var newStartDate = new Date($rootScope.startDate);
+                        newStartDate.setDate(newStartDate.getDate() + 14);
+                        var newEndDate = new Date($rootScope.endDate);
+                        newEndDate.setDate(newEndDate.getDate() + 14);
+                        $rootScope.startDate = formatDate(newStartDate);
+                        $rootScope.endDate = formatDate(newEndDate);
+                        searchReservations();
+                    }
+                }, function() {
+                    console.log("error")
+                });
+            }
+            function ModalInstance($scope, $modalInstance) {
+
+                $scope.ok = function() {
+                    $scope.continue = true;
+                    $modalInstance.close($scope.continue);
+                };
+
+                $scope.cancel = function() {
+                    $scope.continue = false;
+                    $modalInstance.dismiss('cancel');
+                };
+            }
+            ;
         }).
         controller('MainmenuCtrl', function($scope, $location, $rootScope) {
 
@@ -297,9 +424,9 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.search = function(type) {
-
                 var searchUnitIds = [];
                 var searchDepIds = [];
+                var searchString = '';
 
                 $scope.searchStrings = {
                     shortcut1: $scope.server.shortcut1,
@@ -311,11 +438,15 @@ angular.module('myApp.controllers', []).
                 if ($scope.searchStrings[type].unit.type == "groepen") {
                     for (var i = 0; i < $scope.searchStrings[type].unit.Detail.UnitAndDep.length; i++) {
                         searchUnitIds.push($scope.searchStrings[type].unit.Detail.UnitAndDep[i].unit_id);
+                        searchString = searchString + $scope.searchStrings[type].unit.Detail.UnitAndDep[i].unit_id;
                         searchDepIds.push($scope.searchStrings[type].unit.Detail.UnitAndDep[i].dep_id);
+                        searchString = searchString + $scope.searchStrings[type].unit.Detail.UnitAndDep[i].dep_id;
                     }
                 } else {
                     searchUnitIds.push($scope.searchStrings[type].unit.Header.unit_id);
+                    searchString = searchString + $scope.searchStrings[type].unit.Header.unit_id;
                     searchDepIds.push($scope.searchStrings[type].department.dep_id);
+                    searchString = searchString + $scope.searchStrings[type].department.dep_id;
                 }
 
                 $rootScope.searchUnit = searchUnitIds;
@@ -326,11 +457,13 @@ angular.module('myApp.controllers', []).
                 $rootScope.endDate = formatDate(new Date(today.setDate(today.getDate() + 14)));
                 $rootScope.currentdate = formatDate(today);
 
-                if (angular.isUndefined($rootScope.currentReservations)) {
+                if (angular.isUndefined($rootScope[searchString]) || $rootScope[searchString] === 0) {
+                    $rootScope.searchString = searchString;
                     searchReservations();
                 }
                 else {
-                    $scope.reservations = $rootScope.currentReservations;
+                    $scope.reservations = $rootScope[searchString];
+                    $location.path('/doctor/appointmentsView');
                 }
             }
             var reservations = [];
@@ -361,9 +494,9 @@ angular.module('myApp.controllers', []).
                                 alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                             });
                 }
-                $rootScope.currentReservations = reservations;
+                $rootScope[$rootScope.searchString] = reservations;
 
-                if ($rootScope.currentReservations.length === 0) {
+                if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
                     $location.path('/doctor/appointmentsView');
@@ -384,26 +517,37 @@ angular.module('myApp.controllers', []).
                         $rootScope.startDate = formatDate(newStartDate);
                         $rootScope.endDate = formatDate(newEndDate);
                         searchReservations();
-                    } else {
-
                     }
                 }, function() {
                     console.log("error")
                 });
             }
+            function ModalInstance($scope, $modalInstance) {
+
+                $scope.ok = function() {
+                    $scope.continue = true;
+                    $modalInstance.close($scope.continue);
+                };
+
+                $scope.cancel = function() {
+                    $scope.continue = false;
+                    $modalInstance.dismiss('cancel');
+                };
+            }
+            ;
         }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, hospiviewFactory) {
+        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location) {
 
             var lowestDate = new Date(2500, 1, 1);
-            console.log($rootScope.currentReservations);
-            for (var i = 0; i < $rootScope.currentReservations.length; i++) {
-                var compareDate = new Date($rootScope.currentReservations[i].the_date);
+            console.log($rootScope[$rootScope.searchString]);
+            for (var i = 0; i < $rootScope[$rootScope.searchString].length; i++) {
+                var compareDate = new Date($rootScope[$rootScope.searchString][i].the_date);
                 if (compareDate < lowestDate) {
                     lowestDate = compareDate;
                 }
             }
 
-            $scope.reservations = $rootScope.currentReservations;
+            $scope.reservations = $rootScope[$rootScope.searchString];
             $scope.date = formatDate(lowestDate);
             $scope.showDate = formatShowDate($scope.date);
             var cell = JSON.parse(localStorage.getItem($rootScope.user));
@@ -435,7 +579,12 @@ angular.module('myApp.controllers', []).
             $scope.style = function(value) {
                 var color = '#' + value;
                 return {"background-color": color};
-            }
+            };
+            $scope.logout = function() {
+                $rootScope.user = null;
+                $rootScope.type = null;
+                $location.path('/login');
+            };
         }).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
             $scope.reservation = $rootScope.reservationDetail;
@@ -562,6 +711,7 @@ angular.module('myApp.controllers', []).
 
             $scope.servers = $scope.selectedUser.servers;
             $scope.server = $rootScope.currentServer;
+            console.log($scope.server);
 
             var unitsandgroups = [];
             hospiviewFactory.getUnitAndDepList($scope.server.uuid, $scope.server.hosp_url).
@@ -900,19 +1050,6 @@ angular.module('myApp.controllers', []).
             };
         });
 
-var ModalInstance = function($scope, $modalInstance) {
-
-    $scope.ok = function() {
-        $scope.continue = true;
-        $modalInstance.close($scope.continue);
-    };
-
-    $scope.cancel = function() {
-        $scope.continue = false;
-        $modalInstance.close($scope.continue);
-    };
-};
-
 function addToLocalStorage(lsKey, data) {
     if (localStorage.getItem(lsKey) !== null) {
         var lsText = localStorage.getItem(lsKey);
@@ -957,10 +1094,10 @@ function formatDate(date) {
     var mm = date.getMonth() + 1;
     var yyyy = date.getFullYear();
     if (dd < 10) {
-        dd = '0' + dd
+        dd = '0' + dd;
     }
     if (mm < 10) {
-        mm = '0' + mm
+        mm = '0' + mm;
     }
     date = yyyy + '-' + mm + '-' + dd;
     return date;
