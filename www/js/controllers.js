@@ -164,6 +164,19 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = 'all';
 
+                hospiviewFactory.getPublicHolidays('1', '2014', '00', $scope.server.hosp_url).
+                success(function(data){
+                    var json = parseJson(data);
+                    if(json.PublicHolidays.Header.StatusCode == 1){
+                        $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
+//                        for(var i=0; i<$rootScope.publicHolidays.length; i++){
+//                            alert($rootScope.publicHolidays[i].memo);
+//                        }
+//                        alert($rootScope.publicHolidays.length);
+                    }
+                }).error(function(){
+                    alert("De datums van feestdagen konden niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                });
 
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
                         success(function(data) {
@@ -349,22 +362,9 @@ angular.module('myApp.controllers', []).
             $rootScope.currentServer = $scope.selectedUser.servers[0];
             /*!!!*/
  
-            $scope.servers = $scope.selectedUser.servers;
-            $scope.server = $rootScope.currentServer;
+            
  
-            hospiviewFactory.getPublicHolidays('1', '2012', '00', $scope.server.hosp_url).
-                success(function(data){
-                    var json = parseJson(data);
-                    if(json.PublicHolidays.Header.StatusCode == 1){
-                        $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
-//                        for(var i=0; i<$rootScope.publicHolidays.length; i++){
-//                            alert($rootScope.publicHolidays[i].memo);
-//                        }
-//                        alert($rootScope.publicHolidays.length);
-                    }
-                }).error(function(){
-                    alert("De datums van feestdagen konden niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                });
+            
             
             if ($scope.server.shortcut1.unit === "") {
                 $scope.shortcut1Saved = false;
@@ -689,10 +689,11 @@ angular.module('myApp.controllers', []).
             }
             
             var holidays = $rootScope.publicHolidays;
+            if(!angular.isUndefined(holidays.length))
             for(var i=0; i<holidays.length; i++){
-                var holiday_date = new Date(holidays[0].the_date);
-                var holiday_date_end = holiday_date.addHours(1);
-                countEvent.push({title: count, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true});
+                var holiday_date = new Date(holidays[i].the_date);
+                var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
+                countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, color: '#ff0000'});
             }
             
             $scope.eventSources = [countEvent];
