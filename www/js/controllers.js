@@ -146,7 +146,9 @@ angular.module('myApp.controllers', []).
                                     $rootScope.type = 1;
                                 }
                                 /*$location.path('/mainmenu');*/
+                                loadHolidays();
                                 search();
+                                setData();
                             } else {
                                 $scope.error = true;
                                 $scope.errormessage = "Fout in de ingevoerde login gegevens.";
@@ -157,45 +159,71 @@ angular.module('myApp.controllers', []).
                             alert("Data kon niet worden opgehaald, probeer later opnieuw.");
                         });
             };
-
+            
+            function loadHolidays(){
+                $scope.year = new Date().getFullYear().toString();
+                hospiviewFactory.getPublicHolidays('1', $scope.year, '00', $scope.server.hosp_url).
+                    success(function(data){
+                        var json = parseJson(data);
+                        if(json.PublicHolidays.Header.StatusCode == 1){
+                            if(!angular.isUndefined(json.PublicHolidays.Detail)){
+                                $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
+                            }
+                        }else{
+                            $scope.error = true;
+                            $scope.errormessage = "Fout in de gegevens.";
+                        }
+                    }).error(function(){
+                        alert("De datums van feestdagen konden niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                    });
+            }
+            
             function search() {
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = 'all';
-
-                hospiviewFactory.getPublicHolidays('1', '2014', '00', $scope.server.hosp_url).
-                success(function(data){
-                    var json = parseJson(data);
-                    if(json.PublicHolidays.Header.StatusCode == 1){
-                        $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
-//                        for(var i=0; i<$rootScope.publicHolidays.length; i++){
-//                            alert($rootScope.publicHolidays[i].memo);
-//                        }
-//                        alert($rootScope.publicHolidays.length);
-                    }
-                }).error(function(){
-                    alert("De datums van feestdagen konden niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                });
-
+                $rootScope.absentDays = [];
+                
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
-                        success(function(data) {
-                            var json = parseJson(data);
-                            if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                                var units = json.UnitsAndDeps.Detail.Unit;
-                                for (var i = 0; i < units.length; i++) {
-                                    $rootScope.searchUnits.push(units[i]);
-                                }
-                                setData();
-                            } else {
-                                $scope.error = true;
-                                $scope.errormessage = "Fout in de gegevens.";
+                    success(function(data) {
+                        var json = parseJson(data);
+                        if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                            var units = json.UnitsAndDeps.Detail.Unit;
+                            for (var i = 0; i < units.length; i++) {
+                                $rootScope.searchUnits.push(units[i]);
                             }
-                        }).
-                        error(function() {
-                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                        });
+                            loadAbsentDays();
+                        } else {
+                            $scope.error = true;
+                            $scope.errormessage = "Fout in de gegevens.";
+                        }
+                    }).
+                    error(function() {
+                        alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                    });
             }
             ;
-
+            
+            function loadAbsentDays(){
+                if(!angular.isUndefined($rootScope.searchUnits.length))
+                for(var i=0; i<$rootScope.searchUnits.length; i++){
+                hospiviewFactory.getUnitAbsentDays($rootScope.currentServer.uuid, $scope.year, '00', $rootScope.searchUnits[i].Header.unit_id, $rootScope.currentServer.hosp_url).
+                    success(function (data){
+                        var json = parseJson(data);
+                        if(json.UnitAbsentdays.Header.StatusCode == 1){
+                            if(!angular.isUndefined(json.UnitAbsentDays)){
+                                $rootScope.absentDays.push(json.UnitAbsentdays.Detail.AbsentDay);
+                            }
+                        }else{
+                            $scope.error = true;
+                            $scope.errormessage = "Fout in de gegevens.";
+                        }
+                    }).error(function (){
+                        alert("De lijst met afwezigheden kon niet worden opgehaald");
+                    });
+                }
+              
+            }
+            
             function setData() {
                 var today = new Date();
                 $rootScope.startDate = formatDate(today);
@@ -245,6 +273,7 @@ angular.module('myApp.controllers', []).
                                             $scope.errormessage = "Fout in de ingegeven gegevens.";
                                         }
                                     }
+                                
 
                                 }).
                                 error(function() {
@@ -252,10 +281,10 @@ angular.module('myApp.controllers', []).
                                 });
                     }
                 }
-                setResevations();
+            setReservations();
             }
 
-            function setResevations() {
+            function setReservations() {
                 $timeout(function() {
                     $rootScope[$rootScope.searchString] = reservations;
 
@@ -264,7 +293,7 @@ angular.module('myApp.controllers', []).
                     } else {
                         $location.path('/doctor/appointmentsView');
                     }
-                }, 500);
+                }, 250);
 
             }
             function callModal() {
@@ -622,6 +651,7 @@ angular.module('myApp.controllers', []).
                 $location.path('/doctor/appointmentDetail');
             };
             $scope.calendarView = function() {
+                alert($rootScope.absentDays.length);
                 $location.path('/appointmentsCalendar');
             };
             $scope.style = function(value) {
