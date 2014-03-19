@@ -163,16 +163,16 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchString = 'all';
 
                 hospiviewFactory.getPublicHolidays('1', '2014', '00', $scope.server.hosp_url).
-                success(function(data){
-                    var json = parseJson(data);
-                    if(json.PublicHolidays.Header.StatusCode == 1){
-                        $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
+                        success(function(data) {
+                            var json = parseJson(data);
+                            if (json.PublicHolidays.Header.StatusCode == 1) {
+                                $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
 //                        for(var i=0; i<$rootScope.publicHolidays.length; i++){
 //                            alert($rootScope.publicHolidays[i].memo);
 //                        }
 //                        alert($rootScope.publicHolidays.length);
-                    }
-                }).error(function(){
+                            }
+                        }).error(function() {
                     alert("De datums van feestdagen konden niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                 });
 
@@ -206,7 +206,7 @@ angular.module('myApp.controllers', []).
                     searchReservations();
                 }
                 else {
-                    if($rootScope.startDate < $rootScope.searchRangeStart || $rootScope.endDate > $rootScope.searchRangeEnd){
+                    if ($rootScope.startDate < $rootScope.searchRangeStart || $rootScope.endDate > $rootScope.searchRangeEnd) {
                         $scope.reservations = $rootScope[$rootScope.searchString];
                         searchReservations();
                     }
@@ -290,8 +290,8 @@ angular.module('myApp.controllers', []).
             }
 
             function setSearchDates(startDate, endDate) {
-                
-                
+
+
                 if (angular.isUndefined($rootScope.searchRangeStart))
                     $rootScope.searchRangeStart = startDate;
                 else {
@@ -377,11 +377,11 @@ angular.module('myApp.controllers', []).
             /*!!!*/
             $rootScope.currentServer = $scope.selectedUser.servers[0];
             /*!!!*/
- 
-            
- 
-            
-            
+
+
+
+
+
             if ($scope.server.shortcut1.unit === "") {
                 $scope.shortcut1Saved = false;
             } else {
@@ -578,20 +578,29 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $timeout, hospiviewFactory) {
 
-            var lowestDate = new Date(2500, 1, 1);
-            console.log($rootScope[$rootScope.searchString]);
-            for (var i = 0; i < $rootScope[$rootScope.searchString].length; i++) {
-                var compareDate = new Date($rootScope[$rootScope.searchString][i].the_date);
-                if (compareDate < lowestDate && compareDate >= new Date()) {
-                    lowestDate = compareDate;
-                }
-            }
-            
             $scope.eventPerDay;
-            
+            if ($rootScope.eventClick == true) {
+                $scope.date = formatDate(new Date($rootScope.currentdate));
+                console.log(new Date($rootScope.currentdate));
+                $scope.showDate = formatShowDate(new Date($rootScope.currentdate));
+                console.log($scope.showDate);
+            } else {
+                var lowestDate = new Date(2500, 1, 1);
+                for (var i = 0; i < $rootScope[$rootScope.searchString].length; i++) {
+                    var compareDate = new Date($rootScope[$rootScope.searchString][i].the_date);
+                    if (compareDate < lowestDate && compareDate >= new Date()) {
+                        lowestDate = compareDate;
+                    }
+                }
+                $scope.date = formatDate(new Date(lowestDate));
+                console.log(lowestDate);
+                $scope.showDate = formatShowDate(lowestDate);
+                console.log($scope.showDate);
+            }
+
             $scope.reservations = $rootScope[$rootScope.searchString];
-            $scope.date = formatDate(lowestDate);
-            $scope.showDate = formatShowDate($scope.date);
+            
+            $scope.showDate = formatShowDate(lowestDate);
             var cell = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.cellcontent = cell.cellcontent;
 
@@ -600,7 +609,7 @@ angular.module('myApp.controllers', []).
                 newDate.setDate(newDate.getDate() + 1);
                 $scope.date = formatDate(newDate);
                 $scope.showDate = formatShowDate($scope.date);
-                if(new Date($scope.date) > new Date($rootScope.searchRangeEnd)){
+                if (new Date($scope.date) > new Date($rootScope.searchRangeEnd)) {
                     search(newDate, 1);
                 }
             };
@@ -609,7 +618,7 @@ angular.module('myApp.controllers', []).
                 newDate.setDate(newDate.getDate() - 1);
                 $scope.date = formatDate(newDate);
                 $scope.showDate = formatShowDate($scope.date);
-                if(new Date($scope.date) < new Date($rootScope.searchRangeStart)){
+                if (new Date($scope.date) < new Date($rootScope.searchRangeStart)) {
                     search(newDate, 2)
                 }
             };
@@ -658,12 +667,12 @@ angular.module('myApp.controllers', []).
             ;
 
             function setData(newDate, swipe) {
-                if(swipe == 1){ 
+                if (swipe == 1) {
                     $rootScope.startDate = formatDate(newDate);
                     $rootScope.endDate = formatDate(new Date(newDate.setDate(newDate.getDate() + 14)));
                     $rootScope.currentdate = $rootScope.startDate;
-                }else{
-                    $rootScope.endDate = formatDate(newDate); 
+                } else {
+                    $rootScope.endDate = formatDate(newDate);
                     $rootScope.startDate = formatDate(new Date(newDate.setDate(newDate.getDate() - 14)));
                     $rootScope.currentdate = $rootScope.endDate;
                 }
@@ -672,7 +681,7 @@ angular.module('myApp.controllers', []).
                 setSearchDates($rootScope.startDate, $rootScope.endDate);
                 searchReservations();
             }
-            
+
             var reservations = [];
             function searchReservations() {
                 for (var i = 0; i < $rootScope.searchUnits.length; i++) {
@@ -716,7 +725,7 @@ angular.module('myApp.controllers', []).
 
             function setResevations() {
                 $timeout(function() {
-                    for(var i = 0; i < reservations.length; i++)
+                    for (var i = 0; i < reservations.length; i++)
                         $rootScope[$rootScope.searchString].push(reservations[i]);
                     if ($rootScope[$rootScope.searchString].length === 0) {
                         callModal();
@@ -793,7 +802,7 @@ angular.module('myApp.controllers', []).
             var gotoDate = new Date($rootScope.currentdate);
             /*gotoDate.setMonth(gotoDate.getMonth() - 1);*/
             gotoDate = gotoDate.toUTCString();
-            
+
             $scope.back = function() {
                 $location.path('/doctor/appointmentsView');
             };
@@ -827,6 +836,7 @@ angular.module('myApp.controllers', []).
                     eventClick: function(calEvent, jsEvent, view) {
                         var getClickedDay = calEvent.start;
                         $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
+                        $rootScope.eventClick = true;
                         window.location.href = 'index.html#/doctor/appointmentsView';
                     }
                 }
@@ -854,15 +864,15 @@ angular.module('myApp.controllers', []).
                 }
                 start.setDate(start.getDate() + 1);
             }
-            
+
             var holidays = $rootScope.publicHolidays;
-            if(!angular.isUndefined(holidays.length))
-            for(var i=0; i<holidays.length; i++){
-                var holiday_date = new Date(holidays[i].the_date);
-                var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
-                countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, color: '#ff0000', background: '#eeeeff'});
-            }
-            
+            if (!angular.isUndefined(holidays.length))
+                for (var i = 0; i < holidays.length; i++) {
+                    var holiday_date = new Date(holidays[i].the_date);
+                    var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
+                    countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, color: '#ff0000', background: '#eeeeff'});
+                }
+
             $scope.eventSources = [countEvent];
 
             $scope.next = function() {
