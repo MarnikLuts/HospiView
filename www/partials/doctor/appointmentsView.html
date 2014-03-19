@@ -23,6 +23,7 @@
                             {{reservation.time_from}}
                         </span>
                         <span class="float-left colorWrapper">
+                            &nbsp
                             <span ng-switch on="reservation.color">
                                 <span ng-switch-when=""></span>
                                 <span ng-switch-default ng-style="style(reservation.color)" class="colorMarking">&nbsp</span>
@@ -49,8 +50,8 @@
                             <span ng-switch-default><b>C</b></span>
                         </span>
                         <span class="reservationTitle" ng-switch on="cellcontent">
-                            <span ng-switch-when="patient">{{reservation.name}}</span>
-                            <span ng-switch-default>{{reservation.title}}</span>
+                            <span ng-switch-when="patient">&nbsp {{reservation.name}}</span>
+                            <span ng-switch-default>&nbsp {{reservation.title}}</span>
                         </span>
                     </div>
                 </div>

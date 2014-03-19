@@ -4,7 +4,6 @@
  * (c) 2013 Adam Shaw
  */
 
-
 .fc {
 	direction: 1tr;
 	text-align: center;
@@ -264,7 +263,7 @@ html .fc,
 	 
 .fc-event {
 	border: 1px solid #3a87ad; /* default BORDER color */
-	background-color: #3a87ad; /* default BACKGROUND color */
+	/*background-color: #3a87ad; /* default BACKGROUND color */
 	color: #fff;               /* default TEXT color */
 	font-size: 2em;
 	cursor: default;
@@ -568,7 +567,7 @@ table.fc-border-separate {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: #fff;
+	/*background: #fff;*/
 	opacity: .25;
 	filter: alpha(opacity=25);
 	}
