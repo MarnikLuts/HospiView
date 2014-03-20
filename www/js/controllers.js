@@ -182,17 +182,14 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchString = 'all';
                 $rootScope.absentDays = [];
 
-                console.log("search");
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
                         success(function(data) {
                             var json = parseJson(data);
-                            console.log("search request");
                             if (json.UnitsAndDeps.Header.StatusCode == 1) {
                                 var units = json.UnitsAndDeps.Detail.Unit;
                                 for (var i = 0; i < units.length; i++) {
                                     $rootScope.searchUnits.push(units[i]);
                                 }
-                                console.log($rootScope.searchUnits);
                                 loadAbsentDays();
                                 setData();
                             } else {
@@ -247,11 +244,6 @@ angular.module('myApp.controllers', []).
 
             var reservations = [];
             function searchReservations() {
-                console.log($rootScope.currentServer.uuid)
-                console.log($rootScope.searchUnits);
-                console.log($rootScope.startDate);
-                console.log($rootScope.endDate);
-                console.log($rootScope.currentServer.hosp_url);
                 for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                     var depIds = [];
                     var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -618,9 +610,7 @@ angular.module('myApp.controllers', []).
             $scope.eventPerDay;
             if ($rootScope.eventClick == true) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
-                console.log(new Date($rootScope.currentdate));
                 $scope.showDate = formatShowDate(new Date($rootScope.currentdate));
-                console.log($scope.showDate);
             } else {
                 var lowestDate = new Date(2500, 1, 1);
                 for (var i = 0; i < $rootScope[$rootScope.searchString].length; i++) {
@@ -630,9 +620,7 @@ angular.module('myApp.controllers', []).
                     }
                 }
                 $scope.date = formatDate(new Date(lowestDate));
-                console.log(lowestDate);
                 $scope.showDate = formatShowDate(lowestDate);
-                console.log($scope.showDate);
             }
 
             $scope.reservations = $rootScope[$rootScope.searchString];
@@ -668,7 +656,6 @@ angular.module('myApp.controllers', []).
                 $location.path('/doctor/appointmentDetail');
             };
             $scope.calendarView = function() {
-                alert($rootScope.absentDays.length);
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
                 var current = new Date($rootScope.currentdate);

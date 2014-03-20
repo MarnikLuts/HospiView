@@ -72,6 +72,9 @@
 .height70Percent{
     height:70%;
 }
+height20Percent{
+    height: 20%;
+}
 .calendarWrapper{
     height:70%;
 }
@@ -156,4 +159,15 @@
 .mobileHoverFix:hover,
 .mobileHoverFix.hover{
     background-position: 0 0px;
+}
+
+.dateAppointmentsView{
+    display: inline-block;
+    width:90%;
+    margin-bottom:10px;
+}
+
+.calendarButtonAppointmentsView{
+    display: inline-block;
+    width: 5%;
 }
