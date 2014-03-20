@@ -161,6 +161,16 @@ height20Percent{
     background-position: 0 0px;
 }
 
+@-webkit-keyframes spinning
+{
+from {-webkit-transform: rotate(0deg);}
+to {-webkit-transform: rotate(360deg);}
+}
+
+#loginButton [class*="glyphicon-"] {
+    -webkit-animation: spinning 1s linear infinite;
+    animation: spinning 1s linear infinite;
+}
 .dateAppointmentsView{
     display: inline-block;
     width:90%;
