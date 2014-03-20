@@ -181,3 +181,8 @@ to {-webkit-transform: rotate(360deg);}
     display: inline-block;
     width: 5%;
 }
+
+.spinnerApointmentsCalendar{
+    float: left;
+    margin: 10px 10px;
+}
