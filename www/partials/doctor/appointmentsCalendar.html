@@ -9,7 +9,7 @@
     <div class="col-md-12 calendarHeight">
         <div class="text-right"> 
             <button class="btn btn-default btn-lg todayButton" id="todayBtn" ng-click="today()">vandaag</button>
-            <span class="btn-group">
+            <span class="btn-group" ng-controller="searchCtrl">
                 <button class="btn btn-default btn-lg" ng-click="prev()"><span class="glyphicon glyphicon-chevron-left"></span></button>
                 <button class="btn btn-default btn-lg" ng-click="next()"><span class="glyphicon glyphicon-chevron-right"></span></button>
             </span>

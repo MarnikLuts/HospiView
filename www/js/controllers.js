@@ -223,8 +223,8 @@ angular.module('myApp.controllers', []).
             function setData() {
                 var today = new Date();
                 $rootScope.startDate = formatDate(today);
+                $rootScope.currentdate = formatDate(today);                
                 $rootScope.endDate = formatDate(new Date(today.setDate(today.getDate() + 14)));
-                $rootScope.currentdate = formatDate(today);
                 setSearchDates($rootScope.startDate, $rootScope.endDate);
                 if (angular.isUndefined($rootScope[$rootScope.searchString]) || $rootScope[$rootScope.searchString] === 0) {
                     searchReservations();
@@ -403,10 +403,6 @@ angular.module('myApp.controllers', []).
             $rootScope.currentServer = $scope.selectedUser.servers[0];
             /*!!!*/
 
-
-
-
-
             if ($scope.server.shortcut1.unit === "") {
                 $scope.shortcut1Saved = false;
             } else {
@@ -514,7 +510,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchUnit = searchUnitIds;
                 $rootScope.searchDepartment = searchDepIds;
 
-                var today = new Date(2013, 12, 1);
+                var today = new Date();
                 $rootScope.startDate = formatDate(today);
                 $rootScope.endDate = formatDate(new Date(today.setDate(today.getDate() + 14)));
                 $rootScope.currentdate = formatDate(today);
@@ -603,6 +599,7 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $timeout, hospiviewFactory) {
 
+            $scope.username = "";
             $scope.eventPerDay;
             if ($rootScope.eventClick == true) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
@@ -621,7 +618,6 @@ angular.module('myApp.controllers', []).
 
             $scope.reservations = $rootScope[$rootScope.searchString];
 
-            $scope.showDate = formatShowDate(lowestDate);
             var cell = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.cellcontent = cell.cellcontent;
 
@@ -655,32 +651,41 @@ angular.module('myApp.controllers', []).
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
                 var current = new Date($rootScope.currentdate);
-                var request = false;
-                console.log($rootScope.searchRangeStart);
-                console.log($rootScope.searchRangeEnd);
-                console.log(searchEnd.getMonth());
-                console.log(current.getMonth());
+                var request1 = false;
+                var request2 = false;
+                
                 if (searchEnd.getMonth() <= current.getMonth()) {
                     console.log("change 1");
                     searchEnd.setMonth(current.getMonth() + 1);
                     searchEnd.setDate(1);
+                    $rootScope.startDate = $rootScope.endDate;
                     $rootScope.endDate = searchEnd;
-                    console.log($rootScope.endDate);
-                    request = true;
+                    request1 = true;
                 }
-                if (searchStart.getMonth() == current.getMonth() && searchStart.getDate() > 1) {
+                if (searchStart.getMonth() >= current.getMonth() && searchStart.getDate() > 1) {
                     console.log("change 2");
                     searchStart.setMonth(current.getMonth());
                     searchStart.setDate(1);
+                    $rootScope.endDate = $rootScope.startDate;
                     $rootScope.startDate = searchStart;
-                    request = true;
+                    request2 = true;
                 }
-                if (request == true) {
+                if(request1 == true && request2 == true){
+                    $rootScope[$rootScope.searchString] = [];
+                    $rootScope.startDate = searchStart;
+                    $rootScope.endDate = searchEnd;
+                    console.log("&&");
+                    console.log($rootScope.startDate);
+                    console.log($rootScope.endDate);
+                }
+                if (request1 == true || request2 == true) {
+                    console.log("||");
+                    console.log($rootScope.startDate);
+                    console.log($rootScope.endDate);
                     search();
+                }else{
+                    $location.path('/appointmentsCalendar');
                 }
-                console.log($rootScope.searchRangeStart);
-                console.log($rootScope.searchRangeEnd);
-                $location.path('/appointmentsCalendar');
             };
             $scope.style = function(value) {
                 var color = '#' + value;
@@ -716,22 +721,198 @@ angular.module('myApp.controllers', []).
             ;
 
             function setData(newDate, swipe) {
-                console.log($rootScope.endDate);
+                
+                setSearchDates($rootScope.startDate, $rootScope.endDate);
+                searchReservations();
+            }
+
+            var reservations = [];
+            function searchReservations() {
+                for (var i = 0; i < $rootScope.searchUnits.length; i++) {
+                    var depIds = [];
+                    var unitId = $rootScope.searchUnits[i].Header.unit_id;
+                    if ($rootScope.searchUnits[i].Header.perm === "1") {
+                        depIds.push($rootScope.searchUnits[i].Detail.Dep[0].dep_id);
+                    } else {
+                        for (var j = 0; j < $rootScope.searchUnits[i].Detail.Dep.length; j++) {
+                            depIds.push($rootScope.searchUnits[i].Detail.Dep[j].dep_id);
+                        }
+                    }
+                    for (var k = 0; k < depIds.length; k++) {
+                        hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url).
+                                success(function(data) {
+                                    var json = parseJson(data);
+                                    if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
+                                        if (json.ReservationsOnUnit.Header.StatusCode === "1") {
+                                            if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
+                                                reservations.push(json.ReservationsOnUnit.Detail.Reservation);
+                                            } else {
+                                                for (var l = 0; l < json.ReservationsOnUnit.Detail.Reservation.length; l++) {
+                                                    reservations.push(json.ReservationsOnUnit.Detail.Reservation[l]);
+                                                }
+                                            }
+
+                                        } else {
+                                            $scope.error = true;
+                                            $scope.errormessage = "Fout in de ingegeven gegevens.";
+                                        }
+                                    }
+
+                                }).
+                                error(function() {
+                                    alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                                });
+                    }
+                }
+                setResevations();
+            }
+
+            function setResevations() {
+                $timeout(function() {
+                    for (var i = 0; i < reservations.length; i++)
+                        $rootScope[$rootScope.searchString].push(reservations[i]);
+                    if ($rootScope[$rootScope.searchString].length === 0) {
+                        callModal();
+                    } else {
+                        $location.path('/appointmentsCalendar');
+                    }
+                }, 500);
+
+            }
+            function callModal() {
+                var modalInstance = $modal.open({
+                    templateUrl: 'searchModal',
+                    controller: ModalInstance,
+                });
+
+                modalInstance.result.then(function(answer) {
+                    if (answer === true) {
+                        var newStartDate = new Date($rootScope.startDate);
+                        newStartDate.setDate(newStartDate.getDate() + 14);
+                        var newEndDate = new Date($rootScope.endDate);
+                        newEndDate.setDate(newEndDate.getDate() + 14);
+                        $rootScope.startDate = formatDate(newStartDate);
+                        $rootScope.endDate = formatDate(newEndDate);
+                        setSearchDates($rootScope.startDate, $rootScope.endDate);
+                        searchReservations();
+                    }
+                }, function() {
+                    console.log("error")
+                });
+            }
+
+            function setSearchDates(startDate, endDate) {
+                if (angular.isUndefined($rootScope.searchRangeStart))
+                    $rootScope.searchRangeStart = startDate;
+                else {
+                    if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime()){ 
+                        $rootScope.searchRangeStart = startDate;
+                    }
+                }
+                if (angular.isUndefined($rootScope.searchRangeEnd))
+                    $rootScope.searchRangeEnd = endDate;
+                else {
+                    if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime()){
+                        $rootScope.searchRangeEnd = endDate;
+                    }
+                }
+
+            }
+
+            function ModalInstance($scope, $modalInstance) {
+                //Don't use $scope.continue, 'continue' is a reserved keyword
+                $scope.ok = function() {
+                    $scope.continuee = true;
+                    $modalInstance.close($scope.continuee);
+                };
+
+                $scope.cancel = function() {
+                    $scope.continuee = false;
+                    $modalInstance.dismiss('cancel');
+                };
+            }
+            ;
+        }).
+        controller('searchCtrl', function($scope, $location, $rootScope, $timeout, hospiviewFactory) {
+            $scope.next = function() {
+                calendarView();
+                console.log($rootScope[$rootScope.searchString]);
+                console.log($rootScope.searchRangeEnd);
+                $('#doctorCalendar').fullCalendar('next');
+            }
+            $scope.prev = function() {
+                calendarView();
+                $('#doctorCalendar').fullCalendar('prev');
+            }
+            
+            function calendarView() {
+                var searchStart = new Date($rootScope.searchRangeStart);
+                var searchEnd = new Date($rootScope.searchRangeEnd);
+                var calendarDate = $("#doctorCalendar").fullCalendar('getDate');
+                var request = false;
+                if (searchEnd.getMonth() <= calendarDate.getMonth()) {
+                    console.log("change 1");
+                    searchEnd.setMonth(calendarDate.getMonth() + 1);
+                    searchEnd.setDate(1);
+                    $rootScope.endDate = searchEnd;
+                    request = true;
+                }
+                if (searchStart.getMonth() >= calendarDate.getMonth() && searchStart.getDate() > 1) {
+                    console.log("change 2");
+                    searchStart.setMonth(calendarDate.getMonth());
+                    searchStart.setDate(1);
+                    $rootScope.startDate = searchStart;
+                    request = true;
+                }
+                if (request == true) {
+                    search();
+                }
+            };
+            $scope.style = function(value) {
+                var color = '#' + value;
+                return {"background-color": color};
+            };
+            $scope.logout = function() {
+                $rootScope.user = null;
+                $rootScope.type = null;
+                $location.path('/login');
+            };
+            function search(newDate, swipe) {
+                $rootScope.searchUnits = [];
+                $rootScope.searchString = 'all';
+
+                hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
+                        success(function(data) {
+                            var json = parseJson(data);
+                            if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                                var units = json.UnitsAndDeps.Detail.Unit;
+                                for (var i = 0; i < units.length; i++) {
+                                    $rootScope.searchUnits.push(units[i]);
+                                }
+                                setData(newDate, swipe);
+                            } else {
+                                $scope.error = true;
+                                $scope.errormessage = "Fout in de gegevens.";
+                            }
+                        }).
+                        error(function() {
+                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                        });
+            }
+            ;
+
+            function setData(newDate, swipe) {
                 if (swipe == 1) {
-                    console.log("swipe 1");
                     $rootScope.startDate = formatDate(newDate);
                     $rootScope.endDate = formatDate(new Date(newDate.setDate(newDate.getDate() + 14)));
                     $rootScope.currentdate = $rootScope.startDate;
                 } else {
                     if (swipe == 2) {
-                        console.log("swipe 2");
                         $rootScope.endDate = formatDate(newDate);
                         $rootScope.startDate = formatDate(new Date(newDate.setDate(newDate.getDate() - 14)));
                         $rootScope.currentdate = $rootScope.endDate;
                     }
                 }
-                console.log($rootScope.startDate);
-                console.log($rootScope.endDate);
                 setSearchDates($rootScope.startDate, $rootScope.endDate);
                 searchReservations();
             }
@@ -809,23 +990,21 @@ angular.module('myApp.controllers', []).
                     console.log("error")
                 });
             }
-
+            
             function setSearchDates(startDate, endDate) {
-                console.log(" ");
-                console.log("setSearchDates:");
-                console.log($rootScope.startDate);
-                console.log($rootScope.searchRangeStart);
                 if (angular.isUndefined($rootScope.searchRangeStart))
                     $rootScope.searchRangeStart = startDate;
                 else {
-                    if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime())
+                    if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime()){ 
                         $rootScope.searchRangeStart = startDate;
+                    }
                 }
                 if (angular.isUndefined($rootScope.searchRangeEnd))
                     $rootScope.searchRangeEnd = endDate;
                 else {
-                    if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime())
+                    if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime()){
                         $rootScope.searchRangeEnd = endDate;
+                    }
                 }
 
             }
@@ -898,7 +1077,6 @@ angular.module('myApp.controllers', []).
             };
             
             var eventss = $rootScope[$rootScope.searchString];
-            console.log(eventss);
             var j = 0;
             var count = 0;
             var countEvent = [];
