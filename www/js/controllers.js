@@ -173,7 +173,7 @@ angular.module('myApp.controllers', []).
                                 $scope.errormessage = "Fout in de gegevens.";
                             }
                         }).error(function() {
-                            $scope.loggingIn = false;
+                    $scope.loggingIn = false;
                     alert("De datums van feestdagen konden niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                 });
             }
@@ -222,7 +222,7 @@ angular.module('myApp.controllers', []).
                                         $scope.errormessage = "Fout in de gegevens.";
                                     }
                                 }).error(function() {
-                                    $scope.loggingIn = false;
+                            $scope.loggingIn = false;
                             alert("De lijst met afwezigheden kon niet worden opgehaald");
                         });
                     }
@@ -232,7 +232,7 @@ angular.module('myApp.controllers', []).
             function setData() {
                 var today = new Date();
                 $rootScope.startDate = formatDate(today);
-                $rootScope.currentdate = formatDate(today);                
+                $rootScope.currentdate = formatDate(today);
                 $rootScope.endDate = formatDate(new Date(today.setDate(today.getDate() + 14)));
                 setSearchDates($rootScope.startDate, $rootScope.endDate);
                 if (angular.isUndefined($rootScope[$rootScope.searchString]) || $rootScope[$rootScope.searchString] === 0) {
@@ -338,10 +338,6 @@ angular.module('myApp.controllers', []).
                     if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime())
                         $rootScope.searchRangeEnd = endDate;
                 }
-                console.log(startDate);
-                console.log(endDate);
-                console.log($rootScope.searchRangeStart);
-                console.log($rootScope.searchRangeEnd);
             }
 
             function ModalInstance($scope, $modalInstance) {
@@ -612,7 +608,6 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $timeout, hospiviewFactory) {
 
-            console.log($rootScope.endDate);
             $scope.eventPerDay;
             if ($rootScope.eventClick == true) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
@@ -661,13 +656,13 @@ angular.module('myApp.controllers', []).
                 $location.path('/doctor/appointmentDetail');
             };
             $scope.calendarView = function() {
-                
+
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
                 var current = new Date($rootScope.currentdate);
                 var request1 = false;
                 var request2 = false;
-                
+
                 if (searchEnd.getMonth() <= current.getMonth()) {
                     $rootScope.startDate = new Date(searchEnd);
                     searchEnd.setMonth(current.getMonth() + 1);
@@ -682,14 +677,14 @@ angular.module('myApp.controllers', []).
                     $rootScope.startDate = new Date(searchStart);
                     request2 = true;
                 }
-                if(request1 == true && request2 == true){
+                if (request1 == true && request2 == true) {
                     $rootScope[$rootScope.searchString] = [];
                     $rootScope.startDate = searchStart;
                     $rootScope.endDate = searchEnd;
                 }
                 if (request1 == true || request2 == true) {
                     search();
-                }else{
+                } else {
                     $location.path('/appointmentsCalendar');
                 }
             };
@@ -727,7 +722,7 @@ angular.module('myApp.controllers', []).
             ;
 
             function setData(newDate, swipe) {
-                
+
                 setSearchDates($rootScope.startDate, $rootScope.endDate);
                 searchReservations();
             }
@@ -811,14 +806,14 @@ angular.module('myApp.controllers', []).
                 if (angular.isUndefined($rootScope.searchRangeStart))
                     $rootScope.searchRangeStart = startDate;
                 else {
-                    if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime()){ 
+                    if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime()) {
                         $rootScope.searchRangeStart = startDate;
                     }
                 }
                 if (angular.isUndefined($rootScope.searchRangeEnd))
                     $rootScope.searchRangeEnd = endDate;
                 else {
-                    if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime()){
+                    if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime()) {
                         $rootScope.searchRangeEnd = endDate;
                     }
                 }
@@ -841,32 +836,46 @@ angular.module('myApp.controllers', []).
         }).
         controller('searchCtrl', function($scope, $location, $rootScope, $timeout, hospiviewFactory) {
             $scope.next = function() {
-                calendarView('next');    
+                calendarView('next');
             }
             $scope.prev = function() {
                 calendarView('prev');
             }
-            
+
             function calendarView(calendarBrows) {
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
                 var calendarDate = $("#doctorCalendar").fullCalendar('getDate');
                 var current = new Date(calendarDate);
+                var nextMonthCount = 0;
+                if(calendarBrows === 'prev')
+                    nextMonthCount--;
+                else
+                    nextMonthCount++;
+                
+                console.log(searchStart.getMonth());
+                console.log(current.getMonth() + nextMonthCount);
                 var request1 = false;
                 var request2 = false;
-                
-                if (searchEnd.getMonth() <= current.getMonth()+1) {
-                    console.log("change 1");
+
+                if (searchEnd.getMonth() <= current.getMonth() + nextMonthCount) {
+                    console.log("request 1");
+                    if(calendarBrows === 'prev')
+                        nextMonthCount--;
+                    else
+                        nextMonthCount++;
+                    console.log(current.getMonth() + nextMonthCount);
                     $rootScope.startDate = new Date(searchEnd);
-                    searchEnd.setMonth(current.getMonth() + 2);
+                    searchEnd.setMonth(current.getMonth() + nextMonthCount);
                     searchEnd.setDate(1);
                     $rootScope.endDate = new Date(searchEnd);
                     request1 = true;
                 }
-                if (searchStart.getMonth() >= current.getMonth()+1 && searchStart.getDate() > 1) {
-                    console.log("change 2");
+                if (searchStart.getMonth() >= current.getMonth() + nextMonthCount && searchStart.getDate() >= 1) {
+                    console.log("request 2");
+                    console.log(current.getMonth() + nextMonthCount);
                     $rootScope.endDate = new Date(searchStart);
-                    searchStart.setMonth(current.getMonth()+1);
+                    searchStart.setMonth(current.getMonth() + nextMonthCount);
                     searchStart.setDate(1);
                     $rootScope.startDate = new Date(searchStart);
                     request2 = true;
@@ -875,10 +884,11 @@ angular.module('myApp.controllers', []).
                 console.log($rootScope.endDate);
                 if (request1 == true || request2 == true) {
                     search(calendarBrows);
-                }else{
+                } else {
                     $('#doctorCalendar').fullCalendar(calendarBrows);
                 }
-            };
+            }
+            ;
             function search(calendarBrows) {
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = 'all';
@@ -910,6 +920,8 @@ angular.module('myApp.controllers', []).
 
             var reservations = [];
             function searchReservations(calendarBrows) {
+                console.log($rootScope.startDate);
+                console.log($rootScope.endDate);
                 for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                     var depIds = [];
                     var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -924,6 +936,7 @@ angular.module('myApp.controllers', []).
                         hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url).
                                 success(function(data) {
                                     var json = parseJson(data);
+
                                     if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
                                         if (json.ReservationsOnUnit.Header.StatusCode === "1") {
                                             if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
@@ -946,17 +959,67 @@ angular.module('myApp.controllers', []).
                                 });
                     }
                 }
+
                 setResevations(calendarBrows);
             }
 
             function setResevations(calendarBrows) {
                 $timeout(function() {
-                    for (var i = 0; i < reservations.length; i++)
+                    for (var i = 0; i < reservations.length; i++) {
                         $rootScope[$rootScope.searchString].push(reservations[i]);
+                        var start = new Date($rootScope.searchRangeStart);
+                        var end = new Date($rootScope.searchRangeEnd);
+                        var current = new Date($rootScope.currentdate)
+                        start.setHours(0, 0, 0);
+                        end.setHours(0, 0, 0);
+                        var eventss = $rootScope[$rootScope.searchString];
+                        var j = 0;
+                        var count = 0;
+                        var countEvent = [];
+                        var eventsEdit = [];
+                        while (start.getTime() !== end.getTime()) {
+                            for (var i = 0; i < eventss.length; i++) {
+                                eventsEdit.push(new Date(eventss[i].the_date));
+                                eventsEdit[j].setHours(0, 0, 0);
+                                if (start.getTime() === eventsEdit[j].getTime()) {
+                                    count = count + 1;
+                                }
+                                j = j + 1;
+                            }
+                            if (count != 0) {
+                                count = count + "";
+                                var endTest = new Date(start.getFullYear(), start.getMonth(), start.getDate(), start.getHours() + 1);
+                                countEvent.push({title: count, start: start.toUTCString(), end: endTest.toUTCString(), allDay: true});
+                                count = 0;
+                            }
+                            start.setDate(start.getDate() + 1);
+                        }
+
+                        var absentDays = $rootScope.absentDays;
+                        if (!angular.isUndefined(absentDays.length))
+                            for (var i = 0; i < absentDays.length; i++) {
+                                for (var j = 0; j < absentDays[i].length; j++) {
+                                    var absent_date = new Date(absentDays[i][j].the_date);
+                                    var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
+                                    countEvent.push({title: absentDays[i][j].holidaymsg, start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
+                                }
+                            }
+
+                        var holidays = $rootScope.publicHolidays;
+                        if (!angular.isUndefined(holidays.length))
+                            for (var i = 0; i < holidays.length; i++) {
+                                var holiday_date = new Date(holidays[i].the_date);
+                                var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
+                                countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
+                            }
+                        $('#doctorCalendar').fullCalendar('removeEvents').fullCalendar('removeEventSources');
+                        $('#doctorCalendar').fullCalendar( 'addEventSource', countEvent);
+                        $('#doctorCalendar').fullCalendar('refetchEvents');
+                    }
                     if ($rootScope[$rootScope.searchString].length === 0) {
                         callModal(calendarBrows);
                     } else {
-                         $('#doctorCalendar').fullCalendar(calendarBrows);
+                        $('#doctorCalendar').fullCalendar(calendarBrows);
                     }
                 }, 1000);
 
@@ -987,14 +1050,14 @@ angular.module('myApp.controllers', []).
                 if (angular.isUndefined($rootScope.searchRangeStart))
                     $rootScope.searchRangeStart = startDate;
                 else {
-                    if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime()){ 
+                    if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime()) {
                         $rootScope.searchRangeStart = startDate;
                     }
                 }
                 if (angular.isUndefined($rootScope.searchRangeEnd))
                     $rootScope.searchRangeEnd = endDate;
                 else {
-                    if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime()){
+                    if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime()) {
                         $rootScope.searchRangeEnd = endDate;
                     }
                 }
@@ -1067,7 +1130,7 @@ angular.module('myApp.controllers', []).
                     }
                 }
             };
-            
+
             var eventss = $rootScope[$rootScope.searchString];
             var j = 0;
             var count = 0;
@@ -1090,18 +1153,17 @@ angular.module('myApp.controllers', []).
                 }
                 start.setDate(start.getDate() + 1);
             }
-            
-            console.log("Afwezigheidsdagen " + $rootScope.absentDays.length);
+
             var absentDays = $rootScope.absentDays;
-            if(!angular.isUndefined(absentDays.length))
-                for(var i=0; i<absentDays.length; i++){
-                    for(var j=0; j<absentDays[i].length; j++){
+            if (!angular.isUndefined(absentDays.length))
+                for (var i = 0; i < absentDays.length; i++) {
+                    for (var j = 0; j < absentDays[i].length; j++) {
                         var absent_date = new Date(absentDays[i][j].the_date);
                         var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
-                        countEvent.push({title: absentDays[i][j].holidaymsg, start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent" ,color: "#5F615D"});
+                        countEvent.push({title: absentDays[i][j].holidaymsg, start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
                     }
                 }
-            
+
             var holidays = $rootScope.publicHolidays;
             if (!angular.isUndefined(holidays.length))
                 for (var i = 0; i < holidays.length; i++) {
@@ -1109,7 +1171,7 @@ angular.module('myApp.controllers', []).
                     var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
                     countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
                 }
-            
+
             $scope.eventSources = [countEvent];
 
             $scope.next = function() {
