@@ -167,7 +167,7 @@ from {-webkit-transform: rotate(0deg);}
 to {-webkit-transform: rotate(360deg);}
 }
 
-#loginButton [class*="glyphicon-"] {
+.has-spinner .glyphicon-refresh {
     -webkit-animation: spinning 1s linear infinite;
     animation: spinning 1s linear infinite;
 }
