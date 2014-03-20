@@ -102,11 +102,7 @@ angular.module('myApp.controllers', []).
              * of the password field.
              */
             $scope.showpassword = function() {
-                if ($scope.showPasswordBoolean === true) {
-                    $scope.showPasswordBoolean = false;
-                } else {
-                    $scope.showPasswordBoolean = true;
-                }
+                $scope.showPasswordBoolean = !$scope.showPasswordBoolean;
             };
 
             /**
@@ -668,7 +664,6 @@ angular.module('myApp.controllers', []).
                 $location.path('/doctor/appointmentDetail');
             };
             $scope.calendarView = function() {
-                alert($rootScope.absentDays.length);
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
                 var current = new Date($rootScope.currentdate);
@@ -913,12 +908,31 @@ angular.module('myApp.controllers', []).
                     }
                 }
             };
+            
             var eventss = $rootScope[$rootScope.searchString];
             console.log(eventss);
             var j = 0;
             var count = 0;
             var countEvent = [];
             var eventsEdit = [];
+            
+//            console.log("Afwezigheidsdagen " + $rootScope.absentDays.length);
+//            var absentDays = $rootScope.absentDays;
+//            if(!angular.isUndefined(absentDays.length))
+//                for(var i=0; i<absentDays.length; i++){
+//                    var absent_date = new Date(absentDays[i].the_date);
+//                    var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
+//                    countEvent.push({title: absentDays[i].holidaymsg, start: absent_date.toUTCString(), end: absent_date_end, allDay: true});
+//                }
+            
+            var holidays = $rootScope.publicHolidays;
+            if (!angular.isUndefined(holidays.length))
+                for (var i = 0; i < holidays.length; i++) {
+                    var holiday_date = new Date(holidays[i].the_date);
+                    var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
+                    countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
+                }
+            
             while (start.getTime() !== end.getTime()) {
                 for (var i = 0; i < eventss.length; i++) {
                     eventsEdit.push(new Date(eventss[i].the_date));
@@ -936,15 +950,7 @@ angular.module('myApp.controllers', []).
                 }
                 start.setDate(start.getDate() + 1);
             }
-
-            var holidays = $rootScope.publicHolidays;
-            if (!angular.isUndefined(holidays.length))
-                for (var i = 0; i < holidays.length; i++) {
-                    var holiday_date = new Date(holidays[i].the_date);
-                    var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
-                    countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, color: '#ff0000', background: '#eeeeff', className:'holiday'});
-                }
-
+            
             $scope.eventSources = [countEvent];
 
             $scope.next = function() {
