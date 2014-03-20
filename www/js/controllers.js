@@ -321,7 +321,7 @@ angular.module('myApp.controllers', []).
                         searchReservations();
                     }
                 }, function() {
-                    console.log("error")
+                    console.log("error");
                 });
             }
 
@@ -586,7 +586,7 @@ angular.module('myApp.controllers', []).
                         searchReservations();
                     }
                 }, function() {
-                    console.log("error")
+                    console.log("error");
                 });
             }
             ;
@@ -608,7 +608,6 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $timeout, hospiviewFactory) {
             $scope.loadingCalendar=false;
-            console.log($rootScope.endDate);
             $scope.eventPerDay;
             if ($rootScope.eventClick == true) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
@@ -802,7 +801,7 @@ angular.module('myApp.controllers', []).
                         searchReservations();
                     }
                 }, function() {
-                    console.log("error")
+                    console.log("error");
                 });
             }
 
@@ -857,8 +856,6 @@ angular.module('myApp.controllers', []).
                 else
                     nextMonthCount++;
                 
-                console.log(searchStart.getMonth());
-                console.log(current.getMonth() + nextMonthCount);
                 var request1 = false;
                 var request2 = false;
 
@@ -868,24 +865,21 @@ angular.module('myApp.controllers', []).
                         nextMonthCount--;
                     else
                         nextMonthCount++;
-                    console.log(current.getMonth() + nextMonthCount);
-                    $rootScope.startDate = new Date(searchEnd);
+                    $rootScope.startDate = formatDate(new Date(searchEnd));
                     searchEnd.setMonth(current.getMonth() + nextMonthCount);
                     searchEnd.setDate(1);
-                    $rootScope.endDate = new Date(searchEnd);
+                    $rootScope.endDate = formatDate(new Date(searchEnd));
                     request1 = true;
                 }
-                if (searchStart.getMonth() >= current.getMonth() + nextMonthCount && searchStart.getDate() >= 1) {
+                if (searchStart.getMonth() > current.getMonth() + nextMonthCount && searchStart.getDate() >= 1) {
                     console.log("request 2");
-                    console.log(current.getMonth() + nextMonthCount);
-                    $rootScope.endDate = new Date(searchStart);
+                    console.log(current.getMonth());
+                    $rootScope.endDate = formatDate(new Date(searchStart));
                     searchStart.setMonth(current.getMonth() + nextMonthCount);
                     searchStart.setDate(1);
-                    $rootScope.startDate = new Date(searchStart);
+                    $rootScope.startDate = formatDate(new Date(searchStart));
                     request2 = true;
                 }
-                console.log($rootScope.startDate);
-                console.log($rootScope.endDate);
                 if (request1 == true || request2 == true) {
                     search(calendarBrows);
                 } else {
@@ -896,7 +890,6 @@ angular.module('myApp.controllers', []).
             function search(calendarBrows) {
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = 'all';
-
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
                         success(function(data) {
                             var json = parseJson(data);
@@ -924,8 +917,7 @@ angular.module('myApp.controllers', []).
 
             var reservations = [];
             function searchReservations(calendarBrows) {
-                console.log($rootScope.startDate);
-                console.log($rootScope.endDate);
+                reservations = [];
                 for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                     var depIds = [];
                     var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -940,7 +932,6 @@ angular.module('myApp.controllers', []).
                         hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url).
                                 success(function(data) {
                                     var json = parseJson(data);
-
                                     if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
                                         if (json.ReservationsOnUnit.Header.StatusCode === "1") {
                                             if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
@@ -971,9 +962,12 @@ angular.module('myApp.controllers', []).
                 $timeout(function() {
                     for (var i = 0; i < reservations.length; i++) {
                         $rootScope[$rootScope.searchString].push(reservations[i]);
+                    }
+                    if ($rootScope[$rootScope.searchString].length === 0) {
+                        callModal(calendarBrows);
+                    } else {
                         var start = new Date($rootScope.searchRangeStart);
                         var end = new Date($rootScope.searchRangeEnd);
-                        var current = new Date($rootScope.currentdate)
                         start.setHours(0, 0, 0);
                         end.setHours(0, 0, 0);
                         var eventss = $rootScope[$rootScope.searchString];
@@ -1016,13 +1010,9 @@ angular.module('myApp.controllers', []).
                                 var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
                                 countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
                             }
+                        
                         $('#doctorCalendar').fullCalendar('removeEvents').fullCalendar('removeEventSources');
                         $('#doctorCalendar').fullCalendar( 'addEventSource', countEvent);
-                        $('#doctorCalendar').fullCalendar('refetchEvents');
-                    }
-                    if ($rootScope[$rootScope.searchString].length === 0) {
-                        callModal(calendarBrows);
-                    } else {
                         $('#doctorCalendar').fullCalendar(calendarBrows);
                     }
                 }, 1000);
