@@ -148,7 +148,6 @@ angular.module('myApp.controllers', []).
                                 /*$location.path('/mainmenu');*/
                                 loadHolidays();
                                 search();
-                                setData();
                             } else {
                                 $scope.error = true;
                                 $scope.errormessage = "Fout in de ingevoerde login gegevens.";
@@ -159,71 +158,75 @@ angular.module('myApp.controllers', []).
                             alert("Data kon niet worden opgehaald, probeer later opnieuw.");
                         });
             };
-            
-            function loadHolidays(){
+
+            function loadHolidays() {
                 $scope.year = new Date().getFullYear().toString();
                 hospiviewFactory.getPublicHolidays('1', $scope.year, '00', $scope.server.hosp_url).
-                    success(function(data){
-                        var json = parseJson(data);
-                        if(json.PublicHolidays.Header.StatusCode == 1){
-                            if(!angular.isUndefined(json.PublicHolidays.Detail)){
-                                $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
+                        success(function(data) {
+                            var json = parseJson(data);
+                            if (json.PublicHolidays.Header.StatusCode == 1) {
+                                if (!angular.isUndefined(json.PublicHolidays.Detail)) {
+                                    $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
+                                }
+                            } else {
+                                $scope.error = true;
+                                $scope.errormessage = "Fout in de gegevens.";
                             }
-                        }else{
-                            $scope.error = true;
-                            $scope.errormessage = "Fout in de gegevens.";
-                        }
-                    }).error(function(){
-                        alert("De datums van feestdagen konden niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                    });
+                        }).error(function() {
+                    alert("De datums van feestdagen konden niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                });
             }
-            
+
             function search() {
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = 'all';
                 $rootScope.absentDays = [];
-                
+
+                console.log("search");
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
-                    success(function(data) {
-                        var json = parseJson(data);
-                        if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                            var units = json.UnitsAndDeps.Detail.Unit;
-                            for (var i = 0; i < units.length; i++) {
-                                $rootScope.searchUnits.push(units[i]);
+                        success(function(data) {
+                            var json = parseJson(data);
+                            console.log("search request");
+                            if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                                var units = json.UnitsAndDeps.Detail.Unit;
+                                for (var i = 0; i < units.length; i++) {
+                                    $rootScope.searchUnits.push(units[i]);
+                                }
+                                console.log($rootScope.searchUnits);
+                                loadAbsentDays();
+                                setData();
+                            } else {
+                                $scope.error = true;
+                                $scope.errormessage = "Fout in de gegevens.";
                             }
-                            loadAbsentDays();
-                        } else {
-                            $scope.error = true;
-                            $scope.errormessage = "Fout in de gegevens.";
-                        }
-                    }).
-                    error(function() {
-                        alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                    });
+                        }).
+                        error(function() {
+                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                        });
             }
             ;
-            
-            function loadAbsentDays(){
-                if(!angular.isUndefined($rootScope.searchUnits.length))
-                for(var i=0; i<$rootScope.searchUnits.length; i++){
-                hospiviewFactory.getUnitAbsentDays($rootScope.currentServer.uuid, $scope.year, '00', $rootScope.searchUnits[i].Header.unit_id, $rootScope.currentServer.hosp_url).
-                    success(function (data){
-                        var json = parseJson(data);
-                        if(json.UnitAbsentdays.Header.StatusCode == 1){
-                            if(!angular.isUndefined(json.UnitAbsentDays)){
-                                $rootScope.absentDays.push(json.UnitAbsentdays.Detail.AbsentDay);
-                            }
-                        }else{
-                            $scope.error = true;
-                            $scope.errormessage = "Fout in de gegevens.";
-                        }
-                    }).error(function (){
-                        alert("De lijst met afwezigheden kon niet worden opgehaald");
-                    });
-                }
-              
+
+            function loadAbsentDays() {
+                if (!angular.isUndefined($rootScope.searchUnits.length))
+                    for (var i = 0; i < $rootScope.searchUnits.length; i++) {
+                        hospiviewFactory.getUnitAbsentDays($rootScope.currentServer.uuid, $scope.year, '00', $rootScope.searchUnits[i].Header.unit_id, $rootScope.currentServer.hosp_url).
+                                success(function(data) {
+                                    var json = parseJson(data);
+                                    if (json.UnitAbsentdays.Header.StatusCode == 1) {
+                                        if (!angular.isUndefined(json.UnitAbsentDays)) {
+                                            $rootScope.absentDays.push(json.UnitAbsentdays.Detail.AbsentDay);
+                                        }
+                                    } else {
+                                        $scope.error = true;
+                                        $scope.errormessage = "Fout in de gegevens.";
+                                    }
+                                }).error(function() {
+                            alert("De lijst met afwezigheden kon niet worden opgehaald");
+                        });
+                    }
+
             }
-            
+
             function setData() {
                 var today = new Date();
                 $rootScope.startDate = formatDate(today);
@@ -244,6 +247,11 @@ angular.module('myApp.controllers', []).
 
             var reservations = [];
             function searchReservations() {
+                console.log($rootScope.currentServer.uuid)
+                console.log($rootScope.searchUnits);
+                console.log($rootScope.startDate);
+                console.log($rootScope.endDate);
+                console.log($rootScope.currentServer.hosp_url);
                 for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                     var depIds = [];
                     var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -273,7 +281,7 @@ angular.module('myApp.controllers', []).
                                             $scope.errormessage = "Fout in de ingegeven gegevens.";
                                         }
                                     }
-                                
+
 
                                 }).
                                 error(function() {
@@ -281,7 +289,7 @@ angular.module('myApp.controllers', []).
                                 });
                     }
                 }
-            setReservations();
+                setReservations();
             }
 
             function setReservations() {
@@ -628,7 +636,7 @@ angular.module('myApp.controllers', []).
             }
 
             $scope.reservations = $rootScope[$rootScope.searchString];
-            
+
             $scope.showDate = formatShowDate(lowestDate);
             var cell = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.cellcontent = cell.cellcontent;
@@ -661,6 +669,34 @@ angular.module('myApp.controllers', []).
             };
             $scope.calendarView = function() {
                 alert($rootScope.absentDays.length);
+                var searchStart = new Date($rootScope.searchRangeStart);
+                var searchEnd = new Date($rootScope.searchRangeEnd);
+                var current = new Date($rootScope.currentdate);
+                var request = false;
+                console.log($rootScope.searchRangeStart);
+                console.log($rootScope.searchRangeEnd);
+                console.log(searchEnd.getMonth());
+                console.log(current.getMonth());
+                if (searchEnd.getMonth() <= current.getMonth()) {
+                    console.log("change 1");
+                    searchEnd.setMonth(current.getMonth() + 1);
+                    searchEnd.setDate(1);
+                    $rootScope.endDate = searchEnd;
+                    console.log($rootScope.endDate);
+                    request = true;
+                }
+                if (searchStart.getMonth() == current.getMonth() && searchStart.getDate() > 1) {
+                    console.log("change 2");
+                    searchStart.setMonth(current.getMonth());
+                    searchStart.setDate(1);
+                    $rootScope.startDate = searchStart;
+                    request = true;
+                }
+                if (request == true) {
+                    search();
+                }
+                console.log($rootScope.searchRangeStart);
+                console.log($rootScope.searchRangeEnd);
                 $location.path('/appointmentsCalendar');
             };
             $scope.style = function(value) {
@@ -697,14 +733,19 @@ angular.module('myApp.controllers', []).
             ;
 
             function setData(newDate, swipe) {
+                console.log($rootScope.endDate);
                 if (swipe == 1) {
+                    console.log("swipe 1");
                     $rootScope.startDate = formatDate(newDate);
                     $rootScope.endDate = formatDate(new Date(newDate.setDate(newDate.getDate() + 14)));
                     $rootScope.currentdate = $rootScope.startDate;
                 } else {
-                    $rootScope.endDate = formatDate(newDate);
-                    $rootScope.startDate = formatDate(new Date(newDate.setDate(newDate.getDate() - 14)));
-                    $rootScope.currentdate = $rootScope.endDate;
+                    if (swipe == 2) {
+                        console.log("swipe 2");
+                        $rootScope.endDate = formatDate(newDate);
+                        $rootScope.startDate = formatDate(new Date(newDate.setDate(newDate.getDate() - 14)));
+                        $rootScope.currentdate = $rootScope.endDate;
+                    }
                 }
                 console.log($rootScope.startDate);
                 console.log($rootScope.endDate);
@@ -787,6 +828,10 @@ angular.module('myApp.controllers', []).
             }
 
             function setSearchDates(startDate, endDate) {
+                console.log(" ");
+                console.log("setSearchDates:");
+                console.log($rootScope.startDate);
+                console.log($rootScope.searchRangeStart);
                 if (angular.isUndefined($rootScope.searchRangeStart))
                     $rootScope.searchRangeStart = startDate;
                 else {
@@ -829,9 +874,6 @@ angular.module('myApp.controllers', []).
             var current = new Date($rootScope.currentdate)
             start.setHours(0, 0, 0);
             end.setHours(0, 0, 0);
-            var gotoDate = new Date($rootScope.currentdate);
-            /*gotoDate.setMonth(gotoDate.getMonth() - 1);*/
-            gotoDate = gotoDate.toUTCString();
 
             $scope.back = function() {
                 $location.path('/doctor/appointmentsView');
@@ -900,7 +942,7 @@ angular.module('myApp.controllers', []).
                 for (var i = 0; i < holidays.length; i++) {
                     var holiday_date = new Date(holidays[i].the_date);
                     var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
-                    countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, color: '#ff0000', background: '#eeeeff'});
+                    countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, color: '#ff0000', background: '#eeeeff', className:'holiday'});
                 }
 
             $scope.eventSources = [countEvent];

@@ -12,7 +12,9 @@
             <p>Selecteer het ziekenhuis waarmee u connectie wil maken: </p>
             <div class="input-group">
                 <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers" ng-change="serverSelected = true;
-                        accountRadio = null"></select>
+                    accountRadio = null">
+                    <option value="">- Klik hier om te selecteren -</option>
+                </select>
                 <span class="input-group-addon btn" ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span></span>
             </div>      
         </div>
