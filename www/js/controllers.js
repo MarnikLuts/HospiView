@@ -264,7 +264,6 @@ angular.module('myApp.controllers', []).
                         }
                     }
                     for (var k = 0; k < depIds.length; k++) {
-                        console.log('request');
                         promises.push(hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url));
                     }
                     
@@ -300,7 +299,6 @@ angular.module('myApp.controllers', []).
                 }
                 $q.all(promises).then( function(responses){
                         for(var l=0; l<promises.length; l++){
-                            console.log('response'+l);
                             var json = parseJson(responses[l].data);
                             if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
                                 if (json.ReservationsOnUnit.Header.StatusCode === "1") {
@@ -319,7 +317,6 @@ angular.module('myApp.controllers', []).
                                 }
                             }
                         }
-                        console.log('all done');
                         setReservations();
                     }, function(error){
                         alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
@@ -328,7 +325,6 @@ angular.module('myApp.controllers', []).
     
 
             function setReservations() {
-                console.log('reservations');
                     $rootScope[$rootScope.searchString] = reservations;
                     
                     if ($rootScope[$rootScope.searchString].length === 0) {
@@ -777,7 +773,6 @@ angular.module('myApp.controllers', []).
                         }
                     }
                     for (var k = 0; k < depIds.length; k++) {
-                        console.log('request');
                         promises.push(hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url));
                     }
 //                    for (var k = 0; k < depIds.length; k++) {
@@ -811,7 +806,6 @@ angular.module('myApp.controllers', []).
                 
                 $q.all(promises).then( function(responses){
                         for(var l=0; l<promises.length; l++){
-                            console.log('response'+l);
                             var json = parseJson(responses[l].data);
                             if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
                                 if (json.ReservationsOnUnit.Header.StatusCode === "1") {
@@ -830,7 +824,6 @@ angular.module('myApp.controllers', []).
                                 }
                             }
                         }
-                        console.log('all done');
                         setReservations();
                     }, function(error){
                         alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
@@ -950,7 +943,7 @@ angular.module('myApp.controllers', []).
             }
             ;
             function search(calendarBrows) {
-                console.log('hey');
+               $scope.loadingMonth=true;
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = 'all';
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
@@ -1025,7 +1018,6 @@ angular.module('myApp.controllers', []).
                 }
                 $q.all(promises).then( function(responses){
                         for(var l=0; l<promises.length; l++){
-                            console.log('response'+l);
                             var json = parseJson(responses[l].data);
                             if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
                                 if (json.ReservationsOnUnit.Header.StatusCode === "1") {
@@ -1044,8 +1036,6 @@ angular.module('myApp.controllers', []).
                                 }
                             }
                         }
-                        console.log('all done');
-                        console.log(reservations);
                         setReservations(calendarBrows);
                     }, function(error){
                         alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
