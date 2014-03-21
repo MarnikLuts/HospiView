@@ -5,7 +5,7 @@
     </button>
     <h1>Afspraken</h1>
 </div>
-<div class="height80Percent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
+<div class="height60Percent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
     <div class="col-md-12">
         <div class="dateAppointmentsView">
             <h4>{{showDate}}</h4>
@@ -64,4 +64,7 @@
             <div class="alert alert-info" ng-hide="filteredReservations.length"><span class="glyphicon glyphicon-info-sign"></span>Geen afspraken op deze dag.</div>
         </div>
     </div>
+</div>
+<div class="height10Percent col-md-12 form-group text-right">
+    <button type="submit" class="btn btn-default btn-settings" ng-click="settings()"><span class="glyphicon glyphicon-cog"></span> Instellingen</button>
 </div>

@@ -686,6 +686,9 @@ angular.module('myApp.controllers', []).
                 $rootScope.currentdate = reservation.the_date;
                 $location.path('/doctor/appointmentDetail');
             };
+            $scope.settings = function() {
+                $location.path('/settings');
+            };
             $scope.calendarView = function() {
                 $scope.loadingCalendar = true;
                 var searchStart = new Date($rootScope.searchRangeStart);
@@ -773,6 +776,7 @@ angular.module('myApp.controllers', []).
             var reservations = [],
                     promises = [];
             function searchReservations() {
+                promises = [];
                 for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                     var depIds = [];
                     var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -1015,11 +1019,9 @@ angular.module('myApp.controllers', []).
                     promises = [];
 
             function searchReservations(calendarBrows) {
-                console.log($rootScope.startDate);
-                console.log($rootScope.endDate);
                 promises = [];
                 reservations = [];
-                
+
                 for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                     var depIds = [];
                     var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -1222,7 +1224,8 @@ angular.module('myApp.controllers', []).
         controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope) {
             var start = new Date($rootScope.searchRangeStart);
             var end = new Date($rootScope.searchRangeEnd);
-            var current = new Date($rootScope.currentdate)
+            var current = new Date($rootScope.currentdate);
+            var showWeekends = false;
             start.setHours(0, 0, 0);
             end.setHours(0, 0, 0);
 
@@ -1245,13 +1248,11 @@ angular.module('myApp.controllers', []).
                     monthNamesShort: ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sept', 'okt', 'nov', 'dec'],
                     dayNames: ['zondag', 'maandag', 'disndag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
                     dayNamesShort: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
+                    weekends: showWeekends,
                     header: {
                         left: '',
-                        center: '',
-                        right: 'title'
-                    },
-                    buttonText: {
-                        today: 'vandaag',
+                        center: 'title',
+                        right: ''
                     },
                     titleFormat: {
                         day: 'd/m'
@@ -1328,6 +1329,45 @@ angular.module('myApp.controllers', []).
             $scope.today = function() {
                 $('#doctorCalendar').fullCalendar('today');
             }
+            $scope.weekend = function() {
+                var weekendsConfig = {
+                    calendar: {
+                        height: 500,
+                        editable: false,
+                        defaultView: 'month',
+                        timeFormat: 'H:mm',
+                        month: current.getMonth(),
+                        year: current.getFullYear(),
+                        firstDay: 1,
+                        resources: $scope.appointmentsCalendar,
+                        weekNumbers: true,
+                        monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
+                        monthNamesShort: ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sept', 'okt', 'nov', 'dec'],
+                        dayNames: ['zondag', 'maandag', 'disndag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
+                        dayNamesShort: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
+                        weekends: showWeekends,
+                        header: {
+                            left: '',
+                            center: 'title',
+                            right: ''
+                        },
+                        titleFormat: {
+                            day: 'd/m'
+                        },
+                        eventClick: function(calEvent, jsEvent, view) {
+                            var getClickedDay = calEvent.start;
+                            $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
+                            $rootScope.eventClick = true;
+                            window.location.href = 'index.html#/doctor/appointmentsView';
+                        }
+                    }
+                };
+                $scope.uiConfig = weekendsConfig;
+                if(showWeekends == false)
+                    showWeekends = true;
+                else
+                    showWeekends = false;
+            };
 
             /*
              $scope.holidays = [
@@ -1343,6 +1383,41 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller('SettingsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
+
+            $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
+
+            /*for(var i = 0; i < $scope.servers.length; i++){}*/
+            $scope.servers = $scope.selectedUser.servers;
+            for(var i = 0; i < $scope.servers.length; i++){
+                if($scope.servers[i].id === $rootScope.currentServer.id)
+                    $scope.server = $scope.servers[i];
+            }
+
+            $scope.cellcontentchange = function(newCellcontent) {
+                $scope.selectedUser.cellcontent = newCellcontent;
+            };
+
+            $scope.save = function() {
+                for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
+                    if ($scope.selectedUser.servers[i].id == $scope.server.id)
+                    {
+                        $scope.selectedUser.servers[i] = $scope.server;
+                        localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
+                    }
+                }
+                $location.path('/doctor/appointmentsView');
+            };
+            $scope.addOrEditServer = function(action, server) {
+                if (action === "add" && $scope.selectedUser.servers.length === 3)
+                    alert("Er kunnen maximaal 3 ziekenhuizen worden opgeslaan.");
+                else {
+                    if (action === "edit")
+                        $rootScope.editServer = server;
+                }
+                $location.path('/selectserver/' + action);
+            };
+        }).
+        /*controller('SettingsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
 
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
 
@@ -1525,7 +1600,7 @@ angular.module('myApp.controllers', []).
                 }
                 $location.path('/selectserver/' + action);
             };
-        }).
+        }).*/
         controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory) {
 
             if ($routeParams.action == "new")
@@ -1608,7 +1683,7 @@ angular.module('myApp.controllers', []).
                                                 $rootScope.type = 0;
                                             else
                                                 $rootScope.type = 1;
-                                            $location.path('/mainmenu');
+                                            $location.path('/login');
                                         } else {
                                             $scope.error = true;
                                             $scope.errormessage = "Account is reeds op dit toestel toegevoegd.";
@@ -1616,9 +1691,9 @@ angular.module('myApp.controllers', []).
                                     } else {
                                         if ($routeParams.action == "add") {
                                             var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-                                            var addServer = {"id": connectServer[0].id,
-                                                "hosp_full_name": connectServer[0].hosp_full_name,
-                                                "hosp_url": connectServer[0].hosp_url,
+                                            var addServer = {"id": $scope.server.id,
+                                                "hosp_full_name": $scope.server.hosp_full_name,
+                                                "hosp_url": $scope.server.hosp_url,
                                                 "user_password": $scope.password,
                                                 "user_login": $scope.username,
                                                 "reg_no": json.Authentication.Detail.reg_no,
@@ -1632,11 +1707,12 @@ angular.module('myApp.controllers', []).
                                             localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
                                         } else {
                                             var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-                                            for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
+                                            console.log(selectedUser);
+                                            for (var i = 0; i < selectedUser.servers.length; i++) {
                                                 if (selectedUser.servers[i].id == $rootScope.editServer.id) {
-                                                    var editServer = {"id": connectServer[0].id,
-                                                        "hosp_full_name": connectServer[0].hosp_full_name,
-                                                        "hosp_url": connectServer[0].hosp_url,
+                                                    var editServer = {"id": $scope.server.id,
+                                                        "hosp_full_name": $scope.server.hosp_full_name,
+                                                        "hosp_url": $scope.server.hosp_url,
                                                         "user_password": $scope.password,
                                                         "user_login": $scope.username,
                                                         "reg_no": json.Authentication.Detail.reg_no,
@@ -1646,11 +1722,12 @@ angular.module('myApp.controllers', []).
                                                         "shortcut1": {"unit": "", "department": ""},
                                                         "shortcut2": {"unit": "", "department": ""},
                                                         "shortcut3": {"unit": "", "department": ""}};
-                                                    $scope.selectedUser.servers[i] = editServer;
+                                                    selectedUser.servers[i] = editServer;
                                                 }
                                             }
                                             localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
                                         }
+                                        $location.path('/login');
                                     }
 
                                 } else {
@@ -1665,17 +1742,6 @@ angular.module('myApp.controllers', []).
             };
             $scope.cancel = function() {
                 $location.path('/settings');
-            };
-            $scope.refresh = function() {
-                hospiviewFactory.getHospiViewServerList().
-                        success(function(data) {
-                            var json = parseJson(data);
-                            $scope.serversWithHeader = json;
-                            $scope.servers = $scope.serversWithHeader.HospiviewServerList.Detail.Server;
-                        }).
-                        error(function() {
-                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                        });
             };
             $scope.showpassword = function() {
                 if ($scope.showPasswordBoolean === true) {

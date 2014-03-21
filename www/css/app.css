@@ -72,8 +72,14 @@
 .height70Percent{
     height:70%;
 }
-height20Percent{
+.height60Percent{
+    height: 60%;
+}
+.height20Percent{
     height: 20%;
+}
+.height10Percent{
+    height: 10%;
 }
 .calendarWrapper{
     height:70%;
@@ -184,4 +190,11 @@ to {-webkit-transform: rotate(360deg);}
 .spinnerApointmentsCalendar{
     float: left;
     margin: 10px 10px;
+}
+
+#weekendBtn{
+    font-size: 10px;
+}
+#todayBtn{
+    font-size: 10px;
 }
