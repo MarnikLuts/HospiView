@@ -228,7 +228,7 @@ angular.module('myApp.controllers', []).
                     }
 
             }
-            
+
             function setData() {
                 var today = new Date();
                 $rootScope.startDate = formatDate(today);
@@ -607,7 +607,7 @@ angular.module('myApp.controllers', []).
 
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $timeout, hospiviewFactory) {
-            $scope.loadingCalendar=false;
+            $scope.loadingCalendar = false;
             $scope.eventPerDay;
             if ($rootScope.eventClick == true) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
@@ -656,7 +656,7 @@ angular.module('myApp.controllers', []).
                 $location.path('/doctor/appointmentDetail');
             };
             $scope.calendarView = function() {
-                $scope.loadingCalendar=true;
+                $scope.loadingCalendar = true;
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
                 var current = new Date($rootScope.currentdate);
@@ -716,7 +716,7 @@ angular.module('myApp.controllers', []).
                             }
                         }).
                         error(function() {
-                            $scope.loadingCalendar=false;
+                            $scope.loadingCalendar = false;
                             alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                         });
             }
@@ -755,15 +755,15 @@ angular.module('myApp.controllers', []).
                                             }
 
                                         } else {
-                                            $scope.loadingCalendar=false;
+                                            $scope.loadingCalendar = false;
                                             $scope.error = true;
                                             $scope.errormessage = "Fout in de ingegeven gegevens.";
                                         }
                                     }
-                                    
+
                                 }).
                                 error(function() {
-                                    $scope.loadingCalendar=false;
+                                    $scope.loadingCalendar = false;
                                     alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                                 });
                     }
@@ -846,22 +846,22 @@ angular.module('myApp.controllers', []).
             }
 
             function calendarView(calendarBrows) {
+                $scope.loadingMonth = false;
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
                 var calendarDate = $("#doctorCalendar").fullCalendar('getDate');
                 var current = new Date(calendarDate);
                 var nextMonthCount = 0;
-                if(calendarBrows === 'prev')
+                if (calendarBrows === 'prev')
                     nextMonthCount--;
                 else
                     nextMonthCount++;
-                
+
                 var request1 = false;
                 var request2 = false;
 
                 if (searchEnd.getMonth() <= current.getMonth() + nextMonthCount) {
-                    console.log("request 1");
-                    if(calendarBrows === 'prev')
+                    if (calendarBrows === 'prev')
                         nextMonthCount--;
                     else
                         nextMonthCount++;
@@ -872,8 +872,6 @@ angular.module('myApp.controllers', []).
                     request1 = true;
                 }
                 if (searchStart.getMonth() > current.getMonth() + nextMonthCount && searchStart.getDate() >= 1) {
-                    console.log("request 2");
-                    console.log(current.getMonth());
                     $rootScope.endDate = formatDate(new Date(searchStart));
                     searchStart.setMonth(current.getMonth() + nextMonthCount);
                     searchStart.setDate(1);
@@ -888,6 +886,7 @@ angular.module('myApp.controllers', []).
             }
             ;
             function search(calendarBrows) {
+                $scope.loadingMonth = true;
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = 'all';
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
@@ -993,16 +992,6 @@ angular.module('myApp.controllers', []).
                             start.setDate(start.getDate() + 1);
                         }
 
-                        var absentDays = $rootScope.absentDays;
-                        if (!angular.isUndefined(absentDays.length))
-                            for (var i = 0; i < absentDays.length; i++) {
-                                for (var j = 0; j < absentDays[i].length; j++) {
-                                    var absent_date = new Date(absentDays[i][j].the_date);
-                                    var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
-                                    countEvent.push({title: absentDays[i][j].holidaymsg, start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
-                                }
-                            }
-
                         var holidays = $rootScope.publicHolidays;
                         if (!angular.isUndefined(holidays.length))
                             for (var i = 0; i < holidays.length; i++) {
@@ -1010,14 +999,35 @@ angular.module('myApp.controllers', []).
                                 var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
                                 countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
                             }
-                        
+
+                        var absentDays = $rootScope.absentDays;
+                        if (!angular.isUndefined(absentDays.length))
+                            for (var i = 0; i < absentDays.length; i++) {
+                                for (var j = 0; j < absentDays[i].length; j++) {
+                                    if (!isHoliday(absentDays[i][j].the_date, holidays)) {
+                                        var absent_date = new Date(absentDays[i][j].the_date);
+                                        var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
+                                        countEvent.push({title: 'Verlof', start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
+                                    }
+                                }
+                            }
+
                         $('#doctorCalendar').fullCalendar('removeEvents').fullCalendar('removeEventSources');
-                        $('#doctorCalendar').fullCalendar( 'addEventSource', countEvent);
+                        $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
+                        $scope.loadingMonth = false;
                         $('#doctorCalendar').fullCalendar(calendarBrows);
                     }
                 }, 1000);
-
             }
+            function isHoliday(date, holidays) {
+                    if (!angular.isUndefined(holidays.length))
+                        for (var i = 0; i < holidays.length; i++) {
+                            if (date === holidays[i].the_date)
+                                return true;
+                        }
+                    return false;
+                }
+                
             function callModal(calendarBrows) {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
@@ -1036,7 +1046,7 @@ angular.module('myApp.controllers', []).
                         searchReservations(calendarBrows);
                     }
                 }, function() {
-                    console.log("error")
+                    console.log("error");
                 });
             }
 
@@ -1147,7 +1157,7 @@ angular.module('myApp.controllers', []).
                 }
                 start.setDate(start.getDate() + 1);
             }
-            
+
             var holidays = $rootScope.publicHolidays;
             if (!angular.isUndefined(holidays.length))
                 for (var i = 0; i < holidays.length; i++) {
@@ -1155,28 +1165,28 @@ angular.module('myApp.controllers', []).
                     var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
                     countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
                 }
-            
+
             var absentDays = $rootScope.absentDays;
-            if(!angular.isUndefined(absentDays.length))
-                for(var i=0; i<absentDays.length; i++){
-                    for(var j=0; j<absentDays[i].length; j++){
-                        if(!isHoliday(absentDays[i][j].the_date)){
+            if (!angular.isUndefined(absentDays.length))
+                for (var i = 0; i < absentDays.length; i++) {
+                    for (var j = 0; j < absentDays[i].length; j++) {
+                        if (!isHoliday(absentDays[i][j].the_date)) {
                             var absent_date = new Date(absentDays[i][j].the_date);
                             var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
-                            countEvent.push({title: 'Verlof', start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent" ,color: "#5F615D"});
+                            countEvent.push({title: 'Verlof', start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
                         }
                     }
                 }
-            
-            function isHoliday(date){
+
+            function isHoliday(date) {
                 if (!angular.isUndefined(holidays.length))
-                    for(var i=0; i<holidays.length; i++){
-                        if(date===holidays[i].the_date)
+                    for (var i = 0; i < holidays.length; i++) {
+                        if (date === holidays[i].the_date)
                             return true;
                     }
                 return false;
             }
-            
+
             $scope.eventSources = [countEvent];
 
             $scope.next = function() {

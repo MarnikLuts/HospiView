@@ -14,7 +14,7 @@
                     <button class="btn btn-default btn-lg" ng-click="prev()"><span class="glyphicon glyphicon-chevron-left"></span></button>
                     <button class="btn btn-default btn-lg" ng-click="next()"><span class="glyphicon glyphicon-chevron-right"></span></button>
                 </span>
-                <span class="spinnerApointmentsCalendar" ng-show="loadingMonth || true"><i class="glyphicon glyphicon-refresh"></i></span>
+                <span class="spinnerApointmentsCalendar" ng-show="loadingMonth"><i class="glyphicon glyphicon-refresh"></i></span>
             </span>  
         </div>
         <div id="doctorCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar" class="calendar" ng-model="eventSources" calendar="doctorCalendar"></div> 
