@@ -124,13 +124,17 @@
 .reservationHeight{
     max-height:20%;
 }
+.reservationSubInfo{
+}
 .reservationTitle{
     display: inline-block;
     font-size:15px;
     width: 50%;
 }
-
-.reservation{
+.reservationUnitDep{
+    display: inline-block;
+    font-size:11px;
+    width: 50%;
 }
 
 .reservationHour{

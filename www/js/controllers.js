@@ -180,7 +180,7 @@ angular.module('myApp.controllers', []).
 
             function search() {
                 $rootScope.searchUnits = [];
-                $rootScope.searchString = 'all';
+                $rootScope.searchString = $rootScope.user + 'all';
                 $rootScope.absentDays = [];
 
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
@@ -656,6 +656,7 @@ angular.module('myApp.controllers', []).
             }
 
             $scope.reservations = $rootScope[$rootScope.searchString];
+            console.log($scope.reservations);
 
             var cell = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.cellcontent = cell.cellcontent;
@@ -744,7 +745,7 @@ angular.module('myApp.controllers', []).
             };
             function search(newDate, swipe) {
                 $rootScope.searchUnits = [];
-                $rootScope.searchString = 'all';
+                $rootScope.searchString = $rootScope.user + 'all';
 
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
                         success(function(data) {
@@ -931,9 +932,6 @@ angular.module('myApp.controllers', []).
                 var request1 = false;
                 var request2 = false;
 
-                console.log(searchStart);
-                console.log(searchEnd);
-
                 if (calendarBrows === 'next') {
                     if (current.getMonth() == 11 && searchEnd.getFullYear() == current.getFullYear()) {
                         $rootScope.endDate = formatDate(new Date(searchEnd.getFullYear() + 1, 0, 1));
@@ -941,7 +939,6 @@ angular.module('myApp.controllers', []).
                         searchStart.setDate(1);
                         $rootScope.startDate = formatDate(new Date(searchStart));
                         request2 = true;
-                        console.log("nextyear");
                     }
                     else {
                         if (searchEnd.getMonth() <= current.getMonth() + nextMonthCount && searchEnd.getFullYear() == current.getFullYear()) {
@@ -954,7 +951,6 @@ angular.module('myApp.controllers', []).
                             searchEnd.setDate(1);
                             $rootScope.endDate = formatDate(new Date(searchEnd));
                             request1 = true;
-                            console.log("if1");
                         }
                     }
                 }
@@ -966,7 +962,6 @@ angular.module('myApp.controllers', []).
                         searchEnd.setDate(1);
                         $rootScope.endDate = formatDate(new Date(searchEnd));
                         request1 = true;
-                        console.log("prevyear");
                     }
                     else {
                         if (searchStart.getMonth() > current.getMonth() + nextMonthCount && searchStart.getFullYear() == current.getFullYear()) {
@@ -975,7 +970,6 @@ angular.module('myApp.controllers', []).
                             searchStart.setDate(1);
                             $rootScope.startDate = formatDate(new Date(searchStart));
                             request2 = true;
-                            console.log("if2");
                         }
                     }
                 }
@@ -989,7 +983,7 @@ angular.module('myApp.controllers', []).
             function search(calendarBrows) {
                 $scope.loadingMonth = true;
                 $rootScope.searchUnits = [];
-                $rootScope.searchString = 'all';
+                $rootScope.searchString = $rootScope.user + 'all';
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
                         success(function(data) {
                             var json = parseJson(data);
@@ -1082,7 +1076,6 @@ angular.module('myApp.controllers', []).
                             }
                         }
                     }
-                    console.log(reservations);
                     setReservations(calendarBrows);
                 }, function(error) {
                     alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
@@ -1656,12 +1649,18 @@ angular.module('myApp.controllers', []).
                                 var json = parseJson(data);
                                 var localStorageName = json.Authentication.Detail.user_name;
                                 if (json.Authentication.Header.StatusCode == 1) {
-                                    if ($routeParams.action == "new") {
+                                    if ($routeParams.action == "new" || $routeParams.action == "newLocalUser") {
                                         if (localStorage.getItem(localStorageName) === null) {
                                             $scope.error = false;
                                             $rootScope.user = localStorageName;
                                             $rootScope.currentServer = $scope.server;
-                                            addToLocalStorage("users", [{"username": localStorageName}]);
+                                            if($routeParams.action == "new")
+                                                addToLocalStorage("users", [{"username": localStorageName}]);
+                                            else{
+                                                var localUsers = JSON.parse(localStorage.getItem("users"));
+                                                localUsers.push({"username":localStorageName});
+                                                localStorage.setItem("users", JSON.stringify(localUsers));
+                                            }
                                             addToLocalStorage(localStorageName,
                                                     {"servers": [{"id": $rootScope.currentServer.id,
                                                                 "hosp_full_name": $rootScope.currentServer.hosp_full_name,
@@ -1683,6 +1682,8 @@ angular.module('myApp.controllers', []).
                                                 $rootScope.type = 0;
                                             else
                                                 $rootScope.type = 1;
+                                            $rootScope.user = null;
+                                            $rootScope.type = null;
                                             $location.path('/login');
                                         } else {
                                             $scope.error = true;
@@ -1707,7 +1708,6 @@ angular.module('myApp.controllers', []).
                                             localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
                                         } else {
                                             var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-                                            console.log(selectedUser);
                                             for (var i = 0; i < selectedUser.servers.length; i++) {
                                                 if (selectedUser.servers[i].id == $rootScope.editServer.id) {
                                                     var editServer = {"id": $scope.server.id,
@@ -1727,6 +1727,8 @@ angular.module('myApp.controllers', []).
                                             }
                                             localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
                                         }
+                                        $rootScope.user = null;
+                                        $rootScope.type = null;
                                         $location.path('/login');
                                     }
 

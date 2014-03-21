@@ -23,7 +23,7 @@
                 <div class="widthPercent">
                     <!--<div class="float-right"><a class="" ng-click="delete(reservation.id)"><span class="glyphicon glyphicon-remove-circle"></span></a></div>         
                     -->
-                    <div class="text-left reservation widthPercent">
+                    <div class="text-left widthPercent">
                         <span class="float-left reservationHour">
                             {{reservation.time_from}}
                         </span>
@@ -57,6 +57,20 @@
                         <span class="reservationTitle" ng-switch on="cellcontent">
                             <span ng-switch-when="patient">&nbsp {{reservation.name}}</span>
                             <span ng-switch-default>&nbsp {{reservation.title}}</span>
+                        </span>
+                    </div>
+                    <div class="text-left reservationSubInfo widthPercent">
+                        <span class="float-left reservationHour">
+                            &nbsp
+                        </span>
+                        <span class="float-left colorWrapper">
+                            &nbsp &nbsp
+                        </span>
+                        <span ng-switch on="reservation.the_comment">
+                            &nbsp
+                        </span>
+                        <span class="reservationUnitDep" ng-switch on="cellcontent">
+                            {{reservation.unit_name}} / {{reservation.dep_name}}
                         </span>
                     </div>
                 </div>

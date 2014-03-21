@@ -6,7 +6,7 @@
     <h1>Instellingen</h1>
 </div>
 <div>
-    <div class="form-group">
+    <div class="col-md-12 form-group">
         <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers">
         </select>
     </div>
@@ -42,6 +42,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-md-12">
+        <button type="button" class="btn btn-primary input-lg" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-user"></span> voeg applicatiegebruiker toe</button>
     </div>
     <!--<div class="col-md-12">
         <div class="well">
