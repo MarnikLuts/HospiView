@@ -886,9 +886,9 @@ angular.module('myApp.controllers', []).
             $scope.prev = function() {
                 calendarView('prev');
             }
-
+            $scope.loadingMonth=false;
+            
             function calendarView(calendarBrows) {
-                $scope.loadingMonth = false;
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
                 var calendarDate = $("#doctorCalendar").fullCalendar('getDate');
@@ -925,11 +925,11 @@ angular.module('myApp.controllers', []).
                 } else {
                     $('#doctorCalendar').fullCalendar(calendarBrows);
                 }
-                $scope.loadingMonth=false;
+                
             }
             ;
             function search(calendarBrows) {
-                $scope.loadingMonth = true;
+                $scope.loadingMonth=true;
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = 'all';
                 hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
@@ -1057,7 +1057,7 @@ angular.module('myApp.controllers', []).
 
                         $('#doctorCalendar').fullCalendar('removeEvents').fullCalendar('removeEventSources');
                         $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
-                        $scope.loadingMonth = false;
+                        $scope.loadingMonth=false;
                         $('#doctorCalendar').fullCalendar(calendarBrows);
                     }
                 }, 1000);
