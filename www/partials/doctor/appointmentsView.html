@@ -5,8 +5,8 @@
     </button>
     <h1>Afspraken</h1>
 </div>
-<div class="height80Percent widthPercent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
-    <div class="widthPercent height20Percent">
+<div class="height80Percent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
+    <div class="col-md-12">
         <div class="dateAppointmentsView">
             <h4>{{showDate}}</h4>
         </div>
@@ -17,7 +17,7 @@
             </button>
         </div>
     </div>
-    <div class="well widthPercent">
+    <div class="well col-md-12">
         <div class="btn-group-vertical list list_overflow_y_500 list-unstyled widthPercent heightPercent">
             <div class="btn btn-default btn-lg btn-group-justified widthPercent reservationHeight" ng-repeat="reservation in filteredReservations = (reservations| orderBy:'time_from' | filter:{the_date:date})" ng-click="details(reservation)" >
                 <div class="widthPercent">

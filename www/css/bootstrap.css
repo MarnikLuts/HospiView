@@ -2051,7 +2051,6 @@ select.select-xl {
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
-.btn:hover,
 .btn:focus {
   color: #333;
   text-decoration: none;
@@ -2078,7 +2077,6 @@ fieldset[disabled] .btn {
   background-color: #fff;
   border-color: #ccc;
 }
-.btn-default:hover,
 .btn-default:focus,
 .btn-default:active,
 .btn-default.active,
@@ -2095,9 +2093,6 @@ fieldset[disabled] .btn {
 .btn-default.disabled,
 .btn-default[disabled],
 fieldset[disabled] .btn-default,
-.btn-default.disabled:hover,
-.btn-default[disabled]:hover,
-fieldset[disabled] .btn-default:hover,
 .btn-default.disabled:focus,
 .btn-default[disabled]:focus,
 fieldset[disabled] .btn-default:focus,
@@ -2119,7 +2114,6 @@ fieldset[disabled] .btn-default.active {
   background-color: #428bca;
   border-color: #357ebd;
 }
-.btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active,
@@ -2136,9 +2130,6 @@ fieldset[disabled] .btn-default.active {
 .btn-primary.disabled,
 .btn-primary[disabled],
 fieldset[disabled] .btn-primary,
-.btn-primary.disabled:hover,
-.btn-primary[disabled]:hover,
-fieldset[disabled] .btn-primary:hover,
 .btn-primary.disabled:focus,
 .btn-primary[disabled]:focus,
 fieldset[disabled] .btn-primary:focus,
@@ -2160,7 +2151,6 @@ fieldset[disabled] .btn-primary.active {
   background-color: #5cb85c;
   border-color: #4cae4c;
 }
-.btn-success:hover,
 .btn-success:focus,
 .btn-success:active,
 .btn-success.active,
@@ -2177,9 +2167,6 @@ fieldset[disabled] .btn-primary.active {
 .btn-success.disabled,
 .btn-success[disabled],
 fieldset[disabled] .btn-success,
-.btn-success.disabled:hover,
-.btn-success[disabled]:hover,
-fieldset[disabled] .btn-success:hover,
 .btn-success.disabled:focus,
 .btn-success[disabled]:focus,
 fieldset[disabled] .btn-success:focus,
@@ -2201,7 +2188,6 @@ fieldset[disabled] .btn-success.active {
   background-color: #5bc0de;
   border-color: #46b8da;
 }
-.btn-info:hover,
 .btn-info:focus,
 .btn-info:active,
 .btn-info.active,
@@ -2218,9 +2204,6 @@ fieldset[disabled] .btn-success.active {
 .btn-info.disabled,
 .btn-info[disabled],
 fieldset[disabled] .btn-info,
-.btn-info.disabled:hover,
-.btn-info[disabled]:hover,
-fieldset[disabled] .btn-info:hover,
 .btn-info.disabled:focus,
 .btn-info[disabled]:focus,
 fieldset[disabled] .btn-info:focus,
@@ -2242,7 +2225,6 @@ fieldset[disabled] .btn-info.active {
   background-color: #f0ad4e;
   border-color: #eea236;
 }
-.btn-warning:hover,
 .btn-warning:focus,
 .btn-warning:active,
 .btn-warning.active,
@@ -2259,9 +2241,6 @@ fieldset[disabled] .btn-info.active {
 .btn-warning.disabled,
 .btn-warning[disabled],
 fieldset[disabled] .btn-warning,
-.btn-warning.disabled:hover,
-.btn-warning[disabled]:hover,
-fieldset[disabled] .btn-warning:hover,
 .btn-warning.disabled:focus,
 .btn-warning[disabled]:focus,
 fieldset[disabled] .btn-warning:focus,
@@ -2283,7 +2262,6 @@ fieldset[disabled] .btn-warning.active {
   background-color: #d9534f;
   border-color: #d43f3a;
 }
-.btn-danger:hover,
 .btn-danger:focus,
 .btn-danger:active,
 .btn-danger.active,
@@ -2300,9 +2278,6 @@ fieldset[disabled] .btn-warning.active {
 .btn-danger.disabled,
 .btn-danger[disabled],
 fieldset[disabled] .btn-danger,
-.btn-danger.disabled:hover,
-.btn-danger[disabled]:hover,
-fieldset[disabled] .btn-danger:hover,
 .btn-danger.disabled:focus,
 .btn-danger[disabled]:focus,
 fieldset[disabled] .btn-danger:focus,
@@ -2334,19 +2309,15 @@ fieldset[disabled] .btn-link {
           box-shadow: none;
 }
 .btn-link,
-.btn-link:hover,
 .btn-link:focus,
 .btn-link:active {
   border-color: transparent;
 }
-.btn-link:hover,
 .btn-link:focus {
   color: #2a6496;
   text-decoration: underline;
   background-color: transparent;
 }
-.btn-link[disabled]:hover,
-fieldset[disabled] .btn-link:hover,
 .btn-link[disabled]:focus,
 fieldset[disabled] .btn-link:focus {
   color: #999;
@@ -3236,8 +3207,6 @@ input[type="button"].btn-block {
   position: relative;
   float: left;
 }
-.btn-group > .btn:hover,
-.btn-group-vertical > .btn:hover,
 .btn-group > .btn:focus,
 .btn-group-vertical > .btn:focus,
 .btn-group > .btn:active,
@@ -3535,7 +3504,6 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .input-group-btn > .btn + .btn {
   margin-left: -1px;
 }
-.input-group-btn > .btn:hover,
 .input-group-btn > .btn:focus,
 .input-group-btn > .btn:active {
   z-index: 2;

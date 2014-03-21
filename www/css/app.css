@@ -173,13 +173,12 @@ to {-webkit-transform: rotate(360deg);}
 }
 .dateAppointmentsView{
     display: inline-block;
-    width:90%;
     margin-bottom:10px;
 }
 
 .calendarButtonAppointmentsView{
+    float: right;
     display: inline-block;
-    width: 5%;
 }
 
 .spinnerApointmentsCalendar{
