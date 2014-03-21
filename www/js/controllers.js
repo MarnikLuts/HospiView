@@ -307,8 +307,8 @@ angular.module('myApp.controllers', []).
                                     if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
                                         reservations.push(json.ReservationsOnUnit.Detail.Reservation);
                                     } else {
-                                        for (var l = 0; l < json.ReservationsOnUnit.Detail.Reservation.length; l++) {
-                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation[l]);
+                                        for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
+                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation[s]);
                                         }
                                     }
 
@@ -818,8 +818,8 @@ angular.module('myApp.controllers', []).
                                     if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
                                         reservations.push(json.ReservationsOnUnit.Detail.Reservation);
                                     } else {
-                                        for (var l = 0; l < json.ReservationsOnUnit.Detail.Reservation.length; l++) {
-                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation[l]);
+                                        for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
+                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation[s]);
                                         }
                                     }
 
@@ -1032,8 +1032,8 @@ angular.module('myApp.controllers', []).
                                     if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
                                         reservations.push(json.ReservationsOnUnit.Detail.Reservation);
                                     } else {
-                                        for (var l = 0; l < json.ReservationsOnUnit.Detail.Reservation.length; l++) {
-                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation[l]);
+                                        for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
+                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation[s]);
                                         }
                                     }
 
