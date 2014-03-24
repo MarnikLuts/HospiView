@@ -2,7 +2,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-        controller('LoginCtrl', function($scope, $location, $rootScope, $modal, hospiviewFactory, $q, dataFactory) {
+        controller('LoginCtrl', function($scope, $location, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
 
             /**
              * Check if the localStorage item "users" exists. If is doesn't,
@@ -124,6 +124,10 @@ angular.module('myApp.controllers', []).
              */
             $scope.login = function() {
                 $scope.loggingIn = true;
+                
+                languageFactory.initRemoteLanguageStrings($scope.server.hosp_url)
+                        .then(function(){console.log($rootScope.getLocalizedString(3, 'createAppointmentGreeting'));});
+                
                 hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
                         success(function(data) {
                             var json = parseJson(data);
