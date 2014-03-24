@@ -3,12 +3,10 @@
 /* Services */
 
 angular.module('myApp.services', []).
-        
         /**
          * Variable containing the base url.
          */
         constant('base_url', 'cfcs/webservices/reservations_service.cfc?').
-                
         /**
          * Factory containing methods for the different requests.
          * 
@@ -39,50 +37,52 @@ angular.module('myApp.services', []).
                 getPublicHolidays: function(Language_Id, year, month, server_url) {
                     return $http.post(server_url + base_url + "method=GetPublicHolidays&Language_Id=" + Language_Id + "&Year=" + year + "&Month=" + month);
                 },
-                getUnitAbsentDays: function(uuid, year, month, unit_id, server_url){
+                getUnitAbsentDays: function(uuid, year, month, unit_id, server_url) {
                     return $http.post(server_url + base_url + "method=GetUnitAbsentDays&UUID=" + uuid + "&Year=" + year + "&Month=" + month + "&Unit_Id=" + unit_id);
                 }
-                
+
             };
-        }).factory('dataFactory', function($rootScope, $q, hospiviewFactory){
+        }).
+        factory('dataFactory', function($rootScope, $q, hospiviewFactory) {
             return{
-                setHolidays: function(response){
+                setHolidays: function(response) {
                     var defer = $q.defer();
                     var json = parseJson(response.data);
                     if (json.PublicHolidays.Header.StatusCode == 1) {
                         if (!angular.isUndefined(json.PublicHolidays.Detail)) {
                             $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
+                            localStorage.setItem($rootScope.user + "PublicHolidays", JSON.stringify($rootScope.publicHolidays));
                             defer.resolve();
                         }
-                    }else{
+                    } else {
                         defer.reject('Fout in de gegevens');
                     }
                     return defer.promise;
                 },
-                setSearchUnits: function(response){
+                setSearchUnits: function(response) {
                     var defer = $q.defer();
                     var json = parseJson(response.data);
-                        if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                            var units = json.UnitsAndDeps.Detail.Unit;
-                            for (var i = 0; i < units.length; i++) {
-                                $rootScope.searchUnits.push(units[i]);
-                            }
-                            defer.resolve($rootScope.searchUnits);
-                        } else {
-                            defer.reject('Fout in de gegevens');
+                    if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                        var units = json.UnitsAndDeps.Detail.Unit;
+                        for (var i = 0; i < units.length; i++) {
+                            $rootScope.searchUnits.push(units[i]);
                         }
+                        defer.resolve($rootScope.searchUnits);
+                    } else {
+                        defer.reject('Fout in de gegevens');
+                    }
                     return defer.promise;
                 },
-                setAbsentDays: function(year){
+                setAbsentDays: function(year) {
                     var defer = $q.defer(),
-                        promises = [];
-                    
+                            promises = [];
+
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                         promises.push(hospiviewFactory.getUnitAbsentDays($rootScope.currentServer.uuid, year, '00', $rootScope.searchUnits[i].Header.unit_id, $rootScope.currentServer.hosp_url));
                     }
-                    
-                    $q.all(promises).then(function (responses){
-                        for(var j = 0;j<responses.length;j++){
+
+                    $q.all(promises).then(function(responses) {
+                        for (var j = 0; j < responses.length; j++) {
                             var json = parseJson(responses[j].data);
                             if (json.UnitAbsentdays.Header.StatusCode == 1) {
                                 if (!angular.isUndefined(json.UnitAbsentdays.Detail)) {
@@ -93,16 +93,17 @@ angular.module('myApp.services', []).
                                 defer.reject(json.UnitAbsentdays.Header.StatusTitle);
                             }
                         }
+                        localStorage.setItem($rootScope.user + "AbsentDays", JSON.stringify($rootScope.absentDays));
                         defer.resolve();
-                    }, function(error){
+                    }, function(error) {
                         defer.reject("De lijst met afwezigheden kon niet worden opgehaald");
                     });
                     return defer.promise;
                 },
-                searchReservations: function(){
+                searchReservations: function() {
                     var defer = $q.defer(),
-                        reservations = [],
-                        promises = [];
+                            reservations = [],
+                            promises = [];
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                         var depIds = [];
                         var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -142,19 +143,27 @@ angular.module('myApp.services', []).
                         defer.reject("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                     });
                     return defer.promise;
-                }, 
-                setSearchDates: function(startDate, endDate){
-                    if (angular.isUndefined($rootScope.searchRangeStart))
+                },
+                setSearchDates: function(startDate, endDate) {
+                    if (angular.isUndefined($rootScope.searchRangeStart)) {
                         $rootScope.searchRangeStart = startDate;
-                    else {
-                        if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime())
-                            $rootScope.searchRangeStart = startDate;
+                        localStorage.setItem($rootScope.user + "SearchRangeStart", startDate);
                     }
-                    if (angular.isUndefined($rootScope.searchRangeEnd))
-                        $rootScope.searchRangeEnd = endDate;
                     else {
-                        if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime())
+                        if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime()) {
+                            $rootScope.searchRangeStart = startDate;
+                            localStorage.setItem($rootScope.user + "SearchRangeStart", startDate);
+                        }
+                    }
+                    if (angular.isUndefined($rootScope.searchRangeEnd)) {
+                        $rootScope.searchRangeEnd = endDate;
+                        localStorage.setItem($rootScope.user + "SearchRangeEnd", endDate);
+                    }
+                    else {
+                        if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime()) {
                             $rootScope.searchRangeEnd = endDate;
+                            localStorage.setItem($rootScope.user + "SearchRangeEnd", endDate);
+                        }
                     }
                 }
             };

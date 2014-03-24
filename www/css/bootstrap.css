@@ -2379,8 +2379,8 @@ fieldset[disabled] .btn-link:focus {
 }
 .btn-sm-back,
 .btn-group-sm-back > .btn {
-  padding: 15px 10px;
-  font-size: 12px;
+  padding: 10px 5px;
+  font-size: 20px;
   line-height: 1.5;
   border-radius: 3px;
   float: left;
@@ -2388,6 +2388,7 @@ fieldset[disabled] .btn-link:focus {
   color: #000;
   margin-top:0.5%; 
   margin-left:0.5%;
+  width:75px;
 }
 .btn-sm-menu,
 .btn-group-sm-menu > .btn {

@@ -9,6 +9,7 @@ angular.module('myApp', [
     'myApp.directives',
     'myApp.controllers',
     'ngTouch',
+    'ngAnimate',
     'ngResource',
     'ui.bootstrap',
     'ui.calendar'
