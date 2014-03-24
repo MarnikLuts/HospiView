@@ -3,47 +3,47 @@
 </div>
 <div class="col-md-12">
     <div class="well">
-        <h2>{{ getLocalizedString(1, 'loginGreeting') }}</h2>
+        <h2>{{ getLocalizedString('loginGreeting') }}</h2>
         <form name="loginForm" novalidate ng-submit="login()">
             <div class="form-group">
                 <select class="form-control input-xl" ng-model="user" ng-options="user.username as user.username for user in users" ng-change="getServersUser()" required>
-                    <option value="">- {{ getLocalizedString(1, 'loginUserSelectDefault') }} -</option>
+                    <option value="">- {{ getLocalizedString('loginUserSelectDefault') }} -</option>
                 </select>
             </div>
             <div class="form-group">
                 <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers" ng-change="getLoginUser()" required>
-                    <option value="">- {{ getLocalizedString(1, 'loginServerSelectDefault') }} -</option>
+                    <option value="">- {{ getLocalizedString('loginServerSelectDefault') }} -</option>
                 </select>
             </div>
             <div class="form-group">
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                        <input type="text" id="username" class="form-control input-lg" placeholder="Gebruikersnaam" ng-model="username" required>
+                        <input type="text" id="username" class="form-control input-lg" placeholder="{{ getLocalizedString('username') }}" ng-model="username" required>
                     </div>
                 </div>
                 <div class="form-group" ng-hide="showPasswordBoolean">
                     <div class="input-group">
                         <span class="input-group-addon btn" ng-click="showpassword()" ng-hide="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
-                        <input type="password" id="password" class="form-control input-lg" placeholder="Paswoord" ng-model="password" required>
+                        <input type="password" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('password') }}" ng-model="password" required>
                     </div>
                 </div>
                 <div class="form-group" ng-show="showPasswordBoolean">
                     <div class="input-group">
                         <span class="input-group-addon btn" ng-click="showpassword()" ng-show="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
-                        <input type="text" id="password" class="form-control input-lg" placeholder="Paswoord" ng-model="password" required>
+                        <input type="text" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('password') }}" ng-model="password" required>
                     </div>
                 </div>
                 <div class="checkbox">         
                     <label class="checkbox">
-                        <input type="checkbox" ng-model="savePassword" ng-click="savePasswordWarning()">Paswoord automatisch invullen?    
+                        <input type="checkbox" ng-model="savePassword" ng-click="savePasswordWarning()">{{ getLocalizedString('loginAutomaticallyEnterPassword') }}   
                     </label>
                 </div>
                 <div class="alert alert-danger" ng-show="error">{{errormessage}}</div>
                 <div class="form-group text-center">
                     <button type="submit" class="has-spinner btn btn-xl" ng-disabled="loginForm.$invalid || loggingIn">
                         <span ng-show="loggingIn"><i class="glyphicon glyphicon-refresh"></i></span>
-                        Log in
+                        {{ getLocalizedString('login') }}
                     </button>
                 </div>
             </form>
