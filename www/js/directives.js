@@ -14,9 +14,9 @@ angular.module('myApp.directives', []).
                     scope.$watch('nationalRegister', validate);
                     function validate(value) {
                         var userFunction = scope.userFunctionSelect;
-                        if(!scope.needsNationalReg(userFunction)){
+                        if (!scope.needsNationalReg(userFunction)) {
                             ctrl.$setValidity('checknational', true);
-                        }else if (typeof scope.dateOfBirth !== "undefined") {
+                        } else if (typeof scope.dateOfBirth !== "undefined") {
                             var nationalRegisterNumber = scope.nationalRegister;
                             var dateOfBirth = scope.dateOfBirth;
                             var nrYear = dateOfBirth.toString().substr(6, 4);
@@ -67,31 +67,31 @@ angular.module('myApp.directives', []).
             oncheck: '='
         }
     };
-}).directive('riziv', function(){
+}).directive('riziv', function() {
     return{
         restrict: "A",
         require: "ngModel",
-        link: function(scope, elm, attrs, ctrl){
+        link: function(scope, elm, attrs, ctrl) {
             scope.$watch('userFunctionSelect', validate);
             scope.$watch('rizivNumber', validate);
-            function validate(value){
+            function validate(value) {
                 var userFunction = scope.userFunctionSelect;
-                if(!scope.needsRiziv(userFunction)){
+                if (!scope.needsRiziv(userFunction)) {
                     ctrl.$setValidity('riziv', true);
-                }else{
+                } else {
                     var rizivNumber = scope.rizivNumber;
                     var isNum = /^\d+$/.test(rizivNumber);
                     var isValid = false;
-                    
-                    if(isNum && rizivNumber.toString().length===11)
+
+                    if (isNum && rizivNumber.toString().length === 11)
                         isValid = true;
                     else
                         isValid = false;
-                    
+
                     ctrl.$setValidity('riziv', isValid);
-                    
+
                 }
-                
+
             }
         }
     }
