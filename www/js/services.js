@@ -73,7 +73,7 @@ angular.module('myApp.services', []).
                         }
                     return defer.promise;
                 },
-                setAbsentDays: function(response){
+                setAbsentDays: function(year){
                     var defer = $q.defer(),
                         promises = [];
                     
