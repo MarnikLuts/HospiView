@@ -39,6 +39,9 @@ angular.module('myApp.services', []).
                 },
                 getUnitAbsentDays: function(uuid, year, month, unit_id, server_url) {
                     return $http.post(server_url + base_url + "method=GetUnitAbsentDays&UUID=" + uuid + "&Year=" + year + "&Month=" + month + "&Unit_Id=" + unit_id);
+                },
+                getLanguageStrings: function(language_Id, listOfPidsSids, server_url){
+                    return $http.post(server_url + base_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids);
                 }
 
             };
@@ -166,5 +169,67 @@ angular.module('myApp.services', []).
                         }
                     }
                 }
+            };
+        }).factory('languageFactory', function(hospiviewFactory, $q, $rootScope){
+            /**
+             * Gets a language string from a given array using its PID in combination with its SID
+             * 
+             * @param {type} langArray
+             * @param {type} pid
+             * @param {type} sid
+             * @returns {Array|_L164.getStringByPidSid.langString}
+             */
+            function getStringByPidAndSid(langArray, pid, sid){
+                for(var i=0;i<langArray.length;i++){
+                    if(langArray[i].pid == pid && langArray[i].sid == sid) 
+                        return langArray[i].string;
+                }
+            }
+            return{
+                /**
+                 * Loads the language strings from remote data
+                 * 
+                 * @param {type} hosp_url
+                 * @returns {unresolved}
+                 */
+                initRemoteLanguageStrings: function(hosp_url){
+                    var listOfPidsSids = "204,1,2,3,4,5,6",
+                        promises = [],
+                        defer = $q.defer();
+                    
+                    for(var i=1;i<4;i++){
+                        promises.push(hospiviewFactory.getLanguageStrings(i, listOfPidsSids, hosp_url));
+                    }
+                    
+                    $q.all(promises).then(function(responses){
+                        for(var j=0;j<responses.length;j++){
+                            var json = parseJson(responses[j].data);
+                            
+                            if(json.LanguageStrings.Header.StatusCode === "1"){
+                                var remoteDict = {
+                                    createAppointmentGreeting: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 1),
+                                };
+                            
+                                switch(j){
+                                    case 0:
+                                        $rootScope.nlRemoteDict = remoteDict;
+                                        break;
+                                    case 1:
+                                        $rootScope.frRemoteDict = remoteDict;
+                                        break;
+                                    case 2:
+                                        $rootScope.enRemoteDict = remoteDict;
+                                        break;
+                                }
+                                defer.resolve();
+                            }else{
+                                defer.reject("Fout in de gegevens");
+                                break;
+                            }
+                        }
+                    });
+                    return defer.promise;
+                }
+               
             };
         });

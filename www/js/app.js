@@ -27,7 +27,39 @@ angular.module('myApp', [
                 
                 $routeProvider.otherwise({redirectTo: '/login'});
             }]).
-        run(function() {
+        run(function($rootScope) {
             FastClick.attach(document.body);
+            
+            /**
+            * Gets a language string from one of the loaded language files
+            * 
+            * languageID:
+            * 1 for Dutch
+            * 2 for French
+            * 3 for English
+            * 
+            * @param {type} languageID
+            * @param {type} key
+            * @returns {_L164.enDict|enDict|_L164.frDict|frDict|_L164.nlDict|nlDict}
+            */
+           $rootScope.getLocalizedString=function(languageID, key){
+               switch(languageID){
+                   case 1:
+                        if(key in getDutchLanguageStrings())
+                            return getDutchLanguageStrings()[key];
+                        else
+                            return $rootScope.nlRemoteDict[key];
+                   case 2:
+                       if(key in getFrenchLanguageStrings())
+                            return getFrenchLanguageStrings()[key];
+                        else
+                            return $rootScope.frRemoteDict[key];
+                   case 3:
+                       if(key in getEnglishLanguageStrings())
+                            return getEnglishLanguageStrings()[key];
+                        else
+                            return $rootScope.enRemoteDict[key];
+               }
+           };
         });
 //angular.module('myModule',['ui.bootstrap']);
