@@ -44,4 +44,118 @@ angular.module('myApp.services', []).
                 }
                 
             };
+        }).factory('dataFactory', function($rootScope, $q, hospiviewFactory){
+            return{
+                setHolidays: function(response){
+                    var defer = $q.defer();
+                    var json = parseJson(response.data);
+                    if (json.PublicHolidays.Header.StatusCode == 1) {
+                        if (!angular.isUndefined(json.PublicHolidays.Detail)) {
+                            $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
+                            defer.resolve();
+                        }
+                    }else{
+                        defer.reject('Fout in de gegevens');
+                    }
+                    return defer.promise;
+                },
+                setSearchUnits: function(response){
+                    var defer = $q.defer();
+                    var json = parseJson(response.data);
+                        if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                            var units = json.UnitsAndDeps.Detail.Unit;
+                            for (var i = 0; i < units.length; i++) {
+                                $rootScope.searchUnits.push(units[i]);
+                            }
+                            defer.resolve($rootScope.searchUnits);
+                        } else {
+                            defer.reject('Fout in de gegevens');
+                        }
+                    return defer.promise;
+                },
+                setAbsentDays: function(response){
+                    var defer = $q.defer(),
+                        promises = [];
+                    
+                    for (var i = 0; i < $rootScope.searchUnits.length; i++) {
+                        promises.push(hospiviewFactory.getUnitAbsentDays($rootScope.currentServer.uuid, year, '00', $rootScope.searchUnits[i].Header.unit_id, $rootScope.currentServer.hosp_url));
+                    }
+                    
+                    $q.all(promises).then(function (responses){
+                        for(var j = 0;j<responses.length;j++){
+                            var json = parseJson(responses[j].data);
+                            if (json.UnitAbsentdays.Header.StatusCode == 1) {
+                                if (!angular.isUndefined(json.UnitAbsentdays.Detail)) {
+                                    $rootScope.absentDays.push(json.UnitAbsentdays.Detail.AbsentDay);
+                                }
+                            } else {
+//                                defer.reject("Fout in de gegevens.");
+                                defer.reject(json.UnitAbsentdays.Header.StatusTitle);
+                            }
+                        }
+                        defer.resolve();
+                    }, function(error){
+                        defer.reject("De lijst met afwezigheden kon niet worden opgehaald");
+                    });
+                    return defer.promise;
+                },
+                searchReservations: function(){
+                    var defer = $q.defer(),
+                        reservations = [],
+                        promises = [];
+                    for (var i = 0; i < $rootScope.searchUnits.length; i++) {
+                        var depIds = [];
+                        var unitId = $rootScope.searchUnits[i].Header.unit_id;
+
+                        if ($rootScope.searchUnits[i].Header.perm === "1") {
+                            depIds.push($rootScope.searchUnits[i].Detail.Dep[0].dep_id);
+                        } else {
+                            for (var j = 0; j < $rootScope.searchUnits[i].Detail.Dep.length; j++) {
+                                depIds.push($rootScope.searchUnits[i].Detail.Dep[j].dep_id);
+                            }
+                        }
+
+                        for (var k = 0; k < depIds.length; k++) {
+                            promises.push(hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url));
+                        }
+                    }
+                    $q.all(promises).then(function(responses) {
+                        for (var l = 0; l < responses.length; l++) {
+                            var json = parseJson(responses[l].data);
+                            if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
+                                if (json.ReservationsOnUnit.Header.StatusCode === "1") {
+                                    if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
+                                        reservations.push(json.ReservationsOnUnit.Detail.Reservation);
+                                    } else {
+                                        for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
+                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation[s]);
+                                        }
+                                    }
+
+                                } else {
+                                    defer.reject("Fout in de gegevens");
+                                }
+                            }
+                        }
+                        defer.resolve(reservations);
+                    }, function(error) {
+                        defer.reject("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                    });
+                    return defer.promise;
+                }, 
+                setSearchDates: function(startDate, endDate){
+                    if (angular.isUndefined($rootScope.searchRangeStart))
+                        $rootScope.searchRangeStart = startDate;
+                    else {
+                        if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime())
+                            $rootScope.searchRangeStart = startDate;
+                    }
+                    if (angular.isUndefined($rootScope.searchRangeEnd))
+                        $rootScope.searchRangeEnd = endDate;
+                    else {
+                        if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime())
+                            $rootScope.searchRangeEnd = endDate;
+                    }
+                }
+            };
         });
