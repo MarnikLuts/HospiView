@@ -48,20 +48,34 @@ angular.module('myApp.services', []).
         }).
         factory('dataFactory', function($rootScope, $q, hospiviewFactory) {
             return{
-                setHolidays: function(response) {
+                /**
+                 * Function that handles the resolved promise from hospiviewFactory.getPublicHolidays
+                 * 
+                 * @param {type} responses
+                 * @returns {unresolved}
+                 */
+                setHolidays: function(responses) {
                     var defer = $q.defer();
-                    var json = parseJson(response.data);
-                    if (json.PublicHolidays.Header.StatusCode == 1) {
-                        if (!angular.isUndefined(json.PublicHolidays.Detail)) {
-                            $rootScope.publicHolidays = json.PublicHolidays.Detail.PublicHoliday;
-                            localStorage.setItem($rootScope.user + "PublicHolidays", JSON.stringify($rootScope.publicHolidays));
-                            defer.resolve();
+                    for(var i=0;i<responses.length;i++){
+                        var json = parseJson(responses[i].data);
+                        if (json.PublicHolidays.Header.StatusCode == 1) {
+                            if (!angular.isUndefined(json.PublicHolidays.Detail)) {
+                                $rootScope.publicHolidays.push(json.PublicHolidays.Detail.PublicHoliday);
+                            }
+                        } else {
+                            defer.reject('Fout in de gegevens');
                         }
-                    } else {
-                        defer.reject('Fout in de gegevens');
                     }
+                    defer.resolve();
+                    localStorage.setItem($rootScope.user + "PublicHolidays", JSON.stringify($rootScope.publicHolidays));
                     return defer.promise;
                 },
+                /**
+                 * Function that handles the resolved promise from hospiviewFactory.getUnitAndDepList
+                 * 
+                 * @param {type} response
+                 * @returns {unresolved}
+                 */
                 setSearchUnits: function(response) {
                     var defer = $q.defer();
                     var json = parseJson(response.data);
@@ -76,6 +90,12 @@ angular.module('myApp.services', []).
                     }
                     return defer.promise;
                 },
+                /**
+                 * Requests every day where someone is absent and sets the data in the rootscope
+                 * 
+                 * @param {type} year
+                 * @returns {unresolved}
+                 */
                 setAbsentDays: function(year) {
                     var defer = $q.defer(),
                             promises = [];
@@ -103,6 +123,11 @@ angular.module('myApp.services', []).
                     });
                     return defer.promise;
                 },
+                /**
+                 * Gets every reservation from the server and returns the data through 'var reservations'
+                 * 
+                 * @returns {unresolved}
+                 */
                 searchReservations: function() {
                     var defer = $q.defer(),
                             reservations = [],
@@ -168,6 +193,69 @@ angular.module('myApp.services', []).
                             localStorage.setItem($rootScope.user + "SearchRangeEnd", endDate);
                         }
                     }
+                },
+                /**
+                 * Fills the calendar with the data set in the root scope
+                 * 
+                 */
+                loadCalendar: function(){
+                    var start = new Date($rootScope.searchRangeStart);
+                    var end = new Date($rootScope.searchRangeEnd);
+                    start.setHours(0, 0, 0);
+                    end.setHours(0, 0, 0);
+                    
+                    var events = $rootScope[$rootScope.searchString];
+                    var j = 0;
+                    var count = 0;
+                    var countEvent = [];
+                    var eventsEdit = [];
+                    while (start.getTime() !== end.getTime()) {
+                        for (var i = 0; i < events.length; i++) {
+                            eventsEdit.push(new Date(events[i].the_date));
+                            eventsEdit[j].setHours(0, 0, 0);
+                            if (start.getTime() === eventsEdit[j].getTime()) {
+                                count = count + 1;
+                            }
+                            j = j + 1;
+                        }
+                        if (count != 0) {
+                            count = count + "";
+                            var endTest = new Date(start.getFullYear(), start.getMonth(), start.getDate(), start.getHours() + 1);
+                            countEvent.push({title: count, start: start.toUTCString(), end: endTest.toUTCString(), allDay: true});
+                            count = 0;
+                        }
+                        start.setDate(start.getDate() + 1);
+                    }
+                    
+                    var holidays = $rootScope.publicHolidays[$rootScope.languageID-1];
+                    if (!angular.isUndefined(holidays.length))
+                        for (var i = 0; i < holidays.length; i++) {
+                            var holiday_date = new Date(holidays[i].the_date);
+                            var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
+                            countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
+                        }
+
+                    var absentDays = $rootScope.absentDays;
+                    if (!angular.isUndefined(absentDays.length))
+                        for (var i = 0; i < absentDays.length; i++) {
+                            for (var j = 0; j < absentDays[i].length; j++) {
+                                if (!isHoliday(absentDays[i][j].the_date)) {
+                                    var absent_date = new Date(absentDays[i][j].the_date);
+                                    var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
+                                    countEvent.push({title: $rootScope.getLocalizedString('appointmentsCalendarAbsent'), start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
+                                }
+                            }
+                        }
+
+                    function isHoliday(date) {
+                        if (!angular.isUndefined(holidays.length))
+                            for (var i = 0; i < holidays.length; i++) {
+                                if (date === holidays[i].the_date)
+                                    return true;
+                            }
+                        return false;
+                    }
+                    return countEvent;
                 }
             };
         }).factory('languageFactory', function(hospiviewFactory, $q, $rootScope){
