@@ -1127,13 +1127,16 @@ angular.module('myApp.controllers', []).
 
 
             $scope.datenr = {nr: $scope.nationalRegister, date: $scope.dateOfBirth};
-            $scope.userFunctionList = ["Patiënt", "Vertegenwoordiger", "Huisarts", "Arts"];
+            $scope.userFunctionList = [$rootScope.getLocalizedString('newFunctionPatient'), 
+                                        $rootScope.getLocalizedString('newFunctionRepresentative'), 
+                                        $rootScope.getLocalizedString('newFunctionHouseDoctor'), 
+                                        $rootScope.getLocalizedString('newFunctionDoctor')];
             $scope.userFunctionSelected = false;
             $scope.needsNationalReg = function(userFunction) {
-                return userFunction === 'Patiënt' || userFunction === 'Vertegenwoordiger';
+                return userFunction === $rootScope.getLocalizedString('newFunctionPatient') || userFunction === $rootScope.getLocalizedString('newFunctionRepresentative');
             };
             $scope.needsRiziv = function(userFunction) {
-                return userFunction === 'Arts' || userFunction === 'Huisarts';
+                return userFunction === $rootScope.getLocalizedString('newFunctionDoctor') || userFunction === $rootScope.getLocalizedString('newFunctionHouseDoctor');
             };
             $scope.requestAccount = function() {
                 $scope.requestMessage = "U ontvangt dadelijk een email met uw logingegevens. ";

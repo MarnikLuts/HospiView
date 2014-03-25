@@ -205,6 +205,7 @@ angular.module('myApp.services', []).
                     end.setHours(0, 0, 0);
                     
                     var events = $rootScope[$rootScope.searchString];
+                    console.log(events);
                     var j = 0;
                     var count = 0;
                     var countEvent = [];
