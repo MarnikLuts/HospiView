@@ -30,6 +30,8 @@ angular.module('myApp', [
         run(function($rootScope) {
             FastClick.attach(document.body);
             
+            //default languageID
+            $rootScope.languageID = 3;
             /**
             * Gets a language string from one of the loaded language files
             * 
@@ -42,8 +44,8 @@ angular.module('myApp', [
             * @param {type} key
             * @returns {_L164.enDict|enDict|_L164.frDict|frDict|_L164.nlDict|nlDict}
             */
-           $rootScope.getLocalizedString=function(languageID, key){
-               switch(languageID){
+           $rootScope.getLocalizedString=function(key){
+               switch($rootScope.languageID){
                    case 1:
                         if(key in getDutchLanguageStrings())
                             return getDutchLanguageStrings()[key];

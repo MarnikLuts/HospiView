@@ -3,7 +3,7 @@
 
 angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
-
+            
             /**
              * Check if the localStorage item "users" exists. If is doesn't,
              * it means this is the first time the application is running. 
