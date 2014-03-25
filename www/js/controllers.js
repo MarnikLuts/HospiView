@@ -1009,14 +1009,49 @@ angular.module('myApp.controllers', []).
                 $location.path('/mainmenu');
             };
         }).
-        controller('SettingsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
-
+        controller('SettingsCtrl', function($scope, $location, $rootScope) {
+            
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-            /*for(var i = 0; i < $scope.servers.length; i++){}*/
             $scope.servers = $scope.selectedUser.servers;
-            for (var i = 0; i < $scope.servers.length; i++) {
-                if ($scope.servers[i].id === $rootScope.currentServer.id)
-                    $scope.server = $scope.servers[i];
+            
+            $scope.server1 = true;
+            $scope.server2 = false;
+            $scope.server3 = false;
+            
+            $scope.abbreviation1 = $scope.selectedUser.servers[0].hosp_short_name;
+            
+            if($scope.servers.length >= 2){
+                $scope.abbreviation2 = $scope.selectedUser.servers[1].hosp_short_name;
+                $scope.showServer2 = true;
+            }
+            if($scope.servers.length == 3){
+                $scope.abbreviation3 = $scope.selectedUser.servers[2].hosp_short_name;
+                $scope.showServer3 = true;
+            }
+
+            $scope.server1Select = function(){
+                $scope.server1 = true;
+                $scope.server2 = false;
+                $scope.server3 = false;
+                $scope.server1Img = "img/hospi.png";
+                $scope.server2Img = "img/hospi-gray.png";
+                $scope.server3Img = "img/hospi-gray.png";
+            }
+            $scope.server2Select = function(){
+                $scope.server1 = false;
+                $scope.server2 = true;
+                $scope.server3 = false;
+                $scope.server1Img = "img/hospi-gray.png";
+                $scope.server2Img = "img/hospi.png";
+                $scope.server3Img = "img/hospi-gray.png";
+            }
+            $scope.server3Select = function(){
+                $scope.server1 = false;
+                $scope.server2 = false;
+                $scope.server3 = true;
+                $scope.server1Img = "img/hospi-gray.png";
+                $scope.server2Img = "img/hospi-gray.png";
+                $scope.server3Img = "img/hospi.png";
             }
 
             $scope.cellcontentchange = function(newCellcontent) {
@@ -1134,6 +1169,7 @@ angular.module('myApp.controllers', []).
                                             }
                                             addToLocalStorage(localStorageName,
                                                     {"servers": [{"id": $rootScope.currentServer.id,
+                                                                "hosp_short_name": $rootScope.currentServer.hosp_short_name,
                                                                 "hosp_full_name": $rootScope.currentServer.hosp_full_name,
                                                                 "hosp_url": $rootScope.currentServer.hosp_url,
                                                                 "user_password": $scope.password,

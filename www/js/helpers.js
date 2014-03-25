@@ -1,3 +1,10 @@
+/**
+ * Adds object to localstorage item. Creates the object if it does not exist.
+ * 
+ * @param {type} lsKey  key of the localstorage item.
+ * @param {type} data   object that needs to be added.
+ * @returns {undefined}
+ */
 function addToLocalStorage(lsKey, data) {
     if (localStorage.getItem(lsKey) !== null) {
         var lsText = localStorage.getItem(lsKey);
@@ -122,10 +129,4 @@ function getDayNamesShort(languageID){
         case 3:
             return "Su_Mo_Tu_We_Th_Fr_Sa".split("_");
     } 
-}
-
-function pageTransition(from) {
-    var homePage = document.getElementById("tranistion");
-    homePage.className = "heightPercent view-animate-" + (from === "next" ? "next" : "prev");
-    console.log(homePage);
 }

@@ -4027,10 +4027,13 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     margin-right: 0;
   }
 }
+/*changed background color and added text color.*/
 .navbar-default {
-  background-color: #f8f8f8;
+  background-color: rgba(106, 202, 238, 1);
+  color: white;
   border-color: #e7e7e7;
 }
+
 .navbar-default .navbar-brand {
   color: #777;
 }
@@ -5892,3 +5895,13 @@ button.close {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
+
+/*Added to disable transistion. 0.01s is used, because bootstrap expects
+a transition. I would lockup if it were to be set to 0s.*/
+.no-transition {
+  -webkit-transition: height 0.01s;
+  -moz-transition: height 0.01s;
+  -ms-transition: height 0.01s;
+  -o-transition: height 0.01s;
+  transition: height 0.01s;
+}

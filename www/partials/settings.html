@@ -6,9 +6,19 @@
     <h1>Instellingen</h1>
 </div>
 <div>
-    <div class="col-md-12 form-group">
+    <!--<div class="col-md-12 form-group">
         <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers">
         </select>
+    </div>-->
+    <div class="col-md-12">
+        <div class="shortcutButtons">
+            <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server1Select()" 
+                    btn-radio="'server1'">{{abbreviation1}}<br/><img src="img/hospi.png" alt="hospi" width="64" height="90"></button>
+            <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server2Select()" 
+                    btn-radio="'server2'" ng-show="showServer2">{{abbreviation2}}<br/><img src="img/hospi.png" alt="hospi" width="64" height="90"></button>
+            <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server3Select()" 
+                    btn-radio="'server3'" ng-show="showServer3">{{abbreviation3}}<br/><img src="img/hospi.png" alt="hospi" width="64" height="90"></button>
+        </div>
     </div>
     <div class="col-md-12">
         <button type="button" class="btn btn-primary input-lg" ng-click="addOrEditServer('add')">

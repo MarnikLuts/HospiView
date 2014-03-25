@@ -1,4 +1,24 @@
-<div class="col-md-12 page-header-red">
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <span class="title">Afspraken</span>
+    </div>
+    <div class="collapse navbar-collapse no-transition" id="navbar-collapse">
+      <ul class="nav navbar-nav pull-right">
+        <li><a ng-click="settings()">Settings</a></li>
+        
+        <li><a ng-click="logout()">Afmelden</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!--<div class="col-md-12 page-header-red">
     <button class="btn btn-sm-back" ng-click="logout()">
         <span class="glyphicon glyphicon-chevron-left"></span>
         afmelden
@@ -14,7 +34,7 @@
         <li><a ng-click="logout()">Afmelden</a></li>
     </ul>
 
-</div>
+</div>-->
 
 <div class="" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
     <div class="col-md-12 height10Percent">
