@@ -1,9 +1,19 @@
 <div class="col-md-12 page-header-red">
-    <button type="submit" class="btn btn-sm-back" ng-click="logout()">
+    <button class="btn btn-sm-back" ng-click="logout()">
         <span class="glyphicon glyphicon-chevron-left"></span>
         afmelden
     </button>
-    <h1>Afspraken</h1>
+    <span class="title">Afspraken</span>
+
+    <button type="button" class="btn-sm-menu dropdown-toggle" data-toggle="dropdown">
+        <span class="glyphicon glyphicon-list"></span>
+    </button>
+    <ul class="dropdown-menu pull-right" role="menu">
+        <li><a ng-click="settings()">Settings</a></li>
+        <li class="divider"></li>
+        <li><a ng-click="logout()">Afmelden</a></li>
+    </ul>
+
 </div>
 
 <div class="" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
@@ -76,7 +86,7 @@
                     </div>
                 </div>
             </div>
-            <div class="alert alert-info" ng-hide="filteredReservations.length"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('appointmentsViewNoReservations') }}</div>
+            <div class="alert alert-info" ng-hide="filteredReservations.length"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('appointmentsViewNoReservations')}}</div>
         </div>
     </div>
 </div>
