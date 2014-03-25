@@ -5,10 +5,23 @@ function getEnglishLanguageStrings () {
         loginUserSelectDefault: "Choose a user",
         loginServerSelectDefault: "Choose a hospital",
         loginAutomaticallyEnterPassword: "Automatically enter password?",
-        login: "Log in",
+        loginUsername: "Username",
+        loginPassword: "Password",
         
-        username: "Username",
-        password: "Password",
+        //AppointmentsView
+        appointmentsViewReservations: "Reservations",
+        appointmentsViewNoReservations: "No reservations.",
+        
+        //AppointmentsCalendar
+        appointmentsCalendarToday: "Today",
+        appointmentsCalendarWeekends: "Weekends",
+        appointmentsCalendarAbsent: "Day Off",
+        
+        //general app use
+        settings: "Settings",
+        back: "Back",
+        logout: "Log Out",
+        login: "Log In",
     }
 };
 

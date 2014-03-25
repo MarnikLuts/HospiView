@@ -2,7 +2,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-        controller('LoginCtrl', function($scope, $location, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
+        controller('LoginCtrl', function($scope, $location, $locale, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
             
             /**
              * Check if the localStorage item "users" exists. If is doesn't,
@@ -100,12 +100,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.login = function() {
                 $scope.loggingIn = true;
-
-                languageFactory.initRemoteLanguageStrings($scope.server.hosp_url)
-                        .then(function() {
-                            console.log($rootScope.getLocalizedString(3, 'createAppointmentGreeting'));
-                        });
-
+                
                 hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
                         success(function(data) {
                             var json = parseJson(data);
@@ -144,7 +139,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.absentDays = [];
                 //Absent days
                 $rootScope.absentDays = [];
-                var holidayPromise = hospiviewFactory.getPublicHolidays('1', year, '00', $scope.server.hosp_url),
+                var holidayPromise = hospiviewFactory.getPublicHolidays($rootScope.languageID, year, '00', $scope.server.hosp_url),
                         UnitPromise = hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url);
                 holidayPromise.then(function(response) {
                     dataFactory.setHolidays(response);
@@ -156,6 +151,7 @@ angular.module('myApp.controllers', []).
                         .then(function() {
                             return dataFactory.setAbsentDays(year);
                         }, error)
+                        .then(function(){return languageFactory.initRemoteLanguageStrings($scope.server.hosp_url);})
                         .then(setData, error);
             }
 
@@ -503,7 +499,7 @@ angular.module('myApp.controllers', []).
             $scope.eventPerDay;
             if ($rootScope.eventClick == true) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
-                $scope.showDate = formatShowDate(new Date($rootScope.currentdate));
+                $scope.showDate = formatShowDate(new Date($scope.date), $rootScope.languageID);
             } else {
                 var lowestDate = new Date(2500, 1, 1);
                 for (var i = 0; i < $rootScope[$rootScope.searchString].length; i++) {
@@ -513,7 +509,7 @@ angular.module('myApp.controllers', []).
                     }
                 }
                 $scope.date = formatDate(new Date(lowestDate));
-                $scope.showDate = formatShowDate(lowestDate);
+                $scope.showDate = formatShowDate(lowestDate, $rootScope.languageID);
             }
 
             $scope.reservations = $rootScope[$rootScope.searchString];
@@ -523,7 +519,7 @@ angular.module('myApp.controllers', []).
                 var newDate = new Date($scope.date);
                 newDate.setDate(newDate.getDate() + 1);
                 $scope.date = formatDate(newDate);
-                $scope.showDate = formatShowDate($scope.date);
+                $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                 if (new Date($scope.date) > new Date($rootScope.searchRangeEnd)) {
                     search(newDate, 1);
                 }
@@ -532,7 +528,7 @@ angular.module('myApp.controllers', []).
                 var newDate = new Date($scope.date);
                 newDate.setDate(newDate.getDate() - 1);
                 $scope.date = formatDate(newDate);
-                $scope.showDate = formatShowDate($scope.date);
+                $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                 if (new Date($scope.date) < new Date($rootScope.searchRangeStart)) {
                     search(newDate, 2)
                 }
@@ -1045,10 +1041,8 @@ angular.module('myApp.controllers', []).
                     year: current.getFullYear(),
                     firstDay: 1,
                     weekNumbers: true,
-                    monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
-                    monthNamesShort: ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sept', 'okt', 'nov', 'dec'],
-                    dayNames: ['zondag', 'maandag', 'disndag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
-                    dayNamesShort: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
+                    monthNames: getMonthNames($rootScope.languageID),
+                    dayNamesShort: getDayNamesShort($rootScope.languageID),
                     weekends: showWeekends,
                     header: {
                         left: '',
@@ -1104,7 +1098,7 @@ angular.module('myApp.controllers', []).
                         if (!isHoliday(absentDays[i][j].the_date)) {
                             var absent_date = new Date(absentDays[i][j].the_date);
                             var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
-                            countEvent.push({title: 'Verlof', start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
+                            countEvent.push({title: $rootScope.getLocalizedString('appointmentsCalendarAbsent'), start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
                         }
                     }
                 }
@@ -1130,42 +1124,7 @@ angular.module('myApp.controllers', []).
             }
 
             $scope.weekend = function() {
-                var weekendsConfig = {
-                    calendar: {
-                        height: 500,
-                        editable: false,
-                        defaultView: 'month',
-                        timeFormat: 'H:mm',
-                        month: current.getMonth(),
-                        year: current.getFullYear(),
-                        firstDay: 1,
-                        weekNumbers: true,
-                        monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
-                        monthNamesShort: ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sept', 'okt', 'nov', 'dec'],
-                        dayNames: ['zondag', 'maandag', 'disndag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
-                        dayNamesShort: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
-                        weekends: showWeekends,
-                        header: {
-                            left: '',
-                            center: 'title',
-                            right: ''
-                        },
-                        titleFormat: {
-                            day: 'd/m'
-                        },
-                        eventClick: function(calEvent, jsEvent, view) {
-                            var getClickedDay = calEvent.start;
-                            $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
-                            $rootScope.eventClick = true;
-                            window.location.href = 'index.html#/doctor/appointmentsView';
-                        }
-                    }
-                };
-                $scope.uiConfig = weekendsConfig;
-                if (showWeekends == false)
-                    showWeekends = true;
-                else
-                    showWeekends = false;
+                $scope.uiConfig.calendar.weekends = !$scope.uiConfig.calendar.weekends;
             };
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location) {

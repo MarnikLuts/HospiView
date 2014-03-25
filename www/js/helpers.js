@@ -51,17 +51,78 @@ function formatDate(date) {
 
 /**
  * 
+ * returns a formatted date based on the language ID
+ * 
  * @param {type} date
+ * @param {type} languageID
  * @returns {Date|String|formatShowDate.newDate}
  */
-function formatShowDate(date) {
+function formatShowDate(date, languageID) {
     var newDate = new Date(date);
-    var dayNames = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'];
-    var monthNames = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+    
+    if(languageID===undefined)
+        languageID=1;
+    
+    var dayNames = getDayNames(languageID),
+        monthNames = getMonthNames(languageID),
+        
+    
+    
     newDate = dayNames[newDate.getDay()] + " " + newDate.getDate() + " " + monthNames[newDate.getMonth()];
     return newDate;
 }
 
+/**
+ * returns the names of the days based on the given languageID
+ * 
+ * @param {type} languageID
+ * @returns {Array|String}
+ */
+function getDayNames(languageID){
+    switch(languageID){
+        case 1:
+            return "zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag".split("_");
+        case 2:
+            return "dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi".split("_");
+        case 3:
+            return "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_");
+    }
+}
+
+/**
+ * 
+ * returns the month names based on the given languageID
+ * 
+ * @param {type} languageID
+ * @returns {array|String}
+ */
+function getMonthNames(languageID){
+    switch(languageID){
+        case 1:
+            return "januari_februari_maart_april_mei_juni_juli_augustus_september_oktober_november_december".split("_");
+        case 2:
+            return "janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre".split("_");
+        case 3:
+            return "January_February_March_April_May_June_July_August_September_October_November_December".split("_");
+    }
+}
+
+/**
+ * returns the short version of the day based on the given lenguageID
+ * 
+ * @param {type} languageID
+ * @returns {String}
+ */
+function getDayNamesShort(languageID){
+   switch(languageID){
+        case 1:
+            return "Zo_Ma_Di_Wo_Do_Vr_Za".split("_");
+        case 2:
+            return "Di_Lu_Ma_Me_Je_Ve_Sa".split("_");
+        case 3:
+            return "Su_Mo_Tu_We_Th_Fr_Sa".split("_");
+    } 
+}
 
 function pageTransition(from) {
     var homePage = document.getElementById("tranistion");

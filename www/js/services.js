@@ -209,7 +209,7 @@ angular.module('myApp.services', []).
                                 var remoteDict = {
                                     createAppointmentGreeting: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 1),
                                 };
-                            
+                                
                                 switch(j){
                                     case 0:
                                         $rootScope.nlRemoteDict = remoteDict;
