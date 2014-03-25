@@ -2,8 +2,8 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-        controller('LoginCtrl', function($scope, $location, $locale, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
-
+        controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
+            
             /**
              * Check if the localStorage item "users" exists. If is doesn't,
              * it means this is the first time the application is running. 
@@ -131,18 +131,32 @@ angular.module('myApp.controllers', []).
                             callOfflineModal();
                         });
             };
+            
+            /**
+             * loads all the necessary data from the server using the methods of hospiviewfactory and datafactory
+             * 
+             */
             function postLogin() {
-                var year = new Date().getFullYear().toString();
+                var year = new Date().getFullYear().toString(),
+                        holidayPromise = [],
+                        UnitPromise;
+                //Holidays
+                $rootScope.publicHolidays = [];
                 //SearchUnits
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
                 $rootScope.absentDays = [];
                 //Absent days
                 $rootScope.absentDays = [];
-                var holidayPromise = hospiviewFactory.getPublicHolidays($rootScope.languageID, year, '00', $scope.server.hosp_url),
-                        UnitPromise = hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url);
-                holidayPromise.then(function(response) {
-                    dataFactory.setHolidays(response);
+                
+                
+                for(var i=1;i<4;i++){
+                    holidayPromise.push(hospiviewFactory.getPublicHolidays(i, year, '00', $scope.server.hosp_url));
+                }
+                UnitPromise = hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url);
+                
+                $q.all(holidayPromise).then(function(responses) {
+                    dataFactory.setHolidays(responses);
                 }, error);
                 UnitPromise
                         .then(function(response) {
@@ -156,13 +170,23 @@ angular.module('myApp.controllers', []).
                         })
                         .then(setData, error);
             }
-
+            
+            /**
+             * When a promise gets rejected during postLogin() this method be used to properly handle the error
+             * 
+             * @param {type} data
+             */
             function error(data) {
                 $scope.loggingIn = false;
                 $scope.error = true;
                 $scope.errormessage = data;
             }
-
+            
+            /**
+             * When the data from postLogin() is loaded successfully, this function is called
+             * Because this function depends on the current scope it can not be abstracted
+             * 
+             */
             function setData() {
                 var today = new Date();
                 $rootScope.startDate = formatDate(today);
@@ -188,7 +212,7 @@ angular.module('myApp.controllers', []).
                     $location.path('/doctor/appointmentsView');
                 }
             }
-
+            
             function setReservations(reservations) {
                 $rootScope[$rootScope.searchString] = reservations;
                 if ($rootScope[$rootScope.searchString].length === 0) {
@@ -742,7 +766,7 @@ angular.module('myApp.controllers', []).
             }
             ;
         }).
-        controller('searchCtrl', function($scope, $location, $rootScope, $q, hospiviewFactory) {
+        controller('searchCtrl', function($scope, $location, $rootScope, $q, hospiviewFactory, dataFactory) {
             $scope.next = function() {
                 if ($rootScope.isOffline === true) {
                     $('#doctorCalendar').fullCalendar('next');
@@ -822,142 +846,42 @@ angular.module('myApp.controllers', []).
                 $scope.loadingMonth = true;
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
-                hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
-                        success(function(data) {
-                            var json = parseJson(data);
-                            if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                                var units = json.UnitsAndDeps.Detail.Unit;
-                                for (var i = 0; i < units.length; i++) {
-                                    $rootScope.searchUnits.push(units[i]);
-                                }
-                                setData(calendarBrows);
-                            } else {
-                                $scope.error = true;
-                                $scope.errormessage = "Fout in de gegevens.";
-                            }
-                        }).
-                        error(function() {
-                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                        });
+                hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url)
+                        .then(function(response){return dataFactory.setSearchUnits(response);}, error)
+                        .then(function(){setData(calendarBrows);}, error);
+            }
+            
+            /**
+             * Rejected promises will be handled by this function
+             * 
+             * @param {type} data
+             */
+            function error(data){
+                $scope.loadingCalendar = false;
+                $scope.error = true;
+                $scope.errormessage = data;
             }
 
             function setData(calendarBrows) {
                 setSearchDates($rootScope.startDate, $rootScope.endDate);
-                searchReservations(calendarBrows);
+                dataFactory.searchReservations()
+                        .then(function(reservations){setReservations(reservations, calendarBrows);}, error);
             }
 
-            var reservations = [],
-                    promises = [];
-            function searchReservations(calendarBrows) {
-                promises = [];
-                reservations = [];
-                for (var i = 0; i < $rootScope.searchUnits.length; i++) {
-                    var depIds = [];
-                    var unitId = $rootScope.searchUnits[i].Header.unit_id;
-                    if ($rootScope.searchUnits[i].Header.perm === "1") {
-                        depIds.push($rootScope.searchUnits[i].Detail.Dep[0].dep_id);
-                    } else {
-                        for (var j = 0; j < $rootScope.searchUnits[i].Detail.Dep.length; j++) {
-                            depIds.push($rootScope.searchUnits[i].Detail.Dep[j].dep_id);
-                        }
-                    }
-                    for (var k = 0; k < depIds.length; k++) {
-                        promises.push(hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url));
-                    }
-                }
-                $q.all(promises).then(function(responses) {
-                    for (var l = 0; l < promises.length; l++) {
-                        var json = parseJson(responses[l].data);
-                        if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
-                            if (json.ReservationsOnUnit.Header.StatusCode === "1") {
-                                if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
-                                    reservations.push(json.ReservationsOnUnit.Detail.Reservation);
-                                } else {
-                                    for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
-                                        reservations.push(json.ReservationsOnUnit.Detail.Reservation[s]);
-                                    }
-                                }
-
-                            } else {
-                                $scope.loggingIn = false;
-                                $scope.error = true;
-                                $scope.errormessage = "Fout in de ingegeven gegevens.";
-                            }
-                        }
-                    }
-                    setReservations(calendarBrows);
-                }, function(error) {
-                    alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                });
-            }
-
-            function setReservations(calendarBrows) {
+            function setReservations(reservations, calendarBrows) {
                 for (var i = 0; i < reservations.length; i++) {
                     $rootScope[$rootScope.searchString].push(reservations[i]);
                 }
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal(calendarBrows);
                 } else {
-                    var start = new Date($rootScope.searchRangeStart);
-                    var end = new Date($rootScope.searchRangeEnd);
-                    start.setHours(0, 0, 0);
-                    end.setHours(0, 0, 0);
-                    var events = $rootScope[$rootScope.searchString];
-                    var j = 0;
-                    var count = 0;
-                    var countEvent = [];
-                    var eventsEdit = [];
-                    while (start.getTime() !== end.getTime()) {
-                        for (var i = 0; i < events.length; i++) {
-                            eventsEdit.push(new Date(events[i].the_date));
-                            eventsEdit[j].setHours(0, 0, 0);
-                            if (start.getTime() === eventsEdit[j].getTime()) {
-                                count = count + 1;
-                            }
-                            j = j + 1;
-                        }
-                        if (count != 0) {
-                            count = count + "";
-                            var endTest = new Date(start.getFullYear(), start.getMonth(), start.getDate(), start.getHours() + 1);
-                            countEvent.push({title: count, start: start.toUTCString(), end: endTest.toUTCString(), allDay: true});
-                            count = 0;
-                        }
-                        start.setDate(start.getDate() + 1);
-                    }
-
-                    var holidays = $rootScope.publicHolidays;
-                    if (!angular.isUndefined(holidays.length))
-                        for (var i = 0; i < holidays.length; i++) {
-                            var holiday_date = new Date(holidays[i].the_date);
-                            var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
-                            countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
-                        }
-
-                    var absentDays = $rootScope.absentDays;
-                    if (!angular.isUndefined(absentDays.length))
-                        for (var i = 0; i < absentDays.length; i++) {
-                            for (var j = 0; j < absentDays[i].length; j++) {
-                                if (!isHoliday(absentDays[i][j].the_date, holidays)) {
-                                    var absent_date = new Date(absentDays[i][j].the_date);
-                                    var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
-                                    countEvent.push({title: 'Verlof', start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
-                                }
-                            }
-                        }
+                    var countEvent = dataFactory.loadCalendar();
                     localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     $('#doctorCalendar').fullCalendar('removeEvents').fullCalendar('removeEventSources');
                     $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
                     $scope.loadingMonth = false;
                     $('#doctorCalendar').fullCalendar(calendarBrows);
                 }
-            }
-            function isHoliday(date, holidays) {
-                if (!angular.isUndefined(holidays.length))
-                    for (var i = 0; i < holidays.length; i++) {
-                        if (date === holidays[i].the_date)
-                            return true;
-                    }
-                return false;
             }
 
             function callModal(calendarBrows) {
@@ -1019,19 +943,15 @@ angular.module('myApp.controllers', []).
                 $location.path('/doctor/appointmentsView');
             };
         }).
-        controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope, $interval) {
+        controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope, $interval, dataFactory) {
 
             $interval(test(), 1000, 2);
 
             function test() {
                 console.log("test");
             }
-            var start = new Date($rootScope.searchRangeStart);
-            var end = new Date($rootScope.searchRangeEnd);
             var current = new Date($rootScope.currentdate);
             var showWeekends = false;
-            start.setHours(0, 0, 0);
-            end.setHours(0, 0, 0);
             $scope.back = function() {
                 //pageTransition('prev');
                 $location.path('/doctor/appointmentsView');
@@ -1066,56 +986,7 @@ angular.module('myApp.controllers', []).
                 }
             };
 
-            var events = $rootScope[$rootScope.searchString];
-            var j = 0;
-            var count = 0;
-            var countEvent = [];
-            var eventsEdit = [];
-            while (start.getTime() !== end.getTime()) {
-                for (var i = 0; i < events.length; i++) {
-                    eventsEdit.push(new Date(events[i].the_date));
-                    eventsEdit[j].setHours(0, 0, 0);
-                    if (start.getTime() === eventsEdit[j].getTime()) {
-                        count = count + 1;
-                    }
-                    j = j + 1;
-                }
-                if (count != 0) {
-                    count = count + "";
-                    var endTest = new Date(start.getFullYear(), start.getMonth(), start.getDate(), start.getHours() + 1);
-                    countEvent.push({title: count, start: start.toUTCString(), end: endTest.toUTCString(), allDay: true});
-                    count = 0;
-                }
-                start.setDate(start.getDate() + 1);
-            }
-            var holidays = $rootScope.publicHolidays;
-            if (!angular.isUndefined(holidays.length))
-                for (var i = 0; i < holidays.length; i++) {
-                    var holiday_date = new Date(holidays[i].the_date);
-                    var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
-                    countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
-                }
-
-            var absentDays = $rootScope.absentDays;
-            if (!angular.isUndefined(absentDays.length))
-                for (var i = 0; i < absentDays.length; i++) {
-                    for (var j = 0; j < absentDays[i].length; j++) {
-                        if (!isHoliday(absentDays[i][j].the_date)) {
-                            var absent_date = new Date(absentDays[i][j].the_date);
-                            var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
-                            countEvent.push({title: $rootScope.getLocalizedString('appointmentsCalendarAbsent'), start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
-                        }
-                    }
-                }
-
-            function isHoliday(date) {
-                if (!angular.isUndefined(holidays.length))
-                    for (var i = 0; i < holidays.length; i++) {
-                        if (date === holidays[i].the_date)
-                            return true;
-                    }
-                return false;
-            }
+            var countEvent = dataFactory.loadCalendar();
             console.log(countEvent);
             $scope.eventSources = [countEvent];
             $scope.next = function() {
