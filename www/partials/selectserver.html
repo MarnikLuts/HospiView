@@ -7,57 +7,57 @@
 </div>
 <div class="col-md-12">
     <div class="well">
-        <h2>Welkom bij Hospiview</h2>
+        <h2>{{ getLocalizedString('newGreeting') }}</h2>
         <div class="form-group">
-            <p>Selecteer het ziekenhuis waarmee u connectie wil maken: </p>
+            <p>{{ getLocalizedString('newInfo') }}</p>
                 <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers" ng-change="serverSelected = true;
                     accountRadio = null">
-                    <option value="">- Klik hier om te selecteren -</option>
+                    <option value="">- {{ getLocalizedString('newServerSelectDefault') }} -</option>
                 </select> 
         </div>
         <br>
         <div class="form-group" ng-show="serverSelected">
-            <p>Heeft u een account bij dit ziekenhuis?</p>
+            <p>{{ getLocalizedString('newServerHasAccount') }}</p>
             <div class="input-lg">
                 <div class="btn-group btn-group-lg btn-block">
                     <button type="button" class="btn btn-width btn-primary btn-large" ng-model="accountRadio" ng-click="accountTrue = true;
-                        accountFalse = false" btn-radio="'ja'">Ja</button>
+                        accountFalse = false" btn-radio="'ja'">{{ getLocalizedString('yes') }}</button>
                     <button type="button" class="btn btn-width btn-primary btn-large" ng-model="accountRadio" ng-click="accountFalse = true;
-                        accountTrue = false" btn-radio="'nee'">Nee</button>
+                        accountTrue = false" btn-radio="'nee'">{{ getLocalizedString('no') }}</button>
                 </div>
             </div>
         </div>
         <br>
         <div class="form-group" ng-show="accountTrue">
-            <p>{{requestMessage}}Geef uw login gegevens in:</p>
+            <p>{{requestMessage}}{{ getLocalizedString('newServerEnterAccount') }}</p>
             <form name="loginForm" novalidate ng-submit="login()">
                 <div>
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                            <input type="text" id="username" class="form-control input-lg" placeholder="Gebruikersnaam" ng-model="username">
+                            <input type="text" id="username" class="form-control input-lg" placeholder="{{ getLocalizedString('loginUsername') }}" ng-model="username">
                         </div>
                     </div>
                     <div class="form-group" ng-hide="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-hide="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
-                            <input type="password" id="password" class="form-control input-lg" placeholder="Paswoord" ng-model="password" required>
+                            <input type="password" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword') }}" ng-model="password" required>
                         </div>
                     </div>
                     <div class="form-group" ng-show="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-show="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
-                            <input type="text" id="password" class="form-control input-lg" placeholder="Paswoord" ng-model="password" required>
+                            <input type="text" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword') }}" ng-model="password" required>
                         </div>
                     </div>
                     <div class="checkbox">         
                         <label class="checkbox">
-                            <input type="checkbox" ng-model="savePassword" ng-click="savePasswordWarning()">Paswoord automatisch invullen?    
+                            <input type="checkbox" ng-model="savePassword" ng-click="savePasswordWarning()">{{ getLocalizedString('loginAutomaticallyEnterPassword') }}
                         </label>
                     </div>
                     <div class="alert alert-danger" ng-show="error">{{errormessage}}</div>
                     <div class="form-group text-center">
-                        <button type="submit" class="btn btn-xl" ng-disabled="loginForm.$invalid">Log in</button>
+                        <button type="submit" class="btn btn-xl" ng-disabled="loginForm.$invalid">{{ getLocalizedString('login') }}</button>
                     </div>
                 </div>
             </form>
@@ -66,98 +66,98 @@
         <div class="form-group" ng-show="accountFalse">
             <select name="userFunctionSelect" class="form-control input-xl" ng-model="userFunctionSelect" ng-options="userFunction for userFunction in userFunctionList" ng-change="userFunctionSelected = true;
                 accountRadio = null">
-                <option value="">- Selecteer een functie -</option>
+                <option value="">- {{ getLocalizedString('newFunctionSelectDefault') }} -</option>
             </select>
         </div>
         
         <div class="form-group" ng-show="userFunctionSelected&&accountFalse">
-            <p>Geef volgende gegevens in om een account aan te vragen:</p>
+            <p>{{ getLocalizedString('newUserEnterDetails') }}</p>
             <form name="createAccountForm" novalidate ng-submit="requestAccount()">
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.firstName.$valid"></span></span>
-                        <input type="text" name="firstName" class="form-control input-lg" placeholder="Voornaam" ng-model="firstName" required>
+                        <input type="text" name="firstName" class="form-control input-lg" placeholder="{{ getLocalizedString('newUserFirstName') }}" ng-model="firstName" required>
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.firstName.$dirty && createAccountForm.firstName.$invalid">
-                        <span ng-show="createAccountForm.firstName.$error.required">Voornaam is verplicht.</span>
+                        <span ng-show="createAccountForm.firstName.$error.required">{{ getLocalizedString('newUserFirstName') + " " +getLocalizedString('isRequired')+"." }}</span>
                     </div> 
                 </div>
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.lastName.$valid"></span></span>
-                        <input type="text" name="lastName" class="form-control input-lg" placeholder="Achternaam" ng-model="lastName" required>
+                        <input type="text" name="lastName" class="form-control input-lg" placeholder="{{ getLocalizedString('newUserLastName') }}" ng-model="lastName" required>
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.lastName.$dirty && createAccountForm.lastName.$invalid">
-                        <span ng-show="createAccountForm.lastName.$error.required">Achternaam is verplicht.</span>
+                        <span ng-show="createAccountForm.lastName.$error.required">{{ getLocalizedString('newUserLastName') + " " +getLocalizedString('isRequired')+"." }}</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.dateOfBirth.$valid"></span></span>
-                        <input type="text" id="dateOfBirth" name="dateOfBirth" class="form-control input-lg" placeholder="Geboortedatum" ng-model="dateOfBirth" required ng-pattern="/^([0-9]{2})/([0-9]{2})/([0-9]{4})$/">
+                        <input type="text" id="dateOfBirth" name="dateOfBirth" class="form-control input-lg" placeholder="{{ getLocalizedString('newUserDateOfBirth') }}" ng-model="dateOfBirth" required ng-pattern="/^([0-9]{2})/([0-9]{2})/([0-9]{4})$/">
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.dateOfBirth.$dirty && createAccountForm.dateOfBirth.$invalid">
-                        <span ng-show="createAccountForm.dateOfBirth.$error.required">Geboortedatum is verplicht.</span>
-                        <span ng-show="createAccountForm.dateOfBirth.$error.pattern">Geboortedatum moet volgend formaat hebben: dd/mm/yyyy.</span>
+                        <span ng-show="createAccountForm.dateOfBirth.$error.required">{{ getLocalizedString('newUserDateOfBirth') + " " +getLocalizedString('isRequired')+"." }}</span>
+                        <span ng-show="createAccountForm.dateOfBirth.$error.pattern">{{ getLocalizedString('newUserDateIncorrect')}} dd/mm/yyyy.</span>
                     </div>
                 </div>
                 
                  <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.emailAddress.$valid"></span></span>
-                        <input type="email" id="emailAddress" name="emailAddress" class="form-control input-lg" placeholder="E-mailadres" ng-model="emailAddress" required>
+                        <input type="email" id="emailAddress" name="emailAddress" class="form-control input-lg" placeholder="{{ getLocalizedString('newUserEmail') }}" ng-model="emailAddress" required>
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.emailAddress.$dirty && createAccountForm.emailAddress.$invalid">
-                        <span ng-show="createAccountForm.emailAddress.$error.required">E-mailadres is verplicht.</span>
-                        <span ng-show="createAccountForm.emailAddress.$error.email">E-mailadres heeft een fout formaat.</span>
+                        <span ng-show="createAccountForm.emailAddress.$error.required">{{ getLocalizedString('newUserEmail') + " " +getLocalizedString('isRequired')+"." }}</span>
+                        <span ng-show="createAccountForm.emailAddress.$error.email">{{ getLocalizedString('newUserEmailIncorrect')}}</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.confirmEmailAddress.$valid"></span></span>
-                        <input type="email" id="confirmEmailAddress" name="confirmEmailAddress" class="form-control input-lg" placeholder="Bevestig uw e-mailadres" ng-model="confirmEmailAddress" confirmemail="emailAddress" required>
+                        <input type="email" id="confirmEmailAddress" name="confirmEmailAddress" class="form-control input-lg" placeholder="{{ getLocalizedString('newUserEmailConfirm') }}" ng-model="confirmEmailAddress" confirmemail="emailAddress" required>
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.confirmEmailAddress.$dirty && createAccountForm.confirmEmailAddress.$invalid">
-                        <span ng-show="createAccountForm.confirmEmailAddress.$error.required">Bevestiging van het e-mailadres is verplicht.</span>
-                        <span ng-show="createAccountForm.confirmEmailAddress.$error.emailmatch">E-mailadressen komen niet overeen.</span>
+                        <span ng-show="createAccountForm.confirmEmailAddress.$error.required">{{ getLocalizedString('newUserEmailConfirmRequired')}}</span>
+                        <span ng-show="createAccountForm.confirmEmailAddress.$error.emailmatch">{{ getLocalizedString('newUserEmailConfirmIncorrect')}}</span>
                     </div>
                 </div>
                 
                 <div class="form-group" ng-show="needsNationalReg(userFunctionSelect)">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.nationalRegister.$valid" ></span></span>
-                        <input type="number" id="nationalRegister" name="nationalRegister" class="form-control input-lg" placeholder="Rijksregisternummer" ng-model="nationalRegister" checknational ng-required="needsNationalReg(userFunctionSelect)">
+                        <input type="number" id="nationalRegister" name="nationalRegister" class="form-control input-lg" placeholder="{{ getLocalizedString('newUserNatReg') }}" ng-model="nationalRegister" checknational ng-required="needsNationalReg(userFunctionSelect)">
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.nationalRegister.$dirty && createAccountForm.nationalRegister.$invalid">
                         <span ng-show="createAccountForm.nationalRegister.$error.number">Rijksregisternummer moet een nummer van 11 tekens zijn.</span>
-                        <span ng-show="createAccountForm.nationalRegister.$error.required">Rijksregisternummer is verplicht en moet een nummer zijn.</span>
-                        <span ng-show="createAccountForm.nationalRegister.$error.checknational">Rijksregisternummer is niet correct.</span>
+                        <span ng-show="createAccountForm.nationalRegister.$error.required">{{ getLocalizedString('newUserNatReg') + " " +getLocalizedString('isRequired')+" "+getLocalizedString('and')+ " " + getLocalizedString('mustBeNumber')+"."}}</span>
+                        <span ng-show="createAccountForm.nationalRegister.$error.checknational">{{ getLocalizedString('newUserNatRegIncorrect')}}</span>
                     </div>
                 </div>
                 
                 <div class="form-group" ng-show="needsRiziv(userFunctionSelect)" >
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.rizivNumber.$valid"></span></span>
-                        <input type="number" id="rizivNumber" name="rizivNumber" class="form-control input-lg" placeholder="RIZIV Nummer" ng-model="rizivNumber" riziv ng-required="needsRiziv(userFunctionSelect)">
+                        <input type="number" id="rizivNumber" name="rizivNumber" class="form-control input-lg" placeholder="{{ getLocalizedString('newUserRiziv') }}" ng-model="rizivNumber" riziv ng-required="needsRiziv(userFunctionSelect)">
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.rizivNumber.$dirty && createAccountForm.rizivNumber.$invalid">
-                        <span ng-show="createAccountForm.rizivNumber.$error.required">RIZIV nummer is verplicht en moet een nummer zijn.</span>
-                        <span ng-show="createAccountForm.rizivNumber.$error.riziv">RIZIV nummer is niet correct.</span>
+                        <span ng-show="createAccountForm.rizivNumber.$error.required">{{ getLocalizedString('newUserRiziv') + " " +getLocalizedString('isRequired')+" "+getLocalizedString('and')+ " " + getLocalizedString('mustBeNumber')+"."}}</span>
+                        <span ng-show="createAccountForm.rizivNumber.$error.riziv">{{ getLocalizedString('newUserRizivIncorrect')}}</span>
                     </div>
                 </div>
                 
-                <div class="form-group" ng-show="userFunctionSelect==='Vertegenwoordiger'" >
+                <div class="form-group" ng-show="userFunctionSelect===getLocalizedString('newFunctionRepresentative')" >
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-ok" ng-show="createAccountForm.firmName.$valid"></span></span>
-                        <input type="text" id="firmName" name="firmName" class="form-control input-lg" placeholder="Firma" ng-model="firmName" ng-required="userFunctionSelect==='Vertegenwoordiger'">
+                        <input type="text" id="firmName" name="firmName" class="form-control input-lg" placeholder="{{ getLocalizedString('newUserFirm') }}" ng-model="firmName" ng-required="userFunctionSelect===getLocalizedString('newFunctionRepresentative')">
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.firmName.$dirty && createAccountForm.firmName.$invalid">
-                        <span ng-show="createAccountForm.firmName.$error.required">Firma is verplicht.</span>
+                        <span ng-show="createAccountForm.firmName.$error.required">{{ getLocalizedString('newUserFirm')+" "+ getLocalizedString('isRequired') }}.</span>
                     </div>
                 </div>
                
                 <div class="form-group text-center">
-                    <button type="submit" ng-disabled="createAccountForm.$invalid" class="btn btn-xl">Vraag account aan</button>
+                    <button type="submit" ng-disabled="createAccountForm.$invalid" class="btn btn-xl">{{ getLocalizedString('newUserRequest') }}</button>
                 </div>
             </form>
         </div>

@@ -63,7 +63,7 @@ angular.module('myApp.services', []).
                                 $rootScope.publicHolidays.push(json.PublicHolidays.Detail.PublicHoliday);
                             }
                         } else {
-                            defer.reject('Fout in de gegevens');
+                            defer.reject($rootScope.getLocalizedString('internalError'));
                         }
                     }
                     defer.resolve();
@@ -86,7 +86,7 @@ angular.module('myApp.services', []).
                         }
                         defer.resolve($rootScope.searchUnits);
                     } else {
-                        defer.reject('Fout in de gegevens');
+                        defer.reject($rootScope.getLocalizedString('internalError'));
                     }
                     return defer.promise;
                 },
@@ -112,14 +112,13 @@ angular.module('myApp.services', []).
                                     $rootScope.absentDays.push(json.UnitAbsentdays.Detail.AbsentDay);
                                 }
                             } else {
-//                                defer.reject("Fout in de gegevens.");
-                                defer.reject(json.UnitAbsentdays.Header.StatusTitle);
+                                defer.reject($rootScope.getLocalizedString('internalError'));
                             }
                         }
                         localStorage.setItem($rootScope.user + "AbsentDays", JSON.stringify($rootScope.absentDays));
                         defer.resolve();
                     }, function(error) {
-                        defer.reject("De lijst met afwezigheden kon niet worden opgehaald");
+                        defer.reject($rootScope.getLocalizedString('connectionError'));
                     });
                     return defer.promise;
                 },
@@ -162,13 +161,13 @@ angular.module('myApp.services', []).
                                     }
 
                                 } else {
-                                    defer.reject("Fout in de gegevens");
+                                    defer.reject($rootScope.getLocalizedString('internalError'));
                                 }
                             }
                         }
                         defer.resolve(reservations);
                     }, function(error) {
-                        defer.reject("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                        defer.reject($rootScope.getLocalizedString('connectionError'));
                     });
                     return defer.promise;
                 },
@@ -205,6 +204,7 @@ angular.module('myApp.services', []).
                     end.setHours(0, 0, 0);
                     
                     var events = $rootScope[$rootScope.searchString];
+                    console.log(events);
                     var j = 0;
                     var count = 0;
                     var countEvent = [];
@@ -311,7 +311,7 @@ angular.module('myApp.services', []).
                                 }
                                 defer.resolve();
                             }else{
-                                defer.reject("Fout in de gegevens");
+                                defer.reject($rootScope.getLocalizedString('internalError'));
                                 break;
                             }
                         }

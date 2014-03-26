@@ -50,28 +50,26 @@
         </div>
         <script type="text/ng-template" id="searchModal">
             <div class="modal-header">
-            <p>Er zijn de volgende 14 dagen geen afspraken gevonden.
-            Wilt u verder zoeken?</p>
+            <p>{{ getLocalizedString('loginNoReservationsFound') }}</p>
             </div>
             <div class="modal-body form-group">
             <div class="input-lg">
             <div class="btn-group btn-group-lg btn-block">
-            <button class="btn btn-width btn-primary btn-large" ng-click="ok()">ja</button>
-            <button class="btn btn-width btn-primary btn-large" ng-click="cancel()">nee</button>
+            <button class="btn btn-width btn-primary btn-large" ng-click="ok()">{{ getLocalizedString('yes') }}</button>
+            <button class="btn btn-width btn-primary btn-large" ng-click="cancel()">{{ getLocalizedString('no') }}</button>
             </div>
             </div>
             </div>
         </script>
         <script type="text/ng-template" id="offlineModal">
             <div class="modal-header">
-            <p>Er is geen internetconnectie of er kan geen connectie worden gemaakt met de server. Offline kan u nog steeds
-            de laatst opgehaalde afspraken bekijken. Wilt u offline doorgaan?</p>
+            <p>{{ getLocalizedString('loginNoConnection') }}</p>
             </div>
             <div class="modal-body form-group">
             <div class="input-lg">
             <div class="btn-group btn-group-lg btn-block">
-            <button class="btn btn-width btn-primary btn-large" ng-click="ok()">ja</button>
-            <button class="btn btn-width btn-primary btn-large" ng-click="cancel()">nee</button>
+            <button class="btn btn-width btn-primary btn-large" ng-click="ok()">{{ getLocalizedString('yes') }}</button>
+            <button class="btn btn-width btn-primary btn-large" ng-click="cancel()">{{ getLocalizedString('no') }}</button>
             </div>
             </div>
             </div>
