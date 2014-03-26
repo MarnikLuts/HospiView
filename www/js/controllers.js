@@ -771,7 +771,7 @@ angular.module('myApp.controllers', []).
                 } else {
                     var countEvent = dataFactory.loadCalendar();
                     localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
-                    $('#doctorCalendar').fullCalendar('removeEvents').fullCalendar('removeEventSources');
+                    $('#doctorCalendar').fullCalendar('removeEvents');
                     $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
                     $scope.loadingMonth = false;
                     $('#doctorCalendar').fullCalendar(calendarBrows);
@@ -827,39 +827,43 @@ angular.module('myApp.controllers', []).
                 //pageTransition('prev');
                 $location.path('/doctor/appointmentsView');
             };
-            $scope.uiConfig = {
-                calendar: {
-                    height: 500,
-                    editable: false,
-                    defaultView: 'month',
-                    timeFormat: 'H:mm',
-                    month: current.getMonth(),
-                    year: current.getFullYear(),
-                    firstDay: 1,
-                    weekNumbers: true,
-                    monthNames: getMonthNames($rootScope.languageID),
-                    dayNamesShort: getDayNamesShort($rootScope.languageID),
-                    weekends: showWeekends,
-                    header: {
-                        left: '',
-                        center: 'title',
-                        right: ''
-                    },
-                    titleFormat: {
-                        day: 'd/m'
-                    },
-                    eventClick: function(calEvent, jsEvent, view) {
-                        var getClickedDay = calEvent.start;
-                        $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
-                        $rootScope.eventClick = true;
-                        window.location.href = 'index.html#/doctor/appointmentsView';
+            if(!calendarIsLoaded){
+                console.log('loadingCalendar');
+                $scope.uiConfig = {
+                    calendar: {
+                        height: 500,
+                        editable: false,
+                        defaultView: 'month',
+                        timeFormat: 'H:mm',
+                        month: current.getMonth(),
+                        year: current.getFullYear(),
+                        firstDay: 1,
+                        weekNumbers: true,
+                        monthNames: getMonthNames($rootScope.languageID),
+                        dayNamesShort: getDayNamesShort($rootScope.languageID),
+                        weekends: showWeekends,
+                        header: {
+                            left: '',
+                            center: 'title',
+                            right: ''
+                        },
+                        titleFormat: {
+                            day: 'd/m'
+                        },
+                        eventClick: function(calEvent, jsEvent, view) {
+                            var getClickedDay = calEvent.start;
+                            $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
+                            $rootScope.eventClick = true;
+                            window.location.href = 'index.html#/doctor/appointmentsView';
+                        }
                     }
-                }
-            };
-
+                };
+                var calendarIsLoaded=true;
+            }
+           
             var countEvent = dataFactory.loadCalendar();
-            console.log(countEvent);
             $scope.eventSources = [countEvent];
+//            $('#doctorCalendar').fullCalendar('addEventSource', [countEvent]);
             $scope.next = function() {
                 $('#doctorCalendar').fullCalendar('next');
             }
