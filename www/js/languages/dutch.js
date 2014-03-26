@@ -17,6 +17,13 @@ function getDutchLanguageStrings () {
         appointmentsCalendarWeekends: "Weekends",
         appointmentsCalendarAbsent: "Afwezigheidsdag",
         
+        //AppointmentsFilter
+        appointmentsFilterTitle: "Filter",
+        appointmentsFilterUnitOrGroup: "Selecteer een unit of groep",
+        appointmentsFilterDepartment: "Selecteer een departement",
+        appointmentsFilterRemove: "Verwijder huidige filter",
+        appointmentsFilterApply: "Voer filter uit",
+        
         //general app use
         settings: "Instellingen",
         back: "Terug",

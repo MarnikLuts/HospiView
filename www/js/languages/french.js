@@ -17,6 +17,13 @@ function getFrenchLanguageStrings () {
         appointmentsCalendarWeekends: "Week-end",
         appointmentsCalendarAbsent: "Jour de congé",
         
+        //AppointmentsFilter
+        appointmentsFilterTitle: "Filtre",
+        appointmentsFilterUnitOrGroup: "Choisissez une unité",
+        appointmentsFilterDepartment: "Choisissez un département",
+        appointmentsFilterRemove: "Supprimer le filtre actuel",
+        appointmentsFilterApply: "Appliquer le filtre ",
+        
         //general app use
         settings: "Paramètres",
         back: "Retour",

@@ -1,0 +1,30 @@
+<div class="col-md-12 page-header-red">
+    <button type="submit" class="btn btn-sm-back" ng-click="back()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        {{ getLocalizedString('back')}}
+    </button>
+    <h1>{{ getLocalizedString('appointmentsFilterTitle')}}</h1>
+</div>
+<div class="col-md-12 well">
+    {{getLocalizedString('appointmentsFilterMessage')}}
+
+    <div class="form-group">
+        <select class="form-control input-xl" ng-model="serverFilter" ng-options="server as server.hosp_full_name for server in servers" ng-change="loadUnit()">
+            <option value="">{{getLocalizedString('loginUserSelectDefault')}}</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <select class="form-control input-xl" ng-model="unitFilter" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in server" ng-change="loadDep()" ng-hide="disableUnits">
+            <option value="">{{getLocalizedString('appointmentsFilterUnitOrGroup')}}</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <select class="form-control input-xl" ng-model="depFilter" ng-options="dep as dep.dep_name for dep in departments.Dep" ng-hide="disableDepartments">
+            <option value="">{{getLocalizedString('appointmentsFilterDepartment')}}</option>
+        </select>
+    </div>
+</div>
+<div class="col-md-12 btn-group btn-group-lg btn-block">
+    <button class="btn btn-default btn-lg btn-width" ng-click="removeFilter()">{{getLocalizedString('appointmentsFilterRemove')}}</button>
+    <button class="btn btn-default btn-lg btn-width" ng-click="applyFilter()">{{getLocalizedString('appointmentsFilterApply')}}</button>
+</div>

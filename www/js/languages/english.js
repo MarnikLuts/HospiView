@@ -17,6 +17,13 @@ function getEnglishLanguageStrings () {
         appointmentsCalendarWeekends: "Weekends",
         appointmentsCalendarAbsent: "Day Off",
         
+        //AppointmentsFilter
+        appointmentsFilterTitle: "Filter",
+        appointmentsFilterUnitOrGroup: "Select a unit or group",
+        appointmentsFilterDepartment: "Select a department",
+        appointmentsFilterRemove: "Remove current filter",
+        appointmentsFilterApply: "Apply filter",
+        
         //general app use
         settings: "Settings",
         back: "Back",
