@@ -1,4 +1,4 @@
-        /*controller('SettingsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
+        controller('SettingsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
          
          $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
          
@@ -181,9 +181,9 @@
          }
          $location.path('/selectserver/' + action);
          };
-         }).*/
+         }).
         
-        /*controller('DoctorSearchAppointmentsCtrl', function($scope, $location, $rootScope, $modal, $parse, hospiviewFactory) {
+        controller('DoctorSearchAppointmentsCtrl', function($scope, $location, $rootScope, $modal, $parse, hospiviewFactory) {
 
 
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
@@ -368,4 +368,51 @@
                 };
             }
             ;
-        }).*/
+        }).
+        
+        
+        
+        
+        controller('MainmenuCtrl', function($scope, $location, $rootScope) {
+
+            /**
+             * If the user in rootScope is not set, the user is not logged in
+             * and is redirected to the login screen. Otherwise the user model
+             * will be set with the rootScope.
+             */
+            if ($rootScope.user === null || angular.isUndefined($rootScope.user)) {
+                $location.path('/login');
+            } else {
+                $scope.user = $rootScope.user;
+            }
+
+            /**
+             * rootScope user and type will be set to null and the user will be 
+             * redirected to the login.
+             * screen.
+             */
+            $scope.logout = function() {
+                $rootScope.user = null;
+                $rootScope.type = null;
+                $location.path('/login');
+            };
+            $scope.createAppointment = function() {
+                $location.path('/login');
+            };
+            /**
+             * Depending on the type of user, the user will be redirected to 
+             * the appropriate appointments screen.
+             */
+            $scope.viewAppointments = function() {
+                if ($rootScope.type === 0) {
+                    $location.path('/doctor/appointmentsSearch');
+                } else {
+                    if ($rootScope.type === 1) {
+                        $location.path('/patient/appointmentsPatient');
+                    }
+                }
+            };
+            $scope.settings = function() {
+                $location.path('/settings');
+            };
+        });

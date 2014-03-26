@@ -207,7 +207,6 @@ angular.module('myApp.controllers', []).
                                 }, error);
                     }
                     $rootScope.isOffline = true;
-                    //pageTransition('next');
                     $location.path('/doctor/appointmentsView');
                 }
             }
@@ -219,15 +218,13 @@ angular.module('myApp.controllers', []).
                 } else {
                     localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     $rootScope.isOffline = false;
-                    //pageTransition('next');
                     $location.path('/doctor/appointmentsView');
                 }
-
             }
             function callModal() {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
-                    controller: ModalInstance,
+                    controller: ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
                     if (answer === true) {
@@ -273,7 +270,6 @@ angular.module('myApp.controllers', []).
                             $rootScope.publicHolidays = JSON.parse(localStorage.getItem($scope.user + "PublicHolidays"));
                             $rootScope.currentdate = new Date();
                             $rootScope.isOffline = true;
-                            //pageTransition('next');
                             $location.path('/doctor/appointmentsView');
                         }
                         else {
@@ -289,53 +285,7 @@ angular.module('myApp.controllers', []).
             }
 
         }).
-        controller('MainmenuCtrl', function($scope, $location, $rootScope) {
-
-            /**
-             * If the user in rootScope is not set, the user is not logged in
-             * and is redirected to the login screen. Otherwise the user model
-             * will be set with the rootScope.
-             */
-            if ($rootScope.user === null || angular.isUndefined($rootScope.user)) {
-                $location.path('/login');
-            } else {
-                $scope.user = $rootScope.user;
-            }
-
-            /**
-             * rootScope user and type will be set to null and the user will be 
-             * redirected to the login.
-             * screen.
-             */
-            $scope.logout = function() {
-                $rootScope.user = null;
-                $rootScope.type = null;
-                pageTransition('prev');
-                $location.path('/login');
-            };
-            $scope.createAppointment = function() {
-                $location.path('/login');
-            };
-            /**
-             * Depending on the type of user, the user will be redirected to 
-             * the appropriate appointments screen.
-             */
-            $scope.viewAppointments = function() {
-                if ($rootScope.type === 0) {
-                    $location.path('/doctor/appointmentsSearch');
-                } else {
-                    if ($rootScope.type === 1) {
-                        $location.path('/patient/appointmentsPatient');
-                    }
-                }
-            };
-            $scope.settings = function() {
-                $location.path('/settings');
-            };
-        }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $q, hospiviewFactory, dataFactory) {
-
-            console.log($rootScope.depFilter);
 
             $scope.loadingCalendar = false;
             $scope.eventPerDay;
@@ -373,7 +323,7 @@ angular.module('myApp.controllers', []).
                 $scope.date = formatDate(newDate);
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                 if (new Date($scope.date) < new Date($rootScope.searchRangeStart)) {
-                    search(newDate, 2)
+                    search(newDate, 2);
                 }
             };
 
@@ -395,6 +345,8 @@ angular.module('myApp.controllers', []).
                 if ($rootScope.isOffline === true) {
                     $location.path('/appointmentsCalendar');
                 } else {
+                    console.log($rootScope.startDate);
+                    console.log($rootScope.endDate);
                     $scope.loadingCalendar = true;
                     var searchStart = new Date($rootScope.searchRangeStart);
                     var searchEnd = new Date($rootScope.searchRangeEnd);
@@ -402,7 +354,6 @@ angular.module('myApp.controllers', []).
                     var request1 = false;
                     var request2 = false;
                     if (searchEnd.getMonth() <= current.getMonth()) {
-
                         $rootScope.startDate = new Date(searchEnd);
                         searchEnd.setMonth(current.getMonth() + 1);
                         searchEnd.setDate(1);
@@ -445,7 +396,6 @@ angular.module('myApp.controllers', []).
             $scope.logout = function() {
                 $rootScope.user = null;
                 $rootScope.type = null;
-                //pageTransition('prev');
                 $location.path('/login');
             };
             function search(newDate, swipe) {
@@ -480,7 +430,8 @@ angular.module('myApp.controllers', []).
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
-                    //pageTransition('next');
+                    console.log($rootScope.startDate);
+                    console.log($rootScope.endDate);
                     $location.path('/appointmentsCalendar');
                 }
             }
@@ -814,7 +765,6 @@ angular.module('myApp.controllers', []).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
             $scope.reservation = $rootScope.reservationDetail;
             $scope.back = function() {
-                //pageTransition('next');
                 $location.path('/doctor/appointmentsView');
             };
         }).
@@ -823,7 +773,6 @@ angular.module('myApp.controllers', []).
             var current = new Date($rootScope.currentdate);
             var showWeekends = false;
             $scope.back = function() {
-                //pageTransition('prev');
                 $location.path('/doctor/appointmentsView');
             };
             $scope.uiConfig = {
@@ -874,7 +823,6 @@ angular.module('myApp.controllers', []).
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location) {
             $scope.backToMainMenu = function() {
-                //pageTransition('prev');
                 $location.path('/mainmenu');
             };
         }).
@@ -934,7 +882,6 @@ angular.module('myApp.controllers', []).
                         localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
                     }
                 }
-                //pageTransition('prev');
                 $location.path('/doctor/appointmentsView');
             };
             $scope.addOrEditServer = function(action, server) {
@@ -944,7 +891,6 @@ angular.module('myApp.controllers', []).
                     if (action === "edit")
                         $rootScope.editServer = server;
                 }
-                //pageTransition('next');
                 $location.path('/selectserver/' + action);
             };
         }).
@@ -1063,7 +1009,6 @@ angular.module('myApp.controllers', []).
                                                 $rootScope.type = 1;
                                             $rootScope.user = null;
                                             $rootScope.type = null;
-                                            //pageTransition('next');
                                             $location.path('/login');
                                         } else {
                                             $scope.error = true;
@@ -1111,7 +1056,6 @@ angular.module('myApp.controllers', []).
                                         }
                                         $rootScope.user = null;
                                         $rootScope.type = null;
-                                        //pageTransition('next');
                                         $location.path('/login');
                                     }
 
@@ -1131,7 +1075,6 @@ angular.module('myApp.controllers', []).
              * the settings page.
              */
             $scope.cancel = function() {
-                //pageTransition('prev');
                 $location.path('/settings');
             };
 
