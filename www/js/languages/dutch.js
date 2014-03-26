@@ -28,6 +28,10 @@ var dutchStrings = {
         appointmentsFilterRemove: "Verwijder huidige filter",
         appointmentsFilterApply: "Voer filter uit",
         
+        //AppointmentDetail
+        //appointmentDetail: "Reservatie info",
+        //appointmentDetailPatient: "Reservatie info",
+        
         //Selectserver/new
         newGreeting: "Welkom bij Hospiview",
         newInfo: "Selecteer de instelling waarmee u verbinding wil maken:",

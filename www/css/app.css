@@ -82,7 +82,7 @@
     height: 10%;
 }
 .calendarWrapper{
-    height:70%;
+    height:65%;
 }
 .calendarHeight{
     height: 100%;
@@ -197,10 +197,10 @@
 }
 
 #weekendBtn{
-    font-size: 10px;
+    font-size: 15px;
 }
 #todayBtn{
-    font-size: 10px;
+    font-size: 15px;
 }
 
 .view-animate-next.ng-enter, .view-animate-next.ng-leave, .view-animate-prev.ng-enter, .view-animate-prev.ng-leave {
@@ -244,4 +244,8 @@
     font-size:25px;
     padding-top: 15px;
     padding-bottom:10px;
+}
+nextAndPrevCalendar{
+    display: inline-block;
+    
 }
