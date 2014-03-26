@@ -24,7 +24,7 @@ angular.module('myApp', [
                 $routeProvider.when('/settings', {templateUrl: 'partials/settings.html', controller: 'SettingsCtrl'});
                 $routeProvider.when('/selectserver/:action', {templateUrl: 'partials/selectserver.html', controller: 'SelectserverCtrl'});
                 $routeProvider.when('/appointmentsCalendar', {templateUrl: 'partials/doctor/appointmentsCalendar.html', controller: 'DoctorViewAppointmentsCalendarCtrl'});
-                $routeProvider.when('/appointmentsFilter', {templateUrl: 'partials/doctor/appointmentsFilter.html', controller: 'DoctorViewAppointmentsCtrl'});
+                $routeProvider.when('/appointmentsFilter', {templateUrl: 'partials/doctor/appointmentsFilter.html', controller: 'FilterCtrl'});
                 
                 $routeProvider.otherwise({redirectTo: '/login'});
             }]).

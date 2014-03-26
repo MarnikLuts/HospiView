@@ -21,6 +21,13 @@ var englishStrings = {
         appointmentsCalendarWeekends: "Weekends",
         appointmentsCalendarAbsent: "Day Off",
         
+        //AppointmentsFilter
+        appointmentsFilterTitle: "Filter",
+        appointmentsFilterUnitOrGroup: "Select a unit or group",
+        appointmentsFilterDepartment: "Select a department",
+        appointmentsFilterRemove: "Remove current filter",
+        appointmentsFilterApply: "Apply filter",
+        
         //Selectserver/new
         newGreeting: "Welcome to Hospiview",
         newInfo: "Select the facility you want to connect with:",

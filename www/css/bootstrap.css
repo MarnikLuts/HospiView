@@ -2377,6 +2377,7 @@ fieldset[disabled] .btn-link:focus {
   line-height: 1.5;
   border-radius: 3px;
 }
+/* 3 buttons added*/
 .btn-sm-back,
 .btn-group-sm-back > .btn {
   position: relative;
@@ -2386,6 +2387,23 @@ fieldset[disabled] .btn-link:focus {
   float: left;
   margin-top: 0.5%;
   margin-left: 0.5%;
+  margin-bottom: 0.5%;
+  background-color: white;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: black;
+  font-size: 12px;
+}
+.btn-sm-calendar,
+.btn-group-sm-calendar> .btn {
+  position: relative;
+  padding: 9px 10px;
+  height:50px;
+  width: 50px;
+  float: right;
+  margin-top: 0.5%;
+  margin-right: 0.5%;
   margin-bottom: 0.5%;
   background-color: white;
   background-image: none;

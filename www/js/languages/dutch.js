@@ -21,6 +21,13 @@ var dutchStrings = {
         appointmentsCalendarWeekends: "Weekends",
         appointmentsCalendarAbsent: "Afwezigheidsdag",
         
+        //AppointmentsFilter
+        appointmentsFilterTitle: "Filter",
+        appointmentsFilterUnitOrGroup: "Selecteer een unit of groep",
+        appointmentsFilterDepartment: "Selecteer een departement",
+        appointmentsFilterRemove: "Verwijder huidige filter",
+        appointmentsFilterApply: "Voer filter uit",
+        
         //Selectserver/new
         newGreeting: "Welkom bij Hospiview",
         newInfo: "Selecteer de instelling waarmee u verbinding wil maken:",

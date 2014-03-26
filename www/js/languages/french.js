@@ -21,6 +21,14 @@ var frenchStrings = {
         appointmentsCalendarWeekends: "Week-end",
         appointmentsCalendarAbsent: "Jour de congé",
         
+        //AppointmentsFilter
+        appointmentsFilterTitle: "Filtre",
+        appointmentsFilterUnitOrGroup: "Choisissez une unité",
+        appointmentsFilterDepartment: "Choisissez un département",
+        appointmentsFilterRemove: "Supprimer le filtre actuel",
+        appointmentsFilterApply: "Appliquer le filtre",
+
+        
         //Selectserver/new
         newGreeting: "Bienvenue chez Hospiview",
         newInfo: "Selecteer de instelling waarmee u verbinding wil maken:",

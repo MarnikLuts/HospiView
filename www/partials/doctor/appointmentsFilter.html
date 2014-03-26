@@ -10,21 +10,21 @@
 
     <div class="form-group">
         <select class="form-control input-xl" ng-model="serverFilter" ng-options="server as server.hosp_full_name for server in servers" ng-change="loadUnit()">
-            <option value="">{{getLocalizedString('loginUserSelectDefault')}}</option>
+            <option value="">{{getLocalizedString('loginServerSelectDefault')}}</option>
         </select>
     </div>
     <div class="form-group">
-        <select class="form-control input-xl" ng-model="unitFilter" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in server" ng-change="loadDep()" ng-hide="disableUnits">
+        <select class="form-control input-xl" ng-model="unitFilter" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in units" ng-change="loadDep()" ng-hide="disableUnits">
             <option value="">{{getLocalizedString('appointmentsFilterUnitOrGroup')}}</option>
         </select>
     </div>
     <div class="form-group">
-        <select class="form-control input-xl" ng-model="depFilter" ng-options="dep as dep.dep_name for dep in departments.Dep" ng-hide="disableDepartments">
+        <select class="form-control input-xl" ng-model="depFilter" ng-options="dep as dep.dep_name for dep in departments" ng-hide="disableDepartments">
             <option value="">{{getLocalizedString('appointmentsFilterDepartment')}}</option>
         </select>
     </div>
 </div>
 <div class="col-md-12 btn-group btn-group-lg btn-block">
-    <button class="btn btn-default btn-lg btn-width" ng-click="removeFilter()">{{getLocalizedString('appointmentsFilterRemove')}}</button>
-    <button class="btn btn-default btn-lg btn-width" ng-click="applyFilter()">{{getLocalizedString('appointmentsFilterApply')}}</button>
+    <button class="btn btn-primary btn-lg btn-width" ng-click="removeFilter()">{{getLocalizedString('appointmentsFilterRemove')}}</button>
+    <button class="btn btn-primary btn-lg btn-width" ng-click="applyFilter()">{{getLocalizedString('appointmentsFilterApply')}}</button>
 </div>
