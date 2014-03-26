@@ -1,3 +1,15 @@
+document.addEventListener("deviceready", onDeviceReady, false);
+var backFuncton;
+
+function onDeviceReady(){
+    document.addEventListener("backbutton", function(e){
+        if(backFunction===undefined)
+            navigator.app.exitApp();
+        else
+            backFunction();
+    });
+}
+
 /**
  * Adds object to localstorage item. Creates the object if it does not exist.
  * 

@@ -28,9 +28,8 @@ angular.module('myApp', [
                 
                 $routeProvider.otherwise({redirectTo: '/login'});
             }]).
-        run(function($rootScope) {
+        run(function($rootScope, $q) {
             FastClick.attach(document.body);
-            
             //default languageID
             $rootScope.languageID = 3;
             /**

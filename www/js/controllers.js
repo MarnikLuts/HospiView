@@ -3,7 +3,6 @@
 
 angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
-
             /**
              * Check if the localStorage item "users" exists. If is doesn't,
              * it means this is the first time the application is running. 
@@ -822,45 +821,40 @@ angular.module('myApp.controllers', []).
         controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope, $interval, dataFactory) {
 
             var current = new Date($rootScope.currentdate);
-            var showWeekends = true;
+            var showWeekends = false;
             $scope.back = function() {
                 //pageTransition('prev');
                 $location.path('/doctor/appointmentsView');
             };
-            if(!calendarIsLoaded){
-                console.log('loadingCalendar');
-                $scope.uiConfig = {
-                    calendar: {
-                        height: 500,
-                        editable: false,
-                        defaultView: 'month',
-                        timeFormat: 'H:mm',
-                        month: current.getMonth(),
-                        year: current.getFullYear(),
-                        firstDay: 1,
-                        weekNumbers: true,
-                        monthNames: getMonthNames($rootScope.languageID),
-                        dayNamesShort: getDayNamesShort($rootScope.languageID),
-                        weekends: showWeekends,
-                        header: {
-                            left: '',
-                            center: 'title',
-                            right: ''
-                        },
-                        titleFormat: {
-                            day: 'd/m'
-                        },
-                        eventClick: function(calEvent, jsEvent, view) {
-                            var getClickedDay = calEvent.start;
-                            $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
-                            $rootScope.eventClick = true;
-                            window.location.href = 'index.html#/doctor/appointmentsView';
-                        }
+            $scope.uiConfig = {
+                calendar: {
+                    height: 500,
+                    editable: false,
+                    defaultView: 'month',
+                    timeFormat: 'H:mm',
+                    month: current.getMonth(),
+                    year: current.getFullYear(),
+                    firstDay: 1,
+                    weekNumbers: true,
+                    monthNames: getMonthNames($rootScope.languageID),
+                    dayNamesShort: getDayNamesShort($rootScope.languageID),
+                    weekends: showWeekends,
+                    header: {
+                        left: '',
+                        center: 'title',
+                        right: ''
+                    },
+                    titleFormat: {
+                        day: 'd/m'
+                    },
+                    eventClick: function(calEvent, jsEvent, view) {
+                        var getClickedDay = calEvent.start;
+                        $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
+                        $rootScope.eventClick = true;
+                        window.location.href = 'index.html#/doctor/appointmentsView';
                     }
-                };
-                var calendarIsLoaded=true;
-            }
-           
+                }
+            };
             var countEvent = dataFactory.loadCalendar();
             $scope.eventSources = [countEvent];
 //            $('#doctorCalendar').fullCalendar('addEventSource', [countEvent]);
