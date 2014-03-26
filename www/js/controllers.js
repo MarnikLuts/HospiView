@@ -290,7 +290,8 @@ angular.module('myApp.controllers', []).
 
         }).
         controller('MainmenuCtrl', function($scope, $location, $rootScope) {
-
+            alert('main');
+            
             /**
              * If the user in rootScope is not set, the user is not logged in
              * and is redirected to the login screen. Otherwise the user model
@@ -307,6 +308,7 @@ angular.module('myApp.controllers', []).
              * redirected to the login.
              * screen.
              */
+            
             $scope.logout = function() {
                 $rootScope.user = null;
                 $rootScope.type = null;

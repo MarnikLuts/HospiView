@@ -1,13 +1,27 @@
 document.addEventListener("deviceready", onDeviceReady, false);
-var backFuncton;
+var backFunction;
 
 function onDeviceReady(){
+    FastClick.attach(document.body);
     document.addEventListener("backbutton", function(e){
-        if(backFunction===undefined)
-            navigator.app.exitApp();
-        else
-            backFunction();
+        alert(backFunction);    
+        backFunction();
     });
+    
+    if (navigator.notification) { // Override default HTML alert with native dialog
+        window.alert = function (message) {
+            navigator.notification.alert(
+                message,    // message
+                null,       // callback
+                "Hospiview", // title
+                'OK'        // buttonName
+            );
+        };
+    }
+}
+
+function set(newFunction){
+    alert(newFunction);
 }
 
 /**
