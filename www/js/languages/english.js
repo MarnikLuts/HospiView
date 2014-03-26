@@ -1,5 +1,4 @@
-function getEnglishLanguageStrings () {
-    return {
+var englishStrings = {
         //Login screen
         loginGreeting: "Welcome",
         loginUserSelectDefault: "Choose a user",
@@ -8,6 +7,10 @@ function getEnglishLanguageStrings () {
         loginUsername: "Username",
         loginPassword: "Password",
         login: "Log In",
+        loginError: "Invalid username or password.",
+        loginPasswordCheckedMessage: "Attention! By automatically entering your password every user of this device can log in with your account.",
+        loginNoReservationsFound: "There are no reservations found in the next 14 days. Would you like to continue searching?",
+        loginNoConnection: "There is no internet connection or a connection to the server can't be made. Offline you can still view the reservations from the last time you logged in. Would you like to continue offline?",
         
         //AppointmentsView
         appointmentsViewReservations: "Reservations",
@@ -51,6 +54,7 @@ function getEnglishLanguageStrings () {
         newUserNatRegIncorrect: "National register number is not correct.",
         newUserRizivIncorrect: "RIZIV number is not correct.",
         newUserRequest: "Request account",
+        newUserRequestMessage: "You will recieve an email with your login details shortly.",
         
         //Validation
         isRequired: "is required",
@@ -62,6 +66,9 @@ function getEnglishLanguageStrings () {
         back: "Back",
         logout: "Log Out",
         yes: "Yes",
-        no: "No"
-    };
-};
+        no: "No",
+        
+        //Connection messages
+        internalError: "Internal server error.",
+        connectionError: "Cannot connect to the server."
+ };

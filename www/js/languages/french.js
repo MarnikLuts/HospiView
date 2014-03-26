@@ -1,5 +1,4 @@
-function getFrenchLanguageStrings () {
-    return {
+var frenchStrings = {
         //Login screen
         loginGreeting: "Bienvenue",
         loginUserSelectDefault: "Choisissez un utilisatuer",
@@ -8,6 +7,10 @@ function getFrenchLanguageStrings () {
         loginUsername: "Nom d'utilisateur",
         loginPassword: "Mot de passe",
         login: "Enregistrer",
+        loginError: "Le mot de passe et/ou l'email que vous avez saisi est invalide.",
+        loginPasswordCheckedMessage: "Opgelet! Door uw wachtwoord automatisch te laten invullen kan elke gebruiker van dit toestel inloggen met uw account.",
+        loginNoReservationsFound: "Er zijn de volgende 14 dagen geen afspraken gevonden. Wilt u verder zoeken?",
+        loginNoConnection: "Er is geen internetconnectie of er kan geen connectie worden gemaakt met de server. Offline kan u nog steeds de laatst opgehaalde afspraken bekijken. Wilt u offline doorgaan?",
         
         //AppointmentsView
         appointmentsViewReservations: "Réservations",
@@ -51,10 +54,11 @@ function getFrenchLanguageStrings () {
         newUserNatRegIncorrect: "Rijksregisternummer is niet correct.",
         newUserRizivIncorrect: "RIZIV nummer is niet correct.",
         newUserRequest: "Vraag account aan",
+        newUserRequestMessage: "U ontvangt dadelijk een email met uw logingegevens.",
         
         //Validation
         isRequired: "is required.",
-        and: "en",
+        and: "et",
         mustBeNumber: "moet een nummer zijn",
         
         //general app use
@@ -62,6 +66,9 @@ function getFrenchLanguageStrings () {
         back: "Retour",
         logout: "Quitter",
         yes: "Oui",
-        no: "Non"
-    };
-}; 
+        no: "Non",
+        
+        //Connection messages
+        internalError: "Erreur interne du serveur.",
+        connectionError: "Erreur de connexion."
+};

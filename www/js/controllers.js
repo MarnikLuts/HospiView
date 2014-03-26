@@ -71,7 +71,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.savePasswordWarning = function() {
                 if ($scope.savePassword === false)
-                    alert("Opgelet! Door uw wachtwoord automatisch te laten invullen kan elke gebruiker van dit toestel inloggen met uw account.");
+                    alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             };
             /**
              * Toggle showPasswordBoolean. Password field will either show dots 
@@ -122,7 +122,7 @@ angular.module('myApp.controllers', []).
                             } else {
                                 $scope.loggingIn = false;
                                 $scope.error = true;
-                                $scope.errormessage = "Fout in de ingevoerde login gegevens.";
+                                $scope.errormessage = $rootScope.getLocalizedString('loginError');
                             }
                             ;
                         }).
@@ -280,7 +280,7 @@ angular.module('myApp.controllers', []).
                         else {
                             $scope.loggingIn = false;
                             $scope.error = true;
-                            $scope.errormessage = "Fout in de ingevoerde login gegevens.";
+                            $scope.errormessage = $rootScope.getLocalizedString('loginError');;
                         }
                     }
                 }, function() {
@@ -519,7 +519,7 @@ angular.module('myApp.controllers', []).
             }
             ;
         }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $q, hospiviewFactory) {
+        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $q, hospiviewFactory, dataFactory) {
 
             $scope.showmenu = function() {
                 
@@ -633,78 +633,24 @@ angular.module('myApp.controllers', []).
             function search(newDate, swipe) {
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
-                hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url).
-                        success(function(data) {
-                            var json = parseJson(data);
-                            if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                                var units = json.UnitsAndDeps.Detail.Unit;
-                                for (var i = 0; i < units.length; i++) {
-                                    $rootScope.searchUnits.push(units[i]);
-                                }
-                                setData(newDate, swipe);
-                            } else {
-                                $scope.error = true;
-                                $scope.errormessage = "Fout in de gegevens.";
-                            }
-                        }).
-                        error(function() {
-                            $scope.loadingCalendar = false;
-                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                        });
+                hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url)
+                        .then(function(response){dataFactory.setSearchUnits(response);}, error)
+                        .then(function(){setData(newDate, swipe);}, error);
             }
 
             function setData(newDate, swipe) {
-
-                setSearchDates($rootScope.startDate, $rootScope.endDate);
-                searchReservations();
+                dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
+                dataFactory.searchReservations()
+                        .then(function(reservations){setReservations(reservations);}, error);
             }
 
-            var reservations = [],
-                    promises = [];
-            function searchReservations() {
-                promises = [];
-                for (var i = 0; i < $rootScope.searchUnits.length; i++) {
-                    var depIds = [];
-                    var unitId = $rootScope.searchUnits[i].Header.unit_id;
-                    if ($rootScope.searchUnits[i].Header.perm === "1") {
-                        depIds.push($rootScope.searchUnits[i].Detail.Dep[0].dep_id);
-                    } else {
-                        for (var j = 0; j < $rootScope.searchUnits[i].Detail.Dep.length; j++) {
-                            depIds.push($rootScope.searchUnits[i].Detail.Dep[j].dep_id);
-                        }
-                    }
-                    for (var k = 0; k < depIds.length; k++) {
-                        promises.push(hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url));
-                    }
-                }
-
-                $q.all(promises).then(function(responses) {
-                    for (var l = 0; l < promises.length; l++) {
-                        var json = parseJson(responses[l].data);
-                        if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
-                            if (json.ReservationsOnUnit.Header.StatusCode === "1") {
-                                if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
-                                    reservations.push(json.ReservationsOnUnit.Detail.Reservation);
-                                } else {
-                                    for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
-                                        reservations.push(json.ReservationsOnUnit.Detail.Reservation[s]);
-                                    }
-                                }
-
-                            } else {
-                                $scope.loggingIn = false;
-                                $scope.error = true;
-                                $scope.errormessage = "Fout in de ingegeven gegevens.";
-                            }
-                        }
-                    }
-                    setReservations();
-                }, function(error) {
-                    alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                });
+            function error(data){
+                $scope.loggingIn = false;
+                $scope.error = true;
+                $scope.errormessage = data;
             }
 
-            function setReservations() {
+            function setReservations(reservations) {
                 for (var i = 0; i < reservations.length; i++)
                     $rootScope[$rootScope.searchString].push(reservations[i]);
                 if ($rootScope[$rootScope.searchString].length === 0) {
@@ -733,24 +679,6 @@ angular.module('myApp.controllers', []).
                 }, function() {
                     console.log("error");
                 });
-            }
-
-            function setSearchDates(startDate, endDate) {
-                if (angular.isUndefined($rootScope.searchRangeStart))
-                    $rootScope.searchRangeStart = startDate;
-                else {
-                    if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime()) {
-                        $rootScope.searchRangeStart = startDate;
-                    }
-                }
-                if (angular.isUndefined($rootScope.searchRangeEnd))
-                    $rootScope.searchRangeEnd = endDate;
-                else {
-                    if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime()) {
-                        $rootScope.searchRangeEnd = endDate;
-                    }
-                }
-
             }
 
             function ModalInstance($scope, $modalInstance) {
@@ -863,7 +791,7 @@ angular.module('myApp.controllers', []).
             }
 
             function setData(calendarBrows) {
-                setSearchDates($rootScope.startDate, $rootScope.endDate);
+                dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
                 dataFactory.searchReservations()
                         .then(function(reservations){setReservations(reservations, calendarBrows);}, error);
             }
@@ -903,24 +831,6 @@ angular.module('myApp.controllers', []).
                 }, function() {
                     console.log("error");
                 });
-            }
-
-            function setSearchDates(startDate, endDate) {
-                if (angular.isUndefined($rootScope.searchRangeStart))
-                    $rootScope.searchRangeStart = startDate;
-                else {
-                    if (new Date(startDate).getTime() < new Date($rootScope.searchRangeStart).getTime()) {
-                        $rootScope.searchRangeStart = startDate;
-                    }
-                }
-                if (angular.isUndefined($rootScope.searchRangeEnd))
-                    $rootScope.searchRangeEnd = endDate;
-                else {
-                    if (new Date(endDate).getTime() > new Date($rootScope.searchRangeEnd).getTime()) {
-                        $rootScope.searchRangeEnd = endDate;
-                    }
-                }
-
             }
 
             function ModalInstance($scope, $modalInstance) {
@@ -1101,7 +1011,7 @@ angular.module('myApp.controllers', []).
                         $scope.servers = json.HospiviewServerList.Detail.Server;
                     }).
                     error(function() {
-                        alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                        alert($rootScope.getLocalizedString('connectionError'));
                     });
 
             /**
@@ -1139,14 +1049,14 @@ angular.module('myApp.controllers', []).
                 return userFunction === $rootScope.getLocalizedString('newFunctionDoctor') || userFunction === $rootScope.getLocalizedString('newFunctionHouseDoctor');
             };
             $scope.requestAccount = function() {
-                $scope.requestMessage = "U ontvangt dadelijk een email met uw logingegevens. ";
-                $scope.accountRadio = "ja";
+                $scope.requestMessage = $rootScope.getLocalizedString('newUserRequestMessage');
+                $scope.accountRadio = $rootScope.getLocalizedString('yes');
                 $scope.accountTrue = true;
                 $scope.accountFalse = false;
             };
             $scope.savePasswordWarning = function() {
                 if ($scope.savePassword == false)
-                    alert("Opgelet! Door uw wachtwoord automatisch te laten invullen kan elke gebruiker van dit toestel inloggen met uw account.");
+                    alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             };
             $scope.login = function() {
                 if (angular.isUndefined($scope.username) && angular.isUndefined($scope.password)) {
@@ -1246,11 +1156,11 @@ angular.module('myApp.controllers', []).
 
                                 } else {
                                     $scope.error = true;
-                                    $scope.errormessage = "Fout in de ingevoerde login gegevens.";
+                                    $scope.errormessage = $rootScope.getLocalizedString('loginError');
                                 }
                             }).
                             error(function() {
-                                alert("Data kon niet worden opgehaald, probeer later opnieuw.");
+                                alert($rootScope.getLocalizedString('connectionError'));
                             });
                 }
             };
@@ -1269,10 +1179,6 @@ angular.module('myApp.controllers', []).
              * show or hide the password
              */
             $scope.showpassword = function() {
-                if ($scope.showPasswordBoolean === true) {
-                    $scope.showPasswordBoolean = false;
-                } else {
-                    $scope.showPasswordBoolean = true;
-                }
+                $scope.showPasswordBoolean = !$scope.showPasswordBoolean;
             };
         });

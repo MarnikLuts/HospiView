@@ -1,5 +1,4 @@
-function getDutchLanguageStrings () {
-    return {
+var dutchStrings = {
         //Login screen
         loginGreeting: "Welkom",
         loginUserSelectDefault: "Selecteer een gebruiker",
@@ -8,6 +7,10 @@ function getDutchLanguageStrings () {
         loginUsername: "Gebruikersnaam",
         loginPassword: "Wachtwoord",
         login: "Inloggen",
+        loginError: "Fout in de ingevoerde login gegevens.",
+        loginPasswordCheckedMessage: "Opgelet! Door uw wachtwoord automatisch te laten invullen kan elke gebruiker van dit toestel inloggen met uw account.",
+        loginNoReservationsFound: "Er zijn de volgende 14 dagen geen afspraken gevonden. Wilt u verder zoeken?",
+        loginNoConnection: "Er is geen internetconnectie of er kan geen connectie worden gemaakt met de server. Offline kan u nog steeds de laatst opgehaalde afspraken bekijken. Wilt u offline doorgaan?",
         
         //AppointmentsView
         appointmentsViewReservations: "Afspraken",
@@ -51,6 +54,7 @@ function getDutchLanguageStrings () {
         newUserNatRegIncorrect: "Rijksregisternummer is niet correct.",
         newUserRizivIncorrect: "RIZIV nummer is niet correct.",
         newUserRequest: "Vraag account aan",
+        newUserRequestMessage: "U ontvangt dadelijk een email met uw logingegevens.",
         
         //Validation
         isRequired: "is verplicht.",        
@@ -62,6 +66,9 @@ function getDutchLanguageStrings () {
         back: "Terug",
         logout: "Uitloggen",
         yes: "Ja",
-        no: "Nee"
-    };
-}
+        no: "Nee",
+        
+        //Connection messages
+        internalError: "Interne fout in de server.",
+        connectionError: "Kan geen verbinding maken met de server."
+};
