@@ -4,7 +4,7 @@ var backFunction;
 
 function onDeviceReady(){
     document.addEventListener("backbutton", function(e){
-        backFunction();
+        e.preventDefault();
     });
     
     if (navigator.notification) { // Override default HTML alert with native dialog

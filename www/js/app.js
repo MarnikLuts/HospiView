@@ -30,10 +30,6 @@ angular.module('myApp', [
             }]).
         run(function($rootScope) {
             FastClick.attach(document.body);
-            backFunction = function(){
-//                navigator.app.exitApp();
-                alert('going back');
-            };
             //default languageID
             $rootScope.languageID = 3;
             /**

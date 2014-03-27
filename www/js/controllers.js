@@ -942,6 +942,8 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.weekend = function() {
+                var month = $("#doctorCalendar").fullCalendar('getDate');
+                $scope.uiConfig.calendar.month = month.getMonth();
                 $scope.uiConfig.calendar.weekends = !$scope.uiConfig.calendar.weekends;
             };
         }).
