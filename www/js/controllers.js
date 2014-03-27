@@ -221,6 +221,13 @@ angular.module('myApp.controllers', []).
                     $location.path('/doctor/appointmentsView');
                 }
             }
+
+            /**
+             * Calls a dialog box and asks if the user wants to continue searching.
+             * If yes, appointments will be searched for the next 14 days.
+             * 
+             * @returns {undefined}
+             */
             function callModal() {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
@@ -242,6 +249,13 @@ angular.module('myApp.controllers', []).
                 });
             }
 
+            /**
+             * Instance of the dialog box.
+             * 
+             * @param {type} $scope         scope of the dialog box
+             * @param {type} $modalInstance used for modal specific functions
+             * @returns {undefined}         returns true if the user clicked yes
+             */
             function ModalInstance($scope, $modalInstance) {
                 //Don't use $scope.continue, 'continue' is a reserved keyword
                 $scope.ok = function() {
@@ -253,6 +267,12 @@ angular.module('myApp.controllers', []).
                 };
             }
 
+            /**
+             * Dialog box to ask the user if he wants to continue offline. 
+             * If yes, appointments saved in localstorage will be used.
+             * 
+             * @returns {undefined}
+             */
             function callOfflineModal() {
                 var modalInstance = $modal.open({
                     templateUrl: 'offlineModal',
@@ -353,29 +373,37 @@ angular.module('myApp.controllers', []).
                     var current = new Date($rootScope.currentdate);
                     var request1 = false;
                     var request2 = false;
-                    if (searchEnd.getMonth() <= current.getMonth()) {
+                    if (searchEnd.getMonth() <= current.getMonth() && searchEnd.getFullYear() == current.getFullYear()) {
                         $rootScope.startDate = new Date(searchEnd);
                         searchEnd.setMonth(current.getMonth() + 1);
                         searchEnd.setDate(1);
                         $rootScope.endDate = new Date(searchEnd);
                         request1 = true;
+                    } else {
+                        if (searchEnd.getFullYear() < current.getFullYear()) {
+                            $rootScope.startDate = new Date(searchEnd);
+                            searchEnd.setMonth(current.getMonth() + 1);
+                            searchEnd.setYear(current.getYear());
+                            searchEnd.setDate(1);
+                            $rootScope.endDate = new Date(searchEnd);
+                            request1 = true;
+                        }
                     }
-                    if (searchEnd.getMonth() > current.getMonth()) {
-                        if (searchEnd.getFullYear() < current.getMonth())
-                            searchEnd.setFullYear(current.getFullYear() - 1);
-                        $rootScope.endDate = new Date(searchEnd);
-                    }
-                    if (searchStart.getMonth() >= current.getMonth() && searchStart.getDate() > 1) {
+                    if (searchStart.getMonth() >= current.getMonth() && searchStart.getDate() > 1 && searchStart.getFullYear() == current.getFullYear()) {
                         $rootScope.endDate = new Date(searchStart);
                         searchStart.setMonth(current.getMonth());
                         searchStart.setDate(1);
                         $rootScope.startDate = new Date(searchStart);
                         request2 = true;
-                    }
-                    if (searchStart.getMonth() < current.getMonth()) {
-                        if (searchStart.getFullYear() > current.getMonth())
-                            searchStart.setFullYear(current.getFullYear() - 1);
-                        $rootScope.startDate = new Date(searchStart);
+                    } else {
+                        if (searchStart.getFullYear() > current.getFullYear()) {
+                            $rootScope.endDate = new Date(searchStart);
+                            searchStart.setMonth(current.getMonth());
+                            searchStart.setFullYear(current.getFullYear());
+                            searchStart.setDate(1);
+                            $rootScope.startDate = new Date(searchStart);
+                            request2 = true;
+                        }
                     }
                     if (request1 == true && request2 == true) {
                         $rootScope[$rootScope.searchString] = [];
@@ -470,43 +498,74 @@ angular.module('myApp.controllers', []).
         }).
         controller('FilterCtrl', function($scope, $rootScope, $location, hospiviewFactory) {
 
+            /** 
+             * 25.03.2014 Stijn Ceunen
+             * Redirects back to the appointments screen.
+             */
             $scope.back = function() {
                 $location.path('/doctor/appointmentsView');
             };
 
+            /**
+             * 25.03.2014 Stijn Ceunen
+             * Gets the servers the user saved and puts them in the scope.
+             */
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.servers = user.servers;
 
+            /**
+             * 25.03.2014 Stijn Ceunen
+             * This function is used when the state of the server select box is
+             * changed, if an item is selected. 
+             * If the selected item is null, the other selects will be hidden 
+             * since no server is specified. If a server is selected the select 
+             * box to select a unit will be revealed and the units model will be 
+             * set.
+             * @returns {undefined}
+             */
             $scope.loadUnit = function() {
-                if (!(angular.isUndefined($scope.serverFilter))) {
-                    if ($scope.serverFilter == null) {
-                        $scope.disableUnits = true;
-                        $scope.disableDepartments = true;
-                    }
-                    else {
-                        $scope.disableUnits = false;
-                        $scope.units = $rootScope['allUnitsAndGroups.' + $scope.serverFilter.id];
-                    }
+                if ($scope.serverFilter == null) {
+                    $scope.disableUnits = true;
+                    $scope.disableDepartments = true;
+                }
+                else {
+                    $scope.disableUnits = false;
+                    $scope.units = $rootScope['allUnitsAndGroups.' + $scope.serverFilter.id];
                 }
             };
 
+            /**
+             * 25.03.2014 Stijn Ceunen
+             * This function is used when the state of the unit select box is 
+             * changed, if an item is selected.
+             * If the selected item is null of is a group of doctors, not a single
+             * one, the departments select box will be hidden. Else the select
+             * box will be shown, if the department name is null, this means
+             * the users wants so see the reservation of all the departments,
+             * so we are changing the null from empty to "all". Departments model
+             * will be filled.
+             */
             $scope.loadDep = function() {
-                if (!(angular.isUndefined($scope.unitFilter))) {
-                    if ($scope.unitFilter == null || $scope.unitFilter.type == "group")
-                        $scope.disableDepartments = true;
-                    else {
-                        $scope.disableDepartments = false;
-                        for (var i = 0; i < $scope.unitFilter.Detail.Dep.length; i++) {
-                            if ($scope.unitFilter.Detail.Dep[i].dep_name === "") {
-                                $scope.unitFilter.Detail.Dep[i].dep_name = "Allemaal";
-                                break;
-                            }
+                if ($scope.unitFilter == null || $scope.unitFilter.type == "group")
+                    $scope.disableDepartments = true;
+                else {
+                    $scope.disableDepartments = false;
+                    for (var i = 0; i < $scope.unitFilter.Detail.Dep.length; i++) {
+                        if ($scope.unitFilter.Detail.Dep[i].dep_name === "") {
+                            $scope.unitFilter.Detail.Dep[i].dep_name = $rootScope.getLocalizedString('appointmentsFilterAllDepartments');
+                            break;
                         }
-                        $scope.departments = $scope.unitFilter.Detail.Dep;
                     }
+                    $scope.departments = $scope.unitFilter.Detail.Dep;
                 }
             };
 
+            /**
+             * 26.03.2014 Stijn Ceunen
+             * This block will initialise the scope of this page. It will check
+             * each filter (server, unit and department) if a value has been set
+             * before. The proper select boxes will be shown with the saved values.
+             */
             if (angular.isUndefined($rootScope.serverFilter) || $rootScope.serverFilter === '' || $rootScope.serverFilter == null) {
                 $rootScope.serverFilter = '';
                 $scope.disableUnits = true;
@@ -537,7 +596,23 @@ angular.module('myApp.controllers', []).
                 }
             }
 
-
+            /**
+             * 26.03.2014 Stijn Ceunen
+             * This will do a request to get all the units, groups and departments
+             * of all the saved servers of the user. It will only be executed if 
+             * the user has added a server, changed a saved server or the page 
+             * is not visited yet since the user started the application.
+             * First, the variables that record the add or edit of a server are
+             * set back to false. After, a loop of all the servers the user has
+             * saved will start. For each server the getUnitAndDepList and
+             * getUnitDepGroups requests will be executed. The results will be
+             * pushed into the unitsandgroups array which will be pushed in the 
+             * rootScope at the end of the second request. In the getUnitAndDepList
+             * request, there is a loop that will add the "type" property to the 
+             * objects and it will be set to "doctor". The same will be done in
+             * the getUnitDepGroups but is will be set to "group" in that loop.
+             * This is used to group them in the select box. 
+             */
             if ($rootScope.serverAdded === true || $rootScope.serverChanged === true || angular.isUndefined($rootScope.allUnitsAndGroups)) {
                 $rootScope.serverChanger = false;
                 $rootScope.serverAdded = false;
@@ -588,6 +663,11 @@ angular.module('myApp.controllers', []).
                 }
             }
 
+            /**
+             * 26.03.2014 Stijn Ceunen
+             * Sets the filter in the rootscope so it can be used throughout 
+             * the application. Redirects to appointments screen.
+             */
             $scope.applyFilter = function() {
                 if ($scope.serverFilter !== '')
                     $rootScope.serverFilter = $scope.serverFilter;
@@ -598,9 +678,15 @@ angular.module('myApp.controllers', []).
                 $location.path('/doctor/appointmentsView');
             };
 
+            /**
+             * 26.03.2014 Stijn Ceunen
+             * Sets current filters empty, so all data will be shown.
+             * Redirects to appointments screen.
+             */
             $scope.removeFilter = function() {
+                $rootScope.serverFilter = '';
                 $rootScope.unitFilter = '';
-                $scope.depFilter = '';
+                $rootScope.depFilter = '';
                 $location.path('/doctor/appointmentsView');
             }
         }).
@@ -809,13 +895,13 @@ angular.module('myApp.controllers', []).
 //            $('#doctorCalendar').fullCalendar('addEventSource', [countEvent]);
             $scope.next = function() {
                 $('#doctorCalendar').fullCalendar('next');
-            }
+            };
             $scope.prev = function() {
                 $('#doctorCalendar').fullCalendar('prev');
-            }
+            };
             $scope.today = function() {
                 $('#doctorCalendar').fullCalendar('today');
-            }
+            };
 
             $scope.weekend = function() {
                 $scope.uiConfig.calendar.weekends = !$scope.uiConfig.calendar.weekends;
@@ -826,8 +912,17 @@ angular.module('myApp.controllers', []).
                 $location.path('/mainmenu');
             };
         }).
-        controller('SettingsCtrl', function($scope, $location, $rootScope) {
+        /**
+         * TODO: edit servers test and save
+         * @param {type} $scope
+         * @param {type} $location
+         * @param {type} $rootScope
+         * @param {type} languageFactory
+         * @returns {undefined}
+         */
+        controller('SettingsCtrl', function($scope, $location, $rootScope, languageFactory) {
 
+            $scope.saveLanguageString = languageFactory.getStringByPidAndSid(1, 6, 10);
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.servers = $scope.selectedUser.servers;
 
@@ -908,7 +1003,7 @@ angular.module('myApp.controllers', []).
             /**
              * Uses hospiviewFactory to do a request. On success the XML will be
              * parsed too JSON. The servers will be put in the $scope servers.
-             * If 
+             * @param {type} data   returned data from the webservice
              */
             hospiviewFactory.getHospiViewServerList().
                     success(function(data) {
@@ -940,29 +1035,53 @@ angular.module('myApp.controllers', []).
             $scope.showPasswordBoolean = false;
             $scope.savePassword = false;
 
-
-            $scope.datenr = {nr: $scope.nationalRegister, date: $scope.dateOfBirth};
+            /**
+             * Array of functions a user can have.
+             */
             $scope.userFunctionList = [$rootScope.getLocalizedString('newFunctionPatient'),
                 $rootScope.getLocalizedString('newFunctionRepresentative'),
                 $rootScope.getLocalizedString('newFunctionHouseDoctor'),
                 $rootScope.getLocalizedString('newFunctionDoctor')];
             $scope.userFunctionSelected = false;
+
+            /**
+             * Depending on the function the user selected the right div will
+             * be shown.
+             * @param {type} userFunction   the function the user selected
+             * @returns {Boolean}           boolean setting 
+             */
             $scope.needsNationalReg = function(userFunction) {
                 return userFunction === $rootScope.getLocalizedString('newFunctionPatient') || userFunction === $rootScope.getLocalizedString('newFunctionRepresentative');
             };
             $scope.needsRiziv = function(userFunction) {
                 return userFunction === $rootScope.getLocalizedString('newFunctionDoctor') || userFunction === $rootScope.getLocalizedString('newFunctionHouseDoctor');
             };
+
+            /**
+             * Webservice request to request an account. The div will will be hidden
+             * and the login div will be shown.
+             * 
+             * TODO: implement webservice request
+             */
             $scope.requestAccount = function() {
                 $scope.requestMessage = $rootScope.getLocalizedString('newUserRequestMessage');
                 $scope.accountRadio = $rootScope.getLocalizedString('yes');
                 $scope.accountTrue = true;
                 $scope.accountFalse = false;
             };
+
+            /**
+             * Throws an alert in case the checkbox to save the password is checked.
+             */
             $scope.savePasswordWarning = function() {
-                if ($scope.savePassword == false)
+                if ($scope.savePassword === false)
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             };
+
+            /**
+             * 
+             * TODO: write documentation
+             */
             $scope.login = function() {
                 if (angular.isUndefined($scope.username) && angular.isUndefined($scope.password)) {
                     $scope.error = true;
@@ -973,12 +1092,12 @@ angular.module('myApp.controllers', []).
                                 var json = parseJson(data);
                                 var localStorageName = json.Authentication.Detail.user_name;
                                 if (json.Authentication.Header.StatusCode == 1) {
-                                    if ($routeParams.action == "new" || $routeParams.action == "newLocalUser") {
+                                    if ($routeParams.action === "new" || $routeParams.action === "newLocalUser") {
                                         if (localStorage.getItem(localStorageName) === null) {
                                             $scope.error = false;
                                             $rootScope.user = localStorageName;
                                             $rootScope.currentServer = $scope.server;
-                                            if ($routeParams.action == "new")
+                                            if ($routeParams.action === "new")
                                                 addToLocalStorage("users", [{"username": localStorageName}]);
                                             else {
                                                 var localUsers = JSON.parse(localStorage.getItem("users"));
@@ -1015,7 +1134,7 @@ angular.module('myApp.controllers', []).
                                             $scope.errormessage = "Account is reeds op dit toestel toegevoegd.";
                                         }
                                     } else {
-                                        if ($routeParams.action == "add") {
+                                        if ($routeParams.action === "add") {
                                             var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
                                             var addServer = {"id": $scope.server.id,
                                                 "hosp_full_name": $scope.server.hosp_full_name,

@@ -27,6 +27,7 @@ var englishStrings = {
         appointmentsFilterDepartment: "Select a department",
         appointmentsFilterRemove: "Remove current filter",
         appointmentsFilterApply: "Apply filter",
+        appointmentsFilterAllDepartments: "All",
         
         //Selectserver/new
         newGreeting: "Welcome to Hospiview",

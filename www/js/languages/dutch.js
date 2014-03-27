@@ -27,6 +27,7 @@ var dutchStrings = {
         appointmentsFilterDepartment: "Selecteer een departement",
         appointmentsFilterRemove: "Verwijder huidige filter",
         appointmentsFilterApply: "Voer filter uit",
+        appointmentsFilterAllDepartments: "Allemaal",
         
         //AppointmentDetail
         //appointmentDetail: "Reservatie info",

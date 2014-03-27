@@ -27,6 +27,7 @@ var frenchStrings = {
         appointmentsFilterDepartment: "Choisissez un département",
         appointmentsFilterRemove: "Supprimer le filtre actuel",
         appointmentsFilterApply: "Appliquer le filtre",
+        appointmentsFilterAllDepartments: "Tous",
 
         
         //Selectserver/new
