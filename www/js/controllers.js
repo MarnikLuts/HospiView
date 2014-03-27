@@ -309,7 +309,7 @@ angular.module('myApp.controllers', []).
 
             $scope.loadingCalendar = false;
             $scope.eventPerDay;
-            if ($rootScope.eventClick == true) {
+            if ($rootScope.eventClick === true) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
                 $scope.showDate = formatShowDate(new Date($scope.date), $rootScope.languageID);
             } else {
@@ -405,12 +405,12 @@ angular.module('myApp.controllers', []).
                             request2 = true;
                         }
                     }
-                    if (request1 == true && request2 == true) {
+                    if (request1 === true && request2 === true) {
                         $rootScope[$rootScope.searchString] = [];
                         $rootScope.startDate = searchStart;
                         $rootScope.endDate = searchEnd;
                     }
-                    if (request1 == true || request2 == true) {
+                    if (request1 === true || request2 === true) {
                         search();
                     } else {
                         $location.path('/appointmentsCalendar');
@@ -466,7 +466,7 @@ angular.module('myApp.controllers', []).
             function callModal() {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
-                    controller: ModalInstance,
+                    controller: ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
                     if (answer === true) {
@@ -524,7 +524,7 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.loadUnit = function() {
-                if ($scope.serverFilter == null) {
+                if ($scope.serverFilter === null) {
                     $scope.disableUnits = true;
                     $scope.disableDepartments = true;
                 }
@@ -546,7 +546,7 @@ angular.module('myApp.controllers', []).
              * will be filled.
              */
             $scope.loadDep = function() {
-                if ($scope.unitFilter == null || $scope.unitFilter.type == "group")
+                if ($scope.unitFilter === null || $scope.unitFilter.type === "group")
                     $scope.disableDepartments = true;
                 else {
                     $scope.disableDepartments = false;
@@ -566,7 +566,7 @@ angular.module('myApp.controllers', []).
              * each filter (server, unit and department) if a value has been set
              * before. The proper select boxes will be shown with the saved values.
              */
-            if (angular.isUndefined($rootScope.serverFilter) || $rootScope.serverFilter === '' || $rootScope.serverFilter == null) {
+            if (angular.isUndefined($rootScope.serverFilter) || $rootScope.serverFilter === '' || $rootScope.serverFilter === null) {
                 $rootScope.serverFilter = '';
                 $scope.disableUnits = true;
                 $scope.disableDepartments = true;
@@ -575,7 +575,7 @@ angular.module('myApp.controllers', []).
                     if ($scope.servers[i].id === $rootScope.serverFilter.id)
                         $scope.serverFilter = $scope.servers[i];
                 $scope.loadUnit();
-                if (angular.isUndefined($rootScope.unitFilter) || $rootScope.unitFilter === '' || $rootScope.unitFilter == null) {
+                if (angular.isUndefined($rootScope.unitFilter) || $rootScope.unitFilter === '' || $rootScope.unitFilter === null) {
                     $rootScope.unitFilter = '';
                     $rootScope.depFilter = '';
                     $scope.disableDepartments = true;
@@ -688,7 +688,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.unitFilter = '';
                 $rootScope.depFilter = '';
                 $location.path('/doctor/appointmentsView');
-            }
+            };
         }).
         controller('searchCtrl', function($scope, $rootScope, hospiviewFactory, dataFactory) {
             $scope.next = function() {
@@ -759,7 +759,7 @@ angular.module('myApp.controllers', []).
                         }
                     }
                 }
-                if (request1 == true || request2 == true) {
+                if (request1 === true || request2 === true) {
                     search(calendarBrows);
                 } else {
                     $('#doctorCalendar').fullCalendar(calendarBrows);
@@ -817,7 +817,7 @@ angular.module('myApp.controllers', []).
             function callModal(calendarBrows) {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
-                    controller: ModalInstance,
+                    controller: ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
                     if (answer === true) {
@@ -846,7 +846,6 @@ angular.module('myApp.controllers', []).
                     $modalInstance.dismiss('cancel');
                 };
             }
-            ;
         }).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
             $scope.reservation = $rootScope.reservationDetail;
@@ -948,7 +947,7 @@ angular.module('myApp.controllers', []).
                 $scope.server1Img = "img/hospi.png";
                 $scope.server2Img = "img/hospi-gray.png";
                 $scope.server3Img = "img/hospi-gray.png";
-            }
+            };
             $scope.server2Select = function() {
                 $scope.server1 = false;
                 $scope.server2 = true;
@@ -956,7 +955,7 @@ angular.module('myApp.controllers', []).
                 $scope.server1Img = "img/hospi-gray.png";
                 $scope.server2Img = "img/hospi.png";
                 $scope.server3Img = "img/hospi-gray.png";
-            }
+            };
             $scope.server3Select = function() {
                 $scope.server1 = false;
                 $scope.server2 = false;
@@ -964,7 +963,7 @@ angular.module('myApp.controllers', []).
                 $scope.server1Img = "img/hospi-gray.png";
                 $scope.server2Img = "img/hospi-gray.png";
                 $scope.server3Img = "img/hospi.png";
-            }
+            };
 
             $scope.cellcontentchange = function(newCellcontent) {
                 $scope.selectedUser.cellcontent = newCellcontent;
@@ -995,7 +994,7 @@ angular.module('myApp.controllers', []).
              * If it's the first time a user uses the application, the back button
              * has to be hidden so the user is foreced to select a server.
              */
-            if ($routeParams.action == "new")
+            if ($routeParams.action === "new")
                 $scope.newBoolean = true;
             else
                 $scope.newBoolean = false;
