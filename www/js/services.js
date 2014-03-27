@@ -7,6 +7,7 @@ angular.module('myApp.services', []).
          * Variable containing the base url.
          */
         constant('base_url', 'cfcs/webservices/reservations_service.cfc?').
+                
         /**
          * Factory containing methods for the different requests.
          * 
@@ -17,7 +18,7 @@ angular.module('myApp.services', []).
         factory('hospiviewFactory', function($http, base_url) {
             return{
                 getHospiViewServerList: function() {
-                    return $http.post("http://agendaviewtest.agendaview.be/cfcs/webservices/agendaview/hospiview_servers.cfc?method=GetHospiviewServerList"); /*http://agenda.agendaview.be/cfcs/webservices/agendaview/hospiview_servers.cfc?method=GetHospiviewServerList*/
+                    return $http.post("http://agenda.agendaview.be/cfcs/webservices/agendaview/hospiview_servers.cfc?method=GetHospiviewServerList");
                 },
                 getAuthentication: function(username, password, server_url) {
                     return $http.post(server_url + base_url + "method=GetAuthentication&user_login=" + username + "&user_password=" + password);
@@ -204,7 +205,6 @@ angular.module('myApp.services', []).
                     end.setHours(0, 0, 0);
                     
                     var events = $rootScope[$rootScope.searchString];
-                    console.log(events);
                     var j = 0;
                     var count = 0;
                     var countEvent = [];

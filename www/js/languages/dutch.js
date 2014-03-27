@@ -30,8 +30,20 @@ var dutchStrings = {
         appointmentsFilterAllDepartments: "Allemaal",
         
         //AppointmentDetail
-        //appointmentDetail: "Reservatie info",
-        //appointmentDetailPatient: "Reservatie info",
+        appointmentDetail: "Reservatie info",
+        appointmentDetailPatient: "Patiënt info",
+        appointmentDetailId: "Patiënt id: ",
+        appointmentDetailTitle: "Titel: ",
+        appointmentDetailBooking: "Geboekt door: ",
+        appointmentDetailMarking: "Markering(en): ",
+        appointmentDetailType: "Type: ",
+        appointmentDetailFinal: "definitief",
+        appointmentDetailProposal: "voorstel",
+        appointmentDetailComment: "Commentaar: ",
+        appointmentDetailPatientId: "Patiënt id: ",
+        appointmentDetailPatientName: "Naam en voornaam: ",
+        appointmentDetailPatientNational: "Rijksregisternummer: ",
+        
         
         //Selectserver/new
         newGreeting: "Welkom bij Hospiview",
