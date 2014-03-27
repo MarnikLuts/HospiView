@@ -921,10 +921,14 @@ angular.module('myApp.controllers', []).
                         day: 'd/m'
                     },
                     eventClick: function(calEvent, jsEvent, view) {
+                        alert('clicked on event');
                         var getClickedDay = calEvent.start;
                         $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
                         $rootScope.eventClick = true;
                         window.location.href = 'index.html#/doctor/appointmentsView';
+                    },
+                    dayClick: function(date, allDay, jsEvent, view) {
+                        alert("clicked on day");
                     }
                 }
             };
@@ -940,7 +944,7 @@ angular.module('myApp.controllers', []).
             $scope.today = function() {
                 $('#doctorCalendar').fullCalendar('today');
             };
-
+           
             $scope.weekend = function() {
                 var month = $("#doctorCalendar").fullCalendar('getDate');
                 $scope.uiConfig.calendar.month = month.getMonth();
