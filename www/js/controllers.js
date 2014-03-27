@@ -131,8 +131,7 @@ angular.module('myApp.controllers', []).
                             callOfflineModal();
                         });
             };
-            
-            backFunction = $scope.login;
+
             /**
              * loads all the necessary data from the server using the methods of hospiviewfactory and datafactory
              * 
@@ -428,7 +427,6 @@ angular.module('myApp.controllers', []).
                 $rootScope.type = null;
                 $location.path('/login');
             };
-            backFunction = $scope.logout;
             function search(newDate, swipe) {
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
@@ -856,7 +854,6 @@ angular.module('myApp.controllers', []).
             $scope.back = function() {
                 $location.path('/doctor/appointmentsView');
             };
-            
         }).
         controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope, $interval, dataFactory) {
 
@@ -908,6 +905,8 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.weekend = function() {
+                var month = $("#doctorCalendar").fullCalendar('getDate');
+                $scope.uiConfig.calendar.month = month.getMonth();
                 $scope.uiConfig.calendar.weekends = !$scope.uiConfig.calendar.weekends;
             };
         }).
