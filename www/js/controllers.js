@@ -3,6 +3,7 @@
 
 angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
+            
             /**
              * Check if the localStorage item "users" exists. If is doesn't,
              * it means this is the first time the application is running. 
@@ -130,7 +131,8 @@ angular.module('myApp.controllers', []).
                             callOfflineModal();
                         });
             };
-
+            
+            backFunction = $scope.login;
             /**
              * loads all the necessary data from the server using the methods of hospiviewfactory and datafactory
              * 
@@ -426,6 +428,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.type = null;
                 $location.path('/login');
             };
+            backFunction = $scope.logout;
             function search(newDate, swipe) {
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
@@ -852,6 +855,7 @@ angular.module('myApp.controllers', []).
             $scope.back = function() {
                 $location.path('/doctor/appointmentsView');
             };
+            
         }).
         controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope, $interval, dataFactory) {
 

@@ -1,10 +1,9 @@
 document.addEventListener("deviceready", onDeviceReady, false);
+
 var backFunction;
 
 function onDeviceReady(){
-    FastClick.attach(document.body);
     document.addEventListener("backbutton", function(e){
-        alert(backFunction);    
         backFunction();
     });
     
@@ -20,8 +19,8 @@ function onDeviceReady(){
     }
 }
 
-function set(newFunction){
-    alert(newFunction);
+function viewBack(){
+    alert(backFunction);
 }
 
 /**
