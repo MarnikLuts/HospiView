@@ -29,6 +29,20 @@ var frenchStrings = {
         appointmentsFilterApply: "Appliquer le filtre",
         appointmentsFilterAllDepartments: "Tous",
 
+        //AppointmentDetail
+        appointmentDetail: "Reservatie info",
+        appointmentDetailPatient: "Patiënt info",
+        appointmentDetailId: "Patiënt id: ",
+        appointmentDetailTitle: "Titel: ",
+        appointmentDetailBooking: "Geboekt door: ",
+        appointmentDetailMarking: "Markering(en): ",
+        appointmentDetailType: "Type: ",
+        appointmentDetailFinal: "definitief",
+        appointmentDetailProposal: "voorstel",
+        appointmentDetailComment: "Commentaar: ",
+        appointmentDetailPatientId: "Patiënt id: ",
+        appointmentDetailPatientName: "Naam en voornaam: ",
+        appointmentDetailPatientNational: "Rijksregisternummer: ",
         
         //Selectserver/new
         newGreeting: "Bienvenue chez Hospiview",
@@ -73,11 +87,23 @@ var frenchStrings = {
         //general app use
         settings: "Paramètres",
         back: "Retour",
+        filter: "Filter",
         logout: "Quitter",
         yes: "Oui",
         no: "Non",
         
         //Connection messages
         internalError: "Erreur interne du serveur.",
-        connectionError: "Erreur de connexion."
+        connectionError: "Erreur de connexion.",
+        
+        //Settings
+        settingsSave: "Opslaan",
+        settingsAddServer: "Voeg server toe",
+        settingsEditServer: "Wijzig server",
+        settingsUser: "Gebruiker",
+        settingsRefresh: "Verversing",
+        settingsCellcontent: "Cell inhoud",
+        settingsPatient: "Patiënt",
+        settingsTitle: "Titel",
+        settingsAddUser: "Voeg applicatiegebruiker toe"
 };

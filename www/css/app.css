@@ -266,3 +266,18 @@ ul li{
         width: 30%;
     }
 }
+
+        
+.calendarHoliday .fc-event-inner {
+    background-image: url('../../img/arcering_rood.png');
+    font-size: 50%;
+}
+
+.calendarAbsent .fc-event-inner {
+    background-image: url('../../img/arcering_grijs.png');
+    font-size: 50%;
+}
+
+.fc-event :hover{
+    background-color: gray;
+}

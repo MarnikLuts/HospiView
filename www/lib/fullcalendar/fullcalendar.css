@@ -595,13 +595,4 @@ table.fc-border-separate {
 .fc-agenda .ui-resizable-resizing { /* TODO: better selector */
 	_overflow: hidden;
 	}
-        
-.calendarHoliday .fc-event-inner {
-    background-image: url('../../img/arcering_rood.png');
-    font-size: 50%;
-}
 
-.calendarAbsent .fc-event-inner {
-    background-image: url('../../img/arcering_grijs.png');
-    font-size: 50%;
-}
