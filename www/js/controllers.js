@@ -934,12 +934,6 @@ angular.module('myApp.controllers', []).
                         $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
                         $rootScope.eventClick = true;
                         window.location.href = 'index.html#/doctor/appointmentsView';
-                    },
-                    dayClick: function(calEvent, jsEvent, view) {
-                        var getClickedDay = calEvent.start;
-                        $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
-                        $rootScope.eventClick = true;
-                        window.location.href = 'index.html#/doctor/appointmentsView';
                     }
                 }
             };
