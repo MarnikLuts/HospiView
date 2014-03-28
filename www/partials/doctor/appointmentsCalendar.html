@@ -6,15 +6,15 @@
     <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}</div>
 </div>
 <div class="col-md-12 form-group text-right"> 
-    <div class="has-spinner nextAndPrevCalendar" ng-controller="searchCtrl">
+    <div class="has-spinner" ng-controller="searchCtrl">
         <span class="btn-group">
             <button class="btn btn-default btn-lg" ng-click="prev();"><span class="glyphicon glyphicon-chevron-left"></span></button>
             <button class="btn btn-default btn-lg" ng-click="next();"><span class="glyphicon glyphicon-chevron-right"></span></button>
         </span>
         <span class="spinnerApointmentsCalendar" ng-show="loadingMonth"><i class="glyphicon glyphicon-refresh"></i></span>
     </div>
-    <button class="btn btn-default btn-lg btn-calendar-extra" id="todayBtn" ng-click="today()">{{ getLocalizedString('appointmentsCalendarToday')}}</button>
-    <button class="btn btn-default btn-lg btn-calendar-extra" id="weekendBtn" ng-click="weekend()">{{ getLocalizedString('appointmentsCalendarWeekends')}}</button>
+    <button class="btn btn-default btn-lg" id="todayBtn" ng-click="today()">{{ getLocalizedString('appointmentsCalendarToday')}}</button>
+    <button class="btn btn-default btn-lg" id="weekendBtn" ng-click="weekend()">{{ getLocalizedString('appointmentsCalendarWeekends')}}</button>
 
 </div>
 <div class="form-group calendarWrapper">
