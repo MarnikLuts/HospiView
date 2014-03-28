@@ -7,13 +7,13 @@
                 <span class="{{iconImage}}"></span>
             </button>
             </span>
-            <div class="title">Afspraken</div>
+            <div class="title">{{ getLocalizedString('appointmentsViewReservations') }}</div>
         </div>
         <div class="collapse navbar-collapse no-transition" id="menu-collapse">
             <ul class="nav navbar-nav pull-right">
-                <li><a class="btn btn-default" ng-click="filter()">Filter</a></li>
-                <li><a class="btn btn-default" ng-click="settings()">Settings</a></li>
-                <li><a class="btn btn-default" ng-click="logout()">Afmelden</a></li>
+                <li><a class="btn btn-default" ng-click="filter()">{{ getLocalizedString('filter') }}</a></li>
+                <li><a class="btn btn-default" ng-click="settings()">{{ getLocalizedString('settings') }}</a></li>
+                <li><a class="btn btn-default" ng-click="logout()">{{ getLocalizedString('logout') }}</a></li>
             </ul>
         </div>
     </div>

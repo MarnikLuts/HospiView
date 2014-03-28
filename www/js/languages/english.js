@@ -53,12 +53,12 @@ var englishStrings = {
         
         newFunctionSelectDefault: "Select a function",
         
+        newUserEnterDetails: "Enter the following details to request an account:",
+        
         newFunctionPatient: "Patient",
         newFunctionRepresentative: "Representative",
         newFunctionHouseDoctor: "House doctor",
         newFunctionDoctor: "Doctor",
-        
-        newUserEnterDetails: "Enter the following details to request an account:",
         
         newUserFirstName: "First name",
         newUserLastName: "Last name",
@@ -87,11 +87,23 @@ var englishStrings = {
         //general app use
         settings: "Settings",
         back: "Back",
+        filter: "Filter",
         logout: "Log Out",
         yes: "Yes",
         no: "No",
         
         //Connection messages
         internalError: "Internal server error.",
-        connectionError: "Cannot connect to the server."
+        connectionError: "Cannot connect to the server.",
+                
+        //Settings
+        settingsSave: "Save",
+        settingsAddServer: "Add server",
+        settingsEditServer: "Edit server",
+        settingsUser: "User",
+        settingsRefresh: "Refresh rate",
+        settingsCellcontent: "Cell content",
+        settingsPatient: "Patient",
+        settingsTitle: "Title",
+        settingsAddUser: "Add application user"
  };

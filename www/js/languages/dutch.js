@@ -44,7 +44,6 @@ var dutchStrings = {
         appointmentDetailPatientName: "Naam en voornaam: ",
         appointmentDetailPatientNational: "Rijksregisternummer: ",
         
-        
         //Selectserver/new
         newGreeting: "Welkom bij Hospiview",
         newInfo: "Selecteer de instelling waarmee u verbinding wil maken:",
@@ -87,6 +86,7 @@ var dutchStrings = {
         
         //general app use
         settings: "Instellingen",
+        filter: "Filter",
         back: "Terug",
         logout: "Uitloggen",
         yes: "Ja",
@@ -94,5 +94,16 @@ var dutchStrings = {
         
         //Connection messages
         internalError: "Interne fout in de server.",
-        connectionError: "Kan geen verbinding maken met de server."
+        connectionError: "Kan geen verbinding maken met de server.",
+        
+        //Settings
+        settingsSave: "Opslaan",
+        settingsAddServer: "Voeg server toe",
+        settingsEditServer: "Wijzig server",
+        settingsUser: "Gebruiker",
+        settingsRefresh: "Verversing",
+        settingsCellcontent: "Cell inhoud",
+        settingsPatient: "Patiënt",
+        settingsTitle: "Titel",
+        settingsAddUser: "Voeg applicatiegebruiker toe"
 };

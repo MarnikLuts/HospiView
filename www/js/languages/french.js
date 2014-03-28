@@ -87,11 +87,23 @@ var frenchStrings = {
         //general app use
         settings: "Paramètres",
         back: "Retour",
+        filter: "Filter",
         logout: "Quitter",
         yes: "Oui",
         no: "Non",
         
         //Connection messages
         internalError: "Erreur interne du serveur.",
-        connectionError: "Erreur de connexion."
+        connectionError: "Erreur de connexion.",
+        
+        //Settings
+        settingsSave: "Opslaan",
+        settingsAddServer: "Voeg server toe",
+        settingsEditServer: "Wijzig server",
+        settingsUser: "Gebruiker",
+        settingsRefresh: "Verversing",
+        settingsCellcontent: "Cell inhoud",
+        settingsPatient: "Patiënt",
+        settingsTitle: "Titel",
+        settingsAddUser: "Voeg applicatiegebruiker toe"
 };
