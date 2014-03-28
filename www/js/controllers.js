@@ -921,7 +921,6 @@ angular.module('myApp.controllers', []).
                         day: 'd/m'
                     },
                     eventClick: function(calEvent, jsEvent, view) {
-                        console.log('event is clicked')
                         var getClickedDay = calEvent.start;
                         $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
                         $rootScope.eventClick = true;
