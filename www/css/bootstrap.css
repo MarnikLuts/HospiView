@@ -4063,9 +4063,11 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-default .navbar-text {
   color: #777;
 }
-/* Edited different color #777 --> white and font-size*/
+/* Edited 
+    - color: #777 --> white
+    - font-size: 20 --> 15*/
 .navbar-default .navbar-nav > li > a {
-    font-size:20px;
+    font-size:15px;
     color: black;
 }
 .navbar-default .navbar-nav > li > a:hover,
