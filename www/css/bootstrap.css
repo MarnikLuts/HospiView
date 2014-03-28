@@ -3543,13 +3543,15 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-bottom: 0;
   list-style: none;
 }
+/*EDITED: display:block --> inline*/
 .nav > li {
   position: relative;
-  display: block;
+  display: inline;
 }
+/*EDITED: display:block --> inline-block*/
 .nav > li > a {
   position: relative;
-  display: block;
+  display: inline-block;
   padding: 10px 15px;
 }
 .nav > li > a:hover,
@@ -3761,9 +3763,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   overflow-y: auto;
 }
 @media (min-width: 768px) {
-        display:inline-block;
+
   .navbar-collapse {
-    width: auto;
+    width: 100%;
     border-top: 0;
     box-shadow: none;
   }
@@ -3848,11 +3850,17 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 
-/*Edited background-color to white*/
+/*EDITED 
+    - background-color to white
+    - color: black
+    - font-size
+    - padding: 9px 14px
+    - font-size: 20px*/
+
 .navbar-toggle {
   position: relative;
   float: right;
-  padding: 9px 10px;
+  padding: 9px 14px;
   height:50px;
   margin-top: 0.5%;
   margin-right: 0.5%;
@@ -3861,6 +3869,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   background-image: none;
   border: 1px solid transparent;
   border-radius: 4px;
+  color:black;
+  font-size: 20px;
 }
 .navbar-toggle:focus {
   outline: none;
@@ -4056,7 +4066,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 /* Edited different color #777 --> white and font-size*/
 .navbar-default .navbar-nav > li > a {
     font-size:20px;
-  color: white;
+    color: black;
 }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {

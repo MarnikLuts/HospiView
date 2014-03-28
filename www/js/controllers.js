@@ -8,7 +8,7 @@ angular.module('myApp.controllers', []).
                 $interval.cancel($rootScope.requestTimer);
                 $rootScope.requestTimer = undefined;
             }
-            console.log($rootScope.nlRemoteDict);
+            
             /**
              * showPasswordBoolean and savePassword will be set to false.
              * 
@@ -332,8 +332,17 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, hospiviewFactory, dataFactory) {
 
-
-
+            var iconDownBoolean = true;
+            $scope.iconImage = "glyphicon glyphicon-chevron-down";
+            $scope.changeIcon = function(){
+                if(iconDownBoolean === true){
+                    $scope.iconImage = "glyphicon glyphicon-chevron-up";
+                    iconDownBoolean = false;
+                } else {
+                    $scope.iconImage = "glyphicon glyphicon-chevron-down";
+                    iconDownBoolean = true;
+                }
+            }
             $scope.loadingCalendar = false;
             $scope.eventPerDay;
             if ($rootScope.eventClick === true) {
@@ -958,38 +967,29 @@ angular.module('myApp.controllers', []).
                 $location.path('/mainmenu');
             };
         }).
-        /**
-         * TODO: edit servers test and save
-         * @param {type} $scope
-         * @param {type} $location
-         * @param {type} $rootScope
-         * @param {type} languageFactory
-         * @returns {undefined}
-         */
         controller('SettingsCtrl', function($scope, $location, $rootScope, languageFactory) {
 
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.servers = $scope.selectedUser.servers;
 
-            $scope.server1 = true;
-            $scope.server2 = false;
-            $scope.server3 = false;
-
-            $scope.abbreviation1 = $scope.selectedUser.servers[0].hosp_short_name;
-
             if ($scope.servers.length >= 2) {
                 $scope.abbreviation2 = $scope.selectedUser.servers[1].hosp_short_name;
+                $scope.server2Img = "img/hospi-gray.png";
                 $scope.showServer2 = true;
             }
             if ($scope.servers.length == 3) {
                 $scope.abbreviation3 = $scope.selectedUser.servers[2].hosp_short_name;
+                $scope.server3Img = "img/hospi-gray.png";
                 $scope.showServer3 = true;
             }
 
+            $scope.abbreviation1 = $scope.selectedUser.servers[0].hosp_short_name;
+            $scope.server1Img = "img/hospi.png";
+            $scope.serverRadio = $scope.servers[0];
+            $scope.serverLogin = $scope.servers[0].user_login;
+            $scope.serverPassword = $scope.servers[0].user_password;
+            
             $scope.server1Select = function() {
-                $scope.server1 = true;
-                $scope.server2 = false;
-                $scope.server3 = false;
                 $scope.server1Img = "img/hospi.png";
                 $scope.server2Img = "img/hospi-gray.png";
                 $scope.server3Img = "img/hospi-gray.png";
@@ -998,35 +998,27 @@ angular.module('myApp.controllers', []).
                 $scope.serverPassword = $scope.serverRadio.user_password;
             };
             $scope.server2Select = function() {
-                $scope.server1 = false;
-                $scope.server2 = true;
-                $scope.server3 = false;
                 $scope.server1Img = "img/hospi-gray.png";
                 $scope.server2Img = "img/hospi.png";
                 $scope.server3Img = "img/hospi-gray.png";
                 $scope.serverRadio = $scope.servers[1];
+                $scope.serverLogin = $scope.serverRadio.user_login;
+                $scope.serverPassword = $scope.serverRadio.user_password;
             };
             $scope.server3Select = function() {
-                $scope.server1 = false;
-                $scope.server2 = false;
-                $scope.server3 = true;
                 $scope.server1Img = "img/hospi-gray.png";
                 $scope.server2Img = "img/hospi-gray.png";
                 $scope.server3Img = "img/hospi.png";
                 $scope.serverRadio = $scope.servers[2];
+                $scope.serverLogin = $scope.serverRadio.user_login;
+                $scope.serverPassword = $scope.serverRadio.user_password;
             };
 
             $scope.cellcontentchange = function(newCellcontent) {
                 $scope.selectedUser.cellcontent = newCellcontent;
             };
             $scope.save = function() {
-                for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
-                    if ($scope.selectedUser.servers[i].id == $scope.server.id)
-                    {
-                        $scope.selectedUser.servers[i] = $scope.server;
-                        localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
-                    }
-                }
+                localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
                 $location.path('/doctor/appointmentsView');
             };
             $scope.addOrEditServer = function(action, server) {
@@ -1186,7 +1178,9 @@ angular.module('myApp.controllers', []).
                                     } else {
                                         if ($routeParams.action === "add") {
                                             var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
+                                            console.log()
                                             var addServer = {"id": $scope.server.id,
+                                                "hosp_short_name": $scope.server.hosp_short_name,
                                                 "hosp_full_name": $scope.server.hosp_full_name,
                                                 "hosp_url": $scope.server.hosp_url,
                                                 "user_password": $scope.password,
@@ -1206,6 +1200,7 @@ angular.module('myApp.controllers', []).
                                             for (var i = 0; i < selectedUser.servers.length; i++) {
                                                 if (selectedUser.servers[i].id == $rootScope.editServer.id) {
                                                     var editServer = {"id": $scope.server.id,
+                                                        "hosp_short_name": $scope.server.hosp_short_name,
                                                         "hosp_full_name": $scope.server.hosp_full_name,
                                                         "hosp_url": $scope.server.hosp_url,
                                                         "user_password": $scope.password,

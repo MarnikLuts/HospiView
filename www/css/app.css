@@ -245,7 +245,25 @@
     padding-top: 15px;
     padding-bottom:10px;
 }
-nextAndPrevCalendar{
+.nextAndPrevCalendar{
     display: inline-block;
-    
+}
+
+ul{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+ul li{
+    display: inline;
+}
+
+@media screen and (max-width: 768px) {
+    ul{
+        width:100%;
+    }
+    ul li a{
+        font-size: 
+        width: 30%;
+    }
 }

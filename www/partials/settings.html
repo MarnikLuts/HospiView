@@ -13,11 +13,11 @@
     <div class="col-md-12">
         <div class="shortcutButtons">
             <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server1Select()" 
-                    btn-radio="true">{{abbreviation1}}<br/><img src="img/hospi.png" alt="hospi" width="64" height="90"></button>
+                    btn-radio="servers[0]">{{abbreviation1}}<br/><img src="{{server1Img}}" alt="hospi" width="64" height="90"></button>
             <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server2Select()" 
-                    btn-radio="false" ng-show="showServer2">{{abbreviation2}}<br/><img src="img/hospi.png" alt="hospi" width="64" height="90"></button>
+                    btn-radio="servers[1]" ng-show="showServer2">{{abbreviation2}}<br/><img src="{{server2Img}}" alt="hospi" width="64" height="90"></button>
             <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server3Select()" 
-                    btn-radio="false" ng-show="showServer3">{{abbreviation3}}<br/><img src="img/hospi.png" alt="hospi" width="64" height="90"></button>
+                    btn-radio="servers[2]" ng-show="showServer3">{{abbreviation3}}<br/><img src="{{server3Img}}" alt="hospi" width="64" height="90"></button>
         </div>
     </div>
     <div class="col-md-12">
