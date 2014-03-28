@@ -8,7 +8,7 @@ angular.module('myApp.controllers', []).
                 $interval.cancel($rootScope.requestTimer);
                 $rootScope.requestTimer = undefined;
             }
-            
+
             /**
              * showPasswordBoolean and savePassword will be set to false.
              * 
@@ -334,8 +334,8 @@ angular.module('myApp.controllers', []).
 
             var iconDownBoolean = true;
             $scope.iconImage = "glyphicon glyphicon-chevron-down";
-            $scope.changeIcon = function(){
-                if(iconDownBoolean === true){
+            $scope.changeIcon = function() {
+                if (iconDownBoolean === true) {
                     $scope.iconImage = "glyphicon glyphicon-chevron-up";
                     iconDownBoolean = false;
                 } else {
@@ -379,8 +379,13 @@ angular.module('myApp.controllers', []).
                     $rootScope.requestOnSwipe = true;
                     search();
                 }
+                /*$scope.$watch("filteredReservations.length", function(newValue, oldValue){
+                    if(newValue === 0)
+                        $scope.nextDay();
+                });*/
             };
             $scope.previousDay = function() {
+                
                 var newDate = new Date($scope.date);
                 newDate.setDate(newDate.getDate() - 1);
                 $scope.date = formatDate(newDate);
@@ -391,8 +396,15 @@ angular.module('myApp.controllers', []).
                     $rootScope.requestOnSwipe = true;
                     search();
                 }
+                /*$scope.$watch("filteredReservations.length", function(newValue, oldValue){
+                    if(newValue === 0)
+                        $scope.previousDay();
+                });*/
             };
-
+            
+            $scope.checkFilter = function(){
+                console.log($scope.filteredReservations);
+            };
             $scope.details = function(reservation) {
                 $rootScope.reservationDetail = reservation;
                 $rootScope.currentdate = reservation.the_date;
@@ -739,6 +751,10 @@ angular.module('myApp.controllers', []).
         }).
         controller('searchCtrl', function($scope, $rootScope, hospiviewFactory, dataFactory) {
             $scope.next = function() {
+                var calDate = $("#doctorCalendar").fullCalendar('getDate');
+                var months = getMonthNames($rootScope.languageID);
+                $rootScope.displayMonthDate = months[calDate.getMonth() +1] + " " + calDate.getFullYear();
+                
                 if ($rootScope.isOffline === true) {
                     $('#doctorCalendar').fullCalendar('next');
                 } else {
@@ -746,6 +762,10 @@ angular.module('myApp.controllers', []).
                 }
             };
             $scope.prev = function() {
+                var calDate = $("#doctorCalendar").fullCalendar('getDate');
+                var months = getMonthNames($rootScope.languageID);
+                $rootScope.displayMonthDate = months[calDate.getMonth()-1] + " " + calDate.getFullYear();
+                
                 if ($rootScope.isOffline === true) {
                     $('#doctorCalendar').fullCalendar('prev');
                 } else {
@@ -921,11 +941,7 @@ angular.module('myApp.controllers', []).
                     monthNames: getMonthNames($rootScope.languageID),
                     dayNamesShort: getDayNamesShort($rootScope.languageID),
                     weekends: showWeekends,
-                    header: {
-                        left: '',
-                        center: 'title',
-                        right: ''
-                    },
+                    header: false,
                     titleFormat: {
                         day: 'd/m'
                     },
@@ -937,21 +953,20 @@ angular.module('myApp.controllers', []).
                     }
                 }
             };
+
+            var months = getMonthNames($rootScope.languageID);
+            $rootScope.displayMonthDate = months[current.getMonth()] + " " + current.getFullYear();
+                
             var countEvent = dataFactory.loadCalendar();
             $scope.eventSources = [countEvent];
-//            $('#doctorCalendar').fullCalendar('addEventSource', [countEvent]);
-            $scope.next = function() {
-                $('#doctorCalendar').fullCalendar('next');
-            };
-            $scope.prev = function() {
-                $('#doctorCalendar').fullCalendar('prev');
-            };
+
             $scope.today = function() {
                 $('#doctorCalendar').fullCalendar('today');
             };
-           
+
             $scope.weekend = function() {
                 var month = $("#doctorCalendar").fullCalendar('getDate');
+                console.log(month);
                 $scope.uiConfig.calendar.month = month.getMonth();
                 $scope.uiConfig.calendar.weekends = !$scope.uiConfig.calendar.weekends;
             };
@@ -982,7 +997,7 @@ angular.module('myApp.controllers', []).
             $scope.serverRadio = $scope.servers[0];
             $scope.serverLogin = $scope.servers[0].user_login;
             $scope.serverPassword = $scope.servers[0].user_password;
-            
+
             $scope.server1Select = function() {
                 $scope.server1Img = "img/hospi.png";
                 $scope.server2Img = "img/hospi-gray.png";

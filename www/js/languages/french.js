@@ -29,6 +29,20 @@ var frenchStrings = {
         appointmentsFilterApply: "Appliquer le filtre",
         appointmentsFilterAllDepartments: "Tous",
 
+        //AppointmentDetail
+        appointmentDetail: "Info du réservation",
+        appointmentDetailPatient: "Info du patient",
+        appointmentDetailId: "Réservation id: ",
+        appointmentDetailTitle: "Titre: ",
+        appointmentDetailBooking: "Réservé par: ",
+        appointmentDetailMarking: "Marquage(s): ",
+        appointmentDetailType: "Type: ",
+        appointmentDetailFinal: "définitif",
+        appointmentDetailProposal: "proposition",
+        appointmentDetailComment: "Commentaire: ",
+        appointmentDetailPatientId: "Id patient: ",
+        appointmentDetailPatientName: "Nom: ",
+        appointmentDetailPatientNational: "Numéro de registre national: ",
         
         //Selectserver/new
         newGreeting: "Bienvenue chez Hospiview",

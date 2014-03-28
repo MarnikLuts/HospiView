@@ -18,31 +18,13 @@
         </div>
     </div>
 </nav>
-<!--<div class="col-md-12 page-header-red">
-    <button class="btn btn-sm-back" ng-click="logout()">
-        <span class="glyphicon glyphicon-chevron-left"></span>
-        afmelden
-    </button>
-    <span class="title">Afspraken</span>
-
-    <button type="button" class="btn-sm-menu dropdown-toggle" data-toggle="dropdown">
-        <span class="glyphicon glyphicon-list"></span>
-    </button>
-    <ul class="dropdown-menu pull-right" role="menu">
-        <li><a ng-click="settings()">Settings</a></li>
-        <li class="divider"></li>
-        <li><a ng-click="logout()">Afmelden</a></li>
-    </ul>
-
-</div>-->
-
 <div class="height70Percent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
-    <div class="col-md-12 height20Percent">
-        <div class="dateAppointmentsView">
+    <div class="col-md-12 height20Percent widthPercent">
+        <div class="dateAppointmentsView width70Percent">
             <h4>{{showDate}}</h4>
         </div>
-        <div class="calendarButtonAppointmentsView">
-            <button class="has-spinner btn btn-default  btn-sm-calendar" ng-click="calendarView()">
+        <div class="calendarButtonAppointmentsView width25Percent">
+            <button class="has-spinner btn btn-default  btn-sm-calendar widthPercent" ng-click="calendarView()">
                 <span ng-show="loadingCalendar" class="spinner"><i class="glyphicon glyphicon-refresh"></i></span>
                 <span ng-show="!loadingCalendar" ng-disabled="loadingCalendar" class="glyphicon glyphicon-calendar"></span>
             </button>

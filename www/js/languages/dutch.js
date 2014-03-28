@@ -32,7 +32,7 @@ var dutchStrings = {
         //AppointmentDetail
         appointmentDetail: "Reservatie info",
         appointmentDetailPatient: "Patiënt info",
-        appointmentDetailId: "Patiënt id: ",
+        appointmentDetailId: "Reservatie id: ",
         appointmentDetailTitle: "Titel: ",
         appointmentDetailBooking: "Geboekt door: ",
         appointmentDetailMarking: "Markering(en): ",

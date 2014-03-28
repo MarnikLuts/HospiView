@@ -66,11 +66,20 @@
 .widthPercent{
     width:100%;
 }
+.width70Percent{
+    width:70%;
+}
+.width25Percent{
+    width:25%;
+}
 .height80Percent{
     height: 80%;
 }
 .height70Percent{
     height:70%;
+}
+.height75Percent{
+    height:75%;
 }
 .height60Percent{
     height: 60%;
@@ -82,7 +91,7 @@
     height: 10%;
 }
 .calendarWrapper{
-    height:65%;
+    height:100%;
 }
 .calendarHeight{
     height: 100%;
@@ -197,10 +206,10 @@
 }
 
 #weekendBtn{
-    font-size: 15px;
+    font-size: 18px;
 }
 #todayBtn{
-    font-size: 15px;
+    font-size: 18px;
 }
 
 .view-animate-next.ng-enter, .view-animate-next.ng-leave, .view-animate-prev.ng-enter, .view-animate-prev.ng-leave {
@@ -240,9 +249,10 @@
 }
 
 .title{
-    text-align: center;
+    text-align: right;
     font-size:25px;
     padding-top: 15px;
+    padding-right: 0.5%;
     padding-bottom:10px;
 }
 .nextAndPrevCalendar{
