@@ -143,8 +143,7 @@ angular.module('myApp.controllers', []).
                             } else {
                                 $scope.loggingIn = false;
                                 $scope.error = true;
-                                $scope.errormessage = $rootScope.getLocalizedS
-                                tring('loginError');
+                                $scope.errormessage = $rootScope.getLocalizedString('loginError');
                             }
                             ;
                         }).
