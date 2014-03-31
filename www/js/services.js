@@ -173,6 +173,10 @@ angular.module('myApp.services', []).
                     return defer.promise;
                 },
                 setSearchDates: function(startDate, endDate) {
+                    startDate = new Date(startDate);
+                    endDate = new Date(endDate);
+                    /*startDate.setHours(0,0,0);
+                    endDate.setHours(23,59,0);*/
                     if (angular.isUndefined($rootScope.searchRangeStart)) {
                         $rootScope.searchRangeStart = startDate;
                         localStorage.setItem($rootScope.user + "SearchRangeStart", startDate);

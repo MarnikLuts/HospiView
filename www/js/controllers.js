@@ -359,9 +359,11 @@ angular.module('myApp.controllers', []).
                 $scope.showDate = formatShowDate(new Date($scope.date), $rootScope.languageID);
             } else {
                 var lowestDate = new Date(2500, 1, 1);
+                var today = new Date();
+                today.setHours(0, 0, 0);
                 for (var i = 0; i < $rootScope[$rootScope.searchString].length; i++) {
                     var compareDate = new Date($rootScope[$rootScope.searchString][i].the_date);
-                    if (compareDate < lowestDate && compareDate >= new Date()) {
+                    if (compareDate < lowestDate && compareDate >= today) {
                         lowestDate = compareDate;
                     }
                 }
@@ -451,6 +453,8 @@ angular.module('myApp.controllers', []).
                     var searchStart = new Date($rootScope.searchRangeStart);
                     var searchEnd = new Date($rootScope.searchRangeEnd);
                     var current = new Date($rootScope.currentdate);
+                    console.log(searchStart);
+                    console.log(searchEnd);
                     var request1 = false;
                     var request2 = false;
                     if (searchEnd.getMonth() <= current.getMonth() && searchEnd.getFullYear() == current.getFullYear()) {
@@ -470,6 +474,7 @@ angular.module('myApp.controllers', []).
                         }
                     }
                     if (searchStart.getMonth() >= current.getMonth() && searchStart.getDate() > 1 && searchStart.getFullYear() == current.getFullYear()) {
+                        searchStart.setDate(searchStart.getDate() - 1);
                         $rootScope.endDate = new Date(searchStart);
                         searchStart.setMonth(current.getMonth());
                         searchStart.setDate(1);
