@@ -105,5 +105,6 @@ var englishStrings = {
         settingsCellcontent: "Cell content",
         settingsPatient: "Patient",
         settingsTitle: "Title",
-        settingsAddUser: "Add application user"
+        settingsAddUser: "Add application user",
+        settingsNew: "These are the settings, Here you can add new servers and users.\n\nTo exit this screen press 'save'."
  };

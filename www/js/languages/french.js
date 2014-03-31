@@ -105,5 +105,6 @@ var frenchStrings = {
         settingsCellcontent: "Cell inhoud",
         settingsPatient: "Patiënt",
         settingsTitle: "Titel",
-        settingsAddUser: "Voeg applicatiegebruiker toe"
+        settingsAddUser: "Voeg applicatiegebruiker toe",
+        settingsNew: "Dit zijn de instellingen, hier kan u nieuwe servers en gebruikers toevoegen."
 };
