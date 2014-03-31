@@ -98,6 +98,7 @@ var frenchStrings = {
         connectionError: "Erreur de connexion.",
         
         //Settings
+        settingsNew: "Dit zijn de instellingen, hier kan u nieuwe gebruikers en servers toevoegen.\n\nOm uit dit scherm te gaan klik op 'Opslaan'.",
         settingsSave: "Sauver",
         settingsAddServer: "Ajouter un serveur",
         settingsEditServer: "Changez le serveur",

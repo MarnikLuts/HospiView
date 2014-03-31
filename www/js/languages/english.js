@@ -98,6 +98,7 @@ var englishStrings = {
         connectionError: "Cannot connect to the server.",
                 
         //Settings
+        settingsNew: "These are the settings, here you can add new users and servers.\n\nTo exit this screen press 'Save'",
         settingsSave: "Save",
         settingsAddServer: "Add server",
         settingsEditServer: "Edit server",

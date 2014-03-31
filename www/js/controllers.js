@@ -129,7 +129,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.login = function() {
                 $scope.loggingIn = true;
-
+                $scope.error = false;
                 hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
                         success(function(data) {
                             var json = parseJson(data);
@@ -351,7 +351,7 @@ angular.module('myApp.controllers', []).
                     $scope.iconImage = "glyphicon glyphicon-chevron-down";
                     iconDownBoolean = true;
                 }
-            }
+            };
             $scope.loadingCalendar = false;
             $scope.eventPerDay;
             if ($rootScope.eventClick === true) {
@@ -383,7 +383,78 @@ angular.module('myApp.controllers', []).
                     console.log("test");
                 }
             }, refreshRate);
-
+            
+            for(var i=0;i<$rootScope[$rootScope.searchString].length;i++){
+                var reservation = $rootScope[$rootScope.searchString][i],
+                    stepAmount = getSteps(reservation.unit_id);
+                
+                console.log("in: " + reservation.time_in);
+                if(reservation.time_in!=="00:00:00")
+                    if(stepAmount==3)
+                        $rootScope[$rootScope.searchString][i].statusIcon = "arrived.png";
+                    else if(stepAmount==4)
+                        $rootScope[$rootScope.searchString][i].statusIcon = "asked.png";
+                
+                console.log("start: " + reservation.time_start);
+                if(reservation.time_start!=="00:00:00")
+                    if(stepAmount==3)
+                        $rootScope[$rootScope.searchString][i].statusIcon = "finished.png";
+                    else if(stepAmount==4)
+                            $rootScope[$rootScope.searchString][i].statusIcon = "arrived.png";
+                    
+                console.log("out: " + reservation.time_out);
+                if(reservation.time_out!=="00:00:00")
+                    if(stepAmount==3)
+                        $rootScope[$rootScope.searchString][i].statusIcon = "out.png";
+                    else if(stepAmount==4)
+                        $rootScope[$rootScope.searchString][i].statusIcon = "finished.png";
+                
+                if(stepAmount==="4"){
+                    console.log("gone: " + reservation.time_gone);
+                    if(reservation.time_gone!=="00:00:00")
+                        $rootScope[$rootScope.searchString][i].statusIcon = "out.png";
+                }
+                
+                console.log($rootScope[$rootScope.searchString][i].statusIcon);
+                
+            }
+            
+            $scope.getStatusIcon = function(reservation){
+                var stepAmount = getSteps(reservation.unit_id);
+                
+                if(stepAmount==="4"){
+                    if(reservation.time_gone!=="00:00:00")
+                        return "out.png";
+                }
+                
+                if(reservation.time_out!=="00:00:00")
+                    if(stepAmount==3)
+                        return "out.png";
+                    else if(stepAmount==4)
+                        return "finished.png";
+                    
+                if(reservation.time_start!=="00:00:00")
+                    if(stepAmount==3)
+                        return "finished.png";
+                    else if(stepAmount==4)
+                        return "arrived.png";
+                
+                if(reservation.time_in!=="00:00:00")
+                    if(stepAmount==3)
+                        return "arrived.png";
+                    else if(stepAmount==4)
+                        return "asked.png";
+                
+                return "none";
+            };
+            
+            function getSteps(unit_id){
+                for(var i=0;i<$rootScope.searchUnits.length;i++){
+                    if(unit_id==$rootScope.searchUnits[i].Header.unit_id){
+                        return $rootScope.searchUnits[i].Header.step_buttons;
+                    }
+                }
+            }
             $scope.reservations = $rootScope[$rootScope.searchString];
 
             $scope.loadingNext = false;
@@ -1201,6 +1272,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.login = function() {
                 $scope.loggingIn = true;
+                $scope.error = false;
                 if (angular.isUndefined($scope.username) && angular.isUndefined($scope.password)) {
                     $scope.error = true;
                     $scope.errormessage = "Gelieve uw gegevens in te vullen";

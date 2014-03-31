@@ -98,6 +98,7 @@ var dutchStrings = {
         connectionError: "Kan geen verbinding maken met de server.",
         
         //Settings
+        settingsNew: "Dit zijn de instellingen, hier kan u nieuwe gebruikers en servers toevoegen.\n\nOm uit dit scherm te gaan klik op 'Opslaan'.",
         settingsSave: "Opslaan",
         settingsAddServer: "Voeg server toe",
         settingsEditServer: "Wijzig server",
