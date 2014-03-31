@@ -36,6 +36,7 @@ angular.module('myApp.controllers', []).
                 $location.path('/selectserver/new');
             } else {
                 $scope.users = JSON.parse(localStorage.getItem("users"));
+                $("#loginDiv").removeClass("invisible");
             }
             /**
              * Will be called on change in the select. Checks if the user model
@@ -83,6 +84,7 @@ angular.module('myApp.controllers', []).
              * 27.03.2014 Stijn Ceunen
              * If only 1 user is saved, this one will automatically be selected.
              */
+            if ($scope.users!==undefined)
             if ($scope.users.length === 1) {
                 $scope.user = $scope.users[0].username;
                 $scope.getServersUser();
@@ -212,8 +214,7 @@ angular.module('myApp.controllers', []).
             }
 
             /**
-             * When the data from postLogin() is loaded successfully, this function is called
-             * Because this function depends on the current scope it can not be abstracted
+             * Sets the dates between which reservations will be searched
              * 
              */
             function setDates() {
@@ -268,7 +269,7 @@ angular.module('myApp.controllers', []).
                     controller: ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
-                    if (answer === true) {
+                    if (answer) {
                         var newStartDate = new Date($rootScope.startDate);
                         newStartDate.setDate(newStartDate.getDate() + 14);
                         var newEndDate = new Date($rootScope.endDate);
@@ -1001,8 +1002,8 @@ angular.module('myApp.controllers', []).
                 $location.path('/mainmenu');
             };
         }).
-        controller('SettingsCtrl', function($scope, $location, $rootScope, languageFactory) {
-
+        controller('SettingsCtrl', function($scope, $location, $rootScope, languageFactory, $routeParams, $timeout) {
+            
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.servers = $scope.selectedUser.servers;
 
@@ -1086,8 +1087,15 @@ angular.module('myApp.controllers', []).
                 }
                 $location.path('/selectserver/' + action);
             };
+            
+            $timeout(function(){
+                if($routeParams.action === "new")
+                alert($rootScope.getLocalizedString("settingsNew"));  
+            }, 1000);
+            
+             
         }).
-        controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory) {
+        controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory, dataFactory, languageFactory, $q, $modal) {
 
             /**
              * If it's the first time a user uses the application, the back button
@@ -1187,6 +1195,7 @@ angular.module('myApp.controllers', []).
              * TODO: write documentation
              */
             $scope.login = function() {
+                $scope.loggingIn = true;
                 if (angular.isUndefined($scope.username) && angular.isUndefined($scope.password)) {
                     $scope.error = true;
                     $scope.errormessage = "Gelieve uw gegevens in te vullen";
@@ -1201,6 +1210,7 @@ angular.module('myApp.controllers', []).
                                             $scope.error = false;
                                             $rootScope.user = localStorageName;
                                             $rootScope.currentServer = $scope.server;
+                                            $rootScope.currentServer.uuid = json.Authentication.Detail.uuid;
                                             if ($routeParams.action === "new")
                                                 addToLocalStorage("users", [{"username": localStorageName}]);
                                             else {
@@ -1230,10 +1240,12 @@ angular.module('myApp.controllers', []).
                                                 $rootScope.type = 0;
                                             else
                                                 $rootScope.type = 1;
-                                            $rootScope.user = null;
-                                            $rootScope.type = null;
-                                            $location.path('/login');
+//                                            $rootScope.user = null;
+//                                            $rootScope.type = null;
+                                            postLogin();
+//                                            $location.path('/login');
                                         } else {
+                                            $scope.loggingIn = false;
                                             $scope.error = true;
                                             $scope.errormessage = "Account is reeds op dit toestel toegevoegd.";
                                         }
@@ -1280,12 +1292,14 @@ angular.module('myApp.controllers', []).
                                             localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
                                             $rootScope.serverChanged = true;
                                         }
+
                                         $rootScope.user = null;
                                         $rootScope.type = null;
                                         $location.path('/login');
                                     }
 
                                 } else {
+                                    $scope.loggingIn=false;
                                     $scope.error = true;
                                     $scope.errormessage = $rootScope.getLocalizedString('loginError');
                                 }
@@ -1295,13 +1309,148 @@ angular.module('myApp.controllers', []).
                             });
                 }
             };
+            
+            function postLogin() {
+                var year = new Date().getFullYear().toString(),
+                        holidayPromise = [],
+                        UnitPromise;
+                //Holidays
+                $rootScope.publicHolidays = [];
+                //SearchUnits
+                $rootScope.searchUnits = [];
+                $rootScope.searchString = $rootScope.user + 'Reservations';
+                $rootScope.absentDays = [];
+                //Absent days
+                $rootScope.absentDays = [];
 
+
+                for (var i = 1; i < 4; i++) {
+                    holidayPromise.push(hospiviewFactory.getPublicHolidays(i, year, '00', $scope.server.hosp_url));
+                }
+                UnitPromise = hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url);
+
+                $q.all(holidayPromise).then(function(responses) {
+                    dataFactory.setHolidays(responses);
+                }, error);
+                UnitPromise
+                        .then(function(response) {
+                            dataFactory.setSearchUnits(response);
+                        }, error)
+                        .then(function() {
+                            return dataFactory.setAbsentDays(year);
+                        }, error)
+                        .then(function() {
+                            return languageFactory.initRemoteLanguageStrings($scope.server.hosp_url);
+                        })
+                        .then(setDates, error);
+            }
+            
+            /**
+             * When a promise gets rejected during postLogin() this method be used to properly handle the error
+             * 
+             * @param {type} data
+             */
+            function error(data) {
+                $scope.loggingIn = false;
+                $scope.error = true;
+//                $scope.errormessage = "Geen afspraken gevonden";
+                $scope.errormessage = data;
+            }
+
+            /**
+             * Sets the dates between which reservations will be searched
+             * 
+             */
+            function setDates() {
+                var today = new Date();
+                $rootScope.startDate = formatDate(today);
+                $rootScope.currentdate = formatDate(today);
+                $rootScope.endDate = formatDate(new Date(today.setDate(today.getDate() + 14)));
+                setData();
+            }
+
+            function setData() {
+                dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
+                if (angular.isUndefined($rootScope[$rootScope.searchString]) || $rootScope[$rootScope.searchString].length === 0) {
+                    dataFactory.searchReservations()
+                            .then(function(reservations) {
+                                setReservations(reservations);
+                            }, error);
+                }
+                else {
+                    if ($rootScope.startDate < $rootScope.searchRangeStart || $rootScope.endDate > $rootScope.searchRangeEnd) {
+                        $scope.reservations = $rootScope[$rootScope.searchString];
+                        dataFactory.searchReservations()
+                                .then(function(reservations) {
+                                    setReservations(reservations);
+                                }, error);
+                    }
+                    $rootScope.isOffline = true;
+                    $location.path('/settings/new');
+                }
+            }
+
+            function setReservations(reservations) {
+                $rootScope[$rootScope.searchString] = reservations;
+                if ($rootScope[$rootScope.searchString].length === 0) {
+                    callModal();
+                } else {
+                    localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
+                    $rootScope.isOffline = false;
+                    $location.path('/settings/new');
+                }
+            }
+            
+            /**
+             * Calls a dialog box and asks if the user wants to continue searching.
+             * If yes, appointments will be searched for the next 14 days.
+             * 
+             * @returns {undefined}
+             */
+            function callModal() {
+                var modalInstance = $modal.open({
+                    templateUrl: 'searchModal',
+                    controller: ModalInstance
+                });
+                modalInstance.result.then(function(answer) {
+                    if (answer) {
+                        var newStartDate = new Date($rootScope.startDate);
+                        newStartDate.setDate(newStartDate.getDate() + 14);
+                        var newEndDate = new Date($rootScope.endDate);
+                        newEndDate.setDate(newEndDate.getDate() + 14);
+                        $rootScope.startDate = formatDate(newStartDate);
+                        $rootScope.endDate = formatDate(newEndDate);
+                        setData();
+                    }
+                }, function() {
+                    console.log("error");
+                });
+            }
+
+            /**
+             * Instance of the dialog box.
+             * 
+             * @param {type} $scope         scope of the dialog box
+             * @param {type} $modalInstance used for modal specific functions
+             * @returns {undefined}         returns true if the user clicked yes
+             */
+            function ModalInstance($scope, $modalInstance) {
+                //Don't use $scope.continue, 'continue' is a reserved keyword
+                $scope.ok = function() {
+                    $scope.proceed = true;
+                    $modalInstance.close($scope.proceed);
+                };
+                $scope.cancel = function() {
+                    $modalInstance.dismiss('cancel');
+                };
+            }
+            
             /**
              * Adds a new animation to the screentransition and redirects to
              * the settings page.
              */
             $scope.cancel = function() {
-                $location.path('/settings');
+                $location.path('/settings/new');
             };
 
             /**
