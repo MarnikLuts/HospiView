@@ -68,6 +68,10 @@
                             <span ng-switch-when="">&nbsp &nbsp</span>
                             <span ng-switch-default><b>C</b></span>
                         </span>
+                        <span ng-switch on="reservation.application">
+                            <span ng-switch-when="0">&nbsp &nbsp</span>
+                            <span ng-switch-default><img src="img/Internet Explorer.png" alt="Internet explorer icon"/></span>
+                        </span>
                         <span class="reservationTitle" ng-switch on="cellcontent">
                             <span ng-switch-when="patient">&nbsp {{reservation.name}}</span>
                             <span ng-switch-default>&nbsp {{reservation.title}}</span>

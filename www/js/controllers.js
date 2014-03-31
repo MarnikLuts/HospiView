@@ -375,7 +375,7 @@ angular.module('myApp.controllers', []).
             var refreshRate = user.refreshrate * 1000;
 
             $rootScope.requestTimer = $interval(function() {
-                if ($rootScope.isOffline === false) {
+                if (!$rootScope.isOffline) {
                     $rootScope.startDate = $rootScope.searchRangeStart;
                     $rootScope.endDate = $rootScope.searchRangeEnd;
                     $rootScope.refresh = true;
@@ -383,41 +383,6 @@ angular.module('myApp.controllers', []).
                     console.log("test");
                 }
             }, refreshRate);
-            
-            for(var i=0;i<$rootScope[$rootScope.searchString].length;i++){
-                var reservation = $rootScope[$rootScope.searchString][i],
-                    stepAmount = getSteps(reservation.unit_id);
-                
-                console.log("in: " + reservation.time_in);
-                if(reservation.time_in!=="00:00:00")
-                    if(stepAmount==3)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "arrived.png";
-                    else if(stepAmount==4)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "asked.png";
-                
-                console.log("start: " + reservation.time_start);
-                if(reservation.time_start!=="00:00:00")
-                    if(stepAmount==3)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "finished.png";
-                    else if(stepAmount==4)
-                            $rootScope[$rootScope.searchString][i].statusIcon = "arrived.png";
-                    
-                console.log("out: " + reservation.time_out);
-                if(reservation.time_out!=="00:00:00")
-                    if(stepAmount==3)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "out.png";
-                    else if(stepAmount==4)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "finished.png";
-                
-                if(stepAmount==="4"){
-                    console.log("gone: " + reservation.time_gone);
-                    if(reservation.time_gone!=="00:00:00")
-                        $rootScope[$rootScope.searchString][i].statusIcon = "out.png";
-                }
-                
-                console.log($rootScope[$rootScope.searchString][i].statusIcon);
-                
-            }
             
             $scope.getStatusIcon = function(reservation){
                 var stepAmount = getSteps(reservation.unit_id);
