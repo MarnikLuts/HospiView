@@ -128,6 +128,7 @@ angular.module('myApp.controllers', []).
                                 for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                                     if ($scope.selectedUser.servers[i].id === $scope.server.id) {
                                         $scope.selectedUser.servers[i].uuid = json.Authentication.Detail.uuid;
+                                        $scope.selectedUser.save_password = $scope.savePassword;
                                         $rootScope.currentServer = $scope.selectedUser.servers[i];
                                     }
                                 }
@@ -330,7 +331,7 @@ angular.module('myApp.controllers', []).
             }
 
         }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, hospiviewFactory, dataFactory) {
+        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $timeout, $modal, hospiviewFactory, dataFactory) {
 
             var iconDownBoolean = true;
             $scope.iconImage = "glyphicon glyphicon-chevron-down";
@@ -361,48 +362,63 @@ angular.module('myApp.controllers', []).
             }
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.cellcontent = user.cellcontent;
+            var refreshRate = user.refreshrate * 1000;
 
             $rootScope.requestTimer = $interval(function() {
-
-            }, 60000);
+                if($rootScope.isOffline === false){
+                    $rootScope.startDate = $rootScope.searchRangeStart;
+                    $rootScope.endDate = $rootScope.searchRangeEnd;
+                    $rootScope.refresh = true;
+                    search();
+                    console.log("test");
+                }
+            }, refreshRate);
 
             $scope.reservations = $rootScope[$rootScope.searchString];
 
+            $scope.loadingNext = false;
             $scope.nextDay = function() {
+                $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
                 newDate.setDate(newDate.getDate() + 1);
                 $scope.date = formatDate(newDate);
-                $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                 if (new Date($scope.date) > new Date($rootScope.searchRangeEnd)) {
                     $rootScope.startDate = new Date(newDate);
                     $rootScope.endDate = new Date(newDate.setDate(newDate.getDate() + 14));
                     $rootScope.requestOnSwipe = true;
                     search();
                 }
-                /*$scope.$watch("filteredReservations.length", function(newValue, oldValue){
-                    if(newValue === 0)
+                $timeout(function() {
+                    if ($scope.filteredReservations.length === 0) {
                         $scope.nextDay();
-                });*/
+                    } else {
+                        $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
+                        $scope.loadingNext = false;
+                    }
+                }, 100);
             };
             $scope.previousDay = function() {
-                
+                $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
                 newDate.setDate(newDate.getDate() - 1);
                 $scope.date = formatDate(newDate);
-                $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                 if (new Date($scope.date) < new Date($rootScope.searchRangeStart)) {
                     $rootScope.startDate = new Date(newDate.setDate(newDate.getDate() - 14));
                     $rootScope.endDate = new Date();
                     $rootScope.requestOnSwipe = true;
                     search();
                 }
-                /*$scope.$watch("filteredReservations.length", function(newValue, oldValue){
-                    if(newValue === 0)
-                        $scope.previousDay();
-                });*/
+                $timeout(function() {
+                    if ($scope.filteredReservations.length === 0) {
+                        $scope.nextDay();
+                    } else {
+                        $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
+                        $scope.loadingNext = false;
+                    }
+                }, 60000);
             };
-            
-            $scope.checkFilter = function(){
+
+            $scope.checkFilter = function() {
                 console.log($scope.filteredReservations);
             };
             $scope.details = function(reservation) {
@@ -510,18 +526,22 @@ angular.module('myApp.controllers', []).
             }
 
             function setReservations(reservations) {
+                if($rootScope.refresh === true)
+                    $rootScope[$rootScope.searchString] = [];
                 for (var i = 0; i < reservations.length; i++)
                     $rootScope[$rootScope.searchString].push(reservations[i]);
-                if ($rootScope[$rootScope.searchString].length === 0) {
+                if (reservations.length === 0) {
                     callModal();
                 } else {
-                    if ($rootScope.requestOnSwipe === true) {
+                    if ($rootScope.requestOnSwipe === true || $rootScope.refresh === true) {
+                        $rootScope.refresh = false;
                         $rootScope.requestOnSwipe = false;
                     } else {
                         $location.path('/appointmentsCalendar');
                     }
                 }
             }
+            
             function callModal() {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
@@ -535,8 +555,7 @@ angular.module('myApp.controllers', []).
                         newEndDate.setDate(newEndDate.getDate() + 14);
                         $rootScope.startDate = formatDate(newStartDate);
                         $rootScope.endDate = formatDate(newEndDate);
-                        setSearchDates($rootScope.startDate, $rootScope.endDate);
-                        searchReservations();
+                        setData();
                     }
                 }, function() {
                     console.log("error");
@@ -550,7 +569,6 @@ angular.module('myApp.controllers', []).
                     $modalInstance.close($scope.proceed);
                 };
                 $scope.cancel = function() {
-                    $scope.proceed = false;
                     $modalInstance.dismiss('cancel');
                 };
             }
@@ -753,8 +771,8 @@ angular.module('myApp.controllers', []).
             $scope.next = function() {
                 var calDate = $("#doctorCalendar").fullCalendar('getDate');
                 var months = getMonthNames($rootScope.languageID);
-                $rootScope.displayMonthDate = months[calDate.getMonth() +1] + " " + calDate.getFullYear();
-                
+                $rootScope.displayMonthDate = months[calDate.getMonth() + 1] + " " + calDate.getFullYear();
+
                 if ($rootScope.isOffline === true) {
                     $('#doctorCalendar').fullCalendar('next');
                 } else {
@@ -764,8 +782,8 @@ angular.module('myApp.controllers', []).
             $scope.prev = function() {
                 var calDate = $("#doctorCalendar").fullCalendar('getDate');
                 var months = getMonthNames($rootScope.languageID);
-                $rootScope.displayMonthDate = months[calDate.getMonth()-1] + " " + calDate.getFullYear();
-                
+                $rootScope.displayMonthDate = months[calDate.getMonth() - 1] + " " + calDate.getFullYear();
+
                 if ($rootScope.isOffline === true) {
                     $('#doctorCalendar').fullCalendar('prev');
                 } else {
@@ -921,7 +939,7 @@ angular.module('myApp.controllers', []).
             };
 
         }).
-        controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope, $interval, dataFactory) {
+        controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope, dataFactory) {
 
             var current = new Date($rootScope.currentdate);
             var showWeekends = false;
@@ -956,7 +974,7 @@ angular.module('myApp.controllers', []).
 
             var months = getMonthNames($rootScope.languageID);
             $rootScope.displayMonthDate = months[current.getMonth()] + " " + current.getFullYear();
-                
+
             var countEvent = dataFactory.loadCalendar();
             $scope.eventSources = [countEvent];
 
