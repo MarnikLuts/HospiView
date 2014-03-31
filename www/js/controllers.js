@@ -436,7 +436,7 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.settings = function() {
-                $location.path('/settings');
+                $location.path('/settings/default');
             };
 
             $scope.filter = function() {
@@ -1002,7 +1002,7 @@ angular.module('myApp.controllers', []).
                 $location.path('/mainmenu');
             };
         }).
-        controller('SettingsCtrl', function($scope, $location, $rootScope, languageFactory, $routeParams, $timeout) {
+        controller('SettingsCtrl', function($scope, $location, $rootScope, $routeParams, $timeout) {
             
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.servers = $scope.selectedUser.servers;

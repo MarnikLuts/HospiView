@@ -2072,7 +2072,7 @@ fieldset[disabled] .btn {
     filter: alpha(opacity=65);
     -webkit-box-shadow: none;
     box-shadow: none;
-    opacity: 0;
+    opacity: 0.65;
 }
 .btn-default {
     color: #333;
