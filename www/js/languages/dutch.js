@@ -103,7 +103,7 @@ var dutchStrings = {
         settingsEditServer: "Wijzig server",
         settingsUser: "Gebruiker",
         settingsRefresh: "Verversing",
-        settingsCellcontent: "Cell inhoud",
+        settingsCellcontent: "Cellinhoud",
         settingsPatient: "Patiënt",
         settingsTitle: "Titel",
         settingsAddUser: "Voeg applicatiegebruiker toe",
