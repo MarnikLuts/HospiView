@@ -384,6 +384,12 @@ angular.module('myApp.controllers', []).
                 }
             }, refreshRate);
             
+            /**
+             * Gets the name of the icon that matches the current status of the given reservation
+             * 
+             * @param {type} reservation
+             * @returns {String}
+             */
             $scope.getStatusIcon = function(reservation){
                 var stepAmount = getSteps(reservation.unit_id);
                 
@@ -413,6 +419,12 @@ angular.module('myApp.controllers', []).
                 return "none";
             };
             
+            /**
+             * Gets the amount of steps used in the given unit (some use 3, some use 4)
+             * 
+             * @param {type} unit_id
+             * @returns {unresolved}
+             */
             function getSteps(unit_id){
                 for(var i=0;i<$rootScope.searchUnits.length;i++){
                     if(unit_id==$rootScope.searchUnits[i].Header.unit_id){
