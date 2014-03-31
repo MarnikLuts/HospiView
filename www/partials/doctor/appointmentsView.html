@@ -88,6 +88,7 @@
                         </span>
                     </div>
                 </div>
+                <img ng-show="getStatusIcon(reservation)!=='none'" ng-src="img/{{ getStatusIcon(reservation) }}" alt="appointment status"/>
             </div>
             <div class="alert alert-info" ng-hide="filteredReservations.length"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('appointmentsViewNoReservations')}}</div>
         </div>
