@@ -106,9 +106,6 @@
     height: 100%;
 }
 
-.btn-menu{
-    width:100px;
-}
 #doctorCalendar{
     max-height:100%;
     overflow-y:scroll; 
@@ -290,6 +287,18 @@ ul li{
     }
     ul li a{
         width: 30%;
+    }
+}
+@media screen and (min-width: 768px) {
+    ul{
+        width:43%;
+    }
+    ul li{
+        width: 33%;
+    }
+    ul li a{
+        font-size: 15px;
+        width: 100%;
     }
 }
 
