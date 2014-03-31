@@ -1,17 +1,25 @@
-<div class="col-md-12 page-header-blue">
+<nav class="navbar navbar-default" role="navigation">
     <button type="submit" class="btn btn-sm-back" ng-click="cancel()" ng-hide="newBoolean">
         <span class="glyphicon glyphicon-chevron-left"></span>
-        annuleer
+        {{ getLocalizedString('cancel')}}
     </button>
-    <div class="title">Hospiview</div>
-</div>
+    <div class="title">{{ getLocalizedString('settings')}}</div>
+</nav>
 <div class="col-md-12">
     <div class="well">
-        <h2>{{ getLocalizedString('newGreeting') }}</h2>
-        <div class="form-group">
+        <div class="input-group widthPercent btn-group">
+            <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(1)"
+                    btn-radio="1">Nederlands<br/><img src="img/flag_netherlands.png" alt="flag_netherlands" width="60" height="38"></button>
+            <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(2)"
+                    btn-radio="2">français<br/><img src="img/flag_france.png" alt="flag_france" width="60" height="38"></button>
+            <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(3)"
+                    btn-radio="3">English<br/><img src="img/flag_uk.png" alt="flag_uk" width="60" height="38"></button>
+        </div>
+        <h2 ng-show="languageSelected">{{ getLocalizedString('newGreeting') }}</h2>
+        <div class="form-group" ng-show="languageSelected">
             <p>{{ getLocalizedString('newInfo') }}</p>
                 <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers" ng-change="serverSelected = true;
-                    accountRadio = null">
+                    accountRadio = null; accountTrue = null;">
                     <option value="">- {{ getLocalizedString('newServerSelectDefault') }} -</option>
                 </select> 
         </div>

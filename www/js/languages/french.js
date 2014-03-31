@@ -46,17 +46,17 @@ var frenchStrings = {
         
         //Selectserver/new
         newGreeting: "Bienvenue chez Hospiview",
-        newInfo: "Selecteer de instelling waarmee u verbinding wil maken:",
+        newInfo: "Selectionez l'institution vous voulez vous connecter:",
         newServerSelectDefault: "Klik hier om te selecteren",
-        newServerHasAccount: "Heeft u een account bij deze instelling?",
-        newServerEnterAccount: "Geef uw login gegevens in:",
+        newServerHasAccount: "Avez-vous un compte chez l'institution?",
+        newServerEnterAccount: "Entrez vos données de connexion:",
                 
-        newFunctionSelectDefault: "Selecteer een functie",
+        newFunctionSelectDefault: "Selectionez une fonction",
         
-        newFunctionPatient: "Patiënt",
-        newFunctionRepresentative: "Vertegenwoordiger",
-        newFunctionHouseDoctor: "Huisarts",
-        newFunctionDoctor: "Arts",
+        newFunctionPatient: "Patient",
+        newFunctionRepresentative: "Représentant",
+        newFunctionHouseDoctor: " Médecin de famille",
+        newFunctionDoctor: "Médecin",
         
         newUserEnterDetails: "Geef volgende gegevens in om een account aan te vragen:",
         
@@ -80,9 +80,9 @@ var frenchStrings = {
         newUserRequestMessage: "U ontvangt dadelijk een email met uw logingegevens.",
         
         //Validation
-        isRequired: "is required.",
+        isRequired: "Ce champ est obligatoire",
         and: "et",
-        mustBeNumber: "moet een nummer zijn",
+        mustBeNumber: "doit être un nombre",
         
         //general app use
         settings: "Paramètres",
@@ -91,6 +91,7 @@ var frenchStrings = {
         logout: "Quitter",
         yes: "Oui",
         no: "Non",
+        cancel: "annuler",
         
         //Connection messages
         internalError: "Erreur interne du serveur.",
@@ -105,5 +106,10 @@ var frenchStrings = {
         settingsCellcontent: "Cell inhoud",
         settingsPatient: "Patiënt",
         settingsTitle: "Titel",
-        settingsAddUser: "Voeg applicatiegebruiker toe"
+        settingsAddUser: "Ajoutez un utilisateur de l'application",
+        settingsServerSettings: "Paramètres du serveur",
+        settingsApplicationSettings: "Paramètres de l'application",
+        settingsLanguage: "Langue",
+        settingsRefreshMin: "Minimum 30",
+        settingsRefreshMax: "Maximum 60"
 };

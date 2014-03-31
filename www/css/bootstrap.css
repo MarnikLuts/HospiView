@@ -6,6 +6,21 @@
 
 /*! normalize.css v3.0.0 | MIT License | git.io/normalize */
 
+
+/*ADDED*/
+.settingsBtnGroupLabel {
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    opacity: 0;
+}
+
 html {
     font-family: sans-serif;
     -webkit-text-size-adjust: 100%;
@@ -2057,7 +2072,7 @@ fieldset[disabled] .btn {
     filter: alpha(opacity=65);
     -webkit-box-shadow: none;
     box-shadow: none;
-    opacity: .65;
+    opacity: 0;
 }
 .btn-default {
     color: #333;
@@ -3457,7 +3472,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     white-space: nowrap;
     vertical-align: middle;
 }
-/*added min-width */
+
 .input-group-addon {
     padding: 6px 12px;
     font-size: 14px;
@@ -3468,9 +3483,6 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     background-color: #eee;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
-.width-custom {
-    min-width: 100px;
 }
 .input-group-addon.input-sm {
     padding: 5px 10px;

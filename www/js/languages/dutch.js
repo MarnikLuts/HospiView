@@ -80,7 +80,7 @@ var dutchStrings = {
         newUserRequestMessage: "U ontvangt dadelijk een email met uw logingegevens.",
         
         //Validation
-        isRequired: "is verplicht.",        
+        isRequired: "Dit veld is verplicht.",        
         and: "en",
         mustBeNumber: "moet een nummer zijn",
         
@@ -91,6 +91,7 @@ var dutchStrings = {
         logout: "Uitloggen",
         yes: "Ja",
         no: "Nee",
+        cancel: "annuleer",
         
         //Connection messages
         internalError: "Interne fout in de server.",
@@ -105,5 +106,10 @@ var dutchStrings = {
         settingsCellcontent: "Cell inhoud",
         settingsPatient: "Patiënt",
         settingsTitle: "Titel",
-        settingsAddUser: "Voeg applicatiegebruiker toe"
+        settingsAddUser: "Voeg applicatiegebruiker toe",
+        settingsServerSettings: "Server instellingen",
+        settingsApplicationSettings: "Applicatie instellingen",
+        settingsLanguage: "Applicatie taal",
+        settingsRefreshMin: "Minimum 30",
+        settingsRefreshMax: "Maximum 60"
 };

@@ -1,61 +1,82 @@
-<div class="col-md-12 page-header-blue">
-    <button type="submit" class="btn btn-sm-back" ng-click="save()">
+<nav class="navbar navbar-default" role="navigation">
+    <button type="submit" class="btn btn-sm-back" ng-click="save()" ng-disabled="settingsForm.$invalid">
         <span class="glyphicon glyphicon-chevron-left"></span>
-        {{ getLocalizedString('settingsSave') }}
+        {{ getLocalizedString('back')}}
     </button>
-    <div class="title">{{ getLocalizedString('settings') }}</div>
-</div>
+    <div class="title">{{ getLocalizedString('settings')}}</div>
+</nav>
 <div>
-    <!--<div class="col-md-12 form-group">
-        <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers">
-        </select>
-    </div>-->
-    <div class="col-md-12">
-        <div class="shortcutButtons">
-            <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server1Select()" 
-                    btn-radio="servers[0]">{{abbreviation1}}<br/><img src="{{server1Img}}" alt="hospi" width="64" height="90"></button>
-            <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server2Select()" 
-                    btn-radio="servers[1]" ng-show="showServer2">{{abbreviation2}}<br/><img src="{{server2Img}}" alt="hospi" width="64" height="90"></button>
-            <button type="button" class="btn btn-primary btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server3Select()" 
-                    btn-radio="servers[2]" ng-show="showServer3">{{abbreviation3}}<br/><img src="{{server3Img}}" alt="hospi" width="64" height="90"></button>
+    <form name="settingsForm" novalidate>
+        <!--<div class="col-md-12 form-group">
+            <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers">
+            </select>
+        </div>-->
+        <div class="col-md-12">
+            <div class="shortcutButtons">
+                <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server1Select()" 
+                        btn-radio="servers[0]">{{abbreviation1}}<br/><img src="{{server1Img}}" alt="hospi" width="64" height="90"></button>
+                <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server2Select()" 
+                        btn-radio="servers[1]">{{abbreviation2}}<br/><img src="{{server2Img}}" alt="hospi" width="64" height="90" ng-show="showServer2"><span class="glyphicon glyphicon-plus" ng-hide="showServer2"></span></button>
+                <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server3Select()" 
+                        btn-radio="servers[2]">{{abbreviation3}}<br/><img src="{{server3Img}}" alt="hospi" width="64" height="90" ng-show="showServer3"><span class="glyphicon glyphicon-plus" ng-hide="showServer3"></span></button>
+            </div>
         </div>
-    </div>
-    <div class="col-md-12">
-        <button type="button" class="btn btn-primary input-lg" ng-click="addOrEditServer('add')">
-            <span class="glyphicon glyphicon-plus"></span>
-            {{ getLocalizedString('settingsAddServer') }}
-        </button>
-        <button type="button" class="btn btn-primary input-lg float-right" ng-click="addOrEditServer('edit',server)">
-            <span class="glyphicon glyphicon-transfer"></span>
-            {{ getLocalizedString('settingsEditServer') }}
-        </button>
-    </div></br>
-    <div class="col-md-12">
-        <div class="well">
-            <div class="input-group form-group">
-                <span class="input-group-addon width-custom">{{ getLocalizedString('settingsUser') }}:</span>
-                <input id="username" class="form-control input-lg" type="text" ng-model="serverLogin" ng-disabled="true"/>
-            </div>
-            <div class="input-group form-group">
-                <span class="input-group-addon width-custom">{{ getLocalizedString('loginPassword') }}:</span>
-                <input id="password" class="form-control input-lg" type="password" ng-model="serverPassword" ng-disabled="true"/>
-            </div>
-            <div class="input-group form-group">
-                <span class="input-group-addon width-custom">{{ getLocalizedString('settingsRefresh') }}:</span>
-                <input id="refresh" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg"/>
-            </div>
-            <div class="input-group">
-                <span type="button" class="input-group-addon" ng-disabled="true">{{ getLocalizedString('settingsCellcontent') }}:</span>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary" ng-model="selectedUser.cellcontent" ng-click="cellcontentchange('patient')" btn-radio="'patient'">{{ getLocalizedString('settingsPatient') }}</button>
-                    <button type="button" class="btn btn-primary" ng-model="selectedUser.cellcontent" ng-click="cellcontentchange('title')" btn-radio="'title'">{{ getLocalizedString('settingsTitle') }}</button>
+        <div class="col-md-12">
+
+        </div></br>
+        <div class="col-md-12">
+            <div class="well">
+                <h4>{{ getLocalizedString('settingsServerSettings')}}: </h4>
+                <div class="input-group form-group">
+                    <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('settingsUser')}}:</span>
+                    <input id="username" class="form-control input-lg" type="text" ng-model="serverLogin" ng-disabled="true"/>
+                </div>
+                <div class="input-group form-group">
+                    <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('loginPassword')}}:</span>
+                    <input id="password" class="form-control input-lg" type="password" ng-model="serverPassword" ng-disabled="true"/>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('settingsRefresh')}}:</span>
+                        <input id="refresh" name="refreshrate" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="60" required/>
+                    </div>
+                    <div class="alert alert-danger input-group" ng-show="settingsForm.refreshrate.$dirty && settingsForm.refreshrate.$invalid">
+                        <span ng-show="settingsForm.refreshrate.$error.min">{{ getLocalizedString('settingsRefreshMin')}}</span>
+                        <span ng-show="settingsForm.refreshrate.$error.max">{{ getLocalizedString('settingsRefreshMax')}}</span>
+                        <span ng-show="settingsForm.refreshrate.$error.required">{{ getLocalizedString('isRequired')}}</span>
+                    </div>
+                </div>
+                <div class="form-group input-group btn-group widthPercent">
+                    <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('settingsCellcontent')}}:</span>
+                    <button type="button" class="btn btn-default width50Percent" ng-model="selectedUser.cellcontent" ng-click="cellcontentchange('patient')" btn-radio="'patient'">{{ getLocalizedString('settingsPatient')}}</button>
+                    <button type="button" class="btn btn-default width50Percent" ng-model="selectedUser.cellcontent" ng-click="cellcontentchange('title')" btn-radio="'title'">{{ getLocalizedString('settingsTitle')}}</button>
+                </div>
+                <div class="form-group">
+                <div class="form-group">
+                    <button type="button" class="btn btn-default form-control input-lg" ng-click="addOrEditServer('edit', server)">
+                        <span class="glyphicon glyphicon-transfer"></span>
+                        {{ getLocalizedString('settingsEditServer')}}
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-12">
-        <button type="button" class="btn btn-primary input-lg" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-user"></span> {{ getLocalizedString('settingsAddUser') }}</button>
-    </div>
+        <div class="col-md-12">
+            <div class="well">
+                <h4>{{ getLocalizedString('settingsApplicationSettings')}}: </h4>
+                <div class="form-group">
+                    <button type="button" class="btn btn-default btn-lg form-control" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-user"></span> {{ getLocalizedString('settingsAddUser')}}</button>
+                </div>
+                <div class="input-group widthPercent btn-group">
+                    <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(1)"
+                            btn-radio="1">Nederlands<br/><img src="img/flag_netherlands.png" alt="flag_netherlands" width="60" height="38"></button>
+                    <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(2)"
+                            btn-radio="2">français<br/><img src="img/flag_france.png" alt="flag_france" width="60" height="38"></button>
+                    <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(3)"
+                            btn-radio="3">English<br/><img src="img/flag_uk.png" alt="flag_uk" width="60" height="38"></button>
+                </div>
+            </div>
+        </div>
+    </form>
     <!--<div class="col-md-12">
         <div class="well">
             Snelkoppeling 1:

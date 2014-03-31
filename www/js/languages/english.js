@@ -80,9 +80,9 @@ var englishStrings = {
         newUserRequestMessage: "You will recieve an email with your login details shortly.",
         
         //Validation
-        isRequired: "is required",
+        isRequired: "This field is required",
         and: "and",
-        mustBeNumber: "must be a number",
+        mustBeNumber: "has to be a number",
         
         //general app use
         settings: "Settings",
@@ -91,6 +91,7 @@ var englishStrings = {
         logout: "Log Out",
         yes: "Yes",
         no: "No",
+        cancel: "cancel",
         
         //Connection messages
         internalError: "Internal server error.",
@@ -105,5 +106,10 @@ var englishStrings = {
         settingsCellcontent: "Cell content",
         settingsPatient: "Patient",
         settingsTitle: "Title",
-        settingsAddUser: "Add application user"
+        settingsAddUser: "Add application user",
+        settingsServerSettings: "Server settings",
+        settingsApplicationSettings: "Application settings",
+        settingsLanguage: "Application language",
+        settingsRefreshMin: "Minimum 30",
+        settingsRefreshMax: "Maximum 60"
  };

@@ -9,6 +9,14 @@ angular.module('myApp.controllers', []).
                 $rootScope.requestTimer = undefined;
             }
 
+            console.log()
+            if (localStorage.getItem("language") === null) {
+                localStorage.setItem("language", 3);
+                $rootScope.languageID = 3;
+            } else {
+                $rootScope.languageID = parseInt(localStorage.getItem("language"));
+            }
+
             /**
              * showPasswordBoolean and savePassword will be set to false.
              * 
@@ -364,7 +372,7 @@ angular.module('myApp.controllers', []).
             var refreshRate = user.refreshrate * 1000;
 
             $rootScope.requestTimer = $interval(function() {
-                if($rootScope.isOffline === false){
+                if ($rootScope.isOffline === false) {
                     $rootScope.startDate = $rootScope.searchRangeStart;
                     $rootScope.endDate = $rootScope.searchRangeEnd;
                     $rootScope.refresh = true;
@@ -525,7 +533,7 @@ angular.module('myApp.controllers', []).
             }
 
             function setReservations(reservations) {
-                if($rootScope.refresh === true)
+                if ($rootScope.refresh === true)
                     $rootScope[$rootScope.searchString] = [];
                 for (var i = 0; i < reservations.length; i++)
                     $rootScope[$rootScope.searchString].push(reservations[i]);
@@ -540,7 +548,7 @@ angular.module('myApp.controllers', []).
                     }
                 }
             }
-            
+
             function callModal() {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
@@ -998,16 +1006,23 @@ angular.module('myApp.controllers', []).
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.servers = $scope.selectedUser.servers;
 
-            if ($scope.servers.length >= 2) {
-                $scope.abbreviation2 = $scope.selectedUser.servers[1].hosp_short_name;
-                $scope.server2Img = "img/hospi-gray.png";
-                $scope.showServer2 = true;
-            }
             if ($scope.servers.length == 3) {
                 $scope.abbreviation3 = $scope.selectedUser.servers[2].hosp_short_name;
                 $scope.server3Img = "img/hospi-gray.png";
                 $scope.showServer3 = true;
+            } else {
+                $scope.abbreviation3 = $rootScope.getLocalizedString('settingsAddServer');
+                $scope.showServer3 = false;
+                if ($scope.servers.length >= 2) {
+                    $scope.abbreviation2 = $scope.selectedUser.servers[1].hosp_short_name;
+                    $scope.server2Img = "img/hospi-gray.png";
+                    $scope.showServer2 = true;
+                } else {
+                    $scope.abbreviation2 = $rootScope.getLocalizedString('settingsAddServer');
+                    $scope.showServer2 = false;
+                }
             }
+
 
             $scope.abbreviation1 = $scope.selectedUser.servers[0].hosp_short_name;
             $scope.server1Img = "img/hospi.png";
@@ -1024,25 +1039,40 @@ angular.module('myApp.controllers', []).
                 $scope.serverPassword = $scope.serverRadio.user_password;
             };
             $scope.server2Select = function() {
-                $scope.server1Img = "img/hospi-gray.png";
-                $scope.server2Img = "img/hospi.png";
-                $scope.server3Img = "img/hospi-gray.png";
-                $scope.serverRadio = $scope.servers[1];
-                $scope.serverLogin = $scope.serverRadio.user_login;
-                $scope.serverPassword = $scope.serverRadio.user_password;
+                if ($scope.showServer2 === false) {
+                    $scope.addOrEditServer('add');
+                } else {
+                    $scope.server1Img = "img/hospi-gray.png";
+                    $scope.server2Img = "img/hospi.png";
+                    $scope.server3Img = "img/hospi-gray.png";
+                    $scope.serverRadio = $scope.servers[1];
+                    $scope.serverLogin = $scope.serverRadio.user_login;
+                    $scope.serverPassword = $scope.serverRadio.user_password;
+                }
             };
             $scope.server3Select = function() {
-                $scope.server1Img = "img/hospi-gray.png";
-                $scope.server2Img = "img/hospi-gray.png";
-                $scope.server3Img = "img/hospi.png";
-                $scope.serverRadio = $scope.servers[2];
-                $scope.serverLogin = $scope.serverRadio.user_login;
-                $scope.serverPassword = $scope.serverRadio.user_password;
+                if ($scope.showServer3 === false) {
+                    $scope.addOrEditServer('add');
+                } else {
+                    $scope.server1Img = "img/hospi-gray.png";
+                    $scope.server2Img = "img/hospi-gray.png";
+                    $scope.server3Img = "img/hospi.png";
+                    $scope.serverRadio = $scope.servers[2];
+                    $scope.serverLogin = $scope.serverRadio.user_login;
+                    $scope.serverPassword = $scope.serverRadio.user_password;
+                }
             };
 
             $scope.cellcontentchange = function(newCellcontent) {
                 $scope.selectedUser.cellcontent = newCellcontent;
             };
+
+            $scope.changeLanguage = function(id) {
+                $rootScope.languageID = id;
+                localStorage.setItem("language", id);
+            }
+            $scope.languageRadio = $rootScope.languageID;
+
             $scope.save = function() {
                 localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
                 $location.path('/doctor/appointmentsView');
@@ -1068,6 +1098,12 @@ angular.module('myApp.controllers', []).
             else
                 $scope.newBoolean = false;
 
+            $scope.languageSelected = false;
+            $scope.changeLanguage = function(id){
+                $rootScope.languageID = id;
+                localStorage.setItem("language", id);
+                $scope.languageSelected = true;
+            }
             /**
              * Uses hospiviewFactory to do a request. On success the XML will be
              * parsed too JSON. The servers will be put in the $scope servers.
