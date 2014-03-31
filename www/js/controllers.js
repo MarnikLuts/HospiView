@@ -28,6 +28,7 @@ angular.module('myApp.controllers', []).
                 $location.path('/selectserver/new');
             } else {
                 $scope.users = JSON.parse(localStorage.getItem("users"));
+                $("#loginDiv").removeClass("invisible");
             }
             /**
              * Will be called on change in the select. Checks if the user model

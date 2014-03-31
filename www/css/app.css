@@ -276,3 +276,7 @@ ul li{
         width: 30%;
     }
 }
+
+.invisible{
+    display: none;
+}
