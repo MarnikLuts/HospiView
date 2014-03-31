@@ -72,6 +72,9 @@
 .width50Percent{
     width:50%;
 }
+.width40Percent{
+    width:40;
+}
 .widthSettingsLabels {
     min-width: 130px;
 }
@@ -104,7 +107,7 @@
 }
 
 .btn-menu{
-    width:110px;
+    width:100px;
 }
 #doctorCalendar{
     max-height:100%;
