@@ -140,7 +140,7 @@ angular.module('myApp.controllers', []).
                                         $scope.selectedUser.save_password = $scope.savePassword;
                                         $rootScope.currentServer = $scope.selectedUser.servers[i];
                                     } else {
-                                        hospiviewFactory.getAuthentication($scope)
+                                        /*hospiviewFactory.getAuthentication($scope)*/
                                     }
                                 }
                                 localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
