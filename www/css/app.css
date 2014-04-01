@@ -314,3 +314,11 @@ ul li{
 .invisible{
     display: none;
 }
+
+.icasaLogo{
+    width: 100px;
+    height: auto;
+    position: absolute;
+    right: 100px;
+    left: 37px;
+}
