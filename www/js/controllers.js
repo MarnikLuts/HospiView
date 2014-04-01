@@ -941,6 +941,60 @@ angular.module('myApp.controllers', []).
                 }
             };
             $scope.loadingMonth = false;
+            
+            $scope.calendarView = function() {
+                    $scope.loadingCalendar = true;
+                    var searchStart = new Date($rootScope.searchRangeStart);
+                    var searchEnd = new Date($rootScope.searchRangeEnd);
+                    var current = new Date($rootScope.currentdate);
+                    var request1 = false;
+                    var request2 = false;
+                    if (searchEnd.getMonth() <= current.getMonth() && searchEnd.getFullYear() == current.getFullYear()) {
+                        $rootScope.startDate = new Date(searchEnd);
+                        searchEnd.setMonth(current.getMonth() + 1);
+                        searchEnd.setDate(1);
+                        $rootScope.endDate = new Date(searchEnd);
+                        request1 = true;
+                    } else {
+                        if (searchEnd.getFullYear() < current.getFullYear()) {
+                            $rootScope.startDate = new Date(searchEnd);
+                            searchEnd.setMonth(current.getMonth() + 1);
+                            searchEnd.setYear(current.getYear());
+                            searchEnd.setDate(1);
+                            $rootScope.endDate = new Date(searchEnd);
+                            request1 = true;
+                        }
+                    }
+                    if (searchStart.getMonth() >= current.getMonth() && searchStart.getDate() > 1 && searchStart.getFullYear() == current.getFullYear()) {
+                        searchStart.setDate(searchStart.getDate() - 1);
+                        $rootScope.endDate = new Date(searchStart);
+                        searchStart.setMonth(current.getMonth());
+                        searchStart.setDate(1);
+                        $rootScope.startDate = new Date(searchStart);
+                        request2 = true;
+                    } else {
+                        if (searchStart.getFullYear() > current.getFullYear()) {
+                            $rootScope.endDate = new Date(searchStart);
+                            searchStart.setMonth(current.getMonth());
+                            searchStart.setFullYear(current.getFullYear());
+                            searchStart.setDate(1);
+                            $rootScope.startDate = new Date(searchStart);
+                            request2 = true;
+                        }
+                    }
+                    if (request1 === true && request2 === true) {
+                        $rootScope[$rootScope.searchString] = [];
+                        $rootScope.startDate = searchStart;
+                        $rootScope.endDate = searchEnd;
+                    }
+                    if (request1 === true || request2 === true) {
+                        search();
+                    } else {
+                        $location.path('/appointmentsCalendar');
+                    }
+                
+            };
+            
             function calendarView(calendarBrows) {
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
@@ -986,7 +1040,7 @@ angular.module('myApp.controllers', []).
                     }
                     else {
                         if (searchStart.getMonth() > current.getMonth() + nextMonthCount && searchStart.getFullYear() == current.getFullYear()) {
-                            $rootScope.endDate = formatDate(new Date(searchStart));
+                            $rootScope.endDate = formatDate(new Date(searchStart.setDate(searchStart.getDate() - 1)));
                             searchStart.setMonth(current.getMonth() + nextMonthCount);
                             searchStart.setDate(1);
                             $rootScope.startDate = formatDate(new Date(searchStart));
