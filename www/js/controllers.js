@@ -84,15 +84,15 @@ angular.module('myApp.controllers', []).
              * 27.03.2014 Stijn Ceunen
              * If only 1 user is saved, this one will automatically be selected.
              */
-            if ($scope.users!==undefined)
-            if ($scope.users.length === 1) {
-                $scope.user = $scope.users[0].username;
-                $scope.getServersUser();
-                if ($scope.servers.length === 1) {
-                    $scope.server = $scope.servers[0];
-                    $scope.getLoginUser();
+            if ($scope.users !== undefined)
+                if ($scope.users.length === 1) {
+                    $scope.user = $scope.users[0].username;
+                    $scope.getServersUser();
+                    if ($scope.servers.length === 1) {
+                        $scope.server = $scope.servers[0];
+                        $scope.getLoginUser();
+                    }
                 }
-            }
 
 
             /**
@@ -342,6 +342,8 @@ angular.module('myApp.controllers', []).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $timeout, $modal, hospiviewFactory, dataFactory) {
 
             var iconDownBoolean = true;
+            $rootScope.cancelLoop = false;
+            $scope.cancel = false;
             $scope.iconImage = "glyphicon glyphicon-chevron-down";
             $scope.changeIcon = function() {
                 if (iconDownBoolean === true) {
@@ -368,89 +370,84 @@ angular.module('myApp.controllers', []).
                     }
                 }
                 $scope.date = formatDate(new Date(lowestDate));
+                $scope.lastKnownDate = new Date($scope.date);
                 $scope.showDate = formatShowDate(lowestDate, $rootScope.languageID);
             }
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.cellcontent = user.cellcontent;
             var refreshRate = user.refreshrate * 1000;
 
-            $rootScope.requestTimer = $interval(function() {
+            /*$rootScope.requestTimer = $interval(function() {
                 if ($rootScope.isOffline === false) {
                     $rootScope.startDate = $rootScope.searchRangeStart;
                     $rootScope.endDate = $rootScope.searchRangeEnd;
                     $rootScope.refresh = true;
                     search();
-                    console.log("test");
+
                 }
-            }, refreshRate);
-            
-            for(var i=0;i<$rootScope[$rootScope.searchString].length;i++){
+            }, refreshRate);*/
+
+            for (var i = 0; i < $rootScope[$rootScope.searchString].length; i++) {
                 var reservation = $rootScope[$rootScope.searchString][i],
-                    stepAmount = getSteps(reservation.unit_id);
-                
-                console.log("in: " + reservation.time_in);
-                if(reservation.time_in!=="00:00:00")
-                    if(stepAmount==3)
+                        stepAmount = getSteps(reservation.unit_id);
+
+                if (reservation.time_in !== "00:00:00")
+                    if (stepAmount == 3)
                         $rootScope[$rootScope.searchString][i].statusIcon = "arrived.png";
-                    else if(stepAmount==4)
+                    else if (stepAmount == 4)
                         $rootScope[$rootScope.searchString][i].statusIcon = "asked.png";
-                
-                console.log("start: " + reservation.time_start);
-                if(reservation.time_start!=="00:00:00")
-                    if(stepAmount==3)
+
+                if (reservation.time_start !== "00:00:00")
+                    if (stepAmount == 3)
                         $rootScope[$rootScope.searchString][i].statusIcon = "finished.png";
-                    else if(stepAmount==4)
-                            $rootScope[$rootScope.searchString][i].statusIcon = "arrived.png";
-                    
-                console.log("out: " + reservation.time_out);
-                if(reservation.time_out!=="00:00:00")
-                    if(stepAmount==3)
+                    else if (stepAmount == 4)
+                        $rootScope[$rootScope.searchString][i].statusIcon = "arrived.png";
+
+                if (reservation.time_out !== "00:00:00")
+                    if (stepAmount == 3)
                         $rootScope[$rootScope.searchString][i].statusIcon = "out.png";
-                    else if(stepAmount==4)
+                    else if (stepAmount == 4)
                         $rootScope[$rootScope.searchString][i].statusIcon = "finished.png";
-                
-                if(stepAmount==="4"){
-                    console.log("gone: " + reservation.time_gone);
-                    if(reservation.time_gone!=="00:00:00")
+
+                if (stepAmount === "4") {
+                    if (reservation.time_gone !== "00:00:00")
                         $rootScope[$rootScope.searchString][i].statusIcon = "out.png";
                 }
-                
-                console.log($rootScope[$rootScope.searchString][i].statusIcon);
-                
+
             }
-            
-            $scope.getStatusIcon = function(reservation){
+
+            $scope.getStatusIcon = function(reservation) {
                 var stepAmount = getSteps(reservation.unit_id);
-                
-                if(stepAmount==="4"){
-                    if(reservation.time_gone!=="00:00:00")
+
+                if (stepAmount === "4") {
+                    if (reservation.time_gone !== "00:00:00")
                         return "out.png";
                 }
-                
-                if(reservation.time_out!=="00:00:00")
-                    if(stepAmount==3)
+
+                if (reservation.time_out !== "00:00:00")
+                    if (stepAmount == 3)
                         return "out.png";
-                    else if(stepAmount==4)
+                    else if (stepAmount == 4)
                         return "finished.png";
-                    
-                if(reservation.time_start!=="00:00:00")
-                    if(stepAmount==3)
+
+                if (reservation.time_start !== "00:00:00")
+                    if (stepAmount == 3)
                         return "finished.png";
-                    else if(stepAmount==4)
+                    else if (stepAmount == 4)
                         return "arrived.png";
-                
-                if(reservation.time_in!=="00:00:00")
-                    if(stepAmount==3)
+
+                if (reservation.time_in !== "00:00:00")
+                    if (stepAmount == 3)
                         return "arrived.png";
-                    else if(stepAmount==4)
+                    else if (stepAmount == 4)
                         return "asked.png";
-                
+
                 return "none";
             };
-            
-            function getSteps(unit_id){
-                for(var i=0;i<$rootScope.searchUnits.length;i++){
-                    if(unit_id==$rootScope.searchUnits[i].Header.unit_id){
+
+            function getSteps(unit_id) {
+                for (var i = 0; i < $rootScope.searchUnits.length; i++) {
+                    if (unit_id == $rootScope.searchUnits[i].Header.unit_id) {
                         return $rootScope.searchUnits[i].Header.step_buttons;
                     }
                 }
@@ -467,16 +464,20 @@ angular.module('myApp.controllers', []).
                     $rootScope.startDate = new Date(newDate);
                     $rootScope.endDate = new Date(newDate.setDate(newDate.getDate() + 14));
                     $rootScope.requestOnSwipe = true;
+                    $rootScope.searchType = 'next';
                     search();
                 }
-                $timeout(function() {
-                    if ($scope.filteredReservations.length === 0) {
-                        $scope.nextDay();
-                    } else {
-                        $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
-                        $scope.loadingNext = false;
-                    }
-                }, 100);
+                if ($rootScope.cancelLoop === false) {
+                    $timeout(function() {
+                        if ($scope.filteredReservations.length === 0) {
+                            $scope.nextDay();
+                        } else {
+                            $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
+                            $scope.loadingNext = false;
+                            $scope.lastKnownDate = new Date($scope.date);
+                        }
+                    }, 100);
+                }
             };
             $scope.previousDay = function() {
                 $scope.loadingNext = true;
@@ -487,16 +488,20 @@ angular.module('myApp.controllers', []).
                     $rootScope.startDate = new Date(newDate.setDate(newDate.getDate() - 14));
                     $rootScope.endDate = new Date();
                     $rootScope.requestOnSwipe = true;
+                    $rootScope.searchType = 'prev';
                     search();
                 }
-                $timeout(function() {
-                    if ($scope.filteredReservations.length === 0) {
-                        $scope.nextDay();
-                    } else {
-                        $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
-                        $scope.loadingNext = false;
-                    }
-                }, 60000);
+                if ($rootScope.cancelLoop === false) {
+                    $timeout(function() {
+                        if ($scope.filteredReservations.length === 0) {
+                            $scope.previousDay();
+                        } else {
+                            $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
+                            $scope.loadingNext = false;
+                            $scope.lastKnownDate = new Date($scope.date);
+                        }
+                    }, 100);
+                }
             };
 
             $scope.checkFilter = function() {
@@ -524,8 +529,6 @@ angular.module('myApp.controllers', []).
                     var searchStart = new Date($rootScope.searchRangeStart);
                     var searchEnd = new Date($rootScope.searchRangeEnd);
                     var current = new Date($rootScope.currentdate);
-                    console.log(searchStart);
-                    console.log(searchEnd);
                     var request1 = false;
                     var request2 = false;
                     if (searchEnd.getMonth() <= current.getMonth() && searchEnd.getFullYear() == current.getFullYear()) {
@@ -596,6 +599,8 @@ angular.module('myApp.controllers', []).
             }
 
             function setData() {
+                console.log($rootScope.startDate);
+                console.log($rootScope.endDate);
                 dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
                 dataFactory.searchReservations()
                         .then(function(reservations) {
@@ -615,13 +620,15 @@ angular.module('myApp.controllers', []).
                 for (var i = 0; i < reservations.length; i++)
                     $rootScope[$rootScope.searchString].push(reservations[i]);
                 if (reservations.length === 0) {
+                    $rootScope.cancelLoop = true;
                     callModal();
                 } else {
-                    if ($rootScope.requestOnSwipe === true || $rootScope.refresh === true) {
+                    if ($scope.loadingCalendar === true){
+                        $location.path('/appointmentsCalendar');
+                    }
+                    else {
                         $rootScope.refresh = false;
                         $rootScope.requestOnSwipe = false;
-                    } else {
-                        $location.path('/appointmentsCalendar');
                     }
                 }
             }
@@ -632,15 +639,43 @@ angular.module('myApp.controllers', []).
                     controller: ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
+                    $rootScope.cancelLoop === false;
                     if (answer === true) {
-                        var newStartDate = new Date($rootScope.startDate);
-                        newStartDate.setDate(newStartDate.getDate() + 14);
-                        var newEndDate = new Date($rootScope.endDate);
-                        newEndDate.setDate(newEndDate.getDate() + 14);
-                        $rootScope.startDate = formatDate(newStartDate);
-                        $rootScope.endDate = formatDate(newEndDate);
-                        setData();
+                        if ($rootScope.searchType === 'next') {
+                            /*var newStartDate = new Date($rootScope.startDate);
+                            newStartDate.setDate(newStartDate.getDate() + 14);
+                            var newEndDate = new Date($rootScope.endDate);
+                            newEndDate.setDate(newEndDate.getDate() + 14);
+                            $rootScope.startDate = formatDate(newStartDate);
+                            $rootScope.endDate = formatDate(newEndDate);
+                            setData();*/
+                            var endSearch = new Date($rootScope.endDate);
+                            $rootScope.startDate = new Date(endSearch);
+                            endSearch.setDate(endSearch.getDate() + 14);
+                            $rootScope.endDate = new Date(endSearch);
+                            setData();        
+                        }
+                        if ($rootScope.searchType === 'prev') {
+                            /*var newStartDate = new Date($rootScope.startDate);
+                            newStartDate.setDate(newStartDate.getDate() - 14);
+                            var newEndDate = new Date($rootScope.endDate);
+                            newEndDate.setDate(newEndDate.getDate() - 14);
+                            $rootScope.startDate = formatDate(newStartDate);
+                            $rootScope.endDate = formatDate(newEndDate);
+                            setData();*/
+                            var startSearch = new Date($rootScope.startDate);
+                            $rootScope.endDate = new Date(startSearch);
+                            startSearch.setDate(startSearch.getDate() - 14);
+                            $rootScope.endDate = new Date(endSearch);
+                            setData();
+                        }
+                    } else {
+                        $scope.date = new Date($scope.lastKnownDate);
+                        $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
+                        $scope.loadingNext = false;
+                        console.log($scope.date);
                     }
+                    $scope.cancelLoop = false;
                 }, function() {
                     console.log("error");
                 });
@@ -653,7 +688,8 @@ angular.module('myApp.controllers', []).
                     $modalInstance.close($scope.proceed);
                 };
                 $scope.cancel = function() {
-                    $modalInstance.dismiss('cancel');
+                    $scope.proceed = false;
+                    $modalInstance.close($scope.proceed);
                 };
             }
         }).
@@ -745,14 +781,12 @@ angular.module('myApp.controllers', []).
                         if ($scope.units[i].Header.name === $rootScope.unitFilter.Header.name)
                             $scope.unitFilter = $scope.units[i];
                     $scope.loadDep();
-                    console.log($rootScope.depFilter);
                     if (angular.isUndefined($rootScope.depFilter) || $rootScope.depFilter === '' || $rootScope.depFilter == null) {
                         $rootScope.depFilter = '';
                     } else {
                         for (var i = 0; i < $scope.departments.length; i++)
                             if ($scope.departments[i].dep_name === $rootScope.depFilter.dep_name)
                                 $scope.depFilter = $scope.departments[i];
-                        console.log($scope.depFilter);
                     }
                 }
             }
@@ -1068,7 +1102,6 @@ angular.module('myApp.controllers', []).
 
             $scope.weekend = function() {
                 var month = $("#doctorCalendar").fullCalendar('getDate');
-                console.log(month);
                 $scope.uiConfig.calendar.month = month.getMonth();
                 $scope.uiConfig.calendar.weekends = !$scope.uiConfig.calendar.weekends;
             };
@@ -1079,7 +1112,7 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller('SettingsCtrl', function($scope, $location, $rootScope, $routeParams, $timeout) {
-            
+
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.servers = $scope.selectedUser.servers;
 
@@ -1163,13 +1196,13 @@ angular.module('myApp.controllers', []).
                 }
                 $location.path('/selectserver/' + action);
             };
-            
-            $timeout(function(){
-                if($routeParams.action === "new")
-                alert($rootScope.getLocalizedString("settingsNew"));  
+
+            $timeout(function() {
+                if ($routeParams.action === "new")
+                    alert($rootScope.getLocalizedString("settingsNew"));
             }, 1000);
-            
-             
+
+
         }).
         controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory, dataFactory, languageFactory, $q, $modal) {
 
@@ -1183,7 +1216,7 @@ angular.module('myApp.controllers', []).
                 $scope.newBoolean = false;
 
             $scope.languageSelected = false;
-            $scope.changeLanguage = function(id){
+            $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
                 localStorage.setItem("language", id);
                 $scope.languageSelected = true;
@@ -1329,7 +1362,6 @@ angular.module('myApp.controllers', []).
                                     } else {
                                         if ($routeParams.action === "add") {
                                             var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-                                            console.log()
                                             var addServer = {"id": $scope.server.id,
                                                 "hosp_short_name": $scope.server.hosp_short_name,
                                                 "hosp_full_name": $scope.server.hosp_full_name,
@@ -1376,7 +1408,7 @@ angular.module('myApp.controllers', []).
                                     }
 
                                 } else {
-                                    $scope.loggingIn=false;
+                                    $scope.loggingIn = false;
                                     $scope.error = true;
                                     $scope.errormessage = $rootScope.getLocalizedString('loginError');
                                 }
@@ -1386,7 +1418,7 @@ angular.module('myApp.controllers', []).
                             });
                 }
             };
-            
+
             function postLogin() {
                 var year = new Date().getFullYear().toString(),
                         holidayPromise = [],
@@ -1421,7 +1453,7 @@ angular.module('myApp.controllers', []).
                         })
                         .then(setDates, error);
             }
-            
+
             /**
              * When a promise gets rejected during postLogin() this method be used to properly handle the error
              * 
@@ -1477,7 +1509,7 @@ angular.module('myApp.controllers', []).
                     $location.path('/settings/new');
                 }
             }
-            
+
             /**
              * Calls a dialog box and asks if the user wants to continue searching.
              * If yes, appointments will be searched for the next 14 days.
@@ -1521,7 +1553,7 @@ angular.module('myApp.controllers', []).
                     $modalInstance.dismiss('cancel');
                 };
             }
-            
+
             /**
              * Adds a new animation to the screentransition and redirects to
              * the settings page.
