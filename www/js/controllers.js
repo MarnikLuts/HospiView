@@ -9,7 +9,6 @@ angular.module('myApp.controllers', []).
                 $rootScope.requestTimer = undefined;
             }
 
-            console.log()
             if (localStorage.getItem("language") === null) {
                 localStorage.setItem("language", 3);
                 $rootScope.languageID = 3;
@@ -468,17 +467,20 @@ angular.module('myApp.controllers', []).
                 newDate.setDate(newDate.getDate() - 1);
                 $scope.date = formatDate(newDate);
                 if (new Date($scope.date) < new Date($rootScope.searchRangeStart)) {
+                    $rootScope.endDate = new Date(newDate);
                     $rootScope.startDate = new Date(newDate.setDate(newDate.getDate() - 14));
-                    $rootScope.endDate = new Date();
                     $rootScope.requestOnSwipe = true;
                     $rootScope.searchType = 'prev';
                     search();
                 }
+                console.log($rootScope.cancelLoop);
                 if ($rootScope.cancelLoop === false) {
                     $timeout(function() {
                         if ($scope.filteredReservations.length === 0) {
+                            console.log("0");
                             $scope.previousDay();
                         } else {
+                            console.log("else");
                             $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                             $scope.loadingNext = false;
                             $scope.lastKnownDate = new Date($scope.date);
@@ -582,8 +584,6 @@ angular.module('myApp.controllers', []).
             }
 
             function setData() {
-                console.log($rootScope.startDate);
-                console.log($rootScope.endDate);
                 dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
                 dataFactory.searchReservations()
                         .then(function(reservations) {
@@ -612,6 +612,13 @@ angular.module('myApp.controllers', []).
                     else {
                         $rootScope.refresh = false;
                         $rootScope.requestOnSwipe = false;
+                        $rootScope.cancelLoop = false;
+                        if($rootScope.searchType === 'next'){
+                            $scope.nextDay();
+                        }
+                        if($rootScope.searchType === 'prev'){
+                            $scope.previousDay();
+                        }
                     }
                 }
             }
@@ -622,7 +629,6 @@ angular.module('myApp.controllers', []).
                     controller: ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
-                    $rootScope.cancelLoop === false;
                     if (answer === true) {
                         if ($rootScope.searchType === 'next') {
                             /*var newStartDate = new Date($rootScope.startDate);
@@ -636,7 +642,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.startDate = new Date(endSearch);
                             endSearch.setDate(endSearch.getDate() + 14);
                             $rootScope.endDate = new Date(endSearch);
-                            setData();        
+                            search();        
                         }
                         if ($rootScope.searchType === 'prev') {
                             /*var newStartDate = new Date($rootScope.startDate);
@@ -649,18 +655,20 @@ angular.module('myApp.controllers', []).
                             var startSearch = new Date($rootScope.startDate);
                             $rootScope.endDate = new Date(startSearch);
                             startSearch.setDate(startSearch.getDate() - 14);
-                            $rootScope.endDate = new Date(endSearch);
-                            setData();
+                            $rootScope.startDate = new Date(startSearch);
+                            search();
                         }
                     } else {
-                        $scope.date = new Date($scope.lastKnownDate);
+                        $scope.date = formatDate(new Date($scope.lastKnownDate));
                         $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                         $scope.loadingNext = false;
-                        console.log($scope.date);
                     }
-                    $scope.cancelLoop = false;
+                    $rootScope.cancelLoop = false;
                 }, function() {
-                    console.log("error");
+                    $scope.date = formatDate(new Date($scope.lastKnownDate));
+                    $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
+                    $scope.loadingNext = false;
+                    $rootScope.cancelLoop = false;
                 });
             }
 
