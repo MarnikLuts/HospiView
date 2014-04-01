@@ -20,6 +20,7 @@
         </div>-->
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
+
 <div class="height70Percent widthPercent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
     <div class="col-md-12 height20Percent widthPercent">
         <div class="dateAppointmentsView width70Percent">
@@ -28,10 +29,11 @@
                 <span class="spinnerApointmentsCalendar" ng-show="loadingNext"><i class="glyphicon glyphicon-refresh"></i></span>
             </div>
         </div>
-        <button class="btn btn-default btn-appointments-filter" ng-click="filter()">
-            <span class="glyphicon glyphicon-filter"></span>
-        </button>
-        <div class="calendarButtonAppointmentsView width25Percent">
+        
+        <div class="width25Percent">
+            <button class="btn btn-default btn-appointments-filter" ng-click="filter()">
+                <span class="glyphicon glyphicon-filter"></span>
+            </button>
             <button class="has-spinner btn btn-default  btn-sm-calendar widthPercent" ng-click="calendarView()">
                 <span ng-show="loadingCalendar" class="spinner"><i class="glyphicon glyphicon-refresh"></i></span>
                 <span ng-show="!loadingCalendar" ng-disabled="loadingCalendar" class="glyphicon glyphicon-calendar"></span>

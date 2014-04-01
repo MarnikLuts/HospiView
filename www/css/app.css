@@ -217,11 +217,6 @@
     margin-bottom:10px;
 }
 
-.calendarButtonAppointmentsView{
-    float: right;
-    display: inline-block;
-}
-
 .spinnerApointmentsCalendar{
     float: left;
     margin: 10px 10px;
@@ -293,7 +288,51 @@ ul li{
     display: inline;
 }
 
+.invisible{
+    display: none;
+}
+
+.icasaLogo{
+    width: 80px;
+    height: auto;
+    position: absolute;
+    right: 10px;
+    top: 20px;
+}
+
+.animClass {
+    -webkit-transform: translate3d(0, 0, 0);
+}
+
+.btn-sm-back .glyphicon-off{
+    font-size: 20px;
+    color: white;
+}
+
+.btn-sm-back .glyphicon-chevron-left{
+    color: white;
+}
+
+.btn-appointments-filter{
+    height: 50px;
+    position: absolute;
+    right: 130px;
+    top: 0;
+}
+
+.btn-appointments-filter .glyphicon-filter{
+    font-size: 20px;
+    color: black;   
+}
+
 @media screen and (max-width: 768px) {
+    .title{
+        font-size: 20px;
+    }
+    .icasaLogo{
+        width: 70px;
+        top: 22px;
+    }
     ul{
         width:100%;
     }
@@ -312,37 +351,4 @@ ul li{
         font-size: 15px;
         width: 100%;
     }
-}
-
-.invisible{
-    display: none;
-}
-
-.icasaLogo{
-    width: 100px;
-    height: auto;
-    position: absolute;
-    right: 10px;
-    top: 17px;
-}
-
-.animClass {
-    -webkit-transform: translate3d(0, 0, 0);
-}
-
-.btn-sm-back .glyphicon-off{
-    font-size: 20px;
-    color: white;
-}
-
-.btn-sm-back .glyphicon-chevron-left{
-    color: white;
-}
-
-.btn-appointments-filter{
-    height: 50px;
-}
-
-.btn-appointments-filter .glyphicon-filter{
-    font-size: 20px;
 }

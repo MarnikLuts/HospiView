@@ -2423,19 +2423,20 @@ fieldset[disabled] .btn-link:focus {
 /* Button added*/
 .btn-sm-calendar,
 .btn-group-sm-calendar> .btn {
-    position: relative;
-    float: right;
+    position: absolute;
     padding: 9px 14px;
     height:50px;
     max-width: 100px;
-    margin-top: 0.5%;
-    margin-right: 0.5%;
-    margin-bottom: 0.5%;
+    /* margin-top: 0.5%; */
+    /* margin-right: 0.5%; */
+    /* margin-bottom: 0.5%; */
     background-color: white;
     background-image: none;
     border-radius: 4px;
     color: black;
     font-size: 20px;
+    right: 20px;
+    top: 0px;
 }
 /* Button added*/
 .btn-sm-menu,
