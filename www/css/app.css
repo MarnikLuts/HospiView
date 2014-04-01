@@ -288,27 +288,6 @@ ul li{
     display: inline;
 }
 
-@media screen and (max-width: 768px) {
-    ul{
-        width:100%;
-    }
-    ul li a{
-        width: 30%;
-    }
-}
-@media screen and (min-width: 768px) {
-    ul{
-        width:43%;
-    }
-    ul li{
-        width: 33%;
-    }
-    ul li a{
-        font-size: 15px;
-        width: 100%;
-    }
-}
-
 .invisible{
     display: none;
 }
@@ -344,4 +323,32 @@ ul li{
 .btn-appointments-filter .glyphicon-filter{
     font-size: 20px;
     color: black;   
+}
+
+@media screen and (max-width: 768px) {
+    .title{
+        font-size: 20px;
+    }
+    .icasaLogo{
+        width: 70px;
+        top: 22px;
+    }
+    ul{
+        width:100%;
+    }
+    ul li a{
+        width: 30%;
+    }
+}
+@media screen and (min-width: 768px) {
+    ul{
+        width:43%;
+    }
+    ul li{
+        width: 33%;
+    }
+    ul li a{
+        font-size: 15px;
+        width: 100%;
+    }
 }
