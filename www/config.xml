@@ -25,5 +25,4 @@
 
 	<gap:plugin name="org.apache.cordova.dialogs" version="0.2.6" />
 	<gap:plugin name="org.apache.cordova.inappbrowser" version="0.2.4" />
-	<gap:plugin name="org.apache.cordova.splashscreen" version="0.2.7" />
 </widget>
