@@ -23,5 +23,7 @@
 	<gap:splash src="res/splash/ios/Default-Portrait-ipad.png" gap:platform="ios" width="768" height="1024" />
 	<gap:splash src="res/splash/ios/Default-Portrait_at_2x.png" gap:platform="ios" width="1536" height="2048" />
 
-    <gap:plugin name="org.apache.cordova.dialogs" version="0.2.6" />
+	<gap:plugin name="org.apache.cordova.dialogs" version="0.2.6" />
+	<gap:plugin name="org.apache.cordova.inappbrowser" version="0.2.4" />
+	<gap:plugin name="org.apache.cordova.splashscreen" version="0.2.7" />
 </widget>

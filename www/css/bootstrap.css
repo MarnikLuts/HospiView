@@ -2393,12 +2393,13 @@ fieldset[disabled] .btn-link:focus {
     margin-top: 0.5%;
     margin-left: 0.5%;
     margin-bottom: 0.5%;
-    background-color: white;
+    background-color: #3044B5;
     background-image: none;
     border: 1px solid transparent;
     border-radius: 4px;
-    color: black;
+    color: white;
     font-size: 12px;
+    border-color: #DADADA;
 }
 .btn-sm-calendar,
 .btn-group-sm-calendar> .btn {
@@ -3746,9 +3747,11 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     margin-bottom: 20px;
     /* border: 1px solid transparent; */
 }
+
+//Changed border-radius from 4 to 0 px
 @media (min-width: 768px) {
     .navbar {
-        border-radius: 4px;
+        border-radius: 0px;
     }
 }
 
@@ -4061,9 +4064,12 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 /*changed background color and added text color.*/
 .navbar-default {
-    background-color: rgba(106, 202, 238, 1);
-    color: white;
-    border-color: #e7e7e7;
+    /* background-color: rgba(255, 255, 255, 1); */
+    color: black;
+    border-color: #CCCCCC;
+    border-style: solid;
+    border-width: 0px 0px 3px 0px;
+    color: #3044B5;
 }
 
 .navbar-default .navbar-brand {

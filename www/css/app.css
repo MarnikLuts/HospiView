@@ -271,7 +271,10 @@
 }
 
 .title{
-    text-align: right;
+    position: absolute;
+    width: 50%;
+    left:25%;
+    text-align: center;
     font-size:25px;
     padding-top: 15px;
     padding-right: 0.5%;
@@ -319,10 +322,27 @@ ul li{
     width: 100px;
     height: auto;
     position: absolute;
-    right: 100px;
-    left: 37px;
+    right: 10px;
+    top: 17px;
 }
 
 .animClass {
     -webkit-transform: translate3d(0, 0, 0);
+}
+
+.btn-sm-back .glyphicon-off{
+    font-size: 20px;
+    color: white;
+}
+
+.btn-sm-back .glyphicon-chevron-left{
+    color: white;
+}
+
+.btn-appointments-filter{
+    height: 50px;
+}
+
+.btn-appointments-filter .glyphicon-filter{
+    font-size: 20px;
 }

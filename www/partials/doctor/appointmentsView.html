@@ -1,22 +1,24 @@
 <nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <span>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-collapse" ng-click="changeIcon()">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="{{iconImage}}"></span>
-                </button>
-            </span>
-            <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}</div>
-        </div>
-        <div class="collapse navbar-collapse no-transition text-center" id="menu-collapse">
+    <button class="btn btn-sm-back" ng-click="logout()">
+        <span class="glyphicon glyphicon-off"></span>
+    </button>
+    <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}</div>
+        
+<!--        <span>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-collapse" ng-click="changeIcon()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="{{iconImage}}"></span>
+            </button>
+        </span>-->
+        
+<!--        <div class="collapse navbar-collapse no-transition text-center" id="menu-collapse">
             <ul class="nav navbar-nav">
                 <li><a class="btn btn-default" ng-click="filter()">{{ getLocalizedString('filter')}}</a></li>
                 <li><a class="btn btn-default" ng-click="settings()">{{ getLocalizedString('settings')}}</a></li>
                 <li><a class="btn btn-default" ng-click="logout()">{{ getLocalizedString('logout')}}</a></li>
             </ul>
-        </div>
-    </div>
+        </div>-->
+    <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
 <div class="height70Percent widthPercent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
     <div class="col-md-12 height20Percent widthPercent">
@@ -26,6 +28,9 @@
                 <span class="spinnerApointmentsCalendar" ng-show="loadingNext"><i class="glyphicon glyphicon-refresh"></i></span>
             </div>
         </div>
+        <button class="btn btn-default btn-appointments-filter" ng-click="filter()">
+            <span class="glyphicon glyphicon-filter"></span>
+        </button>
         <div class="calendarButtonAppointmentsView width25Percent">
             <button class="has-spinner btn btn-default  btn-sm-calendar widthPercent" ng-click="calendarView()">
                 <span ng-show="loadingCalendar" class="spinner"><i class="glyphicon glyphicon-refresh"></i></span>
