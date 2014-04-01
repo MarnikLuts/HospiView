@@ -322,3 +322,7 @@ ul li{
     right: 100px;
     left: 37px;
 }
+
+.animClass {
+    -webkit-transform: translate3d(0, 0, 0);
+}
