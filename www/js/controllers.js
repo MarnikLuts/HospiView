@@ -345,7 +345,7 @@ angular.module('myApp.controllers', []).
             $scope.cancel = false;
             $scope.iconImage = "glyphicon glyphicon-chevron-down";
             $scope.changeIcon = function() {
-                if (iconDownBoolean === true) {
+                if (iconDownBoolean) {
                     $scope.iconImage = "glyphicon glyphicon-chevron-up";
                     iconDownBoolean = false;
                 } else {
@@ -355,7 +355,7 @@ angular.module('myApp.controllers', []).
             };
             $scope.loadingCalendar = false;
             $scope.eventPerDay;
-            if ($rootScope.eventClick === true) {
+            if ($rootScope.eventClick) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
                 $scope.showDate = formatShowDate(new Date($scope.date), $rootScope.languageID);
             } else {
@@ -507,7 +507,7 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.calendarView = function() {
-                if ($rootScope.isOffline === true) {
+                if ($rootScope.isOffline) {
                     $location.path('/appointmentsCalendar');
                 } else {
                     $scope.loadingCalendar = true;

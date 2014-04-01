@@ -34,7 +34,7 @@
         </div>
     </div>
     <div class="well col-md-12 heightPercent widthPercent">
-        <div class="btn-group-vertical list list_overflow_y_100 list-unstyled widthPercent heightPercent">
+        <div class="animClass btn-group-vertical list list_overflow_y_100 list-unstyled widthPercent heightPercent">
             <div class="btn btn-default btn-lg btn-group-justified widthPercent reservationHeight" ng-repeat="reservation in filteredReservations = (reservations| orderBy:'time_from' | filter:{the_date:date, unit_name:unitFilter.Header.name, dep_name:depFilter.dep_name})" ng-click="details(reservation)" >
                 <div class="widthPercent">
                     <div class="text-left widthPercent">
@@ -86,7 +86,6 @@
                          &nbsp
                     </div>
                 </div>
-                
             </div>
             <div class="alert alert-info" ng-hide="filteredReservations.length"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('appointmentsViewNoReservations')}}</div>
         </div>
