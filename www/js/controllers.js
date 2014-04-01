@@ -377,46 +377,23 @@ angular.module('myApp.controllers', []).
             $scope.cellcontent = user.cellcontent;
             var refreshRate = user.refreshrate * 1000;
 
-            /*$rootScope.requestTimer = $interval(function() {
-                if ($rootScope.isOffline === false) {
+            $rootScope.requestTimer = $interval(function() {
+                if (!$rootScope.isOffline) {
                     $rootScope.startDate = $rootScope.searchRangeStart;
                     $rootScope.endDate = $rootScope.searchRangeEnd;
                     $rootScope.refresh = true;
                     search();
 
                 }
-            }, refreshRate);*/
-
-            for (var i = 0; i < $rootScope[$rootScope.searchString].length; i++) {
-                var reservation = $rootScope[$rootScope.searchString][i],
-                        stepAmount = getSteps(reservation.unit_id);
-
-                if (reservation.time_in !== "00:00:00")
-                    if (stepAmount == 3)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "arrived.png";
-                    else if (stepAmount == 4)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "asked.png";
-
-                if (reservation.time_start !== "00:00:00")
-                    if (stepAmount == 3)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "finished.png";
-                    else if (stepAmount == 4)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "arrived.png";
-
-                if (reservation.time_out !== "00:00:00")
-                    if (stepAmount == 3)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "out.png";
-                    else if (stepAmount == 4)
-                        $rootScope[$rootScope.searchString][i].statusIcon = "finished.png";
-
-                if (stepAmount === "4") {
-                    if (reservation.time_gone !== "00:00:00")
-                        $rootScope[$rootScope.searchString][i].statusIcon = "out.png";
-                }
-
-            }
-
-            $scope.getStatusIcon = function(reservation) {
+            }, refreshRate);
+            
+            /**
+             * Gets the name of the icon that matches the current status of the given reservation
+             * 
+             * @param {type} reservation
+             * @returns {String}
+             */
+            $scope.getStatusIcon = function(reservation){
                 var stepAmount = getSteps(reservation.unit_id);
 
                 if (stepAmount === "4") {
@@ -444,10 +421,16 @@ angular.module('myApp.controllers', []).
 
                 return "none";
             };
-
-            function getSteps(unit_id) {
-                for (var i = 0; i < $rootScope.searchUnits.length; i++) {
-                    if (unit_id == $rootScope.searchUnits[i].Header.unit_id) {
+            
+            /**
+             * Gets the amount of steps used in the given unit (some use 3, some use 4)
+             * 
+             * @param {type} unit_id
+             * @returns {unresolved}
+             */
+            function getSteps(unit_id){
+                for(var i=0;i<$rootScope.searchUnits.length;i++){
+                    if(unit_id==$rootScope.searchUnits[i].Header.unit_id){
                         return $rootScope.searchUnits[i].Header.step_buttons;
                     }
                 }
