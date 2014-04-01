@@ -139,6 +139,8 @@ angular.module('myApp.controllers', []).
                                         $scope.selectedUser.servers[i].uuid = json.Authentication.Detail.uuid;
                                         $scope.selectedUser.save_password = $scope.savePassword;
                                         $rootScope.currentServer = $scope.selectedUser.servers[i];
+                                    } else {
+                                        hospiviewFactory.getAuthentication($scope)
                                     }
                                 }
                                 localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
@@ -382,7 +384,6 @@ angular.module('myApp.controllers', []).
                     $rootScope.endDate = $rootScope.searchRangeEnd;
                     $rootScope.refresh = true;
                     search();
-
                 }
             }, refreshRate);
             
@@ -438,6 +439,8 @@ angular.module('myApp.controllers', []).
 
             $scope.loadingNext = false;
             $scope.nextDay = function() {
+                console.log('next');
+                $rootScope.searchType = 'next';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
                 newDate.setDate(newDate.getDate() + 1);
@@ -446,7 +449,6 @@ angular.module('myApp.controllers', []).
                     $rootScope.startDate = new Date(newDate);
                     $rootScope.endDate = new Date(newDate.setDate(newDate.getDate() + 14));
                     $rootScope.requestOnSwipe = true;
-                    $rootScope.searchType = 'next';
                     search();
                 }
                 if ($rootScope.cancelLoop === false) {
@@ -462,6 +464,8 @@ angular.module('myApp.controllers', []).
                 }
             };
             $scope.previousDay = function() {
+                console.log('prev');
+                $rootScope.searchType = 'prev';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
                 newDate.setDate(newDate.getDate() - 1);
@@ -470,14 +474,11 @@ angular.module('myApp.controllers', []).
                     $rootScope.endDate = new Date(newDate);
                     $rootScope.startDate = new Date(newDate.setDate(newDate.getDate() - 14));
                     $rootScope.requestOnSwipe = true;
-                    $rootScope.searchType = 'prev';
                     search();
                 }
-                console.log($rootScope.cancelLoop);
                 if ($rootScope.cancelLoop === false) {
                     $timeout(function() {
                         if ($scope.filteredReservations.length === 0) {
-                            console.log("0");
                             $scope.previousDay();
                         } else {
                             console.log("else");
