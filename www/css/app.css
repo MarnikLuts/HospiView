@@ -326,6 +326,9 @@ ul li{
 }
 
 @media screen and (max-width: 768px) {
+    .dateAppointmentsViewScaled{
+        width: 100px;
+    }
     .title{
         font-size: 20px;
     }
