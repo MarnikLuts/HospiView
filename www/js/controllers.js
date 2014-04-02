@@ -129,39 +129,41 @@ angular.module('myApp.controllers', []).
             $scope.login = function() {
                 $scope.loggingIn = true;
                 $scope.error = false;
-                hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
-                        success(function(data) {
-                            var json = parseJson(data);
-                            if (json.Authentication.Header.StatusCode == 1) {
-                                $scope.error = false;
-                                for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
-                                    if ($scope.selectedUser.servers[i].id === $scope.server.id) {
-                                        $scope.selectedUser.servers[i].uuid = json.Authentication.Detail.uuid;
-                                        $scope.selectedUser.save_password = $scope.savePassword;
-                                        $rootScope.currentServer = $scope.selectedUser.servers[i];
-                                    } else {
-                                        /*hospiviewFactory.getAuthentication($scope)*/
-                                    }
-                                }
-                                localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
-                                $rootScope.user = $scope.user;
-                                if (json.Authentication.Detail.isexternal == 0) {
-                                    $rootScope.type = 0;
-                                } else {
-                                    $rootScope.type = 1;
-                                }
-                                postLogin();
+                var promises = [];
+                
+                promises.push(hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url));
+                
+                for(var j=1;j<$scope.selectedUser.servers.length;j++){
+                    promises.push(hospiviewFactory.getAuthentication($scope.selectedUser.servers[j].user_login, $scope.selectedUser.servers[j].user_password, $scope.selectedUser.servers[j].hosp_url));
+                }
+                
+                $q.all(promises).then(function(responses){
+                    for(var r=0;r<responses.length;r++){
+                        var json = parseJson(responses[r].data);
+                        if (json.Authentication.Header.StatusCode == 1) {
+                            $scope.error = false;
+                            $rootScope.user = $scope.user;
+                            if (json.Authentication.Detail.isexternal == 0) {
+                                $rootScope.type = 0;
                             } else {
-                                $scope.loggingIn = false;
-                                $scope.error = true;
-                                $scope.errormessage = $rootScope.getLocalizedString('loginError');
+                                $rootScope.type = 1;
                             }
-                            ;
-                        }).
-                        error(function() {
+                            $scope.selectedUser.servers[r].uuid = json.Authentication.Detail.uuid;
+                            $scope.selectedUser.save_password = $scope.savePassword;
+                            localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
+                        }else{
                             $scope.loggingIn = false;
-                            callOfflineModal();
-                        });
+                            $scope.error = true;
+                            $scope.errormessage = $rootScope.getLocalizedString('loginError');
+                        }
+                    }
+                    $rootScope.currentServers = $scope.selectedUser.servers;
+                    setDates();
+                    postLogin();
+                }, function(){
+                    $scope.loggingIn = false;
+                    callOfflineModal();
+                });
             };
 
             /**
@@ -172,36 +174,45 @@ angular.module('myApp.controllers', []).
                 console.log("postLogin");
                 var year = new Date().getFullYear().toString(),
                         holidayPromise = [],
-                        UnitPromise;
-                //Holidays
-                $rootScope.publicHolidays = [];
+                        UnitPromise = [];
+                
                 //SearchUnits
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
-                $rootScope.absentDays = [];
                 //Absent days
                 $rootScope.absentDays = [];
 
-
+                //Reset holidays
+                $rootScope.publicHolidays = [];
                 for (var i = 1; i < 4; i++) {
-                    holidayPromise.push(hospiviewFactory.getPublicHolidays(i, year, '00', $scope.server.hosp_url));
+                    holidayPromise.push(hospiviewFactory.getPublicHolidays(i, year, '00', $scope.selectedUser.servers[0].hosp_url));
                 }
-                UnitPromise = hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url);
-
                 $q.all(holidayPromise).then(function(responses) {
                     dataFactory.setHolidays(responses);
                 }, error);
-                UnitPromise
-                        .then(function(response) {
-                            dataFactory.setSearchUnits(response);
-                        }, error)
-                        .then(function() {
-                            return dataFactory.setAbsentDays(year);
-                        }, error)
-                        .then(function() {
-                            return languageFactory.initRemoteLanguageStrings($scope.server.hosp_url);
-                        })
-                        .then(setDates, error);
+                //End reset holidays
+                
+                for(var j=0;j<$scope.selectedUser.servers.length;j++){
+                    $rootScope.currentServer = $scope.selectedUser.servers[j];
+                    UnitPromise.push(hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url)
+                            .then(function(response){
+                                $rootScope.searchUnits = [];
+                                return dataFactory.setSearchUnits(response);
+                            }, error).then(function(){
+                                return dataFactory.setAbsentDays(year);
+                            }, error)
+                            .then(dataFactory.searchReservations, error));
+                }
+                
+                $q.all(UnitPromise).then(function(reservations){
+                    console.log(JSON.stringify(reservations));
+                    var allReservations = [];
+                    for(var r=0;r<reservations.length;r++){
+                        allReservations.push.apply(allReservations, reservations[r]);
+                    }
+                    console.log(allReservations);
+                    setReservations(allReservations);
+                });
             }
 
             /**
@@ -224,16 +235,18 @@ angular.module('myApp.controllers', []).
                 $rootScope.startDate = formatDate(today);
                 $rootScope.currentdate = formatDate(today);
                 $rootScope.endDate = formatDate(new Date(today.setDate(today.getDate() + 14)));
-                setData();
+                dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
+//                setData();
             }
 
             function setData() {
+                var recievedReservations;
                 dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
                 if (angular.isUndefined($rootScope[$rootScope.searchString]) || $rootScope[$rootScope.searchString].length === 0) {
                     dataFactory.searchReservations()
                             .then(function(reservations) {
                                 console.log("then setData");
-                                setReservations(reservations);
+                                recievedReservations = reservations;
                             }, error);
                 }
                 else {
@@ -241,12 +254,13 @@ angular.module('myApp.controllers', []).
                         $scope.reservations = $rootScope[$rootScope.searchString];
                         dataFactory.searchReservations()
                                 .then(function(reservations) {
-                                    setReservations(reservations);
+                                    recievedReservations = reservations;
                                 }, error);
                     }
                     $rootScope.isOffline = true;
                     $location.path('/doctor/appointmentsView');
                 }
+                return recievedReservations;
             }
 
             function setReservations(reservations) {
@@ -280,7 +294,7 @@ angular.module('myApp.controllers', []).
                         newEndDate.setDate(newEndDate.getDate() + 14);
                         $rootScope.startDate = formatDate(newStartDate);
                         $rootScope.endDate = formatDate(newEndDate);
-                        setData();
+                        postLogin();
                     }
                 }, function() {
                     console.log("error");
@@ -343,7 +357,7 @@ angular.module('myApp.controllers', []).
             }
 
         }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $timeout, $modal, hospiviewFactory, dataFactory) {
+        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $q, $location, $interval, $timeout, $modal, hospiviewFactory, dataFactory) {
 
             var iconDownBoolean = true;
             $rootScope.cancelLoop = false;
@@ -668,15 +682,37 @@ angular.module('myApp.controllers', []).
             }
 
             function search() {
-                $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
-                hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url)
-                        .then(function(response) {
-                            dataFactory.setSearchUnits(response);
-                        }, error)
-                        .then(function() {
-                            setData();
-                        }, error);
+                dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
+                
+                var promises = [];
+                   
+                for(var i=0;i<$rootScope.currentServers.length;i++){
+                    $rootScope.currentServer = $rootScope.currentServers[i];
+                    $rootScope.searchUnits = [];
+                    promises.push(hospiviewFactory.getUnitAndDepList($rootScope.currentServers[i].uuid, $rootScope.currentServers[i].hosp_url)
+                            .then(function (response){
+                                $rootScope.searchUnits = [];
+                                return dataFactory.setSearchUnits(response);
+                            }, error)
+                            .then(dataFactory.searchReservations, error));
+                }
+                
+                $q.all(promises).then(function(reservations){
+                    var allReservations = [];
+                    for(var r=0;r<reservations.length;r++){
+                        allReservations.push.apply(allReservations, reservations[r]);
+                    }
+                    setReservations(allReservations);
+                });
+                
+//                hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url)
+//                        .then(function(response) {
+//                            dataFactory.setSearchUnits(response);
+//                        }, error)
+//                        .then(function() {
+//                            setData();
+//                        }, error);
             }
 
             function setData() {
@@ -694,13 +730,14 @@ angular.module('myApp.controllers', []).
             }
 
             function setReservations(reservations) {
+                console.log("setting reservations");
                 for (var i = 0; i < reservations.length; i++)
                     $rootScope[$rootScope.searchString].push(reservations[i]);
                 if (reservations.length === 0) {
                     $rootScope.cancelLoop = true;
                     callModal();
                 } else {
-                    if ($scope.loadingCalendar === true) {
+                    if ($scope.loadingCalendar) {
                         $location.path('/appointmentsCalendar');
                     }
                     else {
@@ -1467,6 +1504,7 @@ angular.module('myApp.controllers', []).
                                             $scope.error = false;
                                             $rootScope.user = localStorageName;
                                             $rootScope.currentServer = $scope.server;
+                                            $rootScope.currentServers = [$scope.server];
                                             $rootScope.currentServer.uuid = json.Authentication.Detail.uuid;
                                             if ($routeParams.action === "new")
                                                 addToLocalStorage("users", [{"username": localStorageName}]);
