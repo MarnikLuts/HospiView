@@ -2334,6 +2334,28 @@ fieldset[disabled] .btn-link:focus {
     line-height: 1.33;
     border-radius: 6px;
 }
+
+/*ADDED: button for reservations*/
+.btn-reservation,
+.btn-group-reservation > .btn {
+    padding: 5px 8px 0px 8px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 6px;
+}/*
+@media (min-width: 768px) {
+    .btn-reservation,
+    .btn-group-reservation > .btn {
+        padding: 5px 8px 0px 8px;
+    }
+}*/
+@media (max-width: 768px) {
+    .btn-reservation,
+    .btn-group-reservation > .btn {
+        overflow: hidden;
+        //padding: 5px 8px 20px 8px;
+    }
+}
 /*ADDED: smaller text for the shortcuts */
 .btn-lg-shortcut,
 .btn-group-lg-shortcut > .btn {
@@ -3847,8 +3869,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     .container-fluid > .navbar-collapse {
         margin-right: 0;
         margin-left: 0;
-    
-}
+
+    }
 }
 .navbar-static-top {
     z-index: 1000;

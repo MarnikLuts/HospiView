@@ -363,6 +363,7 @@ angular.module('myApp.controllers', []).
             if ($rootScope.eventClick) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
                 $scope.showDate = formatShowDate(new Date($scope.date), $rootScope.languageID);
+                $rootScope.eventClick = false;
             } else {
                 var lowestDate = new Date(2500, 1, 1);
                 var today = new Date();
@@ -401,7 +402,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.getStatusIcon = function(reservation) {
                 var stepAmount = getSteps(reservation.unit_id);
-
+                
                 if (stepAmount === "4") {
                     if (reservation.time_gone !== "00:00:00")
                         return "out.png";
@@ -414,8 +415,9 @@ angular.module('myApp.controllers', []).
                         return "finished.png";
 
                 if (reservation.time_start !== "00:00:00")
-                    if (stepAmount == 3)
+                    if (stepAmount == 3){
                         return "finished.png";
+                    }
                     else if (stepAmount == 4)
                         return "arrived.png";
 
@@ -449,13 +451,15 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchType = 'next';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
-                newDate.setDate(newDate.getDate() + 1);
+                if($rootScope.nextDayRequest !== true)
+                    newDate.setDate(newDate.getDate() + 1);
                 $scope.date = formatDate(newDate);
-                console.log($scope.date);
+                $rootScope.nextDayRequest = false;
                 if (new Date($scope.date) > new Date($rootScope.searchRangeEnd)) {
                     $rootScope.startDate = new Date(newDate);
                     $rootScope.endDate = new Date(newDate.setDate(newDate.getDate() + 14));
                     $rootScope.requestOnSwipe = true;
+                    $rootScope.nextDayRequest = true;
                     search();
                 } else {
                     for (var i = 0; i < $scope.reservations.length; i++) {
@@ -492,12 +496,16 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchType = 'prev';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
-                newDate.setDate(newDate.getDate() - 1);
+                if($rootScope.previousDayRequest !== true)
+                    newDate.setDate(newDate.getDate() - 1);
+                console.log(newDate);
                 $scope.date = formatDate(newDate);
+                $rootScope.previousDayRequest = false;
                 if (new Date($scope.date) < new Date($rootScope.searchRangeStart)) {
                     $rootScope.endDate = new Date(newDate);
                     $rootScope.startDate = new Date(newDate.setDate(newDate.getDate() - 14));
                     $rootScope.requestOnSwipe = true;
+                    $rootScope.previousDayRequest = true;
                     search();
                 }
                 else {
@@ -609,6 +617,31 @@ angular.module('myApp.controllers', []).
                 var color = '#' + value;
                 return {"background-color": color};
             };
+            $scope.styleTest = function(reservation){
+                var colors = [];
+                var color;
+                if(reservation.color !== "")
+                    colors.push(reservation.color);
+                if(reservation.color2 !== "")
+                    colors.push(reservation.color2);               
+                if(reservation.color3 !== "")
+                    colors.push(reservation.color3);       
+                if(reservation.color4 !== "")
+                    colors.push(reservation.color4);
+                if(reservation.color5 !== "")
+                    colors.push(reservation.color5);
+                if(colors.length === 1){
+                    color = '#' + colors[0];
+                    return {"background-color":color};
+                }
+                console.log(colors.length);
+                if(colors.length >= 2){
+                    console.log(colors[0]);
+                    console.log(colors[1]);
+                    color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 50%, #' + colors[1] + ' 50%, #' + colors[1] + ' 100%)';
+                    return {"background": color};
+                }
+            }
             $scope.logout = function() {
                 $rootScope.user = null;
                 $rootScope.type = null;
@@ -868,12 +901,12 @@ angular.module('myApp.controllers', []).
                 $rootScope.serverChanger = false;
                 $rootScope.serverAdded = false;
                 var unitsandgroups = [];
-                for (var j = 0; j < user.servers.length; j++) {
-                    /*variable created to refresh the scope of the user variable*/
-                    var selectedServer = user.servers[j];
-                    console.log(selectedServer);
+                //for (var j = 0; j < user.servers.length; j++) {
                     hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
                             success(function(data) {
+                                                    /*variable created to refresh the scope of the user variable*/
+                                var selectedServer = user.servers[j];
+                                console.log(selectedServer);
                                 var json = parseJson(data);
                                 if (json !== null) {
                                     if (json.UnitsAndDeps.Header.StatusCode == 1) {
@@ -905,7 +938,7 @@ angular.module('myApp.controllers', []).
                                         }
                                         var rootScopeString = 'allUnitsAndGroups.' + selectedServer.id;
                                         $rootScope[rootScopeString] = unitsandgroups;
-                                        console.log(selectedServer.id);
+                                        console.log(selectedServer);
                                     } else {
                                         $scope.error = true;
                                         $scope.errormessage = "Fout in de ingevoerde login gegevens.";
@@ -915,7 +948,7 @@ angular.module('myApp.controllers', []).
                             error(function() {
                                 alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                             });
-                }
+                //}
             }
 
             /**
@@ -1166,10 +1199,10 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
             $scope.reservation = $rootScope.reservationDetail;
+            $rootScope.eventClick = true;
             $scope.back = function() {
                 $location.path('/doctor/appointmentsView');
             };
-
         }).
         controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope, dataFactory) {
 

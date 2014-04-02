@@ -6,7 +6,7 @@
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
 
-<div class="height70Percent widthPercent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
+<div class="height60Percent widthPercent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
     <div class="col-md-12 height20Percent widthPercent">
         <div class="dateAppointmentsView dateAppointmentsViewScaled">
             <h4>{{showDate}}</h4>
@@ -14,7 +14,7 @@
                 <span class="spinnerApointmentsCalendar" ng-show="loadingNext"><i class="glyphicon glyphicon-refresh"></i></span>
             </div>
         </div>
-        
+
         <div class="width25Percent">
             <button class="btn btn-default btn-appointments-filter" ng-click="filter()">
                 <span class="glyphicon glyphicon-filter"></span>
@@ -27,56 +27,60 @@
     </div>
     <div class="well col-md-12 heightPercent widthPercent">
         <div class="animClass btn-group-vertical list list_overflow_y_100 list-unstyled widthPercent heightPercent">
-            <div class="btn btn-default btn-lg btn-group-justified widthPercent reservationHeight" ng-repeat="reservation in filteredReservations = (reservations| orderBy:'time_from' | filter:{the_date:date, unit_name:unitFilter.Header.name, dep_name:depFilter.dep_name})" ng-click="details(reservation)" >
+            <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-style="styleTest(reservation)" ng-repeat="reservation in filteredReservations = (reservations| orderBy:'time_from' | filter:{the_date:date, unit_name:unitFilter.Header.name, dep_name:depFilter.dep_name})" ng-click="details(reservation)" >
                 <div class="widthPercent">
                     <div class="text-left widthPercent">
+                        &nbsp;
                         <span class="reservationHour">
                             {{reservation.time_from}}
                         </span>
                         <span class="reservationTitle"><!--ng-switch on="cellcontent"-->
-                            {{reservation.name}} - {{reservation.title}}
+                            {{reservation.name}} / {{reservation.title}} / {{reservation.dep_name}}
                             <!--<span ng-switch-when="patient">&nbsp {{reservation.name}}</span>
                             <span ng-switch-default>&nbsp {{reservation.title}}</span>-->
                         </span>
-                        <span class="reservationIcons">
+                        <span class="reservationComment">
                             <span ng-switch on="reservation.the_comment">
                                 <span ng-switch-when="">&nbsp</span>
                                 <span ng-switch-default><b>C</b></span>
                             </span>
                         </span>
-                    </div>
-                    <div class="text-left reservationSubInfo widthPercent">
-                        <span class="reservationHour">
-                            &nbsp
-                            <span ng-switch on="reservation.color" class="colorMarking">
-                                <span ng-switch-when=""></span>
-                                <span ng-switch-default ng-style="style(reservation.color)" class="colorMarking">&nbsp</span>
-                            </span>
-                            <span ng-switch on="reservation.color2" class="colorMarking">
-                                <span ng-switch-when=""></span>
-                                <span ng-switch-default ng-style="style(reservation.color2)" class="colorMarking">&nbsp</span>
-                            </span>
-                            <span ng-switch on="reservation.color3" class="colorMarking">
-                                <span ng-switch-when=""></span>
-                                <span ng-switch-default ng-style="style(reservation.color3)" class="colorMarking">&nbsp</span>
-                            </span>
-                            <span ng-switch on="reservation.color4" class="colorMarking">
-                                <span ng-switch-when=""></span>
-                                <span ng-switch-default ng-style="style(reservation.color4)" class="colorMarking">&nbsp</span>
-                            </span>
-                            <span ng-switch on="reservation.color5" class="colorMarking">
-                                <span ng-switch-when=""></span>
-                                <span ng-switch-default ng-style="style(reservation.color5)" class="colorMarking">&nbsp</span>
-                            </span>
-                        </span>
-                        <span class="reservationUnitDep">
-                            {{reservation.unit_name}} / {{reservation.dep_name}}
-                        </span>
                         <span class="reservationIcons">
-                            <img ng-show="getStatusIcon(reservation)!=='none'" ng-src="img/{{ getStatusIcon(reservation) }}" alt="appointment status"/>
+                            <img ng-show="getStatusIcon(reservation) !== 'none'" ng-src="img/{{ getStatusIcon(reservation)}}" alt="appointment status"/>
                         </span>
-                         &nbsp
                     </div>
+                    <!--<div class="text-left reservationSubInfo widthPercent">
+                        <span class="reservationHour">
+                    <!--&nbsp
+                    <span ng-switch on="reservation.color" class="colorMarking">
+                        <span ng-switch-when=""></span>
+                        <span ng-switch-default ng-style="style(reservation.color)" class="colorMarking">&nbsp</span>
+                    </span>
+                    <span ng-switch on="reservation.color2" class="colorMarking">
+                        <span ng-switch-when=""></span>
+                        <span ng-switch-default ng-style="style(reservation.color2)" class="colorMarking">&nbsp</span>
+                    </span>
+                    <span ng-switch on="reservation.color3" class="colorMarking">
+                        <span ng-switch-when=""></span>
+                        <span ng-switch-default ng-style="style(reservation.color3)" class="colorMarking">&nbsp</span>
+                    </span>
+                    <span ng-switch on="reservation.color4" class="colorMarking">
+                        <span ng-switch-when=""></span>
+                        <span ng-switch-default ng-style="style(reservation.color4)" class="colorMarking">&nbsp</span>
+                    </span>
+                    <span ng-switch on="reservation.color5" class="colorMarking">
+                        <span ng-switch-when=""></span>
+                        <span ng-switch-default ng-style="style(reservation.color5)" class="colorMarking">&nbsp</span>
+                    </span>
+                </span>
+                <span class="reservationUnitDep">
+                    {{reservation.unit_name}} / {{reservation.dep_name}}
+                </span>
+                <span class="reservationIcons">
+                    <img ng-show="getStatusIcon(reservation)!=='none'" ng-src="img/{{ getStatusIcon(reservation) }}" alt="appointment status"/>
+                </span>
+                 &nbsp
+            </div>-->
                 </div>
             </div>
             <div class="alert alert-info" ng-hide="filteredReservations.length"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('appointmentsViewNoReservations')}}</div>
