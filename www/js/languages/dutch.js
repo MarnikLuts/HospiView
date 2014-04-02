@@ -46,7 +46,10 @@ var dutchStrings = {
         
         //Selectserver/new
         newGreeting: "Welkom bij Hospiview",
-        newInfo: "Selecteer de instelling waarmee u verbinding wil maken:",
+        newInfo: "Selecteer de instelling waarmee u verbinding wil maken:_"
+                +"Om onze demoserver te gebruiken selecteer \"Agendaview Demo\" en gebruik de volgende login gegevens:_"
+                +"Gebruikersnaam:_apple-user_"
+                +"Wachtwoord:_apple-user",
         newServerSelectDefault: "Klik hier om te selecteren",
         newServerHasAccount: "Heeft u een account bij deze instelling?",
         newServerEnterAccount: "Geef uw login gegevens in:",

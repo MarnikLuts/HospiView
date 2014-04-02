@@ -46,7 +46,10 @@ var englishStrings = {
         
         //Selectserver/new
         newGreeting: "Welcome to Hospiview",
-        newInfo: "Select the facility you want to connect with:",
+        newInfo: "Select the facility you want to connect with:_"
+                +"To use our demoserver, select \"Agendaview Demo\" and use the following credentials:_"
+                +"Username:_apple-user_"
+                +"Password:_apple-user",
         newServerSelectDefault: "Click here to select",
         newServerHasAccount: "Do you have an account with this facility?",
         newServerEnterAccount: "Enter your login details:",

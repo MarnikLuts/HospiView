@@ -15,7 +15,20 @@
         </div>
         <h2 ng-show="languageSelected">{{ getLocalizedString('newGreeting') }}</h2>
         <div class="form-group" ng-show="languageSelected">
-            <p>{{ getLocalizedString('newInfo') }}</p>
+            <p>
+                {{ getLocalizedString('newInfo').split("_")[0] }}<br/><br/>
+                {{ getLocalizedString('newInfo').split("_")[1] }}
+            </p>
+            <table>
+                <tr>
+                    <td>{{ getLocalizedString('newInfo').split("_")[2] }}</td>
+                    <td>{{ getLocalizedString('newInfo').split("_")[3] }}</td>
+                </tr>
+                <tr>
+                    <td>{{ getLocalizedString('newInfo').split("_")[4] }}</td>
+                    <td>{{ getLocalizedString('newInfo').split("_")[5] }}</td>
+                </tr>
+            </table><br/>
                 <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers" ng-change="serverSelected = true;
                     accountRadio = null; accountTrue = null;">
                     <option value="">- {{ getLocalizedString('newServerSelectDefault') }} -</option>
