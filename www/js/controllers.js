@@ -1528,6 +1528,7 @@ angular.module('myApp.controllers', []).
                                 }
                             }).
                             error(function() {
+                                $scope.loggingIn = false;
                                 alert($rootScope.getLocalizedString('connectionError'));
                             });
                 }

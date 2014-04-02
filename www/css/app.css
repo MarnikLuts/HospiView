@@ -304,15 +304,6 @@ ul li{
     -webkit-transform: translate3d(0, 0, 0);
 }
 
-.btn-sm-back .glyphicon-off{
-    font-size: 20px;
-    color: white;
-}
-
-.btn-sm-back .glyphicon-chevron-left{
-    color: white;
-}
-
 .btn-appointments-filter{
     height: 50px;
     position: absolute;
@@ -327,9 +318,15 @@ ul li{
 
 
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 400px) {// Smartphones in portrait mode
     .dateAppointmentsViewScaled{
         width: 100px;
+    }
+    #todayBtn{
+        font-size: 12px;
+    }
+    #weekendBtn{
+        font-size: 12px;
     }
 }
 

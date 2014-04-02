@@ -2401,6 +2401,13 @@ fieldset[disabled] .btn-link:focus {
     font-size: 12px;
     border-color: #DADADA;
 }
+.btn-sm-back .glyphicon{
+    font-size: 20px;
+}
+.btn-sm-back:active{
+    background-color: white;
+    color: #3044B5;
+}
 /* Button added*/
 .btn-sm-settings,
 .btn-group-sm-back > .btn {
@@ -2419,6 +2426,13 @@ fieldset[disabled] .btn-link:focus {
     color: white;
     font-size: 12px;
     border-color: #DADADA;
+}
+.btn-sm-settings .glyphicon{
+    font-size: 20px;
+}
+.btn-sm-settings:active{
+    background-color: white;
+    color: #3044B5;
 }
 /* Button added*/
 .btn-sm-calendar,
