@@ -378,16 +378,19 @@ angular.module('myApp.controllers', []).
             $scope.cellcontent = user.cellcontent;
             var refreshRate = user.refreshrate * 1000;
 
-            /*
-             $rootScope.requestTimer = $interval(function() {
-             if (!$rootScope.isOffline) {
-             $rootScope.startDate = $rootScope.searchRangeStart;
-             $rootScope.endDate = $rootScope.searchRangeEnd;
-             $rootScope.refresh = true;
-             search();
-             }
-             }, refreshRate);*/
 
+            $rootScope.requestTimer = $interval(function() {
+                if (!$rootScope.isOffline) {
+                    $rootScope.refreshStart = new Date($rootScope.searchRangeStart);
+                    $rootScope.refreshEnd = new Date($rootScope.searchRangeEnd);
+                    console.log($rootScope.searchRangeEnd);
+                    console.log($rootScope.refreshEnd);
+                    //$rootScope.refresh = true;
+                    searchRefresh();
+                }
+            }, 5000);
+
+            
             /**
              * Gets the name of the icon that matches the current status of the given reservation
              * 
@@ -446,6 +449,7 @@ angular.module('myApp.controllers', []).
                 var newDate = new Date($scope.date);
                 newDate.setDate(newDate.getDate() + 1);
                 $scope.date = formatDate(newDate);
+                console.log($scope.date);
                 if (new Date($scope.date) > new Date($rootScope.searchRangeEnd)) {
                     $rootScope.startDate = new Date(newDate);
                     $rootScope.endDate = new Date(newDate.setDate(newDate.getDate() + 14));
@@ -609,6 +613,25 @@ angular.module('myApp.controllers', []).
                 $location.path('/login');
             };
             backFunction = $scope.logout;
+
+            function searchRefresh() {
+                $rootScope.searchUnits = [];
+                $rootScope.searchString = $rootScope.user + 'Reservations';
+                hospiviewFactory.getUnitAndDepList($rootScope.currentServer.uuid, $rootScope.currentServer.hosp_url)
+                        .then(function(response) {
+                            dataFactory.setSearchUnits(response);
+                        }, error)
+                        .then(function() {
+                            dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
+                            dataFactory.searchReservations()
+                                    .then(function(reservations) {
+                                        $rootScope[$rootScope.searchString] = [];
+                                        for (var i = 0; i < reservations.length; i++)
+                                            $rootScope[$rootScope.searchString].push(reservations[i]);
+                                    }, error);
+                        }, error);
+            }
+
             function search() {
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
@@ -636,8 +659,6 @@ angular.module('myApp.controllers', []).
             }
 
             function setReservations(reservations) {
-                if ($rootScope.refresh === true)
-                    $rootScope[$rootScope.searchString] = [];
                 for (var i = 0; i < reservations.length; i++)
                     $rootScope[$rootScope.searchString].push(reservations[i]);
                 if (reservations.length === 0) {
@@ -941,60 +962,60 @@ angular.module('myApp.controllers', []).
                 }
             };
             $scope.loadingMonth = false;
-            
+
             $scope.calendarView = function() {
-                    $scope.loadingCalendar = true;
-                    var searchStart = new Date($rootScope.searchRangeStart);
-                    var searchEnd = new Date($rootScope.searchRangeEnd);
-                    var current = new Date($rootScope.currentdate);
-                    var request1 = false;
-                    var request2 = false;
-                    if (searchEnd.getMonth() <= current.getMonth() && searchEnd.getFullYear() == current.getFullYear()) {
+                $scope.loadingCalendar = true;
+                var searchStart = new Date($rootScope.searchRangeStart);
+                var searchEnd = new Date($rootScope.searchRangeEnd);
+                var current = new Date($rootScope.currentdate);
+                var request1 = false;
+                var request2 = false;
+                if (searchEnd.getMonth() <= current.getMonth() && searchEnd.getFullYear() == current.getFullYear()) {
+                    $rootScope.startDate = new Date(searchEnd);
+                    searchEnd.setMonth(current.getMonth() + 1);
+                    searchEnd.setDate(1);
+                    $rootScope.endDate = new Date(searchEnd);
+                    request1 = true;
+                } else {
+                    if (searchEnd.getFullYear() < current.getFullYear()) {
                         $rootScope.startDate = new Date(searchEnd);
                         searchEnd.setMonth(current.getMonth() + 1);
+                        searchEnd.setYear(current.getYear());
                         searchEnd.setDate(1);
                         $rootScope.endDate = new Date(searchEnd);
                         request1 = true;
-                    } else {
-                        if (searchEnd.getFullYear() < current.getFullYear()) {
-                            $rootScope.startDate = new Date(searchEnd);
-                            searchEnd.setMonth(current.getMonth() + 1);
-                            searchEnd.setYear(current.getYear());
-                            searchEnd.setDate(1);
-                            $rootScope.endDate = new Date(searchEnd);
-                            request1 = true;
-                        }
                     }
-                    if (searchStart.getMonth() >= current.getMonth() && searchStart.getDate() > 1 && searchStart.getFullYear() == current.getFullYear()) {
-                        searchStart.setDate(searchStart.getDate() - 1);
+                }
+                if (searchStart.getMonth() >= current.getMonth() && searchStart.getDate() > 1 && searchStart.getFullYear() == current.getFullYear()) {
+                    searchStart.setDate(searchStart.getDate() - 1);
+                    $rootScope.endDate = new Date(searchStart);
+                    searchStart.setMonth(current.getMonth());
+                    searchStart.setDate(1);
+                    $rootScope.startDate = new Date(searchStart);
+                    request2 = true;
+                } else {
+                    if (searchStart.getFullYear() > current.getFullYear()) {
                         $rootScope.endDate = new Date(searchStart);
                         searchStart.setMonth(current.getMonth());
+                        searchStart.setFullYear(current.getFullYear());
                         searchStart.setDate(1);
                         $rootScope.startDate = new Date(searchStart);
                         request2 = true;
-                    } else {
-                        if (searchStart.getFullYear() > current.getFullYear()) {
-                            $rootScope.endDate = new Date(searchStart);
-                            searchStart.setMonth(current.getMonth());
-                            searchStart.setFullYear(current.getFullYear());
-                            searchStart.setDate(1);
-                            $rootScope.startDate = new Date(searchStart);
-                            request2 = true;
-                        }
                     }
-                    if (request1 === true && request2 === true) {
-                        $rootScope[$rootScope.searchString] = [];
-                        $rootScope.startDate = searchStart;
-                        $rootScope.endDate = searchEnd;
-                    }
-                    if (request1 === true || request2 === true) {
-                        search();
-                    } else {
-                        $location.path('/appointmentsCalendar');
-                    }
-                
+                }
+                if (request1 === true && request2 === true) {
+                    $rootScope[$rootScope.searchString] = [];
+                    $rootScope.startDate = searchStart;
+                    $rootScope.endDate = searchEnd;
+                }
+                if (request1 === true || request2 === true) {
+                    search();
+                } else {
+                    $location.path('/appointmentsCalendar');
+                }
+
             };
-            
+
             function calendarView(calendarBrows) {
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
