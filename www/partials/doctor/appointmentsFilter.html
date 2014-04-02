@@ -23,9 +23,12 @@
         <select class="form-control input-xl" ng-model="depFilter" ng-options="dep as dep.dep_name for dep in departments" ng-hide="disableDepartments">
             <option value="">{{getLocalizedString('appointmentsFilterDepartment')}}</option>
         </select>
+    </div> 
+    
+</div>
+<div class="form-group">
+        <div class="btn-group btn-group-lg btn-block">
+            <button class="btn btn-default btn-lg btn-width" ng-click="removeFilter()">{{getLocalizedString('appointmentsFilterRemove')}}</button>
+            <button class="btn btn-default btn-lg btn-width" ng-click="applyFilter()">{{getLocalizedString('appointmentsFilterApply')}}</button>
+        </div>
     </div>
-</div>
-<div class="col-md-12 btn-group btn-group-lg btn-block">
-    <button class="btn btn-primary btn-lg btn-width" ng-click="removeFilter()">{{getLocalizedString('appointmentsFilterRemove')}}</button>
-    <button class="btn btn-primary btn-lg btn-width" ng-click="applyFilter()">{{getLocalizedString('appointmentsFilterApply')}}</button>
-</div>

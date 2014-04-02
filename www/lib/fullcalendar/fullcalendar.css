@@ -393,10 +393,13 @@ table.fc-border-separate {
 	text-align: center;
 	}
 
+/*Edited: background-color: #3044B5;
+            color: white;*/
 .fc .fc-week-number {
 	width: 22px;
 	text-align: center;
-        background-color: rgba(106, 202, 238, 1);
+        background-color: #3044B5;
+        color: white;
 	}
 
 .fc .fc-week-number div {

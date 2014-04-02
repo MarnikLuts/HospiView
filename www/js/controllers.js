@@ -169,6 +169,7 @@ angular.module('myApp.controllers', []).
              * 
              */
             function postLogin() {
+                console.log("postLogin");
                 var year = new Date().getFullYear().toString(),
                         holidayPromise = [],
                         UnitPromise;
@@ -231,6 +232,7 @@ angular.module('myApp.controllers', []).
                 if (angular.isUndefined($rootScope[$rootScope.searchString]) || $rootScope[$rootScope.searchString].length === 0) {
                     dataFactory.searchReservations()
                             .then(function(reservations) {
+                                console.log("then setData");
                                 setReservations(reservations);
                             }, error);
                 }
@@ -252,6 +254,7 @@ angular.module('myApp.controllers', []).
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
+                    console.log("else setResrvations");
                     localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     $rootScope.isOffline = false;
                     $location.path('/doctor/appointmentsView');
@@ -379,18 +382,17 @@ angular.module('myApp.controllers', []).
             var refreshRate = user.refreshrate * 1000;
 
 
-            $rootScope.requestTimer = $interval(function() {
-                if (!$rootScope.isOffline) {
-                    $rootScope.refreshStart = new Date($rootScope.searchRangeStart);
-                    $rootScope.refreshEnd = new Date($rootScope.searchRangeEnd);
-                    console.log($rootScope.searchRangeEnd);
-                    console.log($rootScope.refreshEnd);
-                    //$rootScope.refresh = true;
-                    searchRefresh();
-                }
-            }, 5000);
+            /*$rootScope.requestTimer = $interval(function() {
+             if (!$rootScope.isOffline) {
+             $rootScope.startDate = new Date($rootScope.searchRangeStart);
+             $rootScope.endDate = new Date($rootScope.searchRangeEnd);
+             console.log($rootScope.refreshStart);
+             console.log($rootScope.refreshEnd);
+             searchRefresh();
+             }
+             }, 5000);*/
 
-            
+
             /**
              * Gets the name of the icon that matches the current status of the given reservation
              * 
@@ -612,7 +614,8 @@ angular.module('myApp.controllers', []).
                 $rootScope.type = null;
                 $location.path('/login');
             };
-            backFunction = $scope.logout;
+
+            //backFunction = $scope.logout();
 
             function searchRefresh() {
                 $rootScope.searchUnits = [];
@@ -622,7 +625,6 @@ angular.module('myApp.controllers', []).
                             dataFactory.setSearchUnits(response);
                         }, error)
                         .then(function() {
-                            dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
                             dataFactory.searchReservations()
                                     .then(function(reservations) {
                                         $rootScope[$rootScope.searchString] = [];
@@ -781,6 +783,7 @@ angular.module('myApp.controllers', []).
                 else {
                     $scope.disableUnits = false;
                     $scope.units = $rootScope['allUnitsAndGroups.' + $scope.serverFilter.id];
+                    console.log($scope.serverFilter.id);
                 }
             };
 
@@ -864,25 +867,26 @@ angular.module('myApp.controllers', []).
             if ($rootScope.serverAdded === true || $rootScope.serverChanged === true || angular.isUndefined($rootScope.allUnitsAndGroups)) {
                 $rootScope.serverChanger = false;
                 $rootScope.serverAdded = false;
-
+                var unitsandgroups = [];
                 for (var j = 0; j < user.servers.length; j++) {
-                    var unitsandgroups = [];
-
                     /*variable created to refresh the scope of the user variable*/
                     var selectedServer = user.servers[j];
+                    console.log(selectedServer);
                     hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
-                                if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                                    var units = json.UnitsAndDeps.Detail.Unit;
-                                    for (var i = 0; i < units.length; i++) {
-                                        units[i].type = "doctor";
-                                        units[i].Header.name = units[i].Header.unit_name;
-                                        unitsandgroups.push(units[i]);
+                                if (json !== null) {
+                                    if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                                        var units = json.UnitsAndDeps.Detail.Unit;
+                                        for (var i = 0; i < units.length; i++) {
+                                            units[i].type = "doctor";
+                                            units[i].Header.name = units[i].Header.unit_name;
+                                            unitsandgroups.push(units[i]);
+                                        }
+                                    } else {
+                                        $scope.error = true;
+                                        $scope.errormessage = "Fout in de gegevens.";
                                     }
-                                } else {
-                                    $scope.error = true;
-                                    $scope.errormessage = "Fout in de gegevens.";
                                 }
                             }).
                             error(function() {
@@ -891,18 +895,21 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getUnitDepGroups(selectedServer.uuid, selectedServer.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
-                                if (json.UnitDepGroups.Header.StatusCode == 1) {
-                                    var groups = json.UnitDepGroups.Detail.Group;
-                                    for (var i = 0; i < groups.length; i++) {
-                                        groups[i].type = "group";
-                                        groups[i].Header.name = groups[i].Header.group_name;
-                                        unitsandgroups.push(groups[i]);
+                                if (json !== null) {
+                                    if (json.UnitDepGroups.Header.StatusCode == 1) {
+                                        var groups = json.UnitDepGroups.Detail.Group;
+                                        for (var i = 0; i < groups.length; i++) {
+                                            groups[i].type = "group";
+                                            groups[i].Header.name = groups[i].Header.group_name;
+                                            unitsandgroups.push(groups[i]);
+                                        }
+                                        var rootScopeString = 'allUnitsAndGroups.' + selectedServer.id;
+                                        $rootScope[rootScopeString] = unitsandgroups;
+                                        console.log(selectedServer.id);
+                                    } else {
+                                        $scope.error = true;
+                                        $scope.errormessage = "Fout in de ingevoerde login gegevens.";
                                     }
-                                    var rootScopeString = 'allUnitsAndGroups.' + selectedServer.id;
-                                    $rootScope[rootScopeString] = unitsandgroups;
-                                } else {
-                                    $scope.error = true;
-                                    $scope.errormessage = "Fout in de ingevoerde login gegevens.";
                                 }
                             }).
                             error(function() {
