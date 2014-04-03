@@ -34,17 +34,17 @@
                     <span ng-switch-default>{{reservation.colortitle5}} </span>
                 </span>
             </span></div>
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailType')}} </span><span class="detailDetail">
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailType')}} </span><span class="detailInfo">
                 <span ng-switch on="reservation.rstatus">
                     <span ng-switch-when="1">{{getLocalizedString('appointmentDetailFinal')}}</span>
                     <span ng-switch-default>{{getLocalizedString('appointmentDetailProposal')}}</span>
                 </span></span></div>
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailComment')}}</span><span class="detailDetail">{{reservation.the_comment}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailComment')}}</span><span class="detailInfo">{{reservation.the_comment}}</span></div>
     </div>
     {{getLocalizedString('appointmentDetailPatient')}}
     <div class="well detailTable widthPercent">
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientId')}}</span><span class="detailDetail">{{reservation.unique_pid}}</span></div>
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientName')}}</span><span class="detailDetail">{{reservation.name}}</span></div>
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientNational')}}</span><span class="detailDetail">{{reservation.reg_no}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientId')}}</span><span class="detailInfo">{{reservation.unique_pid}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientName')}}</span><span class="detailInfo">{{reservation.name}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientNational')}}</span><span class="detailInfo">{{reservation.reg_no}}</span></div>
     </div>
 </div>

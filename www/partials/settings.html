@@ -7,7 +7,7 @@
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
 <div class="widthPercent">
-    <form name="settingsForm widthPercent" novalidate>
+    <form name="settingsForm" class="widthPercent" novalidate>
         <!--<div class="col-md-12 form-group">
             <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers">
             </select>
@@ -34,46 +34,35 @@
                     <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('loginPassword')}}:</span>
                     <input id="password" class="form-control input-lg" type="password" ng-model="serverPassword" ng-disabled="true"/>
                 </div>
-                <div class="form-group">
-                    <div class="input-group">
+                <div class="form-group widthPercent">
+                    <div class="input-group widthPercent">
                         <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('settingsRefresh')}}:</span>
                         <input id="refresh" name="refreshrate" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="60" required/>
                     </div>
-                    <div class="alert alert-danger input-group" ng-show="settingsForm.refreshrate.$dirty && settingsForm.refreshrate.$invalid">
+                    <div class="alert alert-danger input-group widthPercent" ng-show="settingsForm.refreshrate.$dirty && settingsForm.refreshrate.$invalid">
                         <span ng-show="settingsForm.refreshrate.$error.min">{{ getLocalizedString('settingsRefreshMin')}}</span>
                         <span ng-show="settingsForm.refreshrate.$error.max">{{ getLocalizedString('settingsRefreshMax')}}</span>
                         <span ng-show="settingsForm.refreshrate.$error.required">{{ getLocalizedString('isRequired')}}</span>
                     </div>
                 </div>
-                <div class="widthPercent">   
-                    {{ getLocalizedString('settingsCellcontent')}}:<br>
-                    <table class="table table-striped list">
-                        <tr>
-                            <td>
-                                {{ getLocalizedString('settingsPatient')}}
-                            </td>
-                            <td>
-                                <input class="form-control" narme="cellcontentPatient" type="checkbox" ng-model="selectedUser.cellcontent.patient" />                  
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                {{ getLocalizedString('settingsTitle')}}
-                            </td>
-                            <td>
-                                <input class="form-control" narme="cellcontentPatient" type="checkbox" ng-model="selectedUser.cellcontent.title" />                  
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                {{ getLocalizedString('settingsDepartment')}}
-                            </td>
-                            <td>
-                                <input class="form-control" narme="cellcontentPatient" type="checkbox" ng-model="selectedUser.cellcontent.department" />                  
-                            </td>
-                        </tr>
-                    </table>
+
+                <div class=" form-group widthPercent settingsCellcontent">   
+                    <h1>{{ getLocalizedString('settingsCellcontent')}}:</h1>
+                    <div class="btn-group" class="settingsCellcontentDetail" data-toggle="buttons">
+                        <label id="settingsPatient" class="btn btn-default width30Percent">
+                            <input id="patientCheckbox" type="checkbox"> {{ getLocalizedString('settingsPatient')}}
+                        </label>
+                        <label id="settingsTitle" class="btn btn-default width30Percent">
+                            <input id="titleCheckbox" type="checkbox"> {{ getLocalizedString('settingsTitle')}}
+                        </label>
+                        <label id="settingsDepartment" class="btn btn-default width30Percent">
+                            <input id="departmentCheckbox" type="checkbox"> {{ getLocalizedString('settingsDepartment')}}
+                        </label>
+                    </div>
+                    &nbsp;
                 </div>
+                <br/>
+                
                 <div class="form-group">
                     <button type="button" class="btn btn-default form-control input-lg" ng-click="addOrEditServer('edit', server)">
                         <span class="glyphicon glyphicon-transfer"></span>

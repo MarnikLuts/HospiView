@@ -1384,7 +1384,14 @@ angular.module('myApp.controllers', []).
             $scope.cellcontentPatient = $scope.selectedUser.cellcontent.patient;
             $scope.cellcontentTitle = $scope.selectedUser.cellcontent.title;
             $scope.cellcontentDepartment = $scope.selectedUser.cellcontent.department;*/
-
+            
+            if($scope.selectedUser.cellcontent.patient === true)
+                $("#settingsPatient").button('toggle');
+            if($scope.selectedUser.cellcontent.title === true)
+                $("#settingsTitle").button('toggle');
+            if($scope.selectedUser.cellcontent.department === true)
+                $("#settingsDepartment").button('toggle');
+            
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
                 localStorage.setItem("language", id);
@@ -1395,6 +1402,11 @@ angular.module('myApp.controllers', []).
 
 
             $scope.save = function() {
+                $scope.selectedUser.cellcontent.patient = $('#patientCheckbox').prop('checked');
+                $scope.selectedUser.cellcontent.title = $('#titleCheckbox').prop('checked');
+                $scope.selectedUser.cellcontent.department = $('#departmentCheckbox').prop('checked');
+
+                console.log($('#patientCheckbox').prop('checked'));
                 localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
                 $location.path('/doctor/appointmentsView');
             };
