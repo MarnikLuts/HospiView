@@ -48,15 +48,20 @@ angular.module('myApp.controllers', []).
              * will be set to false.
              */
             $scope.getServersUser = function() {
+                $scope.username = [];
+                $scope.password = [];
+                $scope.savePassword = [];
                 if (!(angular.isUndefined($scope.user))) {
                     $scope.selectedUser = JSON.parse(localStorage.getItem($scope.user));
                     $scope.servers = $scope.selectedUser.servers;
+                    $scope.serverRadio = $scope.servers[0];
+                    $scope.getLoginUser(0);
                 } else {
-                    $scope.servers = "";
+                    $scope.servers[0] = "";
+                    $scope.username[0] = "";
+                    $scope.password[0] = "";
+                    $scope.savePassword[0] = false;
                 }
-                $scope.username = "";
-                $scope.password = "";
-                $scope.savePassword = false;
             };
 
             /**
@@ -65,20 +70,20 @@ angular.module('myApp.controllers', []).
              * out. Depending on the usersettings, the passwordfield will be 
              * filled out and the savePassword checkbox will be checked.
              */
-            $scope.getLoginUser = function() {
-                if (!(angular.isUndefined($scope.server))) {
-                    $scope.username = $scope.server.user_login;
-                    if ($scope.selectedUser.save_password === true) {
-                        $scope.password = $scope.server.user_password;
-                        $scope.savePassword = $scope.selectedUser.save_password;
+            $scope.getLoginUser = function(index) {
+                if (!(angular.isUndefined($scope.servers[index]))) {
+                    $scope.username[index] = $scope.servers[index].user_login;
+                    if ($scope.selectedUser.servers[index].save_password) {
+                        $scope.password[index] = $scope.servers[index].user_password;
+                        $scope.savePassword[index] = $scope.selectedUser.servers[index].save_password;
                     }
                 } else {
-                    $scope.username = "";
-                    $scope.password = "";
-                    $scope.savePassword = false;
+                    $scope.username[index] = "";
+                    $scope.password[index] = "";
+                    $scope.savePassword[index] = false;
                 }
             };
-
+            
             /**
              * 27.03.2014 Stijn Ceunen
              * If only 1 user is saved, this one will automatically be selected.
@@ -136,14 +141,13 @@ angular.module('myApp.controllers', []).
                 $scope.error = false;
                 var promises = [];
                 
-                promises.push(hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url));
-                
-                for(var j=1;j<$scope.selectedUser.servers.length;j++){
-                    promises.push(hospiviewFactory.getAuthentication($scope.selectedUser.servers[j].user_login, $scope.selectedUser.servers[j].user_password, $scope.selectedUser.servers[j].hosp_url));
+                for(var i=0;i<$scope.selectedUser.servers.length;i++){
+                        promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
                 }
                 
                 $q.all(promises).then(function(responses){
                     for(var r=0;r<responses.length;r++){
+                        console.log('loop');
                         var json = parseJson(responses[r].data);
                         if (json.Authentication.Header.StatusCode == 1) {
                             $scope.error = false;
@@ -154,17 +158,24 @@ angular.module('myApp.controllers', []).
                                 $rootScope.type = 1;
                             }
                             $scope.selectedUser.servers[r].uuid = json.Authentication.Detail.uuid;
-                            $scope.selectedUser.save_password = $scope.savePassword;
+                            $scope.selectedUser.servers[r].save_password = $scope.savePassword[r];
                             localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
                         }else{
                             $scope.loggingIn = false;
                             $scope.error = true;
                             $scope.errormessage = $rootScope.getLocalizedString('loginError');
+                            if($scope.failedServers.length===2)
+                                $scope.authFailed = true;
                         }
                     }
-                    $rootScope.currentServers = $scope.selectedUser.servers;
-                    setDates();
-                    postLogin();
+                    if(!$scope.authFailed){
+                        setDates();
+                        postLogin();
+                    }else{
+                        $scope.loggingIn = false;
+                        $scope.error = true;
+                        $scope.errormessage = $rootScope.getLocalizedString('loginError');
+                    }
                 }, function(){
                     $scope.loggingIn = false;
                     callOfflineModal();
@@ -177,8 +188,7 @@ angular.module('myApp.controllers', []).
              */
             function postLogin() {
                 var year = new Date().getFullYear().toString(),
-                        holidayPromise = [],
-                        UnitPromise = [];
+                        holidayPromise = [];
                 
                 //SearchUnits
                 $rootScope.searchUnits = [];
@@ -189,7 +199,7 @@ angular.module('myApp.controllers', []).
                 //Reset holidays
                 $rootScope.publicHolidays = [];
                 for (var i = 1; i < 4; i++) {
-                    holidayPromise.push(hospiviewFactory.getPublicHolidays(i, year, '00', $scope.selectedUser.servers[0].hosp_url));
+                    holidayPromise.push(hospiviewFactory.getPublicHolidays(i, year, '00', $rootScope.currentServers[0].hosp_url));
                 }
                 $q.all(holidayPromise).then(function(responses) {
                     dataFactory.setHolidays(responses);
@@ -251,7 +261,7 @@ angular.module('myApp.controllers', []).
             function error(data) {
                 $scope.loggingIn = false;
                 $scope.error = true;
-                $scope.errormessage = "Geen afspraken gevonden";
+                $scope.errormessage = data;
             }
 
             /**
@@ -292,6 +302,13 @@ angular.module('myApp.controllers', []).
 
             function setReservations(reservations) {
                 $rootScope[$rootScope.searchString] = reservations;
+                if($scope.failedServers.length!==0){
+                    var servers = "";
+                    for(var i=0;i<$scope.failedServers.length;i++){
+                        servers += "\n" +$scope.failedServers;
+                    }
+                    alert("Inloggen is mislukt op de volgende servers:"+servers);
+                }
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
@@ -1576,7 +1593,7 @@ angular.module('myApp.controllers', []).
              * Throws an alert in case the checkbox to save the password is checked.
              */
             $scope.savePasswordWarning = function() {
-                if ($scope.savePassword === false)
+                if (!$scope.savePassword[0])
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             };
 
@@ -1621,10 +1638,10 @@ angular.module('myApp.controllers', []).
                                                                 "unique_pid": json.Authentication.Detail.unique_pid,
                                                                 "uuid": json.Authentication.Detail.uuid,
                                                                 "isexternal": json.Authentication.Detail.isexternal,
+                                                                "save_password": $scope.savePassword,
                                                                 "shortcut1": {"unit": "", "department": ""},
                                                                 "shortcut2": {"unit": "", "department": ""},
                                                                 "shortcut3": {"unit": "", "department": ""}}],
-                                                        "save_password": $scope.savePassword,
                                                         "language_id": json.Authentication.Detail.language_id,
                                                         "cellcontent": {"patient": true,
                                                                         "title": true,
