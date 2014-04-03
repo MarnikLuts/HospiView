@@ -77,7 +77,7 @@ angular.module('myApp.services', []).
                  * @param {type} response
                  * @returns {unresolved}
                  */
-                setSearchUnits: function(response) {
+                setSearchUnits: function(response, server) {
                     var defer = $q.defer();
                     var json = parseJson(response.data);
                     if (json.UnitsAndDeps.Header.StatusCode == 1) {
@@ -85,7 +85,7 @@ angular.module('myApp.services', []).
                         for (var i = 0; i < units.length; i++) {
                             $rootScope.searchUnits.push(units[i]);
                         }
-                        defer.resolve($rootScope.searchUnits);
+                        defer.resolve(server);
                     } else {
                         defer.reject($rootScope.getLocalizedString('internalError'));
                     }
@@ -97,12 +97,12 @@ angular.module('myApp.services', []).
                  * @param {type} year
                  * @returns {unresolved}
                  */
-                setAbsentDays: function(year) {
+                setAbsentDays: function(year, server) {
                     var defer = $q.defer(),
                             promises = [];
 
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
-                        promises.push(hospiviewFactory.getUnitAbsentDays($rootScope.currentServer.uuid, year, '00', $rootScope.searchUnits[i].Header.unit_id, $rootScope.currentServer.hosp_url));
+                        promises.push(hospiviewFactory.getUnitAbsentDays(server.uuid, year, '00', $rootScope.searchUnits[i].Header.unit_id, server.hosp_url));
                     }
 
                     $q.all(promises).then(function(responses) {
@@ -117,7 +117,7 @@ angular.module('myApp.services', []).
                             }
                         }
                         localStorage.setItem($rootScope.user + "AbsentDays", JSON.stringify($rootScope.absentDays));
-                        defer.resolve();
+                        defer.resolve(server);
                     }, function(error) {
                         defer.reject($rootScope.getLocalizedString('connectionError'));
                     });
@@ -128,10 +128,12 @@ angular.module('myApp.services', []).
                  * 
                  * @returns {unresolved}
                  */
-                searchReservations: function() {
+                searchReservations: function(server) {
+                    console.log("searching reservations");
                     var defer = $q.defer(),
                             reservations = [],
                             promises = [];
+                    console.log("server: " + server.hosp_full_name);
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                         var depIds = [];
                         var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -143,9 +145,8 @@ angular.module('myApp.services', []).
                                 depIds.push($rootScope.searchUnits[i].Detail.Dep[j].dep_id);
                             }
                         }
-
                         for (var k = 0; k < depIds.length; k++) {
-                            promises.push(hospiviewFactory.getReservationsOnUnit($rootScope.currentServer.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, $rootScope.currentServer.hosp_url));
+                            promises.push(hospiviewFactory.getReservationsOnUnit(server.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, server.hosp_url));
                         }
                     }
                     $q.all(promises).then(function(responses) {
@@ -154,8 +155,10 @@ angular.module('myApp.services', []).
                             if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
                                 if (json.ReservationsOnUnit.Header.StatusCode === "1") {
                                     if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
+                                        console.log("adding reservation, server: " + server.hosp_full_name);
                                         reservations.push(json.ReservationsOnUnit.Detail.Reservation);
                                     } else {
+                                        console.log("adding reservation, server: " + server.hosp_full_name);
                                         for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
                                             reservations.push(json.ReservationsOnUnit.Detail.Reservation[s]);
                                         }
@@ -166,8 +169,10 @@ angular.module('myApp.services', []).
                                 }
                             }
                         }
+                        console.log("resolving");
                         defer.resolve(reservations);
                     }, function(error) {
+                        alert('hey');
                         defer.reject($rootScope.getLocalizedString('connectionError'));
                     });
                     return defer.promise;
