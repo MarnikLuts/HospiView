@@ -6,8 +6,8 @@
     <div class="title">{{ getLocalizedString('settings')}}</div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
-<div>
-    <form name="settingsForm" novalidate>
+<div class="widthPercent">
+    <form name="settingsForm widthPercent" novalidate>
         <!--<div class="col-md-12 form-group">
             <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers">
             </select>
@@ -22,11 +22,9 @@
                         btn-radio="servers[2]">{{abbreviation3}}<br/><img src="{{server3Img}}" alt="hospi" width="64" height="90" ng-show="showServer3"><span class="glyphicon glyphicon-plus" ng-hide="showServer3"></span></button>
             </div>
         </div>
-        <div class="col-md-12">
-
-        </div></br>
-        <div class="col-md-12">
-            <div class="well">
+        </br>
+        <div class="col-md-12 widthPercent">
+            <div class="well widthPercent">
                 <h4>{{ getLocalizedString('settingsServerSettings')}}: </h4>
                 <div class="input-group form-group">
                     <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('settingsUser')}}:</span>
@@ -47,12 +45,35 @@
                         <span ng-show="settingsForm.refreshrate.$error.required">{{ getLocalizedString('isRequired')}}</span>
                     </div>
                 </div>
-                <div class="form-group input-group btn-group widthPercent">
-                    <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('settingsCellcontent')}}:</span>
-                    <button type="button" class="btn btn-default width50Percent" ng-model="selectedUser.cellcontent" ng-click="cellcontentchange('patient')" btn-radio="'patient'">{{ getLocalizedString('settingsPatient')}}</button>
-                    <button type="button" class="btn btn-default width50Percent" ng-model="selectedUser.cellcontent" ng-click="cellcontentchange('title')" btn-radio="'title'">{{ getLocalizedString('settingsTitle')}}</button>
+                <div class="widthPercent">   
+                    {{ getLocalizedString('settingsCellcontent')}}:<br>
+                    <table class="table table-striped list">
+                        <tr>
+                            <td>
+                                {{ getLocalizedString('settingsPatient')}}
+                            </td>
+                            <td>
+                                <input class="form-control" narme="cellcontentPatient" type="checkbox" ng-model="selectedUser.cellcontent.patient" />                  
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ getLocalizedString('settingsTitle')}}
+                            </td>
+                            <td>
+                                <input class="form-control" narme="cellcontentPatient" type="checkbox" ng-model="selectedUser.cellcontent.title" />                  
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ getLocalizedString('settingsDepartment')}}
+                            </td>
+                            <td>
+                                <input class="form-control" narme="cellcontentPatient" type="checkbox" ng-model="selectedUser.cellcontent.department" />                  
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="form-group">
                 <div class="form-group">
                     <button type="button" class="btn btn-default form-control input-lg" ng-click="addOrEditServer('edit', server)">
                         <span class="glyphicon glyphicon-transfer"></span>

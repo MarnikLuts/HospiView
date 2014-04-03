@@ -73,7 +73,10 @@
     width:50%;
 }
 .width40Percent{
-    width:40;
+    width:40%;
+}
+.width30Percent{
+    width:33.33%;
 }
 .widthSettingsLabels {
     min-width: 130px;
@@ -200,7 +203,10 @@
     text-align: center;
     float:right;
 }
-
+.cellcontent{
+    font-size:18px;
+    overflow:hidden;
+}
 /*http://stackoverflow.com/questions/15305914/bootstrap-buttons-get-stuck-down-on-mobile-devices*/
 .mobileHoverFix:hover,
 .mobileHoverFix.hover{

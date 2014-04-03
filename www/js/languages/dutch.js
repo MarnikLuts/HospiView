@@ -107,6 +107,7 @@ var dutchStrings = {
         settingsCellcontent: "Cellinhoud",
         settingsPatient: "Patiënt",
         settingsTitle: "Titel",
+        settingsDepartment: "Departement",
         settingsAddUser: "Voeg applicatiegebruiker toe",
         settingsServerSettings: "Server instellingen",
         settingsApplicationSettings: "Applicatie instellingen",

@@ -107,6 +107,7 @@ var frenchStrings = {
         settingsCellcontent: "Le contenu des cellules",
         settingsPatient: "Patient",
         settingsTitle: "Titre",
+        settingsDepartment: "Département",
         settingsAddUser: "Ajoutez un utilisateur de l'application",
         settingsServerSettings: "Paramètres du serveur",
         settingsApplicationSettings: "Paramètres de l'application",

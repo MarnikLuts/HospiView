@@ -107,6 +107,7 @@ var englishStrings = {
         settingsCellcontent: "Cell content",
         settingsPatient: "Patient",
         settingsTitle: "Title",
+        settingsDepartment: "Department",
         settingsAddUser: "Add application user",
         settingsServerSettings: "Server settings",
         settingsApplicationSettings: "Application settings",
