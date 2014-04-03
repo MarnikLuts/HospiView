@@ -560,24 +560,28 @@ angular.module('myApp.controllers', []).
                  }*/
             };
 
-            $scope.checkFilter = function() {
-                console.log($scope.filteredReservations);
-            };
             $scope.details = function(reservation) {
+                $rootScope.eventClick = true;
                 $rootScope.reservationDetail = reservation;
                 $rootScope.currentdate = reservation.the_date;
                 $location.path('/doctor/appointmentDetail');
             };
 
             $scope.settings = function() {
+                $rootScope.eventClick = true;
+                $rootScope.currentdate = new Date($scope.date);
+                console.log($rootScope.currentdate);
                 $location.path('/settings/default');
             };
 
             $scope.filter = function() {
+                $rootScope.eventClick = true;
+                $rootScope.currentdate = $scope.date;
                 $location.path('/appointmentsFilter');
             };
 
             $scope.calendarView = function() {
+                $rootScope.currentdate = $scope.date;
                 if ($rootScope.isOffline) {
                     $location.path('/appointmentsCalendar');
                 } else {
@@ -1008,12 +1012,17 @@ angular.module('myApp.controllers', []).
              * the application. Redirects to appointments screen.
              */
             $scope.applyFilter = function() {
+                console.log($scope.depFilter);
+                console.log($rootScope.getLocalizedString('appointmentsFilterAllDepartments'));
+                if($scope.depFilter.dep_name === $rootScope.getLocalizedString('appointmentsFilterAllDepartments'))
+                    $scope.depFilter = '';
                 if ($scope.serverFilter !== '')
                     $rootScope.serverFilter = $scope.serverFilter;
                 if ($scope.unitFilter !== '')
                     $rootScope.unitFilter = $scope.unitFilter;
                 if ($scope.depFilter !== '')
                     $rootScope.depFilter = $scope.depFilter;
+                
                 $rootScope.filterActive = true;
                 $location.path('/doctor/appointmentsView');
             };
@@ -1252,7 +1261,6 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
             $scope.reservation = $rootScope.reservationDetail;
-            $rootScope.eventClick = true;
             $scope.back = function() {
                 $location.path('/doctor/appointmentsView');
             };
@@ -1380,8 +1388,11 @@ angular.module('myApp.controllers', []).
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
                 localStorage.setItem("language", id);
+                $scope.abbreviation2 = $rootScope.getLocalizedString('settingsAddServer');
+                $scope.abbreviation3 = $rootScope.getLocalizedString('settingsAddServer');
             }
             $scope.languageRadio = $rootScope.languageID;
+
 
             $scope.save = function() {
                 localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));

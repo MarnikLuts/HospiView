@@ -22,10 +22,12 @@ var frenchStrings = {
         appointmentsCalendarAbsent: "Jour de congé",
         
         //AppointmentsFilter
+        appointmentsFilterMessage: "Règle un filtre. Tous les champs sont optional.",
         appointmentsFilterTitle: "Filtre",
+        appointmentsFilterServer: "Choisissez un serveur",
         appointmentsFilterUnitOrGroup: "Choisissez une unité",
         appointmentsFilterDepartment: "Choisissez un département",
-        appointmentsFilterRemove: "Supprimer le filtre actuel",
+        appointmentsFilterRemove: "Supprimer le filtre",
         appointmentsFilterApply: "Appliquer le filtre",
         appointmentsFilterAllDepartments: "Tous",
 

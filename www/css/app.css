@@ -230,6 +230,9 @@
     color: black;
     font-size: 1.3em;
 }
+.filterTitle{
+    font-size: 1.5em;
+}
 /*http://stackoverflow.com/questions/15305914/bootstrap-buttons-get-stuck-down-on-mobile-devices*/
 .mobileHoverFix:hover,
 .mobileHoverFix.hover{

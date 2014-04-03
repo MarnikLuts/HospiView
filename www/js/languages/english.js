@@ -22,10 +22,12 @@ var englishStrings = {
         appointmentsCalendarAbsent: "Day Off",
         
         //AppointmentsFilter
+        appointmentsFilterMessage: "Set a filter. All fields are optional.",
         appointmentsFilterTitle: "Filter",
+        appointmentsFilterServer: "Select a server",
         appointmentsFilterUnitOrGroup: "Select a unit or group",
         appointmentsFilterDepartment: "Select a department",
-        appointmentsFilterRemove: "Remove current filter",
+        appointmentsFilterRemove: "Remove filter",
         appointmentsFilterApply: "Apply filter",
         appointmentsFilterAllDepartments: "All",
         

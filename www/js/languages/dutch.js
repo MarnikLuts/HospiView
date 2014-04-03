@@ -22,10 +22,12 @@ var dutchStrings = {
         appointmentsCalendarAbsent: "Afwezigheidsdag",
         
         //AppointmentsFilter
+        appointmentsFilterMessage: "Stel een filter in. Alle velden zijn optioneel.",
         appointmentsFilterTitle: "Filter",
+        appointmentsFilterServer: "Selecteer een server",
         appointmentsFilterUnitOrGroup: "Selecteer een unit of groep",
         appointmentsFilterDepartment: "Selecteer een departement",
-        appointmentsFilterRemove: "Verwijder huidige filter",
+        appointmentsFilterRemove: "Verwijder filter",
         appointmentsFilterApply: "Voer filter uit",
         appointmentsFilterAllDepartments: "Allemaal",
         

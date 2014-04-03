@@ -9,10 +9,10 @@
 <div class="col-md-12 widthPercent" ng-swipe-left="nextAppointment()" ng-swipe-right="previousAppointment()">
     {{getLocalizedString('appointmentDetail')}}
     <div class="well detailTable widthPercent">
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailId')}}</span><span class="detailDetail">{{reservation.id}}</span></div>
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailTitle')}}</span><span class="detailDetail">{{reservation.title}}</span></div>
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailBooking')}}</span><span class="detailDetail">{{reservation.user_name}}</span></div>
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailMarking')}}</span><span class="detailDetail">
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailId')}}</span><span class="detailInfo">{{reservation.id}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailTitle')}}</span><span class="detailInfo">{{reservation.title}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailBooking')}}</span><span class="detailInfo">{{reservation.user_name}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailMarking')}}</span><span class="detailInfo">
                 <span ng-switch on="reservation.color">
                     <span ng-switch-when=""></span>
                     <span ng-switch-default>{{reservation.colortitle1}} </span>
