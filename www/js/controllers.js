@@ -109,7 +109,7 @@ angular.module('myApp.controllers', []).
             $scope.showpassword = function() {
                 $scope.showPasswordBoolean = !$scope.showPasswordBoolean;
             };
-            
+
             $rootScope.filterActive = '';
             $rootScope.serverFilter = '';
             $rootScope.unitFilter = '';
@@ -135,15 +135,15 @@ angular.module('myApp.controllers', []).
                 $scope.loggingIn = true;
                 $scope.error = false;
                 var promises = [];
-                
+
                 promises.push(hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url));
-                
-                for(var j=1;j<$scope.selectedUser.servers.length;j++){
+
+                for (var j = 1; j < $scope.selectedUser.servers.length; j++) {
                     promises.push(hospiviewFactory.getAuthentication($scope.selectedUser.servers[j].user_login, $scope.selectedUser.servers[j].user_password, $scope.selectedUser.servers[j].hosp_url));
                 }
-                
-                $q.all(promises).then(function(responses){
-                    for(var r=0;r<responses.length;r++){
+
+                $q.all(promises).then(function(responses) {
+                    for (var r = 0; r < responses.length; r++) {
                         var json = parseJson(responses[r].data);
                         if (json.Authentication.Header.StatusCode == 1) {
                             $scope.error = false;
@@ -156,7 +156,7 @@ angular.module('myApp.controllers', []).
                             $scope.selectedUser.servers[r].uuid = json.Authentication.Detail.uuid;
                             $scope.selectedUser.save_password = $scope.savePassword;
                             localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
-                        }else{
+                        } else {
                             $scope.loggingIn = false;
                             $scope.error = true;
                             $scope.errormessage = $rootScope.getLocalizedString('loginError');
@@ -165,7 +165,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.currentServers = $scope.selectedUser.servers;
                     setDates();
                     postLogin();
-                }, function(){
+                }, function() {
                     $scope.loggingIn = false;
                     callOfflineModal();
                 });
@@ -179,7 +179,7 @@ angular.module('myApp.controllers', []).
                 var year = new Date().getFullYear().toString(),
                         holidayPromise = [],
                         UnitPromise = [];
-                
+
                 //SearchUnits
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
@@ -195,49 +195,53 @@ angular.module('myApp.controllers', []).
                     dataFactory.setHolidays(responses);
                 }, error);
                 //End reset holidays
-                
+
                 getReservations(0);
             }
-            
+
             /**
              * Gets the reservations from the server identified by a given index, when done it will call addReservations
              * @param {type} index
              * @returns {undefined}
              */
-            function getReservations(index){
+            function getReservations(index) {
                 var year = new Date().getFullYear().toString(),
-                    server = $rootScope.currentServers[index];
+                        server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
-                hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
-                        .then(function(response){
-                            return dataFactory.setSearchUnits(response, server);
-                        }, error).then(function(server){
-                            return dataFactory.setAbsentDays(year, server);
-                        }, error).then(function(server){
-                            return dataFactory.searchReservations(server);
-                        }, error).then(function(reservations){
-                            addReservations(reservations);
-                        });
+                if (angular.isUndefined($rootScope[$rootScope.searchString]) || $rootScope[$rootScope.searchString].length === 0) {
+                    hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
+                            .then(function(response) {
+                                return dataFactory.setSearchUnits(response, server);
+                            }, error).then(function(server) {
+                        return dataFactory.setAbsentDays(year, server);
+                    }, error).then(function(server) {
+                        return dataFactory.searchReservations(server);
+                    }, error).then(function(reservations) {
+                        addReservations(reservations);
+                    });
+                } else {
+                    setReservations($rootScope[$rootScope.searchString]);
+                }
             }
-            
+
             /**
              * The reservations from every server get added into one array, 
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @type Number
              */
-            var responseCount=0;
+            var responseCount = 0;
             var allReservations = [];
-            function addReservations(reservations){
+            function addReservations(reservations) {
                 console.log(responseCount + " " + reservations);
-                if(reservations!==undefined)
-                for(var r=0;r<reservations.length;r++){
-                    reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
-                    allReservations.push(reservations[r]);
-                }
-                if(responseCount+1 === $rootScope.currentServers.length){
+                if (reservations !== undefined)
+                    for (var r = 0; r < reservations.length; r++) {
+                        reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
+                        allReservations.push(reservations[r]);
+                    }
+                if (responseCount + 1 === $rootScope.currentServers.length) {
                     console.log(allReservations);
                     setReservations(allReservations);
-                }else{
+                } else {
                     responseCount++;
                     getReservations(responseCount);
                 }
@@ -385,6 +389,8 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $q, $location, $interval, $timeout, $modal, hospiviewFactory, dataFactory) {
 
+            console.log($rootScope[$rootScope.searchString]);
+
             var iconDownBoolean = true;
             $rootScope.cancelLoop = false;
             $scope.cancel = false;
@@ -398,10 +404,10 @@ angular.module('myApp.controllers', []).
                     iconDownBoolean = true;
                 }
             };
-            
-            if($rootScope.currentServers.length === 0)
+
+            if ($rootScope.currentServers.length === 0)
                 $scope.oneServer = true;
-            
+
             $scope.loadingCalendar = false;
             $scope.eventPerDay;
             if ($rootScope.eventClick) {
@@ -424,10 +430,6 @@ angular.module('myApp.controllers', []).
             }
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             var refreshRate = user.refreshrate * 1000;
-            
-            $scope.cellcontentPatient = user.cellcontent.patient;
-            $scope.cellcontentTitle = user.cellcontent.title;
-            $scope.cellcontentDepartment = user.cellcontent.department;
 
             /*$rootScope.requestTimer = $interval(function() {
              if (!$rootScope.isOffline) {
@@ -439,8 +441,6 @@ angular.module('myApp.controllers', []).
              }
              }, 5000);*/
 
-             console.log($rootScope.departmentFilter);
-
             /**
              * Gets the name of the icon that matches the current status of the given reservation
              * 
@@ -449,7 +449,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.getStatusIcon = function(reservation) {
                 var stepAmount = getSteps(reservation.unit_id);
-                
+
                 if (stepAmount === "4") {
                     if (reservation.time_gone !== "00:00:00")
                         return "out.png";
@@ -462,7 +462,7 @@ angular.module('myApp.controllers', []).
                         return "finished.png";
 
                 if (reservation.time_start !== "00:00:00")
-                    if (stepAmount == 3){
+                    if (stepAmount == 3) {
                         return "finished.png";
                     }
                     else if (stepAmount == 4)
@@ -498,7 +498,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchType = 'next';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
-                if($rootScope.nextDayRequest !== true)
+                if ($rootScope.nextDayRequest !== true)
                     newDate.setDate(newDate.getDate() + 1);
                 $scope.date = formatDate(newDate);
                 $rootScope.nextDayRequest = false;
@@ -543,7 +543,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchType = 'prev';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
-                if($rootScope.previousDayRequest !== true)
+                if ($rootScope.previousDayRequest !== true)
                     newDate.setDate(newDate.getDate() - 1);
                 $scope.date = formatDate(newDate);
                 $rootScope.previousDayRequest = false;
@@ -667,37 +667,37 @@ angular.module('myApp.controllers', []).
                 var color = '#' + value;
                 return {"background-color": color};
             };
-            $scope.styleTest = function(reservation){
+            $scope.styleTest = function(reservation) {
                 var colors = [];
                 var color;
-                if(reservation.color !== "")
+                if (reservation.color !== "")
                     colors.push(reservation.color);
-                if(reservation.color2 !== "")
-                    colors.push(reservation.color2);               
-                if(reservation.color3 !== "")
-                    colors.push(reservation.color3);       
-                if(reservation.color4 !== "")
+                if (reservation.color2 !== "")
+                    colors.push(reservation.color2);
+                if (reservation.color3 !== "")
+                    colors.push(reservation.color3);
+                if (reservation.color4 !== "")
                     colors.push(reservation.color4);
-                if(reservation.color5 !== "")
+                if (reservation.color5 !== "")
                     colors.push(reservation.color5);
-                
-                if(colors.length === 1){
+
+                if (colors.length === 1) {
                     color = '#' + colors[0];
-                    return {"background-color":color};
+                    return {"background-color": color};
                 }
-                if(colors.length === 2){
+                if (colors.length === 2) {
                     color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 50%, #' + colors[1] + ' 50%, #' + colors[1] + ' 100%)';
                     return {"background": color};
                 }
-                if(colors.length === 3){
+                if (colors.length === 3) {
                     color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 33%, #' + colors[1] + ' 33%, #' + colors[1] + ' 66%, #' + colors[2] + ' 66%, #' + colors[2] + ' 100%)';
                     return {"background": color};
                 }
-                if(colors.length === 4){
+                if (colors.length === 4) {
                     color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 25%, #' + colors[1] + ' 25%, #' + colors[1] + ' 50%, #' + colors[2] + ' 50%, #' + colors[2] + ' 75%, #' + colors[3] + ' 75%, #' + colors[3] + ' 100%)';
                     return {"background": color};
                 }
-                if(colors.length === 5){
+                if (colors.length === 5) {
                     color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 20%, #' + colors[1] + ' 20%, #' + colors[1] + ' 40%, #' + colors[2] + ' 40%, #' + colors[2] + ' 60%, #' + colors[3] + ' 60%, #' + colors[3] + ' 80%, #' + colors[4] + ' 80%, #' + colors[4] + ' 100%)';
                     return {"background": color};
                 }
@@ -705,6 +705,7 @@ angular.module('myApp.controllers', []).
             $scope.logout = function() {
                 $rootScope.user = null;
                 $rootScope.type = null;
+                $rootScope[$rootScope.searchString] = $scope.reservations;
                 $location.path('/login');
             };
 
@@ -712,28 +713,28 @@ angular.module('myApp.controllers', []).
                 console.log("searching through " + $rootScope.currentServers.length + " servers");
                 $rootScope.searchString = $rootScope.user + 'Reservations';
                 dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
-                
-                getReservations(0);   
+
+                getReservations(0);
             }
-            
+
             /**
              * Gets the reservations from the server identified by a given index, when done it will call addReservations
              * @param {type} index
              * @returns {undefined}
              */
-            function getReservations(index){
+            function getReservations(index) {
                 console.log("start " + index);
                 var server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
                 hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
-                        .then(function(response){
+                        .then(function(response) {
                             return dataFactory.setSearchUnits(response, server);
-                        }, error).then(function(server){
-                            return dataFactory.searchReservations(server);
-                        }, error).then(function(reservations){
-                            console.log("end " + index);
-                            addReservations(reservations);
-                        });
+                        }, error).then(function(server) {
+                    return dataFactory.searchReservations(server);
+                }, error).then(function(reservations) {
+                    console.log("end " + index);
+                    addReservations(reservations);
+                });
             }
 
             /**
@@ -741,23 +742,23 @@ angular.module('myApp.controllers', []).
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @type Number
              */
-            var responseCount=0;
+            var responseCount = 0;
             var allReservations = [];
-            function addReservations(reservations){
+            function addReservations(reservations) {
                 console.log(responseCount + " " + reservations);
-                if(reservations!==undefined)
-                for(var r=0;r<reservations.length;r++){
-                    reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
-                    allReservations.push(reservations[r]);
-                }
-                if(responseCount+1 === $rootScope.currentServers.length){
+                if (reservations !== undefined)
+                    for (var r = 0; r < reservations.length; r++) {
+                        reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
+                        allReservations.push(reservations[r]);
+                    }
+                if (responseCount + 1 === $rootScope.currentServers.length) {
                     setReservations(allReservations);
-                }else{
+                } else {
                     responseCount++;
                     getReservations(responseCount);
                 }
             }
-            
+
             function error(data) {
                 $scope.loggingIn = false;
                 $scope.error = true;
@@ -903,7 +904,7 @@ angular.module('myApp.controllers', []).
              * will be filled.
              */
             $scope.loadDep = function() {
-                if ($scope.unitFilter === null || $scope.unitFilter.type === "group"){
+                if ($scope.unitFilter === null || $scope.unitFilter.type === "group") {
                     $scope.disableDepartments = true;
                     $rootScope.departmentFilter = '';
                 }
@@ -1030,7 +1031,7 @@ angular.module('myApp.controllers', []).
             $scope.applyFilter = function() {
                 console.log($scope.depFilter);
                 console.log($rootScope.getLocalizedString('appointmentsFilterAllDepartments'));
-                if($scope.depFilter.dep_name === $rootScope.getLocalizedString('appointmentsFilterAllDepartments'))
+                if ($scope.depFilter.dep_name === $rootScope.getLocalizedString('appointmentsFilterAllDepartments'))
                     $scope.depFilter = '';
                 if ($scope.serverFilter !== '')
                     $rootScope.serverFilter = $scope.serverFilter;
@@ -1038,7 +1039,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.unitFilter = $scope.unitFilter;
                 if ($scope.depFilter !== '')
                     $rootScope.depFilter = $scope.depFilter;
-                
+
                 $rootScope.filterActive = true;
                 $location.path('/doctor/appointmentsView');
             };
@@ -1201,48 +1202,48 @@ angular.module('myApp.controllers', []).
                 console.log("searching through " + $rootScope.currentServers.length + " servers");
                 $rootScope.searchString = $rootScope.user + 'Reservations';
                 dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
-                
-                getReservations(0);   
+
+                getReservations(0);
             }
-            
+
             /**
              * Gets the reservations from the server identified by a given index, when done it will call addReservations
              * @param {type} index
              * @returns {undefined}
              */
-            function getReservations(index){
+            function getReservations(index) {
                 console.log("start " + index);
                 var server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
                 hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
-                        .then(function(response){
+                        .then(function(response) {
                             return dataFactory.setSearchUnits(response, server);
-                        }, error).then(function(server){
-                            return dataFactory.searchReservations(server);
-                        }, error).then(function(reservations){
-                            console.log("end " + index);
-                            addReservations(reservations);
-                        });
+                        }, error).then(function(server) {
+                    return dataFactory.searchReservations(server);
+                }, error).then(function(reservations) {
+                    console.log("end " + index);
+                    addReservations(reservations);
+                });
             }
 
-            
-            var responseCount=0;
+
+            var responseCount = 0;
             var allReservations = [];
             /**
              * The reservations from every server get added into one array, 
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @param {type} reservations
              */
-            function addReservations(reservations){
+            function addReservations(reservations) {
                 console.log(responseCount + " " + reservations);
-                if(reservations!==undefined)
-                for(var r=0;r<reservations.length;r++){
-                    reservations.hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
-                    allReservations[r].push(reservations[r]);
-                }
-                if(responseCount+1 === $rootScope.currentServers.length){
+                if (reservations !== undefined)
+                    for (var r = 0; r < reservations.length; r++) {
+                        reservations.hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
+                        allReservations[r].push(reservations[r]);
+                    }
+                if (responseCount + 1 === $rootScope.currentServers.length) {
                     setReservations(allReservations);
-                }else{
+                } else {
                     responseCount++;
                     getReservations(responseCount);
                 }
@@ -1437,19 +1438,19 @@ angular.module('myApp.controllers', []).
                     $scope.serverLogin = $scope.serverRadio.user_login;
                     $scope.serverPassword = $scope.serverRadio.user_password;
                 }
-            };             
-/*
-            $scope.cellcontentPatient = $scope.selectedUser.cellcontent.patient;
-            $scope.cellcontentTitle = $scope.selectedUser.cellcontent.title;
-            $scope.cellcontentDepartment = $scope.selectedUser.cellcontent.department;*/
-            
-            if($scope.selectedUser.cellcontent.patient === true)
+            };
+            /*
+             $scope.cellcontentPatient = $scope.selectedUser.cellcontent.patient;
+             $scope.cellcontentTitle = $scope.selectedUser.cellcontent.title;
+             $scope.cellcontentDepartment = $scope.selectedUser.cellcontent.department;*/
+
+            if ($scope.selectedUser.cellcontent.patient === true)
                 $("#settingsPatient").button('toggle');
-            if($scope.selectedUser.cellcontent.title === true)
+            if ($scope.selectedUser.cellcontent.title === true)
                 $("#settingsTitle").button('toggle');
-            if($scope.selectedUser.cellcontent.department === true)
+            if ($scope.selectedUser.cellcontent.department === true)
                 $("#settingsDepartment").button('toggle');
-            
+
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
                 localStorage.setItem("language", id);
@@ -1627,8 +1628,8 @@ angular.module('myApp.controllers', []).
                                                         "save_password": $scope.savePassword,
                                                         "language_id": json.Authentication.Detail.language_id,
                                                         "cellcontent": {"patient": true,
-                                                                        "title": true,
-                                                                        "department": true},
+                                                            "title": true,
+                                                            "department": true},
                                                         "refreshrate": 60});
                                             if (json.Authentication.Detail.isexternal == 0)
                                                 $rootScope.type = 0;
@@ -1726,7 +1727,7 @@ angular.module('myApp.controllers', []).
                 $q.all(holidayPromise).then(function(responses) {
                     dataFactory.setHolidays(responses);
                 }, error);
-                
+
                 UnitPromise
                         .then(function(response) {
                             dataFactory.setSearchUnits(response, $scope.server);
