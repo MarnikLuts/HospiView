@@ -16,7 +16,7 @@
         </div>
 
         <div class="width25Percent">
-            <button class="btn btn-default btn-appointments-filter" ng-click="filter()">
+            <button class="btn btn-default btn-appointments-filter" ng-class="{true:'btn-success', false:'btn-default', '':'btn-default'}[filterActive]" ng-click="filter()">
                 <span class="glyphicon glyphicon-filter"></span>
             </button>
             <button class="has-spinner btn btn-default  btn-sm-calendar widthPercent" ng-click="calendarView()">
@@ -24,6 +24,23 @@
                 <span ng-show="!loadingCalendar" ng-disabled="loadingCalendar" class="glyphicon glyphicon-calendar"></span>
             </button>
         </div>
+    </div>
+    <div class="col-md-12 filterText" ng-switch="filterActive">
+        <span ng-switch-when="false"></span>
+        <span ng-switch-when=""></span>
+        <span ng-switch-default>
+            Filter: {{serverFilter.hosp_short_name}}
+            <span ng-switch="unitFilter">
+                <span ng-switch-when=""></span>
+                <span ng-switch-default> > </span>
+            </span>
+            {{unitFilter.Header.name}} 
+            <span ng-switch="depFilter">
+                <span ng-switch-when=""></span>
+                <span ng-switch-default> > </span>
+            </span>
+            {{depFilter.dep_name}}
+        </span>
     </div>
     <div class="well col-md-12 heightPercent widthPercent">
         <div class="animClass btn-group-vertical list list_overflow_y_100 list-unstyled widthPercent heightPercent">
@@ -117,8 +134,10 @@
         </div>
     </div>
 </div>
-<div class="nav navbar-fixed-bottom text-center">
-    <button class="btn btn-sm-settings" ng-click="settings()">
-        <span class="glyphicon glyphicon-cog"></span>
-    </button>
+<div class="nav navbar-fixed-bottom">
+    <div class="text-center">
+        <button class="btn btn-sm-settings" ng-click="settings()">
+            <span class="glyphicon glyphicon-cog"></span>
+        </button>
+    </div>
 </div>

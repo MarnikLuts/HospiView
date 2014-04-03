@@ -109,6 +109,11 @@ angular.module('myApp.controllers', []).
             $scope.showpassword = function() {
                 $scope.showPasswordBoolean = !$scope.showPasswordBoolean;
             };
+            
+            $rootScope.filterActive = '';
+            $rootScope.serverFilter = '';
+            $rootScope.unitFilter = '';
+            $rootScope.departmentFilter = '';
             /**
              * Call getAuthentication(username, password, server_url) method of 
              * the factory hospiviewFactory. The username and password input field
@@ -355,6 +360,7 @@ angular.module('myApp.controllers', []).
                     iconDownBoolean = true;
                 }
             };
+            
             $scope.loadingCalendar = false;
             $scope.eventPerDay;
             if ($rootScope.eventClick) {
@@ -392,6 +398,7 @@ angular.module('myApp.controllers', []).
              }
              }, 5000);*/
 
+             console.log($rootScope.departmentFilter);
 
             /**
              * Gets the name of the icon that matches the current status of the given reservation
@@ -839,8 +846,10 @@ angular.module('myApp.controllers', []).
              * will be filled.
              */
             $scope.loadDep = function() {
-                if ($scope.unitFilter === null || $scope.unitFilter.type === "group")
+                if ($scope.unitFilter === null || $scope.unitFilter.type === "group"){
                     $scope.disableDepartments = true;
+                    $rootScope.departmentFilter = '';
+                }
                 else {
                     $scope.disableDepartments = false;
                     for (var i = 0; i < $scope.unitFilter.Detail.Dep.length; i++) {
@@ -968,6 +977,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.unitFilter = $scope.unitFilter;
                 if ($scope.depFilter !== '')
                     $rootScope.depFilter = $scope.depFilter;
+                $rootScope.filterActive = true;
                 $location.path('/doctor/appointmentsView');
             };
 
@@ -980,6 +990,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.serverFilter = '';
                 $rootScope.unitFilter = '';
                 $rootScope.depFilter = '';
+                $rootScope.filterActive = false;
                 $location.path('/doctor/appointmentsView');
             };
         }).

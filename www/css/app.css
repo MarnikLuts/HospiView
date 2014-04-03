@@ -182,13 +182,31 @@
     width:5%;
 }
 .detailTitle{
-    width: 30%;
+    font-weight: bold;
+    font-size: 1.3em;
+    width: 40%;
     display: table-cell;
 }
 
 .detailInfo{
-    width: 70%;
+    width: 60%;
+    font-size: 1.5em;
     display: table-cell;
+}
+
+@media screen and (min-width: 768px) {
+    .detailTitle{
+        font-weight: bold;
+        font-size: 1.5em;
+        width: 40%;
+        display: table-cell;
+    }
+
+    .detailInfo{
+        width: 60%;
+        font-size: 1.8em;
+        display: table-cell;
+    }
 }
 
 .detailTableRow{
@@ -206,6 +224,11 @@
 .cellcontent{
     font-size:18px;
     overflow:hidden;
+}
+.filterText{
+    padding: 5px;
+    color: black;
+    font-size: 1.3em;
 }
 /*http://stackoverflow.com/questions/15305914/bootstrap-buttons-get-stuck-down-on-mobile-devices*/
 .mobileHoverFix:hover,
@@ -330,15 +353,15 @@ ul li{
 
 
 @media screen and (max-width: 400px) {// Smartphones in portrait mode
-    .dateAppointmentsViewScaled{
-        width: 100px;
-    }
-    #todayBtn{
-        font-size: 12px;
-    }
-    #weekendBtn{
-        font-size: 12px;
-    }
+                                      .dateAppointmentsViewScaled{
+                                          width: 100px;
+                                      }
+                                      #todayBtn{
+                                          font-size: 12px;
+                                      }
+                                      #weekendBtn{
+                                          font-size: 12px;
+                                      }
 }
 
 @media screen and (max-width: 768px) {
