@@ -34,6 +34,7 @@ var frenchStrings = {
         //AppointmentDetail
         appointmentDetail: "Info du réservation",
         appointmentDetailPatient: "Info du patient",
+        appointmentDetailDoctor: "Médecin: ",
         appointmentDetailId: "Réservation id: ",
         appointmentDetailTitle: "Titre: ",
         appointmentDetailBooking: "Réservé par: ",
@@ -109,7 +110,7 @@ var frenchStrings = {
         settingsEditServer: "Changez le serveur",
         settingsUser: "Utilisateur",
         settingsRefresh: "Le taux de rafraîchissement",
-        settingsCellcontent: "Le contenu des cellules",
+        settingsCellcontent: "Paramètres des réservations",
         settingsPatient: "Patient",
         settingsTitle: "Titre",
         settingsDepartment: "Département",

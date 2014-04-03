@@ -210,7 +210,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchUnits = [];
                 hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
                         .then(function(response){
-                            return dataFactory.setSearchUnits(response, server)
+                            return dataFactory.setSearchUnits(response, server);
                         }, error).then(function(server){
                             return dataFactory.setAbsentDays(year, server);
                         }, error).then(function(server){
@@ -231,9 +231,11 @@ angular.module('myApp.controllers', []).
                 console.log(responseCount + " " + reservations);
                 if(reservations!==undefined)
                 for(var r=0;r<reservations.length;r++){
+                    reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
                     allReservations.push(reservations[r]);
                 }
                 if(responseCount+1 === $rootScope.currentServers.length){
+                    console.log(allReservations);
                     setReservations(allReservations);
                 }else{
                     responseCount++;
@@ -396,6 +398,9 @@ angular.module('myApp.controllers', []).
                     iconDownBoolean = true;
                 }
             };
+            
+            if($rootScope.currentServers.length === 0)
+                $scope.oneServer = true;
             
             $scope.loadingCalendar = false;
             $scope.eventPerDay;
@@ -742,6 +747,7 @@ angular.module('myApp.controllers', []).
                 console.log(responseCount + " " + reservations);
                 if(reservations!==undefined)
                 for(var r=0;r<reservations.length;r++){
+                    reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
                     allReservations.push(reservations[r]);
                 }
                 if(responseCount+1 === $rootScope.currentServers.length){
@@ -1231,7 +1237,8 @@ angular.module('myApp.controllers', []).
                 console.log(responseCount + " " + reservations);
                 if(reservations!==undefined)
                 for(var r=0;r<reservations.length;r++){
-                    allReservations.push(reservations[r]);
+                    reservations.hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
+                    allReservations[r].push(reservations[r]);
                 }
                 if(responseCount+1 === $rootScope.currentServers.length){
                     setReservations(allReservations);

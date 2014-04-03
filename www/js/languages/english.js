@@ -34,6 +34,7 @@ var englishStrings = {
         //AppointmentDetail
         appointmentDetail: "Reservation info",
         appointmentDetailPatient: "Patient info",
+        appointmentDetailDoctor: "Doctor: ",
         appointmentDetailId: "Reservation id: ",
         appointmentDetailTitle: "Title: ",
         appointmentDetailBooking: "Booked by: ",
@@ -109,7 +110,7 @@ var englishStrings = {
         settingsEditServer: "Edit server",
         settingsUser: "User",
         settingsRefresh: "Refresh rate",
-        settingsCellcontent: "Cell content",
+        settingsCellcontent: "Reservation settings",
         settingsPatient: "Patient",
         settingsTitle: "Title",
         settingsDepartment: "Department",

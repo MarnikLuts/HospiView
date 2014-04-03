@@ -34,6 +34,7 @@ var dutchStrings = {
         //AppointmentDetail
         appointmentDetail: "Reservatie info",
         appointmentDetailPatient: "Patiënt info",
+        appointmentDetailDoctor: "Arts: ",
         appointmentDetailId: "Reservatie id: ",
         appointmentDetailTitle: "Titel: ",
         appointmentDetailBooking: "Geboekt door: ",
@@ -109,7 +110,7 @@ var dutchStrings = {
         settingsEditServer: "Wijzig server",
         settingsUser: "Gebruiker",
         settingsRefresh: "Verversing",
-        settingsCellcontent: "Cellinhoud",
+        settingsCellcontent: "Reservatie instellingen",
         settingsPatient: "Patiënt",
         settingsTitle: "Titel",
         settingsDepartment: "Departement",
