@@ -476,7 +476,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.requestTimer = undefined;
             }
 
-            /*$rootScope.requestTimer = $interval(function() {
+            $rootScope.requestTimer = $interval(function() {
                 if (!$rootScope.isOffline) {
                     $rootScope.startDate = new Date($rootScope.searchRangeStart);
                     $rootScope.endDate = new Date($rootScope.searchRangeEnd);
@@ -485,7 +485,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.refresh = true;
                     search();
                 }
-            }, 5000);*/
+            }, 5000);
 
             console.log("refreshRate: " + refreshRate);
             /**
