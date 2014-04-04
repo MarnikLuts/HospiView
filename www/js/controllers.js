@@ -155,6 +155,10 @@ angular.module('myApp.controllers', []).
                 console.log("all servers: " + $scope.selectedUser.servers.length);
                 for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                     console.log($scope.password[i]);
+                    if($scope.selectedUser.servers[i].save_password === true){
+                        $scope.username[i] = $scope.selectedUser.servers[i].user_login;
+                        $scope.password[i] = $scope.selectedUser.servers[i].user_password;
+                    }
                     invalidFields[i] = angular.isUndefined($scope.password[i]);
                     if (!invalidFields[i]) {
                         promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
@@ -481,7 +485,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.requestTimer = undefined;
             }
 
-            $rootScope.requestTimer = $interval(function() {
+            /*$rootScope.requestTimer = $interval(function() {
                 if (!$rootScope.isOffline) {
                     $rootScope.startDate = new Date($rootScope.searchRangeStart);
                     $rootScope.endDate = new Date($rootScope.searchRangeEnd);
@@ -490,7 +494,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.refresh = true;
                     search();
                 }
-            }, 5000);
+            }, 5000);*/
 
             console.log("refreshRate: " + refreshRate);
             /**
@@ -1729,7 +1733,7 @@ angular.module('myApp.controllers', []).
                                         } else {
                                             var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
                                             for (var i = 0; i < selectedUser.servers.length; i++) {
-                                                if (selectedUser.servers[i].id == $rootScope.editServer.id) {
+                                                if (selectedUser.servers[i].id == $rootScope.editServer.id && selectedUser.servers[i].user_name == $rootScope.editServer.user_name) {
                                                     var editServer = {"id": $scope.server.id,
                                                         "hosp_short_name": $scope.server.hosp_short_name,
                                                         "hosp_full_name": $scope.server.hosp_full_name,
