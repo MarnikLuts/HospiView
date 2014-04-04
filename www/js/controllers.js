@@ -154,8 +154,8 @@ angular.module('myApp.controllers', []).
                     if (!invalidFields[i]) {
                         promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
                         validServers.push($scope.selectedUser.servers[i]);
-                    } else
-                        $scope.failedServers.push($scope.selectedUser.servers[i].hosp_full_name);
+                    }else
+                        $scope.failedServers.push($scope.selectedUser.servers[i].hosp_short_name);
                 }
 
                 $q.all(promises).then(function(responses) {
@@ -166,8 +166,8 @@ angular.module('myApp.controllers', []).
                         var json = parseJson(responses[r].data);
                         if (json.Authentication.Header.StatusCode != 1) {
                             console.log(validServers[r].hosp_full_name + " auth failed " + r);
-                            $scope.failedServers.push(validServers[r].hosp_full_name);
-                            if ($scope.failedServers.length == $scope.selectedUser.servers.length)
+                            $scope.failedServers.push(validServers[r].hosp_short_name);
+                            if($scope.failedServers.length==$scope.selectedUser.servers.length)
                                 authFailed = true;
                         } else {
                             console.log(validServers[r].hosp_full_name + " auth success " + r);
@@ -806,11 +806,9 @@ angular.module('myApp.controllers', []).
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @type Number
              */
-            //var responseCount = 0;
-            //var allReservations = [];
+            var responseCount = 0;
+            var allReservations = [];
             function addReservations(reservations) {
-                var responseCount = 0;
-                var allReservations = [];
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined) {
                     for (var r = 0; r < reservations.length; r++) {
@@ -1300,7 +1298,7 @@ angular.module('myApp.controllers', []).
                 if (reservations !== undefined)
                     for (var r = 0; r < reservations.length; r++) {
                         reservations.hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
-                        allReservations[r].push(reservations[r]);
+                        allReservations.push(reservations[r]);
                     }
                 if (responseCount + 1 === $rootScope.currentServers.length) {
                     setReservations(allReservations);

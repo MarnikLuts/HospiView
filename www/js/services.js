@@ -110,7 +110,13 @@ angular.module('myApp.services', []).
                             var json = parseJson(responses[j].data);
                             if (json.UnitAbsentdays.Header.StatusCode == 1) {
                                 if (!angular.isUndefined(json.UnitAbsentdays.Detail)) {
-                                    $rootScope.absentDays.push(json.UnitAbsentdays.Detail.AbsentDay);
+                                    for(var a=0;a<json.UnitAbsentdays.Detail.AbsentDay.length;a++){
+                                        var absentDay = json.UnitAbsentdays.Detail.AbsentDay[a];
+                                        absentDay.unit_name = $rootScope.searchUnits[j].Header.unit_name;
+                                        absentDay.hosp_short_name = server.hosp_short_name;
+                                        $rootScope.absentDays.push(absentDay);
+                                    }
+//                                    $rootScope.absentDays.push(json.UnitAbsentdays.Detail.AbsentDay);
                                 }
                             } else {
                                 defer.reject($rootScope.getLocalizedString('internalError'));
@@ -237,19 +243,21 @@ angular.module('myApp.services', []).
                             var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
                             countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
                         }
-
+                    
                     var absentDays = $rootScope.absentDays;
                     if (!angular.isUndefined(absentDays.length))
                         for (var i = 0; i < absentDays.length; i++) {
-                            for (var j = 0; j < absentDays[i].length; j++) {
-                                if (!isHoliday(absentDays[i][j].the_date)) {
-                                    var absent_date = new Date(absentDays[i][j].the_date);
-                                    var absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1);
-                                    countEvent.push({title: $rootScope.getLocalizedString('appointmentsCalendarAbsent'), start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
-                                }
+                            if (!isHoliday(absentDays[i].the_date)) {
+                                var absent_date = new Date(absentDays[i].the_date),
+                                    absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1),
+                                    absent_title = absentDays[i].unit_name;
+                                if($rootScope.currentServers.length>1)
+                                    absent_title=absentDays[i].hosp_short_name + " / " + absentDays[i].unit_name;
+                                countEvent.push({title: absent_title, start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
                             }
                         }
-
+                    console.log(absentDays);
+                    
                     function isHoliday(date) {
                         if (!angular.isUndefined(holidays.length))
                             for (var i = 0; i < holidays.length; i++) {
