@@ -4,13 +4,11 @@
 angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, $interval, hospiviewFactory, dataFactory, languageFactory) {
 
-            /*
-             if (angular.isDefined($rootScope.requestTimer)) {
-             $interval.cancel($rootScope.requestTimer);
-             $rootScope.requestTimer = undefined;
-             }*/
-            $interval.cancel($rootScope.requestTimer);
-            $rootScope.requestTimer = undefined;
+
+            if (angular.isDefined($rootScope.requestTimer)) {
+                $interval.cancel($rootScope.requestTimer);
+                $rootScope.requestTimer = undefined;
+            }
 
             if (localStorage.getItem("language") === null) {
                 localStorage.setItem("language", 3);
@@ -86,7 +84,7 @@ angular.module('myApp.controllers', []).
                     $scope.savePassword[index] = false;
                 }
             };
-            
+
             /**
              * 27.03.2014 Stijn Ceunen
              * If only 1 user is saved, this one will automatically be selected.
@@ -143,33 +141,33 @@ angular.module('myApp.controllers', []).
                 $scope.loggingIn = true;
                 $scope.error = false;
                 var promises = [],
-                    invalidFields = [],
-                    authFailed = false,
-                    validServers = [];
-                
+                        invalidFields = [],
+                        authFailed = false,
+                        validServers = [];
+
                 $rootScope.currentServers = [];
                 $scope.failedServers = [];
                 console.log("all servers: " + $scope.selectedUser.servers.length);
-                for(var i=0;i<$scope.selectedUser.servers.length;i++){
+                for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                     console.log($scope.password[i]);
                     invalidFields[i] = angular.isUndefined($scope.password[i]);
-                    if(!invalidFields[i]){
+                    if (!invalidFields[i]) {
                         promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
                         validServers.push($scope.selectedUser.servers[i]);
-                    }else
+                    } else
                         $scope.failedServers.push($scope.selectedUser.servers[i].hosp_full_name);
                 }
-                
-                $q.all(promises).then(function(responses){
+
+                $q.all(promises).then(function(responses) {
                     console.log("servers with valid fields: " + promises.length);
-                    if(responses.length==0)
-                        authFailed=true;
-                    for(var r=0;r<responses.length;r++){
+                    if (responses.length == 0)
+                        authFailed = true;
+                    for (var r = 0; r < responses.length; r++) {
                         var json = parseJson(responses[r].data);
-                        if(json.Authentication.Header.StatusCode != 1){
+                        if (json.Authentication.Header.StatusCode != 1) {
                             console.log(validServers[r].hosp_full_name + " auth failed " + r);
                             $scope.failedServers.push(validServers[r].hosp_full_name);
-                            if($scope.failedServers.length==$scope.selectedUser.servers.length)
+                            if ($scope.failedServers.length == $scope.selectedUser.servers.length)
                                 authFailed = true;
                         } else {
                             console.log(validServers[r].hosp_full_name + " auth success " + r);
@@ -183,19 +181,19 @@ angular.module('myApp.controllers', []).
                             validServers[r].uuid = json.Authentication.Detail.uuid;
                             validServers[r].save_password = $scope.savePassword[r];
                             $rootScope.currentServers.push(validServers[r]);
-                            localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser)); 
+                            localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
                         }
                     }
                     console.log("auth failed: " + authFailed);
-                    if(!authFailed){
+                    if (!authFailed) {
                         setDates();
                         postLogin();
-                    }else{
+                    } else {
                         $scope.loggingIn = false;
                         $scope.error = true;
                         $scope.errormessage = $rootScope.getLocalizedString('loginError');
                     }
-                }, function(){
+                }, function() {
                     $scope.loggingIn = false;
                     callOfflineModal();
                 });
@@ -209,7 +207,7 @@ angular.module('myApp.controllers', []).
                 console.log("postLogin");
                 var year = new Date().getFullYear().toString(),
                         holidayPromise = [];
-                
+
                 //SearchUnits
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
@@ -263,12 +261,12 @@ angular.module('myApp.controllers', []).
             var allReservations = [];
             function addReservations(reservations) {
                 console.log(responseCount + " " + reservations);
-                if(reservations!==undefined)
-                for(var r=0;r<reservations.length;r++){
-                    reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
-                    allReservations.push(reservations[r]);
-                }
-                if(responseCount+1 === $rootScope.currentServers.length){
+                if (reservations !== undefined)
+                    for (var r = 0; r < reservations.length; r++) {
+                        reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
+                        allReservations.push(reservations[r]);
+                    }
+                if (responseCount + 1 === $rootScope.currentServers.length) {
                     console.log("setting reservations");
                     setReservations(allReservations);
                 } else {
@@ -327,12 +325,12 @@ angular.module('myApp.controllers', []).
             function setReservations(reservations) {
                 console.log("reservation count: " + reservations.length);
                 $rootScope[$rootScope.searchString] = reservations;
-                if($scope.failedServers.length!==0){
+                if ($scope.failedServers.length !== 0) {
                     var servers = "";
-                    for(var i=0;i<$scope.failedServers.length;i++){
-                        servers += "\n" +$scope.failedServers[i];
+                    for (var i = 0; i < $scope.failedServers.length; i++) {
+                        servers += "\n" + $scope.failedServers[i];
                     }
-                    alert("Inloggen is mislukt op de volgende servers:"+servers);
+                    alert("Inloggen is mislukt op de volgende servers:" + servers);
                 }
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
@@ -425,7 +423,7 @@ angular.module('myApp.controllers', []).
             }
 
         }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $q, $location, $interval, $timeout, $modal, hospiviewFactory, dataFactory) {
+        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
 
             console.log($rootScope[$rootScope.searchString]);
 
@@ -469,10 +467,15 @@ angular.module('myApp.controllers', []).
             $scope.cellcontentPatient = user.cellcontent.patient;
             $scope.cellcontentTitle = user.cellcontent.title;
             $scope.cellcontentDepartment = user.cellcontent.department;
-            
+
             if ($rootScope.currentServers.length === 1)
                 $scope.oneServer = true;
-            
+
+            if (angular.isDefined($rootScope.requestTimer)) {
+                $interval.cancel($rootScope.requestTimer);
+                $rootScope.requestTimer = undefined;
+            }
+
             $rootScope.requestTimer = $interval(function() {
                 if (!$rootScope.isOffline) {
                     $rootScope.startDate = new Date($rootScope.searchRangeStart);
@@ -482,8 +485,9 @@ angular.module('myApp.controllers', []).
                     $rootScope.refresh = true;
                     search();
                 }
-            }, refreshRate);
+            }, 5000);
 
+            console.log("refreshRate: " + refreshRate);
             /**
              * Gets the name of the icon that matches the current status of the given reservation
              * 
@@ -554,9 +558,9 @@ angular.module('myApp.controllers', []).
                     search();
                 } else {
                     /*var filterDate = new Date();
-                    var check = new Date($scope.date);
-                    var filterDate = new Date($scope.reservations[0].the_date);*/
-                    
+                     var check = new Date($scope.date);
+                     var filterDate = new Date($scope.reservations[0].the_date);*/
+
                     for (var i = 0; i < $scope.reservations.length; i++) {
                         var filterDate = new Date($scope.reservations[i].the_date);
                         var check = new Date($scope.date);
@@ -608,12 +612,12 @@ angular.module('myApp.controllers', []).
                     var d = new Date($scope.date);
                     var t = new Date($rootScope.searchRangeStart);
                     for (var i = 0; i < $scope.reservations.length; i++) {
-                        
+
                         var filterDate = new Date($scope.reservations[i].the_date);
                         var check = new Date($scope.date);
                         filterDate.setHours(0, 0, 0, 0);
                         check.setHours(0, 0, 0, 0);
-                        if(d.getTime() === t.getTime()){
+                        if (d.getTime() === t.getTime()) {
                             console.log(filterDate + " " + check);
                         }
                         if (filterDate.getTime() === check.getTime())
@@ -842,6 +846,7 @@ angular.module('myApp.controllers', []).
                 } else {
                     if ($scope.loadingCalendar) {
                         $location.path('/appointmentsCalendar');
+                        $scope.loadingCalendar = false;
                     }
                     else {
                         $rootScope.refresh = false;
@@ -1140,7 +1145,6 @@ angular.module('myApp.controllers', []).
             $scope.loadingMonth = false;
 
             $scope.calendarView = function() {
-                $scope.loadingCalendar = true;
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
                 var current = new Date($rootScope.currentdate);
@@ -1315,14 +1319,6 @@ angular.module('myApp.controllers', []).
                 $scope.loadingCalendar = false;
                 $scope.error = true;
                 $scope.errormessage = data;
-            }
-
-            function setData(calendarBrows) {
-                dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
-                dataFactory.searchReservations($rootScope.currentServer)
-                        .then(function(reservations) {
-                            setReservations(reservations, calendarBrows);
-                        }, error);
             }
 
             function setReservations(reservations, calendarBrows) {
