@@ -158,6 +158,7 @@ angular.module('myApp.controllers', []).
                     if ($scope.selectedUser.servers[i].save_password === true) {
                         $scope.username[i] = $scope.selectedUser.servers[i].user_login;
                         $scope.password[i] = $scope.selectedUser.servers[i].user_password;
+                        $scope.selectedUser.servers[i].save_password = true;
                     }
                     invalidFields[i] = angular.isUndefined($scope.password[i]);
                     if (!invalidFields[i]) {
@@ -189,6 +190,7 @@ angular.module('myApp.controllers', []).
                             }
                             validServers[r].uuid = json.Authentication.Detail.uuid;
                             validServers[r].save_password = $scope.savePassword[r];
+                            console.log($scope.savePassword[r]);
                             $rootScope.currentServers.push(validServers[r]);
                             localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
                         }
