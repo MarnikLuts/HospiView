@@ -58,7 +58,9 @@ angular.module('myApp.controllers', []).
                     $scope.serverRadio = $scope.servers[0];
                     $scope.getLoginUser(0);
                 } else {
-                    $scope.servers[0] = "";
+                    $scope.servers[0] = undefined;
+                    $scope.servers[1] = undefined;
+                    $scope.servers[2] = undefined;
                     $scope.username[0] = "";
                     $scope.password[0] = "";
                     $scope.savePassword[0] = false;
@@ -97,6 +99,9 @@ angular.module('myApp.controllers', []).
                         $scope.server = $scope.servers[0];
                         $scope.getLoginUser();
                     }
+                } else {
+                    $scope.serverRadio = false;
+                    console.log($scope.servers);
                 }
 
 
