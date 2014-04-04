@@ -144,33 +144,35 @@ angular.module('myApp.controllers', []).
                 $scope.error = false;
                 var promises = [],
                     invalidFields = [],
-                    authFailed = false;
+                    authFailed = false,
+                    validServers = [];
                 
                 $rootScope.currentServers = [];
                 $scope.failedServers = [];
+                console.log("all servers: " + $scope.selectedUser.servers.length);
                 for(var i=0;i<$scope.selectedUser.servers.length;i++){
-                    invalidFields[i] = $scope.username[i]===undefined || $scope.password[i]===undefined;
-                    if(!invalidFields[i])
+                    console.log($scope.password[i]);
+                    invalidFields[i] = angular.isUndefined($scope.password[i]);
+                    if(!invalidFields[i]){
                         promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
+                        validServers.push($scope.selectedUser.servers[i]);
+                    }else
+                        $scope.failedServers.push($scope.selectedUser.servers[i].hosp_full_name);
                 }
                 
-                
-                
                 $q.all(promises).then(function(responses){
+                    console.log("servers with valid fields: " + promises.length);
                     if(responses.length==0)
                         authFailed=true;
                     for(var r=0;r<responses.length;r++){
                         var json = parseJson(responses[r].data);
                         if(json.Authentication.Header.StatusCode != 1){
-                            console.log($scope.selectedUser.servers[r].hosp_full_name + " auth failed " + r);
-                            $scope.failedServers.push($scope.selectedUser.servers[r].hosp_full_name);
-//                            $scope.loggingIn = false;
-//                            $scope.error = true;
-//                            $scope.errormessage = $rootScope.getLocalizedString('loginError');
-                            if($scope.failedServers.length==promises.length)
+                            console.log(validServers[r].hosp_full_name + " auth failed " + r);
+                            $scope.failedServers.push(validServers[r].hosp_full_name);
+                            if($scope.failedServers.length==$scope.selectedUser.servers.length)
                                 authFailed = true;
                         } else {
-                            console.log($scope.selectedUser.servers[r].hosp_full_name + " auth success " + r);
+                            console.log(validServers[r].hosp_full_name + " auth success " + r);
                             $scope.error = false;
                             $rootScope.user = $scope.user;
                             if (json.Authentication.Detail.isexternal == 0) {
@@ -178,12 +180,13 @@ angular.module('myApp.controllers', []).
                             } else {
                                 $rootScope.type = 1;
                             }
-                            $scope.selectedUser.servers[r].uuid = json.Authentication.Detail.uuid;
-                            $scope.selectedUser.servers[r].save_password = $scope.savePassword[r];
-                            $rootScope.currentServers.push($scope.selectedUser.servers[r]);
+                            validServers[r].uuid = json.Authentication.Detail.uuid;
+                            validServers[r].save_password = $scope.savePassword[r];
+                            $rootScope.currentServers.push(validServers[r]);
                             localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser)); 
                         }
                     }
+                    console.log("auth failed: " + authFailed);
                     if(!authFailed){
                         setDates();
                         postLogin();
