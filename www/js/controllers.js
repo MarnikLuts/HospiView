@@ -496,7 +496,7 @@ angular.module('myApp.controllers', []).
                 }
             }, refreshrate);
 
-            console.log("refreshRate: " + refreshRate);
+//            console.log("refreshRate: " + refreshRate);
             /**
              * Gets the name of the icon that matches the current status of the given reservation
              * 
