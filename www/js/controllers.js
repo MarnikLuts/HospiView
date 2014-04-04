@@ -144,15 +144,28 @@ angular.module('myApp.controllers', []).
                 $scope.error = false;
                 var promises = [];
                 
+                $rootScope.currentServers = [];
+                $scope.failedServers = [];
                 for(var i=0;i<$scope.selectedUser.servers.length;i++){
-                        promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
+                    promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
                 }
                 
                 $q.all(promises).then(function(responses){
                     for(var r=0;r<responses.length;r++){
-                        console.log('loop');
-                        var json = parseJson(responses[r].data);
-                        if (json.Authentication.Header.StatusCode == 1) {
+                        var json = parseJson(responses[r].data),
+                            invalidFields = $scope.username[r]==="" || $scope.password[r]==="";
+                        
+                        
+                        if(invalidFields || json.Authentication.Header.StatusCode != 1){
+                            console.log($scope.selectedUser.servers[r].hosp_full_name + " auth failed");
+                            $scope.failedServers.push($scope.selectedUser.servers[r].hosp_full_name);
+//                            $scope.loggingIn = false;
+//                            $scope.error = true;
+//                            $scope.errormessage = $rootScope.getLocalizedString('loginError');
+                            if($scope.failedServers.length==$scope.selectedUser.servers.length)
+                                $scope.authFailed = true;
+                        } else {
+                            console.log($scope.selectedUser.servers[r].hosp_full_name + " auth success");
                             $scope.error = false;
                             $rootScope.user = $scope.user;
                             if (json.Authentication.Detail.isexternal == 0) {
@@ -162,13 +175,8 @@ angular.module('myApp.controllers', []).
                             }
                             $scope.selectedUser.servers[r].uuid = json.Authentication.Detail.uuid;
                             $scope.selectedUser.servers[r].save_password = $scope.savePassword[r];
+                            $rootScope.currentServers.push($scope.selectedUser.servers[r]);
                             localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
-                        } else {
-                            $scope.loggingIn = false;
-                            $scope.error = true;
-                            $scope.errormessage = $rootScope.getLocalizedString('loginError');
-                            if($scope.failedServers.length===2)
-                                $scope.authFailed = true;
                         }
                     }
                     if(!$scope.authFailed){
@@ -190,6 +198,7 @@ angular.module('myApp.controllers', []).
              * 
              */
             function postLogin() {
+                console.log($rootScope.currentServers.length);
                 var year = new Date().getFullYear().toString(),
                         holidayPromise = [];
                 
@@ -246,13 +255,13 @@ angular.module('myApp.controllers', []).
             var allReservations = [];
             function addReservations(reservations) {
                 console.log(responseCount + " " + reservations);
-                if (reservations !== undefined)
-                    for (var r = 0; r < reservations.length; r++) {
-                        reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
-                        allReservations.push(reservations[r]);
-                    }
-                if (responseCount + 1 === $rootScope.currentServers.length) {
-                    console.log(allReservations);
+                if(reservations!==undefined)
+                for(var r=0;r<reservations.length;r++){
+                    reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
+                    allReservations.push(reservations[r]);
+                }
+                if(responseCount+1 === $rootScope.currentServers.length){
+                    console.log(allReservations[0].dep_name);
                     setReservations(allReservations);
                 } else {
                     responseCount++;
@@ -309,6 +318,7 @@ angular.module('myApp.controllers', []).
 
             function setReservations(reservations) {
                 $rootScope[$rootScope.searchString] = reservations;
+                console.log($rootScope[$rootScope.searchString]);
                 if($scope.failedServers.length!==0){
                     var servers = "";
                     for(var i=0;i<$scope.failedServers.length;i++){
