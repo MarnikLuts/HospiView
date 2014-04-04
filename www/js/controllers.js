@@ -104,7 +104,7 @@ angular.module('myApp.controllers', []).
              * Throw a warning if the user checks the savePassword checkbox.
              */
             $scope.savePasswordWarning = function(savePassword) {
-                if (savePassword === false)
+                if (savePassword === false || savePassword === undefined)
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             };
             /**
