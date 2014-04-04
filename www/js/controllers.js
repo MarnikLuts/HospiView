@@ -257,9 +257,9 @@ angular.module('myApp.controllers', []).
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @type Number
              */
-            var responseCount = 0;
-            var allReservations = [];
             function addReservations(reservations) {
+                var responseCount = 0;
+                var allReservations = [];
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined)
                     for (var r = 0; r < reservations.length; r++) {
@@ -806,9 +806,9 @@ angular.module('myApp.controllers', []).
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @type Number
              */
-            var responseCount = 0;
-            var allReservations = [];
             function addReservations(reservations) {
+                var responseCount = 0;
+                var allReservations = [];
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined) {
                     for (var r = 0; r < reservations.length; r++) {
@@ -1295,14 +1295,15 @@ angular.module('myApp.controllers', []).
             }
 
 
-            var responseCount = 0;
-            var allReservations = [];
+
             /**
              * The reservations from every server get added into one array, 
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @param {type} reservations
              */
             function addReservations(reservations) {
+                var responseCount = 0;
+                var allReservations = [];
                 console.log(allReservations);
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined)
