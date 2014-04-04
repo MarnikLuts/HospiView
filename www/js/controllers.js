@@ -522,7 +522,7 @@ angular.module('myApp.controllers', []).
                     newDate.setDate(newDate.getDate() + 1);
                 $scope.date = formatDate(newDate);
                 $rootScope.nextDayRequest = false;
-                console.log($rootScope.searchRangeEnd);
+                console.log($scope.date);
                 if (new Date($scope.date) > new Date($rootScope.searchRangeEnd)) {
                     $rootScope.startDate = new Date(newDate);
                     $rootScope.endDate = new Date(newDate.setDate(newDate.getDate() + 14));
