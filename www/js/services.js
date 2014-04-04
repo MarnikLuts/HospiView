@@ -129,11 +129,10 @@ angular.module('myApp.services', []).
                  * @returns {unresolved}
                  */
                 searchReservations: function(server) {
-                    console.log("searching reservations");
+                    console.log("get reservations");
                     var defer = $q.defer(),
                             reservations = [],
                             promises = [];
-                    console.log("server: " + server.hosp_full_name);
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                         var depIds = [];
                         var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -155,10 +154,8 @@ angular.module('myApp.services', []).
                             if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
                                 if (json.ReservationsOnUnit.Header.StatusCode === "1") {
                                     if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
-                                        console.log("adding reservation, server: " + server.hosp_full_name);
                                         reservations.push(json.ReservationsOnUnit.Detail.Reservation);
                                     } else {
-                                        console.log("adding reservation, server: " + server.hosp_full_name);
                                         for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
                                             reservations.push(json.ReservationsOnUnit.Detail.Reservation[s]);
                                         }
@@ -169,10 +166,9 @@ angular.module('myApp.services', []).
                                 }
                             }
                         }
-                        console.log("resolving");
+                        console.log("end get reservations");
                         defer.resolve(reservations);
                     }, function(error) {
-                        alert('hey');
                         defer.reject($rootScope.getLocalizedString('connectionError'));
                     });
                     return defer.promise;
