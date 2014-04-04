@@ -155,7 +155,7 @@ angular.module('myApp.controllers', []).
                 console.log("all servers: " + $scope.selectedUser.servers.length);
                 for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                     console.log($scope.password[i]);
-                    if($scope.selectedUser.servers[i].save_password === true){
+                    if ($scope.selectedUser.servers[i].save_password === true) {
                         $scope.username[i] = $scope.selectedUser.servers[i].user_login;
                         $scope.password[i] = $scope.selectedUser.servers[i].user_password;
                     }
@@ -245,21 +245,19 @@ angular.module('myApp.controllers', []).
                 var year = new Date().getFullYear().toString(),
                         server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
-                if (angular.isUndefined($rootScope[$rootScope.searchString]) || $rootScope[$rootScope.searchString].length === 0) {
-                    hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
-                            .then(function(response) {
-                                return dataFactory.setSearchUnits(response, server);
-                            }, error).then(function(server) {
-                        return dataFactory.setAbsentDays(year, server);
-                    }, error).then(function(server) {
-                        return dataFactory.searchReservations(server);
-                    }, error).then(function(reservations) {
-                        addReservations(reservations);
-                    });
-                } else {
-                    setReservations($rootScope[$rootScope.searchString]);
-                }
+
+                hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
+                        .then(function(response) {
+                            return dataFactory.setSearchUnits(response, server);
+                        }, error).then(function(server) {
+                    return dataFactory.setAbsentDays(year, server);
+                }, error).then(function(server) {
+                    return dataFactory.searchReservations(server);
+                }, error).then(function(reservations) {
+                    addReservations(reservations);
+                });
             }
+            
             var responseCount = 0;
             var allReservations = [];
             /**
@@ -486,15 +484,15 @@ angular.module('myApp.controllers', []).
             }
 
             /*$rootScope.requestTimer = $interval(function() {
-                if (!$rootScope.isOffline) {
-                    $rootScope.startDate = new Date($rootScope.searchRangeStart);
-                    $rootScope.endDate = new Date($rootScope.searchRangeEnd);
-                    console.log($rootScope.startDate);
-                    console.log($rootScope.endDate);
-                    $rootScope.refresh = true;
-                    search();
-                }
-            }, 5000);*/
+             if (!$rootScope.isOffline) {
+             $rootScope.startDate = new Date($rootScope.searchRangeStart);
+             $rootScope.endDate = new Date($rootScope.searchRangeEnd);
+             console.log($rootScope.startDate);
+             console.log($rootScope.endDate);
+             $rootScope.refresh = true;
+             search();
+             }
+             }, 5000);*/
 
             console.log("refreshRate: " + refreshRate);
             /**
@@ -819,12 +817,13 @@ angular.module('myApp.controllers', []).
              */
             function addReservations(reservations) {
                 if ($rootScope.refresh) {
-                    var responseCount = 0;
-                    var allReservations = [];
+                    responseCount = 0;
+                    allReservations = [];
                 }
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined) {
                     for (var r = 0; r < reservations.length; r++) {
+                        console.log(responseCount);
                         reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
                         allReservations.push(reservations[r]);
                     }
@@ -1309,7 +1308,7 @@ angular.module('myApp.controllers', []).
 
 
             var responseCount = 0;
-                var allReservations = [];
+            var allReservations = [];
 
             /**
              * The reservations from every server get added into one array, 
@@ -1317,7 +1316,7 @@ angular.module('myApp.controllers', []).
              * @param {type} reservations
              */
             function addReservations(reservations) {
-                
+
                 console.log(allReservations);
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined)
