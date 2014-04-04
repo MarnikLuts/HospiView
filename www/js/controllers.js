@@ -443,9 +443,6 @@ angular.module('myApp.controllers', []).
                 }
             };
 
-            if ($rootScope.currentServers.length === 0)
-                $scope.oneServer = true;
-
             $scope.loadingCalendar = false;
             $scope.eventPerDay;
             if ($rootScope.eventClick) {
@@ -469,6 +466,13 @@ angular.module('myApp.controllers', []).
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             var refreshRate = user.refreshrate * 1000;
 
+            $scope.cellcontentPatient = user.cellcontent.patient;
+            $scope.cellcontentTitle = user.cellcontent.title;
+            $scope.cellcontentDepartment = user.cellcontent.department;
+            
+            if ($rootScope.currentServers.length === 1)
+                $scope.oneServer = true;
+            
             $rootScope.requestTimer = $interval(function() {
                 if (!$rootScope.isOffline) {
                     $rootScope.startDate = new Date($rootScope.searchRangeStart);
@@ -478,7 +482,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.refresh = true;
                     search();
                 }
-            }, 5000);
+            }, refreshRate);
 
             /**
              * Gets the name of the icon that matches the current status of the given reservation
@@ -1492,10 +1496,6 @@ angular.module('myApp.controllers', []).
                     $scope.serverPassword = $scope.serverRadio.user_password;
                 }
             };
-            /*
-             $scope.cellcontentPatient = $scope.selectedUser.cellcontent.patient;
-             $scope.cellcontentTitle = $scope.selectedUser.cellcontent.title;
-             $scope.cellcontentDepartment = $scope.selectedUser.cellcontent.department;*/
 
             if ($scope.selectedUser.cellcontent.patient === true)
                 $("#settingsPatient").button('toggle');
