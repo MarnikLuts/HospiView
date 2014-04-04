@@ -476,7 +476,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.requestTimer = undefined;
             }
 
-            $rootScope.requestTimer = $interval(function() {
+            /*$rootScope.requestTimer = $interval(function() {
                 if (!$rootScope.isOffline) {
                     $rootScope.startDate = new Date($rootScope.searchRangeStart);
                     $rootScope.endDate = new Date($rootScope.searchRangeEnd);
@@ -485,7 +485,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.refresh = true;
                     search();
                 }
-            }, 5000);
+            }, 5000);*/
 
             console.log("refreshRate: " + refreshRate);
             /**
@@ -1123,7 +1123,11 @@ angular.module('myApp.controllers', []).
             $scope.next = function() {
                 var calDate = $("#doctorCalendar").fullCalendar('getDate');
                 var months = getMonthNames($rootScope.languageID);
-                $rootScope.displayMonthDate = months[calDate.getMonth() + 1] + " " + calDate.getFullYear();
+                if (calDate.getMonth() + 1 < 12)
+                    $rootScope.displayMonthDate = months[calDate.getMonth() + 1] + " " + calDate.getFullYear();
+                else
+                    $rootScope.displayMonthDate = months[0] + " " + (calDate.getFullYear()+1);
+
 
                 if ($rootScope.isOffline) {
                     $('#doctorCalendar').fullCalendar('next');
@@ -1134,7 +1138,12 @@ angular.module('myApp.controllers', []).
             $scope.prev = function() {
                 var calDate = $("#doctorCalendar").fullCalendar('getDate');
                 var months = getMonthNames($rootScope.languageID);
-                $rootScope.displayMonthDate = months[calDate.getMonth() - 1] + " " + calDate.getFullYear();
+                //$rootScope.displayMonthDate = months[calDate.getMonth() - 1] + " " + calDate.getFullYear();
+                console.log(calDate.getMonth());
+                if (calDate.getMonth() - 1 > -1)
+                    $rootScope.displayMonthDate = months[calDate.getMonth() - 1] + " " + calDate.getFullYear();
+                else
+                    $rootScope.displayMonthDate = months[11] + " " + (calDate.getFullYear()-1);
 
                 if ($rootScope.isOffline === true) {
                     $('#doctorCalendar').fullCalendar('prev');
@@ -1296,11 +1305,12 @@ angular.module('myApp.controllers', []).
              * @param {type} reservations
              */
             function addReservations(reservations) {
+                console.log(allReservations);
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined)
                     for (var r = 0; r < reservations.length; r++) {
-                        reservations.hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
-                        allReservations[r].push(reservations[r]);
+                        reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
+                        allReservations.push(reservations[r]);
                     }
                 if (responseCount + 1 === $rootScope.currentServers.length) {
                     setReservations(allReservations);
