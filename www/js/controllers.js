@@ -159,7 +159,7 @@ angular.module('myApp.controllers', []).
                     if (!invalidFields[i]) {
                         promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
                         validServers.push($scope.selectedUser.servers[i]);
-                    }else
+                    } else
                         $scope.failedServers.push($scope.selectedUser.servers[i].hosp_short_name);
                 }
 
@@ -172,7 +172,7 @@ angular.module('myApp.controllers', []).
                         if (json.Authentication.Header.StatusCode != 1) {
                             console.log(validServers[r].hosp_full_name + " auth failed " + r);
                             $scope.failedServers.push(validServers[r].hosp_short_name);
-                            if($scope.failedServers.length==$scope.selectedUser.servers.length)
+                            if ($scope.failedServers.length == $scope.selectedUser.servers.length)
                                 authFailed = true;
                         } else {
                             console.log(validServers[r].hosp_full_name + " auth success " + r);
@@ -256,15 +256,15 @@ angular.module('myApp.controllers', []).
                     setReservations($rootScope[$rootScope.searchString]);
                 }
             }
-
+            var responseCount = 0;
+            var allReservations = [];
             /**
              * The reservations from every server get added into one array, 
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @type Number
              */
             function addReservations(reservations) {
-                var responseCount = 0;
-                var allReservations = [];
+
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined)
                     for (var r = 0; r < reservations.length; r++) {
@@ -806,14 +806,18 @@ angular.module('myApp.controllers', []).
                 });
             }
 
+            var responseCount = 0;
+            var allReservations = [];
             /**
              * The reservations from every server get added into one array, 
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @type Number
              */
             function addReservations(reservations) {
-                var responseCount = 0;
-                var allReservations = [];
+                if ($rootScope.refresh) {
+                    var responseCount = 0;
+                    var allReservations = [];
+                }
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined) {
                     for (var r = 0; r < reservations.length; r++) {
@@ -1129,7 +1133,7 @@ angular.module('myApp.controllers', []).
                 if (calDate.getMonth() + 1 < 12)
                     $rootScope.displayMonthDate = months[calDate.getMonth() + 1] + " " + calDate.getFullYear();
                 else
-                    $rootScope.displayMonthDate = months[0] + " " + (calDate.getFullYear()+1);
+                    $rootScope.displayMonthDate = months[0] + " " + (calDate.getFullYear() + 1);
 
 
                 if ($rootScope.isOffline) {
@@ -1146,7 +1150,7 @@ angular.module('myApp.controllers', []).
                 if (calDate.getMonth() - 1 > -1)
                     $rootScope.displayMonthDate = months[calDate.getMonth() - 1] + " " + calDate.getFullYear();
                 else
-                    $rootScope.displayMonthDate = months[11] + " " + (calDate.getFullYear()-1);
+                    $rootScope.displayMonthDate = months[11] + " " + (calDate.getFullYear() - 1);
 
                 if ($rootScope.isOffline === true) {
                     $('#doctorCalendar').fullCalendar('prev');
@@ -1300,6 +1304,8 @@ angular.module('myApp.controllers', []).
             }
 
 
+            var responseCount = 0;
+                var allReservations = [];
 
             /**
              * The reservations from every server get added into one array, 
@@ -1307,8 +1313,7 @@ angular.module('myApp.controllers', []).
              * @param {type} reservations
              */
             function addReservations(reservations) {
-                var responseCount = 0;
-                var allReservations = [];
+                
                 console.log(allReservations);
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined)
