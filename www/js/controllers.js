@@ -259,7 +259,7 @@ angular.module('myApp.controllers', []).
                     addReservations(reservations);
                 });
             }
-            
+
             var responseCount = 0;
             var allReservations = [];
             /**
@@ -471,7 +471,7 @@ angular.module('myApp.controllers', []).
                 $scope.showDate = formatShowDate(lowestDate, $rootScope.languageID);
             }
             var user = JSON.parse(localStorage.getItem($rootScope.user));
-            var refreshRate = user.refreshrate * 1000;
+            var refreshrate = user.refreshrate * 1000;
 
             $scope.cellcontentPatient = user.cellcontent.patient;
             $scope.cellcontentTitle = user.cellcontent.title;
@@ -485,16 +485,16 @@ angular.module('myApp.controllers', []).
                 $rootScope.requestTimer = undefined;
             }
 
-            /*$rootScope.requestTimer = $interval(function() {
-             if (!$rootScope.isOffline) {
-             $rootScope.startDate = new Date($rootScope.searchRangeStart);
-             $rootScope.endDate = new Date($rootScope.searchRangeEnd);
-             console.log($rootScope.startDate);
-             console.log($rootScope.endDate);
-             $rootScope.refresh = true;
-             search();
-             }
-             }, 5000);*/
+            $rootScope.requestTimer = $interval(function() {
+                if (!$rootScope.isOffline) {
+                    $rootScope.startDate = new Date($rootScope.searchRangeStart);
+                    $rootScope.endDate = new Date($rootScope.searchRangeEnd);
+                    console.log($rootScope.startDate);
+                    console.log($rootScope.endDate);
+                    $rootScope.refresh = true;
+                    search();
+                }
+            }, refreshrate);
 
             console.log("refreshRate: " + refreshRate);
             /**
