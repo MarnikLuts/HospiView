@@ -79,6 +79,7 @@ angular.module('myApp.controllers', []).
                     if ($scope.selectedUser.servers[index].save_password) {
                         $scope.password[index] = $scope.servers[index].user_password;
                         $scope.savePassword[index] = $scope.selectedUser.servers[index].save_password;
+                       
                     }
                 } else {
                     $scope.username[index] = "";
@@ -308,29 +309,6 @@ angular.module('myApp.controllers', []).
 //                setData();
             }
 
-            function setData() {
-                var recievedReservations;
-                dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
-                if (angular.isUndefined($rootScope[$rootScope.searchString]) || $rootScope[$rootScope.searchString].length === 0) {
-                    dataFactory.searchReservations()
-                            .then(function(reservations) {
-                                setReservations(reservations);
-                            }, error);
-                }
-                else {
-                    if ($rootScope.startDate < $rootScope.searchRangeStart || $rootScope.endDate > $rootScope.searchRangeEnd) {
-                        $scope.reservations = $rootScope[$rootScope.searchString];
-                        dataFactory.searchReservations()
-                                .then(function(reservations) {
-                                    recievedReservations = reservations;
-                                }, error);
-                    }
-                    $rootScope.isOffline = true;
-                    $location.path('/doctor/appointmentsView');
-                }
-                return recievedReservations;
-            }
-
             function setReservations(reservations) {
                 console.log("reservation count: " + reservations.length);
                 $rootScope[$rootScope.searchString] = reservations;
@@ -362,6 +340,8 @@ angular.module('myApp.controllers', []).
                     controller: ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
+
+                    console.log($scope.loggingIn);
                     if (answer) {
                         var newStartDate = new Date($rootScope.startDate);
                         newStartDate.setDate(newStartDate.getDate() + 14);
@@ -372,7 +352,7 @@ angular.module('myApp.controllers', []).
                         postLogin();
                     }
                 }, function() {
-                    console.log("error");
+                    $scope.loggingIn = false;
                 });
             }
 
@@ -495,8 +475,6 @@ angular.module('myApp.controllers', []).
                     search();
                 }
             }, refreshrate);
-
-            console.log("refreshRate: " + refreshRate);
             /**
              * Gets the name of the icon that matches the current status of the given reservation
              * 
@@ -1730,6 +1708,7 @@ angular.module('myApp.controllers', []).
                                                 "unique_pid": json.Authentication.Detail.unique_pid,
                                                 "uuid": json.Authentication.Detail.uuid,
                                                 "isexternal": json.Authentication.Detail.isexternal,
+                                                "save_password": $scope.savePassword,
                                                 "shortcut1": {"unit": "", "department": ""},
                                                 "shortcut2": {"unit": "", "department": ""},
                                                 "shortcut3": {"unit": "", "department": ""}};
@@ -1750,6 +1729,7 @@ angular.module('myApp.controllers', []).
                                                         "unique_pid": json.Authentication.Detail.unique_pid,
                                                         "uuid": json.Authentication.Detail.uuid,
                                                         "isexternal": json.Authentication.Detail.isexternal,
+                                                        "save_password": $scope.savePassword,
                                                         "shortcut1": {"unit": "", "department": ""},
                                                         "shortcut2": {"unit": "", "department": ""},
                                                         "shortcut3": {"unit": "", "department": ""}};
