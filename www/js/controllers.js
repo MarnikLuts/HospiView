@@ -4,7 +4,6 @@
 angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, $interval, hospiviewFactory, dataFactory, languageFactory) {
 
-
             if (angular.isDefined($rootScope.requestTimer)) {
                 $interval.cancel($rootScope.requestTimer);
                 $rootScope.requestTimer = undefined;
@@ -79,7 +78,7 @@ angular.module('myApp.controllers', []).
                     if ($scope.selectedUser.servers[index].save_password) {
                         $scope.password[index] = $scope.servers[index].user_password;
                         $scope.savePassword[index] = $scope.selectedUser.servers[index].save_password;
-                       
+
                     }
                 } else {
                     $scope.username[index] = "";
@@ -459,12 +458,7 @@ angular.module('myApp.controllers', []).
 
             if ($rootScope.currentServers.length === 1)
                 $scope.oneServer = true;
-
-            if (angular.isDefined($rootScope.requestTimer)) {
-                $interval.cancel($rootScope.requestTimer);
-                $rootScope.requestTimer = undefined;
-            }
-
+/*
             $rootScope.requestTimer = $interval(function() {
                 if (!$rootScope.isOffline) {
                     $rootScope.startDate = new Date($rootScope.searchRangeStart);
@@ -472,9 +466,10 @@ angular.module('myApp.controllers', []).
                     console.log($rootScope.startDate);
                     console.log($rootScope.endDate);
                     $rootScope.refresh = true;
+                    alert("test");
                     search();
                 }
-            }, refreshrate);
+            }, 5000);*/
             /**
              * Gets the name of the icon that matches the current status of the given reservation
              * 
@@ -544,10 +539,6 @@ angular.module('myApp.controllers', []).
                     $rootScope.searchType = 'next';
                     search();
                 } else {
-                    /*var filterDate = new Date();
-                     var check = new Date($scope.date);
-                     var filterDate = new Date($scope.reservations[0].the_date);*/
-
                     for (var i = 0; i < $scope.reservations.length; i++) {
                         var filterDate = new Date($scope.reservations[i].the_date);
                         var check = new Date($scope.date);
@@ -564,49 +555,34 @@ angular.module('myApp.controllers', []).
                         $scope.loadingNext = false;
                     }
                 }
-
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
-                /*
-                 if ($rootScope.cancelLoop === false) {
-                 if ($scope.filteredReservations.length === 0) {
-                 $scope.nextDay();
-                 } else {
-                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
-                 $scope.loadingNext = false;
-                 $scope.lastKnownDate = new Date($scope.date);
-                 }
-                 
-                 }*/
             };
             $scope.previousDay = function() {
                 var count = 0;
                 $rootScope.searchType = '';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
-                if ($rootScope.previousDayRequest !== true)
+                if ($rootScope.nextDayRequest !== true)
                     newDate.setDate(newDate.getDate() - 1);
                 $scope.date = formatDate(newDate);
-                $rootScope.previousDayRequest = false;
+                $rootScope.nextDayRequest = false;
                 if (new Date($scope.date) < new Date($rootScope.searchRangeStart)) {
                     $rootScope.endDate = new Date(newDate);
                     $rootScope.startDate = new Date(newDate.setDate(newDate.getDate() - 14));
+                    console.log($rootScope.startDate);
+                    console.log($rootScope.endDate);
                     $rootScope.requestOnSwipe = true;
-                    $rootScope.previousDayRequest = true;
+                    $rootScope.nextDayRequest = true;
                     $rootScope.searchType = 'prev';
                     search();
                 }
                 else {
-                    var d = new Date($scope.date);
-                    var t = new Date($rootScope.searchRangeStart);
                     for (var i = 0; i < $scope.reservations.length; i++) {
 
                         var filterDate = new Date($scope.reservations[i].the_date);
                         var check = new Date($scope.date);
                         filterDate.setHours(0, 0, 0, 0);
                         check.setHours(0, 0, 0, 0);
-                        if (d.getTime() === t.getTime()) {
-                            console.log(filterDate + " " + check);
-                        }
                         if (filterDate.getTime() === check.getTime())
                             count++;
                     }
@@ -617,21 +593,7 @@ angular.module('myApp.controllers', []).
                         $scope.loadingNext = false;
                     }
                 }
-
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
-
-                /*if ($rootScope.cancelLoop === false) {
-                 $timeout(function() {
-                 if ($scope.filteredReservations.length === 0) {
-                 $scope.previousDay();
-                 } else {
-                 console.log("else");
-                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
-                 $scope.loadingNext = false;
-                 $scope.lastKnownDate = new Date($scope.date);
-                 }
-                 }, 100);
-                 }*/
             };
 
             $scope.details = function(reservation) {
@@ -752,10 +714,6 @@ angular.module('myApp.controllers', []).
             $scope.logout = function() {
                 $rootScope.user = null;
                 $rootScope.type = null;
-                if (angular.isDefined($rootScope.requestTimer)) {
-                    $interval.cancel($rootScope.requestTimer);
-                    $rootScope.requestTimer = undefined;
-                }
                 $rootScope[$rootScope.searchString] = $scope.reservations;
                 $location.path('/login');
             };
@@ -790,16 +748,18 @@ angular.module('myApp.controllers', []).
 
             var responseCount = 0;
             var allReservations = [];
+            var firstCycle = true;
             /**
              * The reservations from every server get added into one array, 
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @type Number
              */
             function addReservations(reservations) {
-                if ($rootScope.refresh) {
+                if (firstCycle) {
                     responseCount = 0;
                     allReservations = [];
                 }
+                firstCycle = false;
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined) {
                     for (var r = 0; r < reservations.length; r++) {
@@ -824,6 +784,7 @@ angular.module('myApp.controllers', []).
 
             function setReservations(reservations) {
                 console.log("setting reservations");
+                firstCycle = true;
                 if ($rootScope.refresh === true) {
                     $rootScope[$rootScope.searchString] = [];
                 }
@@ -832,6 +793,7 @@ angular.module('myApp.controllers', []).
                 $scope.reservations = $rootScope[$rootScope.searchString];
                 if (reservations.length === 0) {
                     $rootScope.cancelLoop = true;
+                    console.log("modal");
                     callModal();
                 } else {
                     if ($scope.loadingCalendar) {
