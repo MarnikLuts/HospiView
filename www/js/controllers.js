@@ -4,11 +4,20 @@
 angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, $interval, hospiviewFactory, dataFactory, languageFactory) {
 
+            /**
+             * Checks if the refresh of appointments is initiated. If it is,
+             * it will be set to undifined so no refreshes happen on the login
+             * screen.
+             */
             if (angular.isDefined($rootScope.requestTimer)) {
                 $interval.cancel($rootScope.requestTimer);
                 $rootScope.requestTimer = undefined;
             }
 
+            /**
+             * If the app is never used, the language will be set to English.
+             * Otherwise, the saved language will be used.
+             */
             if (localStorage.getItem("language") === null) {
                 localStorage.setItem("language", 3);
                 $rootScope.languageID = 3;
@@ -17,8 +26,15 @@ angular.module('myApp.controllers', []).
             }
 
             /**
+             * Empty the variables used to filter the appointments.
+             */
+            $rootScope.filterActive = '';
+            $rootScope.serverFilter = '';
+            $rootScope.unitFilter = '';
+            $rootScope.departmentFilter = '';
+
+            /**
              * showPasswordBoolean and savePassword will be set to false.
-             * 
              */
             $scope.showPasswordBoolean = false;
             $scope.savePassword = false;
@@ -37,6 +53,7 @@ angular.module('myApp.controllers', []).
                 $scope.users = JSON.parse(localStorage.getItem("users"));
                 $("#loginDiv").removeClass("invisible");
             }
+
             /**
              * Will be called on change in the select. Checks if the user model
              * (this is the local user of the application, not the username for
@@ -51,10 +68,13 @@ angular.module('myApp.controllers', []).
                 $scope.username = [];
                 $scope.password = [];
                 $scope.savePassword = [];
-                if (!(angular.isUndefined($scope.user))) {
+                if (angular.isDefined($scope.user)) {
                     $scope.selectedUser = JSON.parse(localStorage.getItem($scope.user));
                     $scope.servers = $scope.selectedUser.servers;
                     $scope.serverRadio = $scope.servers[0];
+                    for(var i = 0; i<$scope.servers.length; i++)
+                        $scope.savePassword[i] = $scope.selectedUser.servers[i].save_password;
+                    
                     $scope.getLoginUser(0);
                 } else {
                     $scope.servers[0] = undefined;
@@ -73,12 +93,11 @@ angular.module('myApp.controllers', []).
              * filled out and the savePassword checkbox will be checked.
              */
             $scope.getLoginUser = function(index) {
-                if (!(angular.isUndefined($scope.servers[index]))) {
+                if (angular.isDefined($scope.servers[index])) {
                     $scope.username[index] = $scope.servers[index].user_login;
                     if ($scope.selectedUser.servers[index].save_password) {
                         $scope.password[index] = $scope.servers[index].user_password;
                         $scope.savePassword[index] = $scope.selectedUser.servers[index].save_password;
-
                     }
                 } else {
                     $scope.username[index] = "";
@@ -104,7 +123,6 @@ angular.module('myApp.controllers', []).
                     console.log($scope.servers);
                 }
 
-
             /**
              * Throw a warning if the user checks the savePassword checkbox.
              */
@@ -112,6 +130,7 @@ angular.module('myApp.controllers', []).
                 if (savePassword === false || savePassword === undefined)
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             };
+
             /**
              * Toggle showPasswordBoolean. Password field will either show dots 
              * (false) or text (true). Toggled by pressing the icon in front
@@ -121,26 +140,8 @@ angular.module('myApp.controllers', []).
                 $scope.showPasswordBoolean = !$scope.showPasswordBoolean;
             };
 
-            $rootScope.filterActive = '';
-            $rootScope.serverFilter = '';
-            $rootScope.unitFilter = '';
-            $rootScope.departmentFilter = '';
             /**
-             * Call getAuthentication(username, password, server_url) method of 
-             * the factory hospiviewFactory. The username and password input field
-             * will be passed as parameters. The last parameter is the url of the
-             * server the user wants to login on. On a successful call, the 
-             * response data (XML) will be parsed to JSON with the xml2json 
-             * library (/js/xml2json.min.js) in the parseJson(xml) function. If
-             * the StatusCode sent by the webservice is 1, the passed parameters
-             * were correct. No error message will be shown, status of the checkbox
-             * and the uuid of the session will be saved in localStorage.
-             * rootScope user and server are being set (rootscope is available
-             * throughout the application during this session). The type of user
-             * is determined and set in the rootscope. (0 = doctor, 1 = patient).
-             * The user will then be redirected to mainmenu.html.
-             * If the StatusCode is not 1, an message error will be displayed.
-             * If the call failed, an error message will be displayed
+             * 
              */
             $scope.login = function() {
                 $scope.loggingIn = true;
@@ -192,6 +193,7 @@ angular.module('myApp.controllers', []).
                             validServers[r].save_password = $scope.savePassword[r];
                             console.log($scope.savePassword[r]);
                             $rootScope.currentServers.push(validServers[r]);
+                            console.log($scope.selectedUser);
                             localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
                         }
                     }
@@ -262,13 +264,18 @@ angular.module('myApp.controllers', []).
 
             var responseCount = 0;
             var allReservations = [];
+            var firstCycle = true;
             /**
              * The reservations from every server get added into one array, 
              * when this function is executed for every server, the data will be handled by the setReservations function
              * @type Number
              */
             function addReservations(reservations) {
-
+                if (firstCycle) {
+                    responseCount = 0;
+                    allReservations = [];
+                }
+                firstCycle = false;
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined)
                     for (var r = 0; r < reservations.length; r++) {
@@ -305,10 +312,10 @@ angular.module('myApp.controllers', []).
                 $rootScope.currentdate = formatDate(today);
                 $rootScope.endDate = formatDate(new Date(today.setDate(today.getDate() + 14)));
                 dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
-//                setData();
             }
 
             function setReservations(reservations) {
+                firstCycle = true;
                 console.log("reservation count: " + reservations.length);
                 $rootScope[$rootScope.searchString] = reservations;
                 if ($scope.failedServers.length !== 0) {
@@ -336,11 +343,9 @@ angular.module('myApp.controllers', []).
             function callModal() {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
-                    controller: ModalInstance
+                    controller: $rootScope.ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
-
-                    console.log($scope.loggingIn);
                     if (answer) {
                         var newStartDate = new Date($rootScope.startDate);
                         newStartDate.setDate(newStartDate.getDate() + 14);
@@ -356,20 +361,23 @@ angular.module('myApp.controllers', []).
             }
 
             /**
-             * Instance of the dialog box.
+             * Controller for the modal. Is declared in the rootScope, so can be used
+             * by other controllers. If a button of the modal is clicked the 
+             * modal will be closed and a parameter with the answer will be passed.
              * 
-             * @param {type} $scope         scope of the dialog box
-             * @param {type} $modalInstance used for modal specific functions
-             * @returns {undefined}         returns true if the user clicked yes
+             * @param           $scope          scope of the modal
+             * @param           $modalInstance  to access modalInstance functions
+             * @returns boolean $scope.proceed  boolean indicating which button was pressed
              */
-            function ModalInstance($scope, $modalInstance) {
+            $rootScope.ModalInstance = function($scope, $modalInstance) {
                 //Don't use $scope.continue, 'continue' is a reserved keyword
                 $scope.ok = function() {
                     $scope.proceed = true;
                     $modalInstance.close($scope.proceed);
                 };
                 $scope.cancel = function() {
-                    $modalInstance.dismiss('cancel');
+                    $scope.proceed = false;
+                    $modalInstance.close($scope.proceed);
                 };
             }
 
@@ -382,7 +390,7 @@ angular.module('myApp.controllers', []).
             function callOfflineModal() {
                 var modalInstance = $modal.open({
                     templateUrl: 'offlineModal',
-                    controller: ModalInstance
+                    controller: $rootScope.ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
                     if (answer === true) {
@@ -413,24 +421,19 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
 
-            console.log($rootScope[$rootScope.searchString]);
-
-            var iconDownBoolean = true;
-            $rootScope.cancelLoop = false;
-            $scope.cancel = false;
-            $scope.iconImage = "glyphicon glyphicon-chevron-down";
-            $scope.changeIcon = function() {
-                if (iconDownBoolean) {
-                    $scope.iconImage = "glyphicon glyphicon-chevron-up";
-                    iconDownBoolean = false;
-                } else {
-                    $scope.iconImage = "glyphicon glyphicon-chevron-down";
-                    iconDownBoolean = true;
-                }
-            };
-
+            /**
+             * Initiating variables. 
+             * searchInProgress is used to disable the refresh if another
+             * request is busy. 
+             * loadingCalendar is used to show the loading animation to indicate
+             * the application is doing somthing.
+             */
+            $rootScope.searchInProgress = false;
             $scope.loadingCalendar = false;
-            $scope.eventPerDay;
+
+            /**
+             * 
+             */
             if ($rootScope.eventClick) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
                 $scope.showDate = formatShowDate(new Date($scope.date), $rootScope.languageID);
@@ -451,6 +454,7 @@ angular.module('myApp.controllers', []).
             }
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             var refreshrate = user.refreshrate * 1000;
+            console.log(refreshrate);
 
             $scope.cellcontentPatient = user.cellcontent.patient;
             $scope.cellcontentTitle = user.cellcontent.title;
@@ -458,18 +462,25 @@ angular.module('myApp.controllers', []).
 
             if ($rootScope.currentServers.length === 1)
                 $scope.oneServer = true;
-/*
-            $rootScope.requestTimer = $interval(function() {
-                if (!$rootScope.isOffline) {
+
+            function refresh() {
+                if (!$rootScope.searchInProgress) {
+                    $rootScope.searchType = '';
                     $rootScope.startDate = new Date($rootScope.searchRangeStart);
                     $rootScope.endDate = new Date($rootScope.searchRangeEnd);
-                    console.log($rootScope.startDate);
-                    console.log($rootScope.endDate);
                     $rootScope.refresh = true;
-                    alert("test");
+                    $scope.loadingNext = true;
                     search();
                 }
-            }, 5000);*/
+            }
+
+            $rootScope.requestTimer = $interval(function() {
+                if (!$rootScope.isOffline) {
+                    refresh();
+                }
+            }, refreshrate);
+
+
             /**
              * Gets the name of the icon that matches the current status of the given reservation
              * 
@@ -519,9 +530,32 @@ angular.module('myApp.controllers', []).
                     }
                 }
             }
+
+            $scope.details = function(reservation) {
+                $rootScope.eventClick = true;
+                $rootScope.reservationDetail = reservation;
+                $rootScope.currentdate = reservation.the_date;
+                $location.path('/doctor/appointmentDetail');
+            };
+
+            $scope.settings = function() {
+                $rootScope.eventClick = true;
+                $rootScope.currentdate = new Date($scope.date);
+                console.log($rootScope.currentdate);
+                $location.path('/settings/default');
+            };
+
+            $scope.filter = function() {
+                $rootScope.eventClick = true;
+                $rootScope.currentdate = $scope.date;
+                $location.path('/appointmentsFilter');
+            };
+
             $scope.reservations = $rootScope[$rootScope.searchString];
 
             $scope.loadingNext = false;
+
+
             $scope.nextDay = function() {
                 var count = 0;
                 $rootScope.searchType = '';
@@ -532,9 +566,9 @@ angular.module('myApp.controllers', []).
                 $scope.date = formatDate(newDate);
                 $rootScope.nextDayRequest = false;
                 if (new Date($scope.date) > new Date($rootScope.searchRangeEnd)) {
+                    $rootScope.searchInProgress = true;
                     $rootScope.startDate = new Date(newDate);
                     $rootScope.endDate = new Date(newDate.setDate(newDate.getDate() + 14));
-                    $rootScope.requestOnSwipe = true;
                     $rootScope.nextDayRequest = true;
                     $rootScope.searchType = 'next';
                     search();
@@ -567,11 +601,9 @@ angular.module('myApp.controllers', []).
                 $scope.date = formatDate(newDate);
                 $rootScope.nextDayRequest = false;
                 if (new Date($scope.date) < new Date($rootScope.searchRangeStart)) {
+                    $rootScope.searchInProgress = true;
                     $rootScope.endDate = new Date(newDate);
                     $rootScope.startDate = new Date(newDate.setDate(newDate.getDate() - 14));
-                    console.log($rootScope.startDate);
-                    console.log($rootScope.endDate);
-                    $rootScope.requestOnSwipe = true;
                     $rootScope.nextDayRequest = true;
                     $rootScope.searchType = 'prev';
                     search();
@@ -596,27 +628,9 @@ angular.module('myApp.controllers', []).
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
 
-            $scope.details = function(reservation) {
-                $rootScope.eventClick = true;
-                $rootScope.reservationDetail = reservation;
-                $rootScope.currentdate = reservation.the_date;
-                $location.path('/doctor/appointmentDetail');
-            };
-
-            $scope.settings = function() {
-                $rootScope.eventClick = true;
-                $rootScope.currentdate = new Date($scope.date);
-                console.log($rootScope.currentdate);
-                $location.path('/settings/default');
-            };
-
-            $scope.filter = function() {
-                $rootScope.eventClick = true;
-                $rootScope.currentdate = $scope.date;
-                $location.path('/appointmentsFilter');
-            };
 
             $scope.calendarView = function() {
+                $rootScope.searchInProgress = true;
                 $rootScope.currentdate = $scope.date;
                 if ($rootScope.isOffline) {
                     $location.path('/appointmentsCalendar');
@@ -668,6 +682,7 @@ angular.module('myApp.controllers', []).
                     if (request1 === true || request2 === true) {
                         search();
                     } else {
+                        $rootScope.searchInProgress = false;
                         $location.path('/appointmentsCalendar');
                     }
                 }
@@ -792,18 +807,20 @@ angular.module('myApp.controllers', []).
                     $rootScope[$rootScope.searchString].push(reservations[i]);
                 $scope.reservations = $rootScope[$rootScope.searchString];
                 if (reservations.length === 0) {
-                    $rootScope.cancelLoop = true;
                     console.log("modal");
                     callModal();
                 } else {
                     if ($scope.loadingCalendar) {
                         $location.path('/appointmentsCalendar');
+                        $rootScope.searchInProgress = false;
                         $scope.loadingCalendar = false;
                     }
                     else {
+                        if($rootScope.refresh){
+                            $scope.loadingNext = false;
+                        }
                         $rootScope.refresh = false;
-                        $rootScope.requestOnSwipe = false;
-                        $rootScope.cancelLoop = false;
+                        $rootScope.searchInProgress = false;
                         if ($rootScope.searchType === 'next') {
                             $scope.nextDay();
                         }
@@ -814,10 +831,15 @@ angular.module('myApp.controllers', []).
                 }
             }
 
+            /**
+             * First calls the instance of the modal. The modal template is 
+             * declared in login.html. The controller 
+             * @returns {undefined}
+             */
             function callModal() {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
-                    controller: ModalInstance
+                    controller: $rootScope.ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
                     if (answer === true) {
@@ -826,7 +848,6 @@ angular.module('myApp.controllers', []).
                             $rootScope.startDate = new Date(endSearch);
                             endSearch.setDate(endSearch.getDate() + 14);
                             $rootScope.endDate = new Date(endSearch);
-                            $rootScope.cancelLoop = false;
                             search();
                         }
                         if ($rootScope.searchType === 'prev') {
@@ -834,38 +855,20 @@ angular.module('myApp.controllers', []).
                             $rootScope.endDate = new Date(startSearch);
                             startSearch.setDate(startSearch.getDate() - 14);
                             $rootScope.startDate = new Date(startSearch);
-                            $rootScope.cancelLoop = false;
-                            search();
                         }
+                        search();
                     } else {
                         $scope.date = formatDate(new Date($scope.lastKnownDate));
                         $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                         $scope.loadingNext = false;
                         $rootScope.nextDayRequest = false;
-                        $rootScope.searchType = '';
-                        $rootScope.cancelLoop = false;
                     }
-
                 }, function() {
                     $scope.date = formatDate(new Date($scope.lastKnownDate));
                     $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                     $scope.loadingNext = false;
                     $rootScope.nextDayRequest = false;
-                    $rootScope.searchType = '';
-                    $rootScope.cancelLoop = false;
                 });
-            }
-
-            function ModalInstance($scope, $modalInstance) {
-                //Don't use $scope.continue, 'continue' is a reserved keyword
-                $scope.ok = function() {
-                    $scope.proceed = true;
-                    $modalInstance.close($scope.proceed);
-                };
-                $scope.cancel = function() {
-                    $scope.proceed = false;
-                    $modalInstance.close($scope.proceed);
-                };
             }
         }).
         controller('FilterCtrl', function($scope, $rootScope, $location, hospiviewFactory) {
@@ -1251,6 +1254,7 @@ angular.module('myApp.controllers', []).
 
             var responseCount = 0;
             var allReservations = [];
+            var firstCycle = true;
 
             /**
              * The reservations from every server get added into one array, 
@@ -1258,7 +1262,11 @@ angular.module('myApp.controllers', []).
              * @param {type} reservations
              */
             function addReservations(reservations) {
-
+                if (firstCycle) {
+                    responseCount = 0;
+                    allReservations = [];
+                }
+                firstCycle = false;
                 console.log(allReservations);
                 console.log(responseCount + " " + reservations);
                 if (reservations !== undefined)
@@ -1286,7 +1294,8 @@ angular.module('myApp.controllers', []).
             }
 
             function setReservations(reservations, calendarBrows) {
-                console.log(calendarBrows = $scope.calendarBrows);
+                firstCycle = true;
+                calendarBrows = $scope.calendarBrows;
                 for (var i = 0; i < reservations.length; i++) {
                     $rootScope[$rootScope.searchString].push(reservations[i]);
                 }
@@ -1305,7 +1314,7 @@ angular.module('myApp.controllers', []).
             function callModal(calendarBrows) {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
-                    controller: ModalInstance
+                    controller: $rootScope.ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
                     if (answer === true) {
@@ -1321,18 +1330,6 @@ angular.module('myApp.controllers', []).
                 }, function() {
                     console.log("error");
                 });
-            }
-
-            function ModalInstance($scope, $modalInstance) {
-                //Don't use $scope.continue, 'continue' is a reserved keyword
-                $scope.ok = function() {
-                    $scope.proceed = true;
-                    $modalInstance.close($scope.proceed);
-                };
-                $scope.cancel = function() {
-                    $scope.proceed = false;
-                    $modalInstance.dismiss('cancel');
-                };
             }
         }).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
@@ -1500,6 +1497,16 @@ angular.module('myApp.controllers', []).
 
         }).
         controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory, dataFactory, languageFactory, $q, $modal) {
+
+            /**
+             * Checks if the refresh of appointments is initiated. If it is,
+             * it will be set to undifined so no refreshes happen on the login
+             * screen.
+             */
+            if (angular.isDefined($rootScope.requestTimer)) {
+                $interval.cancel($rootScope.requestTimer);
+                $rootScope.requestTimer = undefined;
+            }
 
             /**
              * If it's the first time a user uses the application, the back button
@@ -1680,7 +1687,7 @@ angular.module('myApp.controllers', []).
                                         } else {
                                             var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
                                             for (var i = 0; i < selectedUser.servers.length; i++) {
-                                                if (selectedUser.servers[i].id == $rootScope.editServer.id && selectedUser.servers[i].user_name == $rootScope.editServer.user_name) {
+                                                if (selectedUser.servers[i].id === $rootScope.editServer.id && selectedUser.servers[i].user_name === $rootScope.editServer.user_name) {
                                                     var editServer = {"id": $scope.server.id,
                                                         "hosp_short_name": $scope.server.hosp_short_name,
                                                         "hosp_full_name": $scope.server.hosp_full_name,
@@ -1821,7 +1828,7 @@ angular.module('myApp.controllers', []).
             function callModal() {
                 var modalInstance = $modal.open({
                     templateUrl: 'searchModal',
-                    controller: ModalInstance
+                    controller: $rootScope.ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
                     if (answer) {
@@ -1832,6 +1839,8 @@ angular.module('myApp.controllers', []).
                         $rootScope.startDate = formatDate(newStartDate);
                         $rootScope.endDate = formatDate(newEndDate);
                         setData();
+                    } else {
+                        $location.path('/login');
                     }
                 }, function() {
                     console.log("error");
@@ -1839,26 +1848,7 @@ angular.module('myApp.controllers', []).
             }
 
             /**
-             * Instance of the dialog box.
-             * 
-             * @param {type} $scope         scope of the dialog box
-             * @param {type} $modalInstance used for modal specific functions
-             * @returns {undefined}         returns true if the user clicked yes
-             */
-            function ModalInstance($scope, $modalInstance) {
-                //Don't use $scope.continue, 'continue' is a reserved keyword
-                $scope.ok = function() {
-                    $scope.proceed = true;
-                    $modalInstance.close($scope.proceed);
-                };
-                $scope.cancel = function() {
-                    $modalInstance.dismiss('cancel');
-                };
-            }
-
-            /**
-             * Adds a new animation to the screentransition and redirects to
-             * the settings page.
+             * Redirects to the settings page.
              */
             $scope.cancel = function() {
                 $location.path('/settings/new');

@@ -95,42 +95,7 @@
                             </span>
                             <img ng-show="getStatusIcon(reservation) !== 'none'" ng-src="img/{{ getStatusIcon(reservation)}}" alt="appointment status"/>
                         </span>
-                        <!--<span class="reservationIcons">
-                            <img ng-show="getStatusIcon(reservation) !== 'none'" ng-src="img/{{ getStatusIcon(reservation)}}" alt="appointment status"/>
-                        </span>-->
                     </div>
-                    <!--<div class="text-left reservationSubInfo widthPercent">
-                        <span class="reservationHour">
-                    <!--&nbsp
-                    <span ng-switch on="reservation.color" class="colorMarking">
-                        <span ng-switch-when=""></span>
-                        <span ng-switch-default ng-style="style(reservation.color)" class="colorMarking">&nbsp</span>
-                    </span>
-                    <span ng-switch on="reservation.color2" class="colorMarking">
-                        <span ng-switch-when=""></span>
-                        <span ng-switch-default ng-style="style(reservation.color2)" class="colorMarking">&nbsp</span>
-                    </span>
-                    <span ng-switch on="reservation.color3" class="colorMarking">
-                        <span ng-switch-when=""></span>
-                        <span ng-switch-default ng-style="style(reservation.color3)" class="colorMarking">&nbsp</span>
-                    </span>
-                    <span ng-switch on="reservation.color4" class="colorMarking">
-                        <span ng-switch-when=""></span>
-                        <span ng-switch-default ng-style="style(reservation.color4)" class="colorMarking">&nbsp</span>
-                    </span>
-                    <span ng-switch on="reservation.color5" class="colorMarking">
-                        <span ng-switch-when=""></span>
-                        <span ng-switch-default ng-style="style(reservation.color5)" class="colorMarking">&nbsp</span>
-                    </span>
-                </span>
-                <span class="reservationUnitDep">
-                    {{reservation.unit_name}} / {{reservation.dep_name}}
-                </span>
-                <span class="reservationIcons">
-                    <img ng-show="getStatusIcon(reservation)!=='none'" ng-src="img/{{ getStatusIcon(reservation) }}" alt="appointment status"/>
-                </span>
-                 &nbsp
-            </div>-->
                 </div>
             </div>
             <div class="alert alert-info" ng-hide="filteredReservations.length"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('appointmentsViewNoReservations')}}</div>
