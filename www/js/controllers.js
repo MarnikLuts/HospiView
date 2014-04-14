@@ -33,6 +33,8 @@ angular.module('myApp.controllers', []).
             $rootScope.unitFilter = '';
             $rootScope.departmentFilter = '';
 
+            delete $rootScope.searchRangeStart;
+            delete $rootScope.searchRangeEnd;
             /**
              * showPasswordBoolean and savePassword will be set to false.
              */
