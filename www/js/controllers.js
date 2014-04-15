@@ -2,14 +2,17 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-        controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, $interval, hospiviewFactory, dataFactory, languageFactory) {
+        controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, $interval, hospiviewFactory, dataFactory) {
 
             /**
              * Checks if the refresh of appointments is initiated. If it is,
              * it will be set to undifined so no refreshes happen on the login
              * screen.
              */
+            /*$interval.cancel($rootScope.requestTimer);
+            $rootScope.requestTimer = undefined;*/
             if (angular.isDefined($rootScope.requestTimer)) {
+                alert("defined");
                 $interval.cancel($rootScope.requestTimer);
                 $rootScope.requestTimer = undefined;
             }
@@ -33,6 +36,13 @@ angular.module('myApp.controllers', []).
             $rootScope.unitFilter = '';
             $rootScope.departmentFilter = '';
 
+            /**
+             * $rootScope.searchRangeStart tracks the earliest date checked
+             * for appointments and $rootScope.searchRangeEnd tracks the last
+             * date. These variables are being deleted on the login screen, 
+             * otherwise dates in this range would be skipped while retrieving 
+             * appointments.
+             */
             delete $rootScope.searchRangeStart;
             delete $rootScope.searchRangeEnd;
             /**
