@@ -432,7 +432,7 @@ angular.module('myApp.controllers', []).
             }
 
         }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $timeout, $modal, hospiviewFactory, dataFactory) {
+        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
 
             /**
              * Initiating variables. 
