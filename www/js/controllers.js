@@ -487,7 +487,7 @@ angular.module('myApp.controllers', []).
                 }
             }
 
-            $rootScope.requestTimer = $interval(function() {
+            $scope.requestTimer = $interval(function() {
                 if (!$rootScope.isOffline) {
                     refresh();
                 }
