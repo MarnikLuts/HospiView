@@ -12,11 +12,11 @@ angular.module('myApp.controllers', []).
             $interval.cancel($rootScope.requestTimer);
             $rootScope.requestTimer = undefined;
             delete $rootScope.requestTimer;/*
-            if (angular.isDefined($rootScope.requestTimer)) {
-                alert("defined");
-                $interval.cancel($rootScope.requestTimer);
-                $rootScope.requestTimer = undefined;
-            }*/
+             if (angular.isDefined($rootScope.requestTimer)) {
+             alert("defined");
+             $interval.cancel($rootScope.requestTimer);
+             $rootScope.requestTimer = undefined;
+             }*/
 
             /**
              * If the app is never used, the language will be set to English.
@@ -85,9 +85,9 @@ angular.module('myApp.controllers', []).
                     $scope.selectedUser = JSON.parse(localStorage.getItem($scope.user));
                     $scope.servers = $scope.selectedUser.servers;
                     $scope.serverRadio = $scope.servers[0];
-                    for(var i = 0; i<$scope.servers.length; i++)
+                    for (var i = 0; i < $scope.servers.length; i++)
                         $scope.savePassword[i] = $scope.selectedUser.servers[i].save_password;
-                    
+
                     $scope.getLoginUser(0);
                 } else {
                     $scope.servers[0] = undefined;
@@ -487,12 +487,17 @@ angular.module('myApp.controllers', []).
                 }
             }
 
-            $scope.requestTimer = $timeout(function() {
+            var requestTimer = $interval(function() {
                 if (!$rootScope.isOffline) {
+                    alert("test");
                     refresh();
                 }
             }, refreshrate);
 
+            $scope.$on("$destroy", function(event) {
+                        $timeout.cancel(requestTimer);
+                    }
+            );
 
             /**
              * Gets the name of the icon that matches the current status of the given reservation
@@ -829,7 +834,7 @@ angular.module('myApp.controllers', []).
                         $scope.loadingCalendar = false;
                     }
                     else {
-                        if($rootScope.refresh){
+                        if ($rootScope.refresh) {
                             $scope.loadingNext = false;
                         }
                         $rootScope.refresh = false;
