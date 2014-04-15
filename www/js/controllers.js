@@ -432,7 +432,7 @@ angular.module('myApp.controllers', []).
             }
 
         }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
+        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $timeout, $modal, hospiviewFactory, dataFactory) {
 
             /**
              * Initiating variables. 
@@ -487,7 +487,7 @@ angular.module('myApp.controllers', []).
                 }
             }
 
-            $scope.requestTimer = $interval(function() {
+            $scope.requestTimer = $timeout(function() {
                 if (!$rootScope.isOffline) {
                     refresh();
                 }
