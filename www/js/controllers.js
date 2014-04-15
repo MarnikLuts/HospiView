@@ -9,13 +9,13 @@ angular.module('myApp.controllers', []).
              * it will be set to undifined so no refreshes happen on the login
              * screen.
              */
-            /*$interval.cancel($rootScope.requestTimer);
-            $rootScope.requestTimer = undefined;*/
+            $interval.cancel($rootScope.requestTimer);
+            $rootScope.requestTimer = undefined;/*
             if (angular.isDefined($rootScope.requestTimer)) {
                 alert("defined");
                 $interval.cancel($rootScope.requestTimer);
                 $rootScope.requestTimer = undefined;
-            }
+            }*/
 
             /**
              * If the app is never used, the language will be set to English.
