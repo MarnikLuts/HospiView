@@ -10,7 +10,8 @@ angular.module('myApp.controllers', []).
              * screen.
              */
             $interval.cancel($rootScope.requestTimer);
-            $rootScope.requestTimer = undefined;/*
+            $rootScope.requestTimer = undefined;
+            delete $rootScope.requestTimer;/*
             if (angular.isDefined($rootScope.requestTimer)) {
                 alert("defined");
                 $interval.cancel($rootScope.requestTimer);
