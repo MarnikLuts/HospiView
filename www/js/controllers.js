@@ -495,7 +495,7 @@ angular.module('myApp.controllers', []).
             }, refreshrate);
 
             $scope.$on("$destroy", function(event) {
-                        $timeout.cancel(requestTimer);
+                        $interval.cancel(requestTimer);
                     }
             );
 
