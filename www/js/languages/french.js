@@ -119,5 +119,6 @@ var frenchStrings = {
         settingsApplicationSettings: "Paramètres de l'application",
         settingsLanguage: "Langue",
         settingsRefreshMin: "Minimum 30",
-        settingsRefreshMax: "Maximum 60"
+        settingsRefreshMax: "Maximum 60",
+        settingsRefreshDecimal: "Doit être décimal"
 };

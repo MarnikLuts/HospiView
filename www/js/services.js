@@ -7,7 +7,6 @@ angular.module('myApp.services', []).
          * Variable containing the base url.
          */
         constant('base_url', 'cfcs/webservices/reservations_service.cfc?').
-                
         /**
          * Factory containing methods for the different requests.
          * 
@@ -41,7 +40,7 @@ angular.module('myApp.services', []).
                 getUnitAbsentDays: function(uuid, year, month, unit_id, server_url) {
                     return $http.post(server_url + base_url + "method=GetUnitAbsentDays&UUID=" + uuid + "&Year=" + year + "&Month=" + month + "&Unit_Id=" + unit_id);
                 },
-                getLanguageStrings: function(language_Id, listOfPidsSids, server_url){
+                getLanguageStrings: function(language_Id, listOfPidsSids, server_url) {
                     return $http.post(server_url + base_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids);
                 }
 
@@ -57,7 +56,7 @@ angular.module('myApp.services', []).
                  */
                 setHolidays: function(responses) {
                     var defer = $q.defer();
-                    for(var i=0;i<responses.length;i++){
+                    for (var i = 0; i < responses.length; i++) {
                         var json = parseJson(responses[i].data);
                         if (json.PublicHolidays.Header.StatusCode == 1) {
                             if (!angular.isUndefined(json.PublicHolidays.Detail)) {
@@ -110,7 +109,7 @@ angular.module('myApp.services', []).
                             var json = parseJson(responses[j].data);
                             if (json.UnitAbsentdays.Header.StatusCode == 1) {
                                 if (!angular.isUndefined(json.UnitAbsentdays.Detail)) {
-                                    for(var a=0;a<json.UnitAbsentdays.Detail.AbsentDay.length;a++){
+                                    for (var a = 0; a < json.UnitAbsentdays.Detail.AbsentDay.length; a++) {
                                         var absentDay = json.UnitAbsentdays.Detail.AbsentDay[a];
                                         absentDay.unit_name = $rootScope.searchUnits[j].Header.unit_name;
                                         absentDay.hosp_short_name = server.hosp_short_name;
@@ -207,12 +206,12 @@ angular.module('myApp.services', []).
                  * Fills the calendar with the data set in the root scope
                  * 
                  */
-                loadCalendar: function(){
+                loadCalendar: function() {
                     var start = new Date($rootScope.searchRangeStart);
                     var end = new Date($rootScope.searchRangeEnd);
                     start.setHours(0, 0, 0);
                     end.setHours(0, 0, 0);
-                    
+
                     var events = $rootScope[$rootScope.searchString];
                     var j = 0;
                     var count = 0;
@@ -235,29 +234,29 @@ angular.module('myApp.services', []).
                         }
                         start.setDate(start.getDate() + 1);
                     }
-                    
-                    var holidays = $rootScope.publicHolidays[$rootScope.languageID-1];
+
+                    var holidays = $rootScope.publicHolidays[$rootScope.languageID - 1];
                     if (!angular.isUndefined(holidays.length))
                         for (var i = 0; i < holidays.length; i++) {
                             var holiday_date = new Date(holidays[i].the_date);
                             var holiday_date_end = new Date(holiday_date.getFullYear(), holiday_date.getMonth(), holiday_date.getDate(), holiday_date.getHours() + 1);
                             countEvent.push({title: holidays[i].memo, start: holiday_date.toUTCString(), end: holiday_date_end, allDay: true, className: "calendarHoliday", color: "#E83131"});
                         }
-                    
+
                     var absentDays = $rootScope.absentDays;
                     if (!angular.isUndefined(absentDays.length))
                         for (var i = 0; i < absentDays.length; i++) {
                             if (!isHoliday(absentDays[i].the_date)) {
                                 var absent_date = new Date(absentDays[i].the_date),
-                                    absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1),
-                                    absent_title = absentDays[i].unit_name;
-                                if($rootScope.currentServers.length>1)
-                                    absent_title=absentDays[i].hosp_short_name + " / " + absentDays[i].unit_name;
+                                        absent_date_end = new Date(absent_date.getFullYear(), absent_date.getMonth(), absent_date.getDate(), absent_date.getHours() + 1),
+                                        absent_title = absentDays[i].unit_name;
+                                if ($rootScope.currentServers.length > 1)
+                                    absent_title = absentDays[i].hosp_short_name + " / " + absentDays[i].unit_name;
                                 countEvent.push({title: absent_title, start: absent_date.toUTCString(), end: absent_date_end, allDay: true, className: "calendarAbsent", color: "#5F615D"});
                             }
                         }
                     console.log(absentDays);
-                    
+
                     function isHoliday(date) {
                         if (!angular.isUndefined(holidays.length))
                             for (var i = 0; i < holidays.length; i++) {
@@ -267,68 +266,136 @@ angular.module('myApp.services', []).
                         return false;
                     }
                     return countEvent;
-                }
-            };
-        }).factory('languageFactory', function(hospiviewFactory, $q, $rootScope){
-            /**
-             * Gets a language string from a given array using its PID in combination with its SID
-             * 
-             * @param {type} langArray
-             * @param {type} pid
-             * @param {type} sid
-             * @returns {Array|_L164.getStringByPidSid.langString}
-             */
-            function getStringByPidAndSid(langArray, pid, sid){
-                for(var i=0;i<langArray.length;i++){
-                    if(langArray[i].pid == pid && langArray[i].sid == sid) 
-                        return langArray[i].string;
-                }
-            }
-            return{
-                /**
-                 * Loads the language strings from remote data
-                 * 
-                 * @param {type} hosp_url
-                 * @returns {unresolved}
-                 */
-                initRemoteLanguageStrings: function(hosp_url){
-                    var listOfPidsSids = "204,1,2,3,4,5,6",
-                        promises = [],
-                        defer = $q.defer();
+                },
+                refresh: function() {
+                    console.log("refresh");
+                    $rootScope.requestCounter = 0;
+                    $rootScope.searchType = '';
+                    $rootScope.startDate = new Date($rootScope.searchRangeStart);
+                    $rootScope.endDate = new Date($rootScope.searchRangeEnd);
+                    $rootScope.refresh = true;
+
+                    $rootScope.searchString = $rootScope.user + 'Reservations';
+
+                    //var index = 0;
+                    var allReservations = [];
+                    var responseCount = 0;
+                    var index = 0;
+
+                    var self = this;
+                    var firstCycle = true;
+
+                    getReservations(index);
                     
-                    for(var i=1;i<4;i++){
-                        promises.push(hospiviewFactory.getLanguageStrings(i, listOfPidsSids, hosp_url));
+                    function getReservations(index) {
+                        var server = $rootScope.currentServers[index];
+                        $rootScope.searchUnits = [];
+                        hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
+                                .then(function(response) {
+                                    return self.setSearchUnits(response, server);
+                                }, error).then(function(server) {
+                            return self.searchReservations(server);
+                        }, error).then(function(reservations) {
+                            console.log(reservations);
+                            addReservations(reservations);
+                        });
                     }
                     
-                    $q.all(promises).then(function(responses){
-                        for(var j=0;j<responses.length;j++){
-                            var json = parseJson(responses[j].data);
-                            
-                            if(json.LanguageStrings.Header.StatusCode === "1"){
-                                var remoteDict = {
-                                    createAppointmentGreeting: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 1),
-                                };
-                                
-                                switch(j){
-                                    case 0:
-                                        $rootScope.nlRemoteDict = remoteDict;
-                                        break;
-                                    case 1:
-                                        $rootScope.frRemoteDict = remoteDict;
-                                        break;
-                                    case 2:
-                                        $rootScope.enRemoteDict = remoteDict;
-                                        break;
-                                }
-                                defer.resolve();
-                            }else{
-                                defer.reject($rootScope.getLocalizedString('internalError'));
-                                break;
+                    function addReservations(reservations) {
+                        if (reservations !== undefined) {
+                            for (var r = 0; r < reservations.length; r++) {
+                                reservations[r].hosp_short_name = $rootScope.currentServers[index].hosp_short_name;
+                                allReservations.push(reservations[r]);
                             }
                         }
-                    });
-                    return defer.promise;
+                        if (responseCount + 1 === $rootScope.currentServers.length) {
+                            setReservations(allReservations);
+                        } else {
+                            responseCount++;
+                            getReservations(responseCount);
+                        }
+                    }
+
+                    function setReservations() {
+                        if (firstCycle) {
+                            $rootScope[$rootScope.searchString] = [];
+                            firstCycle = false;
+                        }
+                        for (var i = 0; i < allReservations.length; i++)
+                            $rootScope[$rootScope.searchString].push(allReservations[i]);
+                        $rootScope.$emit('setReservationsEvent', {});
+                        $rootScope.refresh = false;
+                        $rootScope.searchInProgress = false;
+                        console.log($rootScope[$rootScope.searchString]);
+                    }
+                    
+                    function error(data) {
+                        var loggingIn = false;
+                        var error = true;
+                        var errormessage = data;
+                    }
                 }
-               
             };
-        });
+        }).factory('languageFactory', function(hospiviewFactory, $q, $rootScope) {
+    /**
+     * Gets a language string from a given array using its PID in combination with its SID
+     * 
+     * @param {type} langArray
+     * @param {type} pid
+     * @param {type} sid
+     * @returns {Array|_L164.getStringByPidSid.langString}
+     */
+    function getStringByPidAndSid(langArray, pid, sid) {
+        for (var i = 0; i < langArray.length; i++) {
+            if (langArray[i].pid == pid && langArray[i].sid == sid)
+                return langArray[i].string;
+        }
+    }
+    return{
+        /**
+         * Loads the language strings from remote data
+         * 
+         * @param {type} hosp_url
+         * @returns {unresolved}
+         */
+        initRemoteLanguageStrings: function(hosp_url) {
+            var listOfPidsSids = "204,1,2,3,4,5,6",
+                    promises = [],
+                    defer = $q.defer();
+
+            for (var i = 1; i < 4; i++) {
+                promises.push(hospiviewFactory.getLanguageStrings(i, listOfPidsSids, hosp_url));
+            }
+
+            $q.all(promises).then(function(responses) {
+                for (var j = 0; j < responses.length; j++) {
+                    var json = parseJson(responses[j].data);
+
+                    if (json.LanguageStrings.Header.StatusCode === "1") {
+                        var remoteDict = {
+                            createAppointmentGreeting: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 1),
+                        };
+
+                        switch (j) {
+                            case 0:
+                                $rootScope.nlRemoteDict = remoteDict;
+                                break;
+                            case 1:
+                                $rootScope.frRemoteDict = remoteDict;
+                                break;
+                            case 2:
+                                $rootScope.enRemoteDict = remoteDict;
+                                break;
+                        }
+                        defer.resolve();
+                    } else {
+                        defer.reject($rootScope.getLocalizedString('internalError'));
+                        break;
+                    }
+                }
+            });
+            return defer.promise;
+        }
+
+    };
+});

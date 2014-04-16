@@ -5,7 +5,6 @@
     <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}</div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
-
 <div class="height60Percent widthPercent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
     <div class="col-md-12 height20Percent widthPercent">
         <div class="dateAppointmentsView dateAppointmentsViewScaled">
@@ -109,3 +108,4 @@
         </button>
     </div>
 </div>
+<span ng-controller="refreshCtrl"></span>

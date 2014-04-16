@@ -48,11 +48,12 @@
                 <div class="form-group widthPercent">
                     <div class="input-group widthPercent">
                         <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('settingsRefresh')}}:</span>
-                        <input id="refresh" name="refreshrate" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="60" required/>
+                        <input id="refresh" name="refreshrate" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="60" ng-pattern="/^[0-6]?[0-9]$/" required/>
                     </div>
                     <div class="alert alert-danger input-group widthPercent" ng-show="settingsForm.refreshrate.$dirty && settingsForm.refreshrate.$invalid">
                         <span ng-show="settingsForm.refreshrate.$error.min">{{ getLocalizedString('settingsRefreshMin')}}</span>
                         <span ng-show="settingsForm.refreshrate.$error.max">{{ getLocalizedString('settingsRefreshMax')}}</span>
+                        <span ng-show="settingsForm.refreshrate.$error.pattern">{{ getLocalizedString('settingsRefreshDecimal')}}</span>
                         <span ng-show="settingsForm.refreshrate.$error.required">{{ getLocalizedString('isRequired')}}</span>
                     </div>
                 </div>

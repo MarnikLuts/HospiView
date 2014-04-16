@@ -119,5 +119,6 @@ var englishStrings = {
         settingsApplicationSettings: "Application settings",
         settingsLanguage: "Application language",
         settingsRefreshMin: "Minimum 30",
-        settingsRefreshMax: "Maximum 60"
+        settingsRefreshMax: "Maximum 60",
+        settingsRefreshDecimal: "Has to be decimal"
  };

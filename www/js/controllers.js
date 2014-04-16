@@ -9,14 +9,16 @@ angular.module('myApp.controllers', []).
              * it will be set to undifined so no refreshes happen on the login
              * screen.
              */
-            $interval.cancel($rootScope.requestTimer);
-            $rootScope.requestTimer = undefined;
-            delete $rootScope.requestTimer;/*
+            /*$interval.cancel($rootScope.requestTimer);
+             $rootScope.requestTimer = undefined;
+             delete $rootScope.requestTimer;/*
              if (angular.isDefined($rootScope.requestTimer)) {
              alert("defined");
              $interval.cancel($rootScope.requestTimer);
              $rootScope.requestTimer = undefined;
              }*/
+
+            $rootScope.requestCounter = 0;
 
             /**
              * If the app is never used, the language will be set to English.
@@ -466,8 +468,6 @@ angular.module('myApp.controllers', []).
                 $scope.showDate = formatShowDate(lowestDate, $rootScope.languageID);
             }
             var user = JSON.parse(localStorage.getItem($rootScope.user));
-            var refreshrate = user.refreshrate * 1000;
-            console.log(refreshrate);
 
             $scope.cellcontentPatient = user.cellcontent.patient;
             $scope.cellcontentTitle = user.cellcontent.title;
@@ -475,29 +475,14 @@ angular.module('myApp.controllers', []).
 
             if ($rootScope.currentServers.length === 1)
                 $scope.oneServer = true;
-
-            function refresh() {
-                if (!$rootScope.searchInProgress) {
-                    $rootScope.searchType = '';
-                    $rootScope.startDate = new Date($rootScope.searchRangeStart);
-                    $rootScope.endDate = new Date($rootScope.searchRangeEnd);
-                    $rootScope.refresh = true;
-                    $scope.loadingNext = true;
-                    search();
-                }
-            }
-
-            var requestTimer = $interval(function() {
-                if (!$rootScope.isOffline) {
-                    alert("test");
-                    refresh();
-                }
-            }, refreshrate);
-
-            $scope.$on("$destroy", function(event) {
-                        $interval.cancel(requestTimer);
-                    }
-            );
+            
+            
+            $rootScope.$on('setReservationsEvent', function(event, args) {
+                console.log("setReservationsEvent");
+                $scope.reservations = [];
+                $scope.reservations = $rootScope[$rootScope.searchString];
+            });
+            
 
             /**
              * Gets the name of the icon that matches the current status of the given reservation
@@ -1357,7 +1342,7 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope, dataFactory) {
-
+            
             var current = new Date($rootScope.currentdate);
             var showWeekends = false;
             $scope.back = function() {
@@ -1404,6 +1389,11 @@ angular.module('myApp.controllers', []).
                 $scope.uiConfig.calendar.month = month.getMonth();
                 $scope.uiConfig.calendar.weekends = !$scope.uiConfig.calendar.weekends;
             };
+            
+            $rootScope.$on('setReservationsEvent', function(event, args) {
+                countEvent = dataFactory.loadCalendar();
+                $scope.eventSources = [countEvent];
+            });
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location) {
             $scope.backToMainMenu = function() {
@@ -1515,16 +1505,6 @@ angular.module('myApp.controllers', []).
 
         }).
         controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory, dataFactory, languageFactory, $q, $modal) {
-
-            /**
-             * Checks if the refresh of appointments is initiated. If it is,
-             * it will be set to undifined so no refreshes happen on the login
-             * screen.
-             */
-            if (angular.isDefined($rootScope.requestTimer)) {
-                $interval.cancel($rootScope.requestTimer);
-                $rootScope.requestTimer = undefined;
-            }
 
             /**
              * If it's the first time a user uses the application, the back button
@@ -1879,4 +1859,25 @@ angular.module('myApp.controllers', []).
             $scope.showpassword = function() {
                 $scope.showPasswordBoolean = !$scope.showPasswordBoolean;
             };
+        }).
+        controller('refreshCtrl', function($scope, $rootScope, $interval, dataFactory){
+            var user = JSON.parse(localStorage.getItem($rootScope.user));
+            var refreshrate = user.refreshrate * 1000;
+            
+            var requestTimer = $interval(function() {
+                if (!$rootScope.isOffline) {
+                    console.log($rootScope.requestCounter);
+                    $rootScope.requestCounter = $rootScope.requestCounter + 1000;
+                    if (refreshrate <= $rootScope.requestCounter && !$rootScope.searchInProgress) {
+                        dataFactory.refresh();
+                    }
+                }
+            }, 1000);
+
+            $scope.$on("$destroy", function(event) {
+                $interval.cancel(requestTimer);
+            });
+            
+            $scope.$emit('refreshEvent', {});
         });
+

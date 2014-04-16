@@ -119,5 +119,6 @@ var dutchStrings = {
         settingsApplicationSettings: "Applicatie instellingen",
         settingsLanguage: "Applicatie taal",
         settingsRefreshMin: "Minimum 30",
-        settingsRefreshMax: "Maximum 60"
+        settingsRefreshMax: "Maximum 60",
+        settingsRefreshDecimal: "Mag geen komma getal zijn"
 };
