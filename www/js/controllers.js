@@ -715,22 +715,22 @@ angular.module('myApp.controllers', []).
                 }
                 if (colors.length === 2) {
                     color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 50%, #' + colors[1] + ' 50%, #' + colors[1] + ' 100%)';
-                    color2 = '-webkit-linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 50%, #' + colors[1] + ' 50%, #' + colors[1] + ' 100%)';
+                    color2 = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 50%, #' + colors[1] + ' 50%, #' + colors[1] + ' 100%)';
                     return {"background": color2};
                 }
                 if (colors.length === 3) {
                     color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 33%, #' + colors[1] + ' 33%, #' + colors[1] + ' 66%, #' + colors[2] + ' 66%, #' + colors[2] + ' 100%)';
-                    color2 = '-webkit-linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 33%, #' + colors[1] + ' 33%, #' + colors[1] + ' 66%, #' + colors[2] + ' 66%, #' + colors[2] + ' 100%)';
+                    color2 = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 33%, #' + colors[1] + ' 33%, #' + colors[1] + ' 66%, #' + colors[2] + ' 66%, #' + colors[2] + ' 100%)';
                     return {"background": color2};
                 }
                 if (colors.length === 4) {
                     color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 25%, #' + colors[1] + ' 25%, #' + colors[1] + ' 50%, #' + colors[2] + ' 50%, #' + colors[2] + ' 75%, #' + colors[3] + ' 75%, #' + colors[3] + ' 100%)';
-                    color2 = '-webkit-linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 25%, #' + colors[1] + ' 25%, #' + colors[1] + ' 50%, #' + colors[2] + ' 50%, #' + colors[2] + ' 75%, #' + colors[3] + ' 75%, #' + colors[3] + ' 100%)';
+                    color2 = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 25%, #' + colors[1] + ' 25%, #' + colors[1] + ' 50%, #' + colors[2] + ' 50%, #' + colors[2] + ' 75%, #' + colors[3] + ' 75%, #' + colors[3] + ' 100%)';
                     return {"background": color2};
                 }
                 if (colors.length === 5) {
                     color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 20%, #' + colors[1] + ' 20%, #' + colors[1] + ' 40%, #' + colors[2] + ' 40%, #' + colors[2] + ' 60%, #' + colors[3] + ' 60%, #' + colors[3] + ' 80%, #' + colors[4] + ' 80%, #' + colors[4] + ' 100%)';
-                    color2 = '-webkit-linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 20%, #' + colors[1] + ' 20%, #' + colors[1] + ' 40%, #' + colors[2] + ' 40%, #' + colors[2] + ' 60%, #' + colors[3] + ' 60%, #' + colors[3] + ' 80%, #' + colors[4] + ' 80%, #' + colors[4] + ' 100%)';
+                    color2 = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 20%, #' + colors[1] + ' 20%, #' + colors[1] + ' 40%, #' + colors[2] + ' 40%, #' + colors[2] + ' 60%, #' + colors[3] + ' 60%, #' + colors[3] + ' 80%, #' + colors[4] + ' 80%, #' + colors[4] + ' 100%)';
                     return {"background": color2};
                 }
             }
