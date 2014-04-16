@@ -48,6 +48,8 @@ angular.module('myApp.controllers', []).
              */
             delete $rootScope.searchRangeStart;
             delete $rootScope.searchRangeEnd;
+            $rootScope.searchRangeStart = null;
+            $rootScope.searchRangeEnd = null;
             /**
              * showPasswordBoolean and savePassword will be set to false.
              */
@@ -340,6 +342,7 @@ angular.module('myApp.controllers', []).
                     }
                     alert("Inloggen is mislukt op de volgende servers:" + servers);
                 }
+                
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
