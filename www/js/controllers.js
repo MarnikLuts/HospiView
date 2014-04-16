@@ -369,6 +369,8 @@ angular.module('myApp.controllers', []).
                         $rootScope.startDate = formatDate(newStartDate);
                         $rootScope.endDate = formatDate(newEndDate);
                         postLogin();
+                    } else {
+                        $scope.loggingIn = false;
                     }
                 }, function() {
                     $scope.loggingIn = false;
