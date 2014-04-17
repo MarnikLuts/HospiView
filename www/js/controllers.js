@@ -213,7 +213,6 @@ angular.module('myApp.controllers', []).
                             }
                             validServers[r].uuid = json.Authentication.Detail.uuid;
                             console.log(json.Authentication.Detail.uuid + " ");
-                            alert(validServers[r].uuid + " ");
                             validServers[r].save_password = $scope.savePassword[r];
                             console.log($scope.savePassword[r]);
                             $rootScope.currentServers.push(validServers[r]);
@@ -1481,11 +1480,11 @@ angular.module('myApp.controllers', []).
             };
 
             if ($scope.selectedUser.cellcontent.patient === true)
-                $("#settingsPatient").button('toggle');
+                $('#patientCheckbox').prop('checked', true);
             if ($scope.selectedUser.cellcontent.title === true)
-                $("#settingsTitle").button('toggle');
+                $('#titleCheckbox').prop('checked', true);
             if ($scope.selectedUser.cellcontent.department === true)
-                $("#settingsDepartment").button('toggle');
+                $('#departmentCheckbox').prop('checked', true);
 
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
@@ -1501,7 +1500,6 @@ angular.module('myApp.controllers', []).
                 $scope.selectedUser.cellcontent.title = $('#titleCheckbox').prop('checked');
                 $scope.selectedUser.cellcontent.department = $('#departmentCheckbox').prop('checked');
 
-                console.log($('#patientCheckbox').prop('checked'));
                 localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
                 $location.path('/doctor/appointmentsView');
             };
