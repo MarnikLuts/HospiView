@@ -62,7 +62,7 @@ angular.module('myApp.controllers', []).
              * 
              * Else, the localStorage item "users" will be used to create a
              * list of users of the application.
-             * */
+             */
             if (localStorage.getItem("users") === null) {
                 $location.path('/selectserver/new');
             } else {
@@ -331,6 +331,7 @@ angular.module('myApp.controllers', []).
             }
 
             function setReservations(reservations) {
+                alert($rootScope.searchRangeStart + " " + $rootScope.searchRangeEnd);
                 firstCycle = true;
                 console.log("reservation count: " + reservations.length);
                 $rootScope[$rootScope.searchString] = reservations;
