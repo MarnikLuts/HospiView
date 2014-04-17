@@ -2,7 +2,13 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-        controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, hospiviewFactory, dataFactory) {
+        controller('LoginCtrl', function($scope, $location, $route, $q, $rootScope, $modal, hospiviewFactory, dataFactory) {
+            
+            if($rootScope.logout){
+                $rootScope.logout = false;
+                window.location.reload();
+            }
+            
             $scope.pageClass = "previous-page-visited";
             /**
              * Checks if the refresh of appointments is initiated. If it is,
@@ -178,9 +184,7 @@ angular.module('myApp.controllers', []).
                         $scope.selectedUser.servers[i].save_password = true;
                     }
                     invalidFields[i] = angular.isUndefined($scope.password[i]);
-                    alert(promises + " ");
                     if (!invalidFields[i]) {
-                        alert("valid fields");
                         promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
                         validServers.push($scope.selectedUser.servers[i]);
                     } else
@@ -442,7 +446,7 @@ angular.module('myApp.controllers', []).
             }
 
         }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
+        controller('DoctorViewAppointmentsCtrl', function($scope, $route, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
             $scope.pageClass = "next-page";
             /**
              * Initiating variables. 
@@ -743,6 +747,7 @@ angular.module('myApp.controllers', []).
                 }
             }
             $scope.logout = function() {
+                $rootScope.logout = true;
                 $rootScope.user = null;
                 $rootScope.type = null;
                 $rootScope[$rootScope.searchString] = $scope.reservations;
