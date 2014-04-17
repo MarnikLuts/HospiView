@@ -274,7 +274,6 @@ angular.module('myApp.controllers', []).
                 }, error).then(function(server) {
                     return dataFactory.searchReservations(server);
                 }, error).then(function(reservations) {
-                    alert(reservations.length + " ");
                     addReservations(reservations);
                 });
             }
@@ -317,6 +316,7 @@ angular.module('myApp.controllers', []).
                 $scope.loggingIn = false;
                 $scope.error = true;
                 $scope.errormessage = data;
+                alert(data + " ");
             }
 
             /**
