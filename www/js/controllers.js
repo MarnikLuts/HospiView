@@ -274,6 +274,7 @@ angular.module('myApp.controllers', []).
                 }, error).then(function(server) {
                     return dataFactory.searchReservations(server);
                 }, error).then(function(reservations) {
+                    alert(reservations.length + " ");
                     addReservations(reservations);
                 });
             }
@@ -331,7 +332,6 @@ angular.module('myApp.controllers', []).
             }
 
             function setReservations(reservations) {
-                alert(reservations.length + " ");
                 firstCycle = true;
                 console.log("reservation count: " + reservations.length);
                 $rootScope[$rootScope.searchString] = reservations;
