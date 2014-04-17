@@ -265,15 +265,20 @@ angular.module('myApp.controllers', []).
                 var year = new Date().getFullYear().toString(),
                         server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
+                alert(server.uuid + " " + server.hosp_url);
 
                 hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
                         .then(function(response) {
-                            return dataFactory.setSearchUnits(response, server);
-                        }, error).then(function(server) {
+                            alert(response + " ");
+                    return dataFactory.setSearchUnits(response, server);
+                }, error).then(function(server) {
+                    alert(server + " ");
                     return dataFactory.setAbsentDays(year, server);
                 }, error).then(function(server) {
+                    alert(server + " ");
                     return dataFactory.searchReservations(server);
                 }, error).then(function(reservations) {
+                    alert(reservations + " ");
                     addReservations(reservations);
                 });
             }
@@ -316,7 +321,6 @@ angular.module('myApp.controllers', []).
                 $scope.loggingIn = false;
                 $scope.error = true;
                 $scope.errormessage = data;
-                alert(data + " ");
             }
 
             /**
