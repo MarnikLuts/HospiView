@@ -190,6 +190,7 @@ angular.module('myApp.controllers', []).
                     }
                     invalidFields[i] = angular.isUndefined($scope.password[i]);
                     if (!invalidFields[i]) {
+                        alert(promises + " ");
                         promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
                         validServers.push($scope.selectedUser.servers[i]);
                     } else
