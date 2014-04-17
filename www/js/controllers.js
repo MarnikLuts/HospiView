@@ -4,20 +4,15 @@
 angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $route, $q, $rootScope, $modal, hospiviewFactory, dataFactory) {
             
-            if($rootScope.logout){
-                $rootScope.logout = false;
-                window.location.reload();
-            }
-            
             $('.icasaLogo').live('tap', function() {
                 var url = $(this).attr("rel");   
                 loadURL(url);
             });
             
-            function loadUrl(url){
+            $scope.loadUrl = function(url){
                 navigator.app.loadUrl(url, { openExternal:true });
                 return false;
-            } 
+            };
 
             $scope.pageClass = "previous-page-visited";
             /**
@@ -757,7 +752,6 @@ angular.module('myApp.controllers', []).
                 }
             }
             $scope.logout = function() {
-                $rootScope.logout = true;
                 $rootScope.user = null;
                 $rootScope.type = null;
                 $rootScope[$rootScope.searchString] = $scope.reservations;
