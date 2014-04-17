@@ -3,7 +3,7 @@
 
 angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, $interval, hospiviewFactory, dataFactory) {
-
+            $scope.pageClass = "previous-page-visited";
             /**
              * Checks if the refresh of appointments is initiated. If it is,
              * it will be set to undifined so no refreshes happen on the login
@@ -439,7 +439,7 @@ angular.module('myApp.controllers', []).
 
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
-
+            $scope.pageClass = "next-page";
             /**
              * Initiating variables. 
              * searchInProgress is used to disable the refresh if another
