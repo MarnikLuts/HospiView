@@ -13,6 +13,14 @@
         <link rel="stylesheet" href="lib/fullcalendar/fullcalendar.css"/>
         <link rel="stylesheet" href="lib/fullcalendar/fullcalendar.print.css"/>
 
+        <script type="text/javascript" charset="utf-8" src="lib/cordova.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            document.addEventListener("deviceready", onDeviceReady, false);
+            navigator.splashscreen.show();
+            function onDeviceReady() {
+                navigator.splashscreen.hide()
+            }
+        </script>
     </head>
     <body>
         
@@ -22,7 +30,7 @@
         <!-- page {{pageClass}}-->
     
         <!--Load JavaScript files-->
-        <script type="text/javascript" src="cordova.js"></script>
+        
         <script src="js/helpers.js"></script>
         <script src="lib/jquery-1.7.min.js"></script>
         <script src="lib/jquery-ui-1.8.16.custom.min.js"></script>
@@ -49,5 +57,6 @@
         <script src="js/languages/dutch.js"></script>
         <script src="js/languages/french.js"></script>
         <script src="js/languages/english.js"></script>
+
     </body>
 </html>
