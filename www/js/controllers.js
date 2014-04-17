@@ -46,10 +46,9 @@ angular.module('myApp.controllers', []).
              * otherwise dates in this range would be skipped while retrieving 
              * appointments.
              */
-            delete $rootScope.searchRangeStart;
-            delete $rootScope.searchRangeEnd;
-            $rootScope.searchRangeStart = null;
-            $rootScope.searchRangeEnd = null;
+            $rootScope.searchRangeStart = undefined;
+            $rootScope.searchRangeEnd = undefined;
+            
             /**
              * showPasswordBoolean and savePassword will be set to false.
              */
