@@ -331,7 +331,7 @@ angular.module('myApp.controllers', []).
             }
 
             function setReservations(reservations) {
-                alert($rootScope.searchRangeStart + " " + $rootScope.searchRangeEnd);
+                alert(reservations);
                 firstCycle = true;
                 console.log("reservation count: " + reservations.length);
                 $rootScope[$rootScope.searchString] = reservations;
