@@ -178,7 +178,9 @@ angular.module('myApp.controllers', []).
                         $scope.selectedUser.servers[i].save_password = true;
                     }
                     invalidFields[i] = angular.isUndefined($scope.password[i]);
+                    alert(promises + " ");
                     if (!invalidFields[i]) {
+                        alert("valid fields");
                         promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
                         validServers.push($scope.selectedUser.servers[i]);
                     } else
@@ -206,6 +208,7 @@ angular.module('myApp.controllers', []).
                                 $rootScope.type = 1;
                             }
                             validServers[r].uuid = json.Authentication.Detail.uuid;
+                            console.log(json.Authentication.Detail.uuid + " ");
                             alert(validServers[r].uuid + " ");
                             validServers[r].save_password = $scope.savePassword[r];
                             console.log($scope.savePassword[r]);
@@ -266,7 +269,6 @@ angular.module('myApp.controllers', []).
                 var year = new Date().getFullYear().toString(),
                         server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
-                alert(server.uuid + " " + server.hosp_url);
 
                 hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
                         .then(function(response) {
