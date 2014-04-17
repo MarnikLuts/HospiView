@@ -9,6 +9,16 @@ angular.module('myApp.controllers', []).
                 window.location.reload();
             }
             
+            $('.icasaLogo').live('tap', function() {
+                var url = $(this).attr("rel");   
+                loadURL(url);
+            });
+            
+            function loadUrl(url){
+                navigator.app.loadUrl(url, { openExternal:true });
+                return false;
+            } 
+
             $scope.pageClass = "previous-page-visited";
             /**
              * Checks if the refresh of appointments is initiated. If it is,
@@ -272,6 +282,7 @@ angular.module('myApp.controllers', []).
                 var year = new Date().getFullYear().toString(),
                         server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
+                alert(server.uuid);
 
                 hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
                         .then(function(response) {
