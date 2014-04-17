@@ -2,7 +2,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-        controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, $interval, hospiviewFactory, dataFactory) {
+        controller('LoginCtrl', function($scope, $location, $q, $rootScope, $modal, hospiviewFactory, dataFactory) {
             $scope.pageClass = "previous-page-visited";
             /**
              * Checks if the refresh of appointments is initiated. If it is,
@@ -206,6 +206,7 @@ angular.module('myApp.controllers', []).
                                 $rootScope.type = 1;
                             }
                             validServers[r].uuid = json.Authentication.Detail.uuid;
+                            alert(validServers[r].uuid + " ");
                             validServers[r].save_password = $scope.savePassword[r];
                             console.log($scope.savePassword[r]);
                             $rootScope.currentServers.push(validServers[r]);
@@ -269,16 +270,12 @@ angular.module('myApp.controllers', []).
 
                 hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
                         .then(function(response) {
-                            alert(response + " ");
                     return dataFactory.setSearchUnits(response, server);
                 }, error).then(function(server) {
-                    alert(server + " ");
                     return dataFactory.setAbsentDays(year, server);
                 }, error).then(function(server) {
-                    alert(server + " ");
                     return dataFactory.searchReservations(server);
                 }, error).then(function(reservations) {
-                    alert(reservations + " ");
                     addReservations(reservations);
                 });
             }
