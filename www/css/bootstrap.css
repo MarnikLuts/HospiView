@@ -1762,7 +1762,6 @@ input[type="date"] {
 .form-group {
     margin-bottom: 15px;
 }
-
 .radio,
 .checkbox {
     display: block;
@@ -1777,12 +1776,10 @@ input[type="date"] {
     font-weight: normal;
     cursor: pointer;
 }
-/*EDITED: bigger checkboxes*/
 .radio input[type="radio"],
 .radio-inline input[type="radio"],
 .checkbox input[type="checkbox"],
 .checkbox-inline input[type="checkbox"] {
-    height: 50px;
     float: left;
     margin-left: -20px;
 }
