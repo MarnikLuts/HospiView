@@ -1,0 +1,25 @@
+<div class="col-md-12 page-header-blue">
+    <h1>HospiView</h1>
+</div>
+<div class="col-md-12 well-lg-red">
+    <h2>Welkom</h2>
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+            <input type="text" id="username" class="form-control input-lg" placeholder="Gebruikersnaam" ng-model="username">
+        </div></br>
+        <div class="input-group" ng-hide="showPasswordBoolean">
+            <span class="input-group-addon btn" ng-click="showpassword()"><span class="glyphicon glyphicon-eye-close"></span></span>
+            <input type="password" id="password" class="form-control input-lg" placeholder="Paswoord" ng-model="password">
+        </div>
+        <div class="input-group" ng-show="showPasswordBoolean">
+            <span class="input-group-addon btn" ng-click="showpassword()"><span class="glyphicon glyphicon-eye-close"></span></span>
+            <input type="text" id="password" class="form-control input-lg" placeholder="Paswoord" ng-model="password">
+        </div>
+    </div>
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-xl" ng-click="login()">Log in</button>
+    </div>
+    <div class="alert alert-danger" ng-show="error">{{errormessage}}</div>
+</div>
+

@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>SOAP JavaScript Client Test</title>
+    <script type="text/javascript">
+        function soap() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open('POST', 'http://agendaviewtest.agendaview.be/cfcs/webservices/reservations_service.cfc?wsdl', true);
+
+            // build SOAP request
+            var sr = '<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">' +
+                    '<Body>' +
+                    '<GetAuthentication xmlns="http://webservices.cfcs">' +
+                    '<User_Login>[string]</User_Login>' +
+                    '<User_Password>[string]</User_Password>' +
+                    '</GetAuthentication>' +
+                    '</Body>' +
+                    '</Envelope>';
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+
+                        alert('done use firebug to see response');
+                    }
+                }
+            }
+            // Send the POST request
+            xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+            xmlhttp.send(sr);
+            // send request
+            // ...
+        }
+    </script>
+</head>
+<body>
+    <form name="Demo" action="" method="post">
+        <div>
+            <input type="button" value="Soap" onclick="soap();" />
+        </div>
+    </form>
+</body>
+<html>

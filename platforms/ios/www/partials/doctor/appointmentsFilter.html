@@ -1,0 +1,37 @@
+<nav class="navbar navbar-default" role="navigation">
+    <button type="submit" class="btn btn-sm-back" ng-click="back()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        {{ getLocalizedString('back')}}
+    </button>
+    <div class="title">{{ getLocalizedString('appointmentsFilterTitle')}}</div>
+    <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
+</nav>
+<div class="col-md-12">
+    <div class="well">
+        <h4>{{getLocalizedString('appointmentsFilterMessage')}}</h4>
+        <div class="form-group">
+            <span class="filterTitle">{{getLocalizedString('appointmentsFilterServer')}}:</span>
+            <select class="form-control input-xl" ng-model="serverFilter" ng-options="server as server.hosp_full_name for server in servers" ng-change="loadUnit()">
+                <option value="">{{getLocalizedString('loginServerSelectDefault')}}</option>
+            </select>
+        </div>
+        <div class="form-group" ng-hide="disableUnits">
+            <span class="filterTitle">{{getLocalizedString('appointmentsFilterUnitOrGroup')}}:</span>
+            <select class="form-control input-xl" ng-model="unitFilter" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in units" ng-change="loadDep()" ng-hide="disableUnits">
+                <option value="">{{getLocalizedString('appointmentsFilterUnitOrGroup')}}</option>
+            </select>
+        </div>
+        <div class="form-group" ng-hide="disableDepartments">
+            <span class="filterTitle">{{getLocalizedString('appointmentsFilterDepartment')}}:</span>
+            <select class="form-control input-xl" ng-model="depFilter" ng-options="dep as dep.dep_name for dep in departments" ng-hide="disableDepartments">
+                <option value="">{{getLocalizedString('appointmentsFilterDepartment')}}</option>
+            </select>
+        </div> 
+    </div>
+    <div class="form-group">
+        <div class="btn-group btn-group-lg btn-block">
+            <button class="btn btn-default btn-lg btn-width" ng-click="removeFilter()">{{getLocalizedString('appointmentsFilterRemove')}}</button>
+            <button class="btn btn-default btn-lg btn-width" ng-click="applyFilter()">{{getLocalizedString('appointmentsFilterApply')}}</button>
+        </div>
+    </div>
+</div>

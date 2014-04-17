@@ -1,0 +1,52 @@
+<nav class="navbar navbar-default" role="navigation">
+    <button type="submit" class="btn btn-sm-back" ng-click="back()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        {{ getLocalizedString('back')}}
+    </button>
+    <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}</div>
+    <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
+</nav>
+<div class="col-md-12 widthPercent" ng-swipe-left="nextAppointment()" ng-swipe-right="previousAppointment()">
+    <h2>{{reservation.title}} / {{reservation.name}}</h2>
+    <h4>{{getLocalizedString('appointmentDetail')}}</h4>
+    <div class="well detailTable widthPercent">
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailDoctor')}}</span><span class="detailInfo">{{reservation.unit_name}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailId')}}</span><span class="detailInfo">{{reservation.id}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailTitle')}}</span><span class="detailInfo">{{reservation.title}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailBooking')}}</span><span class="detailInfo">{{reservation.user_name}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailMarking')}}</span><span class="detailInfo">
+                <span ng-switch on="reservation.color">
+                    <span ng-switch-when=""></span>
+                    <span ng-switch-default>{{reservation.colortitle1}} </span>
+                </span>
+                <span ng-switch on="reservation.color2">
+                    <span ng-switch-when=""></span>
+                    <span ng-switch-default>{{reservation.colortitle2}} </span>
+                </span>
+                <span ng-switch on="reservation.color3">
+                    <span ng-switch-when=""></span>
+                    <span ng-switch-default>{{reservation.colortitle3}} </span>
+                </span>
+                <span ng-switch on="reservation.color4">
+                    <span ng-switch-when=""></span>
+                    <span ng-switch-default>{{reservation.colortitle4}} </span>
+                </span>
+                <span ng-switch on="reservation.color5">
+                    <span ng-switch-when=""></span>
+                    <span ng-switch-default>{{reservation.colortitle5}} </span>
+                </span>
+            </span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailType')}} </span><span class="detailInfo">
+                <span ng-switch on="reservation.rstatus">
+                    <span ng-switch-when="1">{{getLocalizedString('appointmentDetailFinal')}}</span>
+                    <span ng-switch-default>{{getLocalizedString('appointmentDetailProposal')}}</span>
+                </span></span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailComment')}}</span><span class="detailInfo">{{reservation.the_comment}}</span></div>
+    </div>
+    <h4>{{getLocalizedString('appointmentDetailPatient')}}</h4>
+    <div class="well detailTable widthPercent">
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientId')}}</span><span class="detailInfo">{{reservation.unique_pid}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientName')}}</span><span class="detailInfo">{{reservation.name}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientNational')}}</span><span class="detailInfo">{{reservation.reg_no}}</span></div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+    <head>
+        <meta charset="utf-8">
+        <title>HospiView</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+        
+        <!--Load CSS files-->
+        <link rel="stylesheet" href="css/app.css"/>
+        <link rel="stylesheet" href="css/bootstrap.css"/>
+        
+        <link rel="stylesheet" href="lib/fullcalendar/fullcalendar.css"/>
+        <link rel="stylesheet" href="lib/fullcalendar/fullcalendar.print.css"/>
+
+        <script type="text/javascript" charset="utf-8" src="lib/cordova.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            document.addEventListener("deviceready", onDeviceReady, false);
+            navigator.splashscreen.show();
+            function onDeviceReady() {
+                navigator.splashscreen.hide()
+            }
+        </script>
+    </head>
+    <body>
+        
+        <!--The interfaces will be loaded in this div tag. (SingleView architecture)-->
+
+        <div ng-view class="heightPercent widthPercent"></div>
+        <!-- page {{pageClass}}-->
+    
+        <!--Load JavaScript files-->
+        
+        <script src="js/helpers.js"></script>
+        <script src="lib/jquery-1.7.min.js"></script>
+        <script src="lib/jquery-ui-1.8.16.custom.min.js"></script>
+        <script src="lib/angular/angular.js"></script>
+        <script src="lib/angular/angular-route.js"></script>
+        <script src="lib/angular/angular-resource.min.js"></script>
+        <script src="lib/angular/angular-touch.min.js"></script>
+        <script src="lib/angular/angular-animate.min.js"></script>
+        <script src="lib/fastclick.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/services.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/filters.js"></script>
+        <script src="js/directives.js"></script>
+        <script src="js/xml2json.min.js"></script>
+        <script src="lib/pageslider.js"></script>
+        <script src="lib/bootstrap.min.js"></script>
+        <script src="lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
+        <script src="lib/dialogs.min.js"></script>
+        
+        <script src='lib/fullcalendar/calendar.js'></script>
+        <script src='lib/fullcalendar/fullcalendar.js'></script>
+        
+        <script src="js/languages/dutch.js"></script>
+        <script src="js/languages/french.js"></script>
+        <script src="js/languages/english.js"></script>
+
+    </body>
+</html>

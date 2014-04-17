@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" xmlns:cdv="http://cordova.apache.org/ns/1.0" id="com.icasa-group.HospiView" version="1.0.0">
+    <name>HospiView</name>
+    <description>Mobile HospiView application</description>
+    <author email="Stijn.Ceunen@com.icasa-group" href="http://http://www.icasa-group.com/">Stijn</author>
+    <access origin="*"/>
+    <preference name="fullscreen" value="true"/>
+    <preference name="webviewbounce" value="true"/>
+
+	<icon gap:density="ldpi" gap:platform="android" src="res/icon/android/icon-36-ldpi.png" />
+	<icon gap:density="mdpi" gap:platform="android" src="res/icon/android/icon-48-mdpi.png" />
+	<icon gap:density="hdpi" gap:platform="android" src="res/icon/android/icon-72-hdpi.png" />
+	<icon gap:density="xhdpi" gap:platform="android" src="res/icon/android/icon-96-xhdpi.png" />
+
+	<icon gap:platform="ios" height="57" src="res/icon/ios/icon-57.png" width="57" />
+	<icon gap:platform="ios" height="72" src="res/icon/ios/icon-72.png" width="72" />
+	<icon gap:platform="ios" height="114" src="res/icon/ios/icon-57-2x.png" width="114" />
+	<icon gap:platform="ios" height="144" src="res/icon/ios/icon-72-2x.png" width="144" />
+	
+	<gap:splash src="res/splash/ios/Default.png" gap:platform="ios" width="320" height="480" />
+	<gap:splash src="res/splash/ios/Default_at_2x.png" gap:platform="ios" width="640" height="960" />
+	<gap:splash src="res/splash/ios/Default_iphone5.png" gap:platform="ios" width="640" height="1136" />
+	<gap:splash src="res/splash/ios/Default-Portrait-ipad.png" gap:platform="ios" width="768" height="1024" />
+	<gap:splash src="res/splash/ios/Default-Portrait_at_2x.png" gap:platform="ios" width="1536" height="2048" />
+
+	<gap:plugin name="org.apache.cordova.dialogs" />
+	<gap:plugin name="org.apache.cordova.inappbrowser"/>
+</widget>
