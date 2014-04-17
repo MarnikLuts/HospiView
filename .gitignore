@@ -38,5 +38,3 @@ IOS/www/
 
 .DS_store
 /platforms/android/assets/
-/platforms/ios/build/
-/platforms/ios/www/
