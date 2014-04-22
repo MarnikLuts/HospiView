@@ -1,43 +1,38 @@
 # built application files
+
 *.apk
+
 *.ap_
 
+
+
 # Java class files
+
 *.class
 
+
+
 # generated files - android project subfolder
+
 android/bin/
+
 android/gen/
+
 android/assets/
 
-# generated files
+
+
+# generated 
+files
 bin/
+
 gen/
 
+
+
 # Local configuration file (sdk path, etc)
+
 local.properties
 
-# IOS / Xcode
-build/*
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-*.xcworkspace
-!default.xcworkspace
-xcuserdata
-profile
-*.moved-aside
-IOS/www/
 
-/nbproject/private/
-
-.DS_store
-/platforms/android/assets/
-/platforms/ios/build/
-/platforms/ios/www/
 /platforms
