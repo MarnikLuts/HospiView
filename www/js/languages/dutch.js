@@ -24,9 +24,7 @@ var dutchStrings = {
         //AppointmentsFilter
         appointmentsFilterMessage: "Stel een filter in. Alle velden zijn optioneel.",
         appointmentsFilterTitle: "Filter",
-        appointmentsFilterServer: "Selecteer een server",
-        appointmentsFilterUnitOrGroup: "Selecteer een unit of groep",
-        appointmentsFilterDepartment: "Selecteer een departement",
+        appointmentsFilterNoFilter: "Niet filteren",
         appointmentsFilterRemove: "Verwijder filter",
         appointmentsFilterApply: "Voer filter uit",
         appointmentsFilterAllDepartments: "Allemaal",

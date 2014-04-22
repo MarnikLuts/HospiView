@@ -24,9 +24,7 @@ var englishStrings = {
         //AppointmentsFilter
         appointmentsFilterMessage: "Set a filter. All fields are optional.",
         appointmentsFilterTitle: "Filter",
-        appointmentsFilterServer: "Select a server",
-        appointmentsFilterUnitOrGroup: "Select a unit or group",
-        appointmentsFilterDepartment: "Select a department",
+        appointmentsFilterNoFilter: "No filter",
         appointmentsFilterRemove: "Remove filter",
         appointmentsFilterApply: "Apply filter",
         appointmentsFilterAllDepartments: "All",
