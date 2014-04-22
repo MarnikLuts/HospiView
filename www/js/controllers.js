@@ -1552,6 +1552,17 @@ angular.module('myApp.controllers', []).
             };
             
             $scope.deleteServer = function(){
+                window.confirm(
+                        "Are you sure?",
+                        function(response){
+                            if(response==1){
+                                alert('delete user');
+                            }
+                        }
+                );
+            };
+            
+            $scope.deleteServer = function(){
                 var lsObject = JSON.parse(localStorage.getItem($rootScope.user)),
                     servers = lsObject.servers;
                 //Only works on mobile device

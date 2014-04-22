@@ -121,5 +121,6 @@ var frenchStrings = {
         settingsRefreshMin: "Minimum 30",
         settingsRefreshMax: "Maximum 60",
         settingsRefreshDecimal: "Doit être décimal",
-        settingsDeleteServer: "Delete server"
+        settingsDeleteServer: "Delete server",
+        settingsDeleteCurrentUser: "Delete user"
 };
