@@ -277,8 +277,7 @@ angular.module('myApp.controllers', []).
                 var year = new Date().getFullYear().toString(),
                         server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
-                alert(server.uuid);
-
+                
                 hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
                         .then(function(response) {
                     return dataFactory.setSearchUnits(response, server);
