@@ -497,6 +497,11 @@ angular.module('myApp.controllers', []).
                 console.log("setReservationsEvent");
                 $scope.reservations = [];
                 $scope.reservations = $rootScope[$rootScope.searchString];
+                if ($scope.reservations.length === 0) {
+                    $rootScope.isOffline = true;
+                    alert($rootScope.getLocalizedString('uuidExpiredMessage'));
+                    $scope.logout();
+                }
             });
 
 
@@ -508,7 +513,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.getStatusIcon = function(reservation) {
                 var stepAmount = reservation.step_buttons;
-                
+
                 if (stepAmount === "4") {
                     if (reservation.time_gone !== "00:00:00")
                         return "out.png";
@@ -1088,7 +1093,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.serverFilter = $scope.serverFilter;
                 if ($scope.unitFilter !== '')
                     $rootScope.unitFilter = $scope.unitFilter;
-                if(angular.isUndefined($scope.depFilter))
+                if (angular.isUndefined($scope.depFilter))
                     $rootScope.depFilter = '';
                 if ($scope.depFilter !== '')
                     $rootScope.depFilter = $scope.depFilter;
@@ -1430,6 +1435,14 @@ angular.module('myApp.controllers', []).
             $rootScope.$on('setReservationsEvent', function(event, args) {
                 countEvent = dataFactory.loadCalendar();
                 $scope.eventSources = [countEvent];
+                if ($rootScope[$rootScope.searchString].length === 0) {
+                    $rootScope.isOffline = true;
+                    alert($rootScope.getLocalizedString('uuidExpiredMessage'));
+                    $rootScope.user = null;
+                    $rootScope.type = null;
+                    $rootScope[$rootScope.searchString] = $scope.reservations;
+                    $location.path('/login');
+                }
             });
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope) {

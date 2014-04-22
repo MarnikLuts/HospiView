@@ -101,6 +101,7 @@ var englishStrings = {
         //Connection messages
         internalError: "Internal server error.",
         connectionError: "Cannot connect to the server.",
+        uuidExpiredMessage: "You'll be logged out. Your login time is expired or you are logged in on another mobile device. Please login again to view your appointments.",
                 
         //Settings
         settingsNew: "These are the settings, here you can add new users and servers.\n\nTo exit this screen press 'Back'",
