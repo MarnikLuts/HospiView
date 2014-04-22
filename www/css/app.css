@@ -151,48 +151,21 @@
 }
 
 .reservationTitle{
-    /*border-right: solid black 1px;
-    border-left: solid black 1px;*/
-    float:left;
-    padding-left: 5px;
     font-size:0.6em;
     font-weight: bold;
-    width: 60%;
 }
 
 .reservationHour{
-    float: left;
-    width: 25%;
     font-size: 0.7em;
-}/*
-.reservationServer{
-    float: left;
-    width: 15%;
-    font-size: 0.7em;
-}*/
-@media screen and (max-width: 768px) {
-    .reservationServer{
-        /*float: none;
-        display: block;*/
-    }
 }
-.reservationIcons{
-    float:right;
-    font-size:0.6em;
-    margin-top: -5px;
-    width:5%;
-}
+
 .reservationComment{
-    text-align: left;
-    float:right;
     font-size: 0.6em;
-    width:10%;
 }
+
 .detailTitle{
     font-weight: bold;
     font-size: 1.3em;
-    width: 40%;
-    display: table-cell;
 }
 
 .detailInfo{

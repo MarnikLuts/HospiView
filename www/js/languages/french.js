@@ -33,6 +33,7 @@ var frenchStrings = {
         appointmentDetail: "Info du réservation",
         appointmentDetailPatient: "Info du patient",
         appointmentDetailDoctor: "Médecin: ",
+        appointmentDetailDepartment: "Département: ",
         appointmentDetailId: "Réservation id: ",
         appointmentDetailTitle: "Titre: ",
         appointmentDetailBooking: "Réservé par: ",

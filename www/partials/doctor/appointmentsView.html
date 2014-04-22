@@ -41,21 +41,21 @@
             {{depFilter.dep_name}}
         </span>
     </div>
-    <div class="well col-md-12 heightPercent widthPercent">
+    <div class="well well-sm col-md-12 heightPercent widthPercent">
         <div class="animClass btn-group-vertical list list_overflow_y_100 list-unstyled widthPercent heightPercent">
             <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-style="styleTest(reservation)" ng-repeat="reservation in filteredReservations = (reservations| orderBy:'time_from' | filter:{the_date:date, unit_name:unitFilter.Header.name, dep_name:depFilter.dep_name})" ng-click="details(reservation)" >
-                <div class="widthPercent">
-                    <div class="text-left widthPercent">
+                <div class=".container-fluid">
+                    <div class="row">
                         &nbsp;
-                        <span class="reservationHour">
+                        <div class="col-xs-3 reservationHour">
                             {{reservation.time_from}} 
                             <span ng-switch on="oneServer">
                                 <span ng-switch-when="true"></span>
                                 <span ng-switch-default>{{reservation.hosp_short_name}}</span>
                             </span>
-                        </span>
-                        
-                        <span class="reservationTitle">
+                        </div>
+
+                        <div class="col-xs-5 reservationTitle">
                             <span ng-switch on="cellcontentPatient">
                                 <span ng-switch-when="false"></span>
                                 <span ng-switch-default>{{reservation.name}} 
@@ -85,15 +85,36 @@
                                     </span>
                                     {{reservation.dep_name}}</span> 
                             </span>
-                        </span>
-                        
-                        <span class="reservationComment">
+                        </div>
+
+                        <div class="col-xs-1">
                             <span ng-switch on="reservation.the_comment">
                                 <span ng-switch-when="">&nbsp</span>
                                 <span ng-switch-default><b>C </b></span>
                             </span>
+                        </div>
+                        <div class="col-xs-1">
                             <img ng-show="getStatusIcon(reservation) !== 'none'" ng-src="img/{{ getStatusIcon(reservation)}}" alt="appointment status"/>
-                        </span>
+                        </div>
+                        <div class="col-xs-1">
+                            <img ng-show="reservation.application === '1'" ng-src="img/Internet Explorer.png" alt="appointment reservationtype" height="15" width="15"/>
+                        </div>
+                        <!--<div class="col-xs-3 reservationComment">
+                            <div class="row">
+                                <div class="col-xs-1">
+                                    <span ng-switch on="reservation.the_comment">
+                                        <span ng-switch-when="">&nbsp</span>
+                                        <span ng-switch-default><b>C </b></span>
+                                    </span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <img ng-show="getStatusIcon(reservation) !== 'none'" ng-src="img/{{ getStatusIcon(reservation)}}" alt="appointment status"/>
+                                </div>
+                                <div class="col-xs-3">
+                                    <img ng-show="reservation.application === '1'" ng-src="img/Internet Explorer.png" alt="appointment reservationtype" height="15" width="15"/>
+                                </div>
+                            </div>
+                        </div>-->
                     </div>
                 </div>
             </div>

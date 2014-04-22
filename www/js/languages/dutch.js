@@ -33,6 +33,7 @@ var dutchStrings = {
         appointmentDetail: "Reservatie info",
         appointmentDetailPatient: "Patiënt info",
         appointmentDetailDoctor: "Arts: ",
+        appointmentDetailDepartment: "Departement: ",
         appointmentDetailId: "Reservatie id: ",
         appointmentDetailTitle: "Titel: ",
         appointmentDetailBooking: "Geboekt door: ",
