@@ -144,6 +144,13 @@
                         {{ getLocalizedString('settingsEditServer')}}
                     </button>
                 </div>
+                
+                <div class="form-group" ng-show="servers.length>1">
+                    <button type="button" class="btn btn-danger form-control input-lg" ng-click="deleteServer()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        {{ getLocalizedString('settingsDeleteServer')}}
+                    </button>
+                </div>
             </div>
         </div>
     </form>

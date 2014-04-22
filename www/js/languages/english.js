@@ -120,5 +120,6 @@ var englishStrings = {
         settingsLanguage: "Application language",
         settingsRefreshMin: "Minimum 30",
         settingsRefreshMax: "Maximum 60",
-        settingsRefreshDecimal: "Has to be decimal"
+        settingsRefreshDecimal: "Has to be decimal",
+        settingsDeleteServer: "Delete server"
  };
