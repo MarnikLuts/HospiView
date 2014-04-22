@@ -90,10 +90,7 @@
                         </div>
 
                         <div class="col-xs-1">
-                            <span ng-switch on="reservation.the_comment">
-                                <span ng-switch-when="">&nbsp</span>
-                                <span ng-switch-default><b>C </b></span>
-                            </span>
+                            <img ng-show="reservation.the_comment !== ''" ng-src="img/comment.png" alt="appointment comment"/>
                         </div>
                         <div class="col-xs-1 float-right">
                             <img ng-show="getStatusIcon(reservation) !== 'none'" ng-src="img/{{ getStatusIcon(reservation)}}" alt="appointment status"/>
