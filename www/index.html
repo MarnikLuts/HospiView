@@ -20,8 +20,7 @@
         
         <!--The interfaces will be loaded in this div tag. (SingleView architecture)-->
 
-        <div ng-view class="heightPercent widthPercent"></div>
-        <!-- page {{pageClass}}-->
+        <div ng-view class="heightPercent widthPercent page {{pageClass}}" ng-class="pageClass"></div>
     
         <!--Load JavaScript files-->
         
