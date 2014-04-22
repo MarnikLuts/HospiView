@@ -19,8 +19,8 @@ angular.module('myApp.services', []).
                 getHospiViewServerList: function() {
                     return $http.post("http://agenda.agendaview.be/cfcs/webservices/agendaview/hospiview_servers.cfc?method=GetHospiviewServerList");
                 },
-                getAuthentication: function(username, password, server_url) {
-                    return $http.post(server_url + base_url + "method=GetAuthentication&user_login=" + username + "&user_password=" + password);
+                getAuthentication: function(username, password, count, server_url) {
+                    return $http.post(server_url + base_url + "method=GetAuthentication&user_login=" + username + "&user_password=" + password + "&count=" + count);
                 },
                 getUnitAndDepList: function(uuid, server_url) {
                     return $http.post(server_url + base_url + "method=GetUnitAndDepList&UUID=" + uuid);

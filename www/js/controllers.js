@@ -13,6 +13,8 @@ angular.module('myApp.controllers', []).
                 return false;
             };
 
+            if(angular.isUndefined($rootScope.loginCount))
+                $rootScope.loginCount = 1;
             /**
              * Checks if the refresh of appointments is initiated. If it is,
              * it will be set to undifined so no refreshes happen on the login
@@ -188,7 +190,8 @@ angular.module('myApp.controllers', []).
                     }
                     invalidFields[i] = angular.isUndefined($scope.password[i]);
                     if (!invalidFields[i]) {
-                        promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
+                        promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $rootScope.loginCount, $scope.selectedUser.servers[i].hosp_url));
+                        $rootScope.loginCount = $rootScope.loginCount + 1;
                         validServers.push($scope.selectedUser.servers[i]);
                     } else
                         $scope.failedServers.push($scope.selectedUser.servers[i].hosp_short_name);
@@ -1644,8 +1647,9 @@ angular.module('myApp.controllers', []).
                     $scope.error = true;
                     $scope.errormessage = "Gelieve uw gegevens in te vullen";
                 } else {
-                    hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
+                    hospiviewFactory.getAuthentication($scope.username, $scope.password, $rootScope.loginCount, $scope.server.hosp_url).
                             success(function(data) {
+                                $rootScope.loginCount = $rootScope.loginCount + 1;
                                 var json = parseJson(data);
                                 if (json.Authentication.Header.StatusCode == 1) {
                                     var localStorageName = json.Authentication.Detail.user_name;
