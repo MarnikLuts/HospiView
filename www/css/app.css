@@ -408,24 +408,22 @@ ul li{
     z-index: 9999; 
 }
 
-.previous-page-visited.ng-enter{
+.left-to-right.ng-enter{
     -webkit-animation: slideInLeft 0.5s both ease-in; 
 }
 
-.previous-page-visited.ng-leave{
-    -webkit-animation: slideOutLeft 0.5s both ease-in; 
+.left-to-right.ng-leave{
+    -webkit-animation: slideOutRight 0.5s both ease-in; 
+    /*-webkit-animation: slideOutLeft 0.5s both ease-in;*/ 
 }
 
-.previous-page.ng-leave{
-    -webkit-animation: slideOutLeft 0.5s both ease-in; 
-}
-
-.next-page.ng-enter{
+.right-to-left.ng-enter{
     -webkit-animation: slideInRight 0.5s both ease-in; 
 }
 
-.next-page.ng-leave{
-    -webkit-animation: slideOutRight 0.5s both ease-in; 
+.right-to-left.ng-leave{
+    -webkit-animation: slideOutLeft 0.5s both ease-in;
+    /*-webkit-animation: slideOutRight 0.5s both ease-in;*/ 
 }
 
 @media screen and (max-width: 400px) {// Smartphones in portrait mode
