@@ -278,7 +278,7 @@ angular.module('myApp.services', []).
                 },
                 refresh: function() {
                     console.log("refresh");
-                    $rootScope.requestCounter = 0;
+                    $rootScope.refreshCounter = 0;
                     $rootScope.searchType = '';
                     $rootScope.startDate = new Date($rootScope.searchRangeStart);
                     $rootScope.endDate = new Date($rootScope.searchRangeEnd);
