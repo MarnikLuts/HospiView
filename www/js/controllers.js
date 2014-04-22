@@ -507,8 +507,8 @@ angular.module('myApp.controllers', []).
              * @returns {String}
              */
             $scope.getStatusIcon = function(reservation) {
-                var stepAmount = getSteps(reservation.unit_id);
-
+                var stepAmount = reservation.step_buttons;
+                
                 if (stepAmount === "4") {
                     if (reservation.time_gone !== "00:00:00")
                         return "out.png";

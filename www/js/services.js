@@ -56,6 +56,15 @@ angular.module('myApp.services', []).
             };
         }).
         factory('dataFactory', function($rootScope, $q, hospiviewFactory) {
+            
+            function getSteps(unit_id) {
+                for (var i = 0; i < $rootScope.searchUnits.length; i++) {
+                    if (unit_id == $rootScope.searchUnits[i].Header.unit_id) {
+                        return $rootScope.searchUnits[i].Header.step_buttons;
+                    }
+                }
+            }
+            
             return{
                 /**
                  * Function that handles the resolved promise from hospiviewFactory.getPublicHolidays
@@ -167,19 +176,17 @@ angular.module('myApp.services', []).
                             var json = parseJson(responses[l].data);
                             if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
                                 if (json.ReservationsOnUnit.Header.StatusCode === "1") {
-                                    if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
-                                        reservations.push(json.ReservationsOnUnit.Detail.Reservation);
-                                    } else {
-                                        for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
-                                            reservations.push(json.ReservationsOnUnit.Detail.Reservation[s]);
-                                        }
+                                    for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
+                                        var reservation = json.ReservationsOnUnit.Detail.Reservation[s];
+                                        reservation.step_buttons = getSteps(reservation.unit_id);
+                                        reservations.push(reservation);
                                     }
-
                                 } else {
                                     defer.reject($rootScope.getLocalizedString('internalError'));
                                 }
                             }
                         }
+                        console.log(reservations);
                         console.log("end get reservations");
                         defer.resolve(reservations);
                     }, function(error) {
