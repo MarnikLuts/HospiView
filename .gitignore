@@ -37,6 +37,6 @@ IOS/www/
 /nbproject/private/
 
 .DS_store
-/platforms/android/assets/
-/platforms/ios/build/
-/platforms/ios/www/
+platforms/android/assets/
+platforms/ios/build/
+platforms/ios/www/
