@@ -398,16 +398,15 @@ ul li{
 	position:absolute; 
 	top:0;  
 	width:100%; 
-        -webkit-perspective: 1000;
-        -webkit-backface-visibility: hidden;
+        -webkit-transform: translate3d(0, 0, 0);
 }
 
 .page.ng-enter { 
-    z-index: 8888; 
+    z-index: 1053; 
 }
 
 .page.ng-leave { 
-    z-index: 9999; 
+    z-index: 1054; 
 }
 
 .left-to-right.ng-enter{
