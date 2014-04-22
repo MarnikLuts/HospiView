@@ -879,7 +879,6 @@ angular.module('myApp.controllers', []).
                             $rootScope.startDate = new Date(endSearch);
                             endSearch.setDate(endSearch.getDate() + 14);
                             $rootScope.endDate = new Date(endSearch);
-                            search();
                         }
                         if ($rootScope.searchType === 'prev') {
                             var startSearch = new Date($rootScope.startDate);
