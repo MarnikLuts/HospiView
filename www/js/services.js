@@ -339,9 +339,9 @@ angular.module('myApp.services', []).
                         }
                         for (var i = 0; i < allReservations.length; i++)
                             $rootScope[$rootScope.searchString].push(allReservations[i]);
-                        $rootScope.$emit('setReservationsEvent', {});
                         $rootScope.refresh = false;
                         $rootScope.searchInProgress = false;
+                        $rootScope.$emit('setReservationsEvent', {});
                         console.log($rootScope[$rootScope.searchString]);
                     }
                     

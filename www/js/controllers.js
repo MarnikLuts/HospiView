@@ -763,7 +763,6 @@ angular.module('myApp.controllers', []).
             $scope.logout = function() {
                 $rootScope.user = null;
                 $rootScope.type = null;
-                $rootScope[$rootScope.searchString] = $scope.reservations;
 
                 $location.path('/login');
             };
@@ -1440,7 +1439,6 @@ angular.module('myApp.controllers', []).
                     alert($rootScope.getLocalizedString('uuidExpiredMessage'));
                     $rootScope.user = null;
                     $rootScope.type = null;
-                    $rootScope[$rootScope.searchString] = $scope.reservations;
                     $location.path('/login');
                 }
             });
