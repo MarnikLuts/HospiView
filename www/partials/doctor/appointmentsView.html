@@ -89,16 +89,16 @@
                             </span>
                         </div>
 
-                        <div class="col-xs-1 reservationComment">
+                        <div class="col-xs-1">
                             <span ng-switch on="reservation.the_comment">
                                 <span ng-switch-when="">&nbsp</span>
                                 <span ng-switch-default><b>C </b></span>
                             </span>
                         </div>
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 float-right">
                             <img ng-show="getStatusIcon(reservation) !== 'none'" ng-src="img/{{ getStatusIcon(reservation)}}" alt="appointment status"/>
                         </div>
-                        <div class="col-xs-1">
+                        <div class="col-xs-1 float-right">
                             <img ng-show="reservation.application === '1'" ng-src="img/Internet Explorer.png" alt="appointment reservationtype" height="15" width="15"/>
                         </div>
                         <!--<div class="col-xs-3 reservationComment">
