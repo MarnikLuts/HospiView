@@ -16,6 +16,14 @@ function onDeviceReady(){
                 'OK'        // buttonName
             );
         };
+        window.confirm = function(message, callBack){
+            navigator.notification.confirm(
+                message, 
+                callBack, 
+                "Hospiview", 
+                ["OK","Cancel"]
+            );
+        };
     }
 }
 

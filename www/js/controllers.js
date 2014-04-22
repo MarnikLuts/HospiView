@@ -513,8 +513,8 @@ angular.module('myApp.controllers', []).
              */
             $scope.getStatusIcon = function(reservation) {
                 var stepAmount = reservation.step_buttons;
-
-                if (stepAmount === "4") {
+                
+                if (stepAmount == 4) {
                     if (reservation.time_gone !== "00:00:00")
                         return "out.png";
                 }
@@ -1450,73 +1450,77 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller('SettingsCtrl', function($scope, $location, $rootScope, $routeParams, $timeout) {
+            loadSettings();
+            
+            function loadSettings(){
+                $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
+                $scope.servers = $scope.selectedUser.servers;
 
-            $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-            $scope.servers = $scope.selectedUser.servers;
-
-            if ($scope.servers.length == 3) {
-                $scope.abbreviation3 = $scope.selectedUser.servers[2].hosp_short_name;
-                $scope.server3Img = "img/hospi-gray.png";
-                $scope.showServer3 = true;
-            } else {
-                $scope.abbreviation3 = $rootScope.getLocalizedString('settingsAddServer');
-                $scope.showServer3 = false;
-                if ($scope.servers.length >= 2) {
-                    $scope.abbreviation2 = $scope.selectedUser.servers[1].hosp_short_name;
-                    $scope.server2Img = "img/hospi-gray.png";
-                    $scope.showServer2 = true;
-                } else {
-                    $scope.abbreviation2 = $rootScope.getLocalizedString('settingsAddServer');
-                    $scope.showServer2 = false;
-                }
-            }
-
-
-            $scope.abbreviation1 = $scope.selectedUser.servers[0].hosp_short_name;
-            $scope.server1Img = "img/hospi.png";
-            $scope.serverRadio = $scope.servers[0];
-            $scope.serverLogin = $scope.servers[0].user_login;
-            $scope.serverPassword = $scope.servers[0].user_password;
-
-            $scope.server1Select = function() {
-                $scope.server1Img = "img/hospi.png";
-                $scope.server2Img = "img/hospi-gray.png";
-                $scope.server3Img = "img/hospi-gray.png";
-                $scope.serverRadio = $scope.servers[0];
-                $scope.serverLogin = $scope.serverRadio.user_login;
-                $scope.serverPassword = $scope.serverRadio.user_password;
-            };
-            $scope.server2Select = function() {
-                if ($scope.showServer2 === false) {
-                    $scope.addOrEditServer('add');
-                } else {
-                    $scope.server1Img = "img/hospi-gray.png";
-                    $scope.server2Img = "img/hospi.png";
+                if ($scope.servers.length == 3) {
+                    $scope.abbreviation3 = $scope.selectedUser.servers[2].hosp_short_name;
                     $scope.server3Img = "img/hospi-gray.png";
-                    $scope.serverRadio = $scope.servers[1];
-                    $scope.serverLogin = $scope.serverRadio.user_login;
-                    $scope.serverPassword = $scope.serverRadio.user_password;
-                }
-            };
-            $scope.server3Select = function() {
-                if ($scope.showServer3 === false) {
-                    $scope.addOrEditServer('add');
+                    $scope.showServer3 = true;
                 } else {
-                    $scope.server1Img = "img/hospi-gray.png";
+                    $scope.abbreviation3 = $rootScope.getLocalizedString('settingsAddServer');
+                    $scope.showServer3 = false;
+                    if ($scope.servers.length >= 2) {
+                        $scope.abbreviation2 = $scope.selectedUser.servers[1].hosp_short_name;
+                        $scope.server2Img = "img/hospi-gray.png";
+                        $scope.showServer2 = true;
+                    } else {
+                        $scope.abbreviation2 = $rootScope.getLocalizedString('settingsAddServer');
+                        $scope.showServer2 = false;
+                    }
+                }
+
+
+                $scope.abbreviation1 = $scope.selectedUser.servers[0].hosp_short_name;
+                $scope.server1Img = "img/hospi.png";
+                $scope.serverRadio = $scope.servers[0];
+                $scope.serverLogin = $scope.servers[0].user_login;
+                $scope.serverPassword = $scope.servers[0].user_password;
+
+                $scope.server1Select = function() {
+                    $scope.server1Img = "img/hospi.png";
                     $scope.server2Img = "img/hospi-gray.png";
-                    $scope.server3Img = "img/hospi.png";
-                    $scope.serverRadio = $scope.servers[2];
+                    $scope.server3Img = "img/hospi-gray.png";
+                    $scope.serverRadio = $scope.servers[0];
                     $scope.serverLogin = $scope.serverRadio.user_login;
                     $scope.serverPassword = $scope.serverRadio.user_password;
-                }
-            };
+                };
+                $scope.server2Select = function() {
+                    if ($scope.showServer2 === false) {
+                        $scope.addOrEditServer('add');
+                    } else {
+                        $scope.server1Img = "img/hospi-gray.png";
+                        $scope.server2Img = "img/hospi.png";
+                        $scope.server3Img = "img/hospi-gray.png";
+                        $scope.serverRadio = $scope.servers[1];
+                        $scope.serverLogin = $scope.serverRadio.user_login;
+                        $scope.serverPassword = $scope.serverRadio.user_password;
+                    }
+                };
+                $scope.server3Select = function() {
+                    if ($scope.showServer3 === false) {
+                        $scope.addOrEditServer('add');
+                    } else {
+                        $scope.server1Img = "img/hospi-gray.png";
+                        $scope.server2Img = "img/hospi-gray.png";
+                        $scope.server3Img = "img/hospi.png";
+                        $scope.serverRadio = $scope.servers[2];
+                        $scope.serverLogin = $scope.serverRadio.user_login;
+                        $scope.serverPassword = $scope.serverRadio.user_password;
+                    }
+                };
 
-            if ($scope.selectedUser.cellcontent.patient === true)
-                $('#patientCheckbox').prop('checked', true);
-            if ($scope.selectedUser.cellcontent.title === true)
-                $('#titleCheckbox').prop('checked', true);
-            if ($scope.selectedUser.cellcontent.department === true)
-                $('#departmentCheckbox').prop('checked', true);
+                if ($scope.selectedUser.cellcontent.patient === true)
+                    $('#patientCheckbox').prop('checked', true);
+                if ($scope.selectedUser.cellcontent.title === true)
+                    $('#titleCheckbox').prop('checked', true);
+                if ($scope.selectedUser.cellcontent.department === true)
+                    $('#departmentCheckbox').prop('checked', true);
+            }
+            
 
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
@@ -1546,7 +1550,57 @@ angular.module('myApp.controllers', []).
 
                 $location.path('/selectserver/' + action);
             };
-
+            
+            $scope.deleteServer = function(){
+                var lsObject = JSON.parse(localStorage.getItem($rootScope.user)),
+                    servers = lsObject.servers;
+                //Only works on mobile device
+                if(servers.length>1){
+                    window.confirm(
+                        "are you sure?",
+                        function(response){
+                            if(response==1){
+                                var id = $scope.serverRadio.id,
+                                    user_login = $scope.serverRadio.user_login,
+                                    user_password = $scope.serverRadio.user_password;
+                            
+                                for(var i=0;i<servers.length;i++){
+                                    if(servers[i].id==id && servers[i].user_login==user_login && servers[i].user_password==user_password){
+                                        $rootScope.currentServers.splice(i,1);
+                                        servers.splice(i,1);
+                                        lsObject.servers = servers;
+                                        localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
+                                        $location.path("/login");
+                                        $scope.$apply();
+                                    }
+                                }
+                            }
+                        }
+                    );
+                }
+                //Works in browser
+//                if(servers.length>1){
+//                    var response = window.confirm("are you sure?");
+//                    if(response){
+//                        var id = $scope.serverRadio.id,
+//                            user_login = $scope.serverRadio.user_login,
+//                            user_password = $scope.serverRadio.user_password;
+//
+//                        for(var i=0;i<servers.length;i++){
+//                            if(servers[i].id==id && servers[i].user_login==user_login && servers[i].user_password==user_password){
+//                                $rootScope.currentServers.splice(i,1);
+//                                servers.splice(i,1);
+//                                lsObject.servers = servers;
+//                                localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
+//                                window.location.href = "/HospiView/index.html#/login";
+////                                loadSettings();
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+            };
+            
             $timeout(function() {
                 if ($routeParams.action === "new")
                     alert($rootScope.getLocalizedString("settingsNew"));
