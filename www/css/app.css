@@ -373,59 +373,6 @@ ul li{
     font-size: 20px;
     color: black;   
 }
-/*PAGE TRANSITION CSS*/
-
-@-webkit-keyframes slideInRight {
-    from {-webkit-transform: translate3d(100%,0,0); }
-    to {-webkit-transform: translate3d(0,0,0); }
-}
-
-@-webkit-keyframes slideInLeft {
-    from {-webkit-transform: translate3d(-100%,0,0); }
-    to {-webkit-transform: translate3d(0,0,0); }
-}
-
-@-webkit-keyframes slideOutLeft {
-    to { -webkit-transform: translate3d(-100%,0,0); }
-}
-
-@-webkit-keyframes slideOutRight {
-    to { -webkit-transform: translate3d(100%,0,0); }
-}
-
-.page{
-	bottom:0; 
-	position:absolute; 
-	top:0;  
-	width:100%; 
-        -webkit-transform: translate3d(0, 0, 0);
-}
-
-.page.ng-enter { 
-    z-index: 1053; 
-}
-
-.page.ng-leave { 
-    z-index: 1054; 
-}
-
-.left-to-right.ng-enter{
-    -webkit-animation: slideInLeft 0.5s both ease-in; 
-}
-
-.left-to-right.ng-leave{
-    -webkit-animation: slideOutRight 0.5s both ease-in; 
-    /*-webkit-animation: slideOutLeft 0.5s both ease-in;*/ 
-}
-
-.right-to-left.ng-enter{
-    -webkit-animation: slideInRight 0.5s both ease-in; 
-}
-
-.right-to-left.ng-leave{
-    -webkit-animation: slideOutLeft 0.5s both ease-in;
-    /*-webkit-animation: slideOutRight 0.5s both ease-in;*/ 
-}
 
 @media screen and (max-width: 400px) {// Smartphones in portrait mode
     .dateAppointmentsViewScaled{
