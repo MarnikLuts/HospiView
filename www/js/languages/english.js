@@ -121,5 +121,6 @@ var englishStrings = {
         settingsRefreshMin: "Minimum 30",
         settingsRefreshMax: "Maximum 60",
         settingsRefreshDecimal: "Has to be decimal",
-        settingsDeleteServer: "Delete server"
+        settingsDeleteServer: "Delete server",
+        settingsDeleteCurrentUser: "Delete user"
  };

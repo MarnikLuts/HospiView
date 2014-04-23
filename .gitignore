@@ -35,7 +35,8 @@ gen/
 local.properties
 
 
-/nbproject/private/
+/nbproject
 
 .DS_store
 platforms/
+plugins

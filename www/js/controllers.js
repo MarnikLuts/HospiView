@@ -359,7 +359,7 @@ angular.module('myApp.controllers', []).
                 } else {
                     localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     $rootScope.isOffline = false;
-
+                    $rootScope.pageClass = "right-to-left";
                     $location.path('/doctor/appointmentsView');
                 }
             }
@@ -559,7 +559,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.eventClick = true;
                 $rootScope.reservationDetail = reservation;
                 $rootScope.currentdate = reservation.the_date;
-
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/doctor/appointmentDetail');
             };
 
@@ -567,14 +567,14 @@ angular.module('myApp.controllers', []).
                 $rootScope.eventClick = true;
                 $rootScope.currentdate = new Date($scope.date);
                 console.log($rootScope.currentdate);
-
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/settings/default');
             };
 
             $scope.filter = function() {
                 $rootScope.eventClick = true;
                 $rootScope.currentdate = $scope.date;
-
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/appointmentsFilter');
             };
 
@@ -660,7 +660,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchInProgress = true;
                 $rootScope.currentdate = $scope.date;
                 if ($rootScope.isOffline) {
-
+                    $rootScope.pageClass = "right-to-left";
                     $location.path('/appointmentsCalendar');
                 } else {
                     $scope.loadingCalendar = true;
@@ -711,7 +711,7 @@ angular.module('myApp.controllers', []).
                         search();
                     } else {
                         $rootScope.searchInProgress = false;
-
+                        $rootScope.pageClass = "right-to-left";
                         $location.path('/appointmentsCalendar');
                     }
                 }
@@ -759,11 +759,11 @@ angular.module('myApp.controllers', []).
                     color2 = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 20%, #' + colors[1] + ' 20%, #' + colors[1] + ' 40%, #' + colors[2] + ' 40%, #' + colors[2] + ' 60%, #' + colors[3] + ' 60%, #' + colors[3] + ' 80%, #' + colors[4] + ' 80%, #' + colors[4] + ' 100%)';
                     return {"background": color2};
                 }
-            }
+            };
             $scope.logout = function() {
                 $rootScope.user = null;
                 $rootScope.type = null;
-
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/login');
             };
 
@@ -845,7 +845,7 @@ angular.module('myApp.controllers', []).
                     callModal();
                 } else {
                     if ($scope.loadingCalendar) {
-
+                        $rootScope.pageClass = "right-to-left"; 
                         $location.path('/appointmentsCalendar');
                         $rootScope.searchInProgress = false;
                         $scope.loadingCalendar = false;
@@ -912,7 +912,7 @@ angular.module('myApp.controllers', []).
              * Redirects back to the appointments screen.
              */
             $scope.back = function() {
-
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
 
@@ -1098,7 +1098,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.depFilter = $scope.depFilter;
 
                 $rootScope.filterActive = true;
-
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/doctor/appointmentsView');
             };
 
@@ -1112,7 +1112,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.unitFilter = '';
                 $rootScope.depFilter = '';
                 $rootScope.filterActive = false;
-
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
         }).
@@ -1377,7 +1377,7 @@ angular.module('myApp.controllers', []).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
             $scope.reservation = $rootScope.reservationDetail;
             $scope.back = function() {
-
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
         }).
@@ -1386,7 +1386,7 @@ angular.module('myApp.controllers', []).
             var current = new Date($rootScope.currentdate);
             var showWeekends = false;
             $scope.back = function() {
-
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
             $scope.uiConfig = {
@@ -1439,13 +1439,14 @@ angular.module('myApp.controllers', []).
                     alert($rootScope.getLocalizedString('uuidExpiredMessage'));
                     $rootScope.user = null;
                     $rootScope.type = null;
+                    $rootScope.pageClass = "right-to-left";
                     $location.path('/login');
                 }
             });
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope) {
             $scope.backToMainMenu = function() {
-
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/mainmenu');
             };
         }).
@@ -1527,7 +1528,7 @@ angular.module('myApp.controllers', []).
                 localStorage.setItem("language", id);
                 $scope.abbreviation2 = $rootScope.getLocalizedString('settingsAddServer');
                 $scope.abbreviation3 = $rootScope.getLocalizedString('settingsAddServer');
-            }
+            };
             $scope.languageRadio = $rootScope.languageID;
 
 
@@ -1537,7 +1538,7 @@ angular.module('myApp.controllers', []).
                 $scope.selectedUser.cellcontent.department = $('#departmentCheckbox').prop('checked');
 
                 localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
-
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
             $scope.addOrEditServer = function(action, server) {
@@ -1549,6 +1550,18 @@ angular.module('myApp.controllers', []).
                 }
 
                 $location.path('/selectserver/' + action);
+            };
+            
+            $scope.deleteServer = function(){
+                window.confirm(
+                        "Are you sure?",
+                        function(response){
+                            if(response==1){
+                                $rootScope.pageClass = "left-to-right";
+                                alert('delete user');
+                            }
+                        }
+                );
             };
             
             $scope.deleteServer = function(){
@@ -1570,6 +1583,7 @@ angular.module('myApp.controllers', []).
                                         servers.splice(i,1);
                                         lsObject.servers = servers;
                                         localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
+                                        $rootScope.pageClass = "left-to-right";
                                         $location.path("/login");
                                         $scope.$apply();
                                     }
@@ -1813,7 +1827,7 @@ angular.module('myApp.controllers', []).
 
                                         $rootScope.user = null;
                                         $rootScope.type = null;
-
+                                        $rootScope.pageClass = "right-to-left";
                                         $location.path('/login');
                                     }
 
@@ -1907,7 +1921,7 @@ angular.module('myApp.controllers', []).
                                 }, error);
                     }
                     $rootScope.isOffline = true;
-
+                    $rootScope.pageClass = "right-to-left";
                     $location.path('/settings/new');
                 }
             }
@@ -1919,7 +1933,7 @@ angular.module('myApp.controllers', []).
                 } else {
                     localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     $rootScope.isOffline = false;
-
+                    $rootScope.pageClass = "right-to-left";
                     $location.path('/settings/new');
                 }
             }
@@ -1956,7 +1970,7 @@ angular.module('myApp.controllers', []).
              * Redirects to the settings page.
              */
             $scope.cancel = function() {
-
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/settings/new');
             };
 

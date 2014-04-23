@@ -121,5 +121,6 @@ var dutchStrings = {
         settingsRefreshMin: "Minimum 30",
         settingsRefreshMax: "Maximum 60",
         settingsRefreshDecimal: "Mag geen komma getal zijn",
-        settingsDeleteServer: "Verwijder server"
+        settingsDeleteServer: "Verwijder server",
+        settingsDeleteCurrentUser: "Verwijder gebruiker"
 };
