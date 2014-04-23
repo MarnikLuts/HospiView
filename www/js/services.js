@@ -285,11 +285,12 @@ angular.module('myApp.services', []).
                 },
                 refresh: function() {
                     console.log("refresh");
+                    $rootScope.refresh = true;
                     $rootScope.refreshCounter = 0;
                     $rootScope.searchType = '';
                     $rootScope.startDate = new Date($rootScope.searchRangeStart);
                     $rootScope.endDate = new Date($rootScope.searchRangeEnd);
-                    $rootScope.refresh = true;
+                    
 
                     $rootScope.searchString = $rootScope.user + 'Reservations';
 
@@ -328,7 +329,8 @@ angular.module('myApp.services', []).
                             setReservations(allReservations);
                         } else {
                             responseCount++;
-                            getReservations(responseCount);
+                            index = index + 1;
+                            getReservations(index);
                         }
                     }
 
