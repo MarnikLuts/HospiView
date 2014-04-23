@@ -559,7 +559,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.eventClick = true;
                 $rootScope.reservationDetail = reservation;
                 $rootScope.currentdate = reservation.the_date;
-
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/doctor/appointmentDetail');
             };
 
@@ -567,14 +567,14 @@ angular.module('myApp.controllers', []).
                 $rootScope.eventClick = true;
                 $rootScope.currentdate = new Date($scope.date);
                 console.log($rootScope.currentdate);
-
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/settings/default');
             };
 
             $scope.filter = function() {
                 $rootScope.eventClick = true;
                 $rootScope.currentdate = $scope.date;
-
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/appointmentsFilter');
             };
 
