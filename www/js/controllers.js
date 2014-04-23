@@ -359,7 +359,7 @@ angular.module('myApp.controllers', []).
                 } else {
                     localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     $rootScope.isOffline = false;
-
+                    $rootScope.pageClass = "right-to-left";
                     $location.path('/doctor/appointmentsView');
                 }
             }
@@ -763,7 +763,7 @@ angular.module('myApp.controllers', []).
             $scope.logout = function() {
                 $rootScope.user = null;
                 $rootScope.type = null;
-
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/login');
             };
 
