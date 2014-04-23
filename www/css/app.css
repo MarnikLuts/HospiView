@@ -61,7 +61,7 @@
     margin-right: 20%;
 }
 .heightPercent{
-    /* height:100%; */
+    height:100%;
 }
 .widthPercent{
     width: 100%;
@@ -86,6 +86,9 @@
 }
 .width25Percent{
     width:25%;
+}
+.height80Percent{
+    height: 90%;
 }
 .height80Percent{
     height: 80%;
@@ -347,8 +350,9 @@ ul li{
 }
 
 .AppointmentsListFill {
-    top: 0px;
-    height: 100%;
+    position: absolute;
+    top: 150px;
+    bottom: 50px;
 }
 
 .btn-appointments-filter{

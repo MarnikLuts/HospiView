@@ -1,12 +1,13 @@
-<nav class="navbar navbar-default" role="navigation">
-    <button class="btn btn-sm-back" ng-click="logout()">
-        <span class="glyphicon glyphicon-off"></span>
-    </button>
-    <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}</div>
-    <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
-</nav>
-<div class="height60Percent widthPercent" ng-swipe-left="nextDay()" ng-swipe-right="previousDay()">
-    <div class="col-md-12 height20Percent widthPercent">
+
+<div class="heightPercent widthPercent" >
+    <nav class="navbar navbar-default" role="navigation">
+        <button class="btn btn-sm-back" ng-click="logout()">
+            <span class="glyphicon glyphicon-off"></span>
+        </button>
+        <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}</div>
+        <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
+    </nav>
+    <div class="col-md-12 height10Percent widthPercent">
         <div class="dateAppointmentsView dateAppointmentsViewScaled">
             <h4>{{showDate}}</h4>
             <div class="has-spinner">
@@ -41,7 +42,7 @@
             {{depFilter.dep_name}}
         </span>
     </div>
-    <div class="well well-sm col-md-12 widthPercent AppointmentsListFill">
+    <div ng-swipe-left="nextDay()" ng-swipe-right="previousDay()" class="well well-sm widthPercent AppointmentsListFill">
         <div class="AppointmentsList btn-group-vertical list list_overflow_y_100 list-unstyled">
             <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-style="styleTest(reservation)" ng-repeat="reservation in filteredReservations = (reservations| orderBy:'time_from' | filter:{the_date:date, unit_name:unitFilter.Header.name, dep_name:depFilter.dep_name})" ng-click="details(reservation)" >
                 <div class=".container-fluid">
