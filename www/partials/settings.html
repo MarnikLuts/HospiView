@@ -100,15 +100,15 @@
                 <h4>{{ getLocalizedString('settingsApplicationSettings')}}: </h4>
                 <div class="form-group widthPercent">
                     <div class="input-group widthPercent">
-                        <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('settingsRefresh')}}:</span>
+                        <span class="input-group-addon widthSettingsLabels">{{getLocalizedString('settingsRefresh')}}:</span>
                         <input id="refresh" name="refreshrate" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="60" ng-pattern="/^[0-6]?[0-9]$/" required/>
-                        <span class="input-group-addon">{{ getLocalizedString('settingsRefreshUnit')}}</span>
+                        <span class="input-group-addon">{{getLocalizedString('settingsRefreshUnit')}}</span>
                     </div>
                     <div class="alert alert-danger input-group widthPercent" ng-show="settingsForm.refreshrate.$dirty && settingsForm.refreshrate.$invalid">
-                        <span ng-show="settingsForm.refreshrate.$error.min">{{ getLocalizedString('settingsRefreshMin')}}</span>
-                        <span ng-show="settingsForm.refreshrate.$error.max">{{ getLocalizedString('settingsRefreshMax')}}</span>
-                        <span ng-show="settingsForm.refreshrate.$error.pattern">{{ getLocalizedString('settingsRefreshDecimal')}}</span>
-                        <span ng-show="settingsForm.refreshrate.$error.required">{{ getLocalizedString('isRequired')}}</span>
+                        <span ng-show="settingsForm.refreshrate.$error.min">{{getLocalizedString('settingsRefreshMin')}}</span>
+                        <span ng-show="settingsForm.refreshrate.$error.max">{{getLocalizedString('settingsRefreshMax')}}</span>
+                        <span ng-show="settingsForm.refreshrate.$error.pattern">{{getLocalizedString('settingsRefreshDecimal')}}</span>
+                        <span ng-show="settingsForm.refreshrate.$error.required">{{getLocalizedString('isRequired')}}</span>
                     </div>
                 </div>
 
@@ -116,13 +116,13 @@
                     <tr>
                         <td class="widthSettingsTabelLabel"><label>{{ getLocalizedString('settingsLanguage')}}</label></td>
                         <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(1)"
-                                    btn-radio="1">Nederlands<br/><img src="img/flag_netherlands.png" alt="flag_netherlands" width="30" height="19"></button>
+                                    btn-radio="1"><img src="img/flag_netherlands.png" alt="flag_netherlands" width="30" height="19"></button>
                         </td>
                         <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(2)"
-                                    btn-radio="2">français<br/><img src="img/flag_france.png" alt="flag_france" width="30" height="19"></button>
+                                    btn-radio="2"><img src="img/flag_france.png" alt="flag_france" width="30" height="19"></button>
                         </td>
                         <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(3)"
-                                    btn-radio="3">English<br/><img src="img/flag_uk.png" alt="flag_uk" width="30" height="19"></button>
+                                    btn-radio="3"><img src="img/flag_uk.png" alt="flag_uk" width="30" height="19"></button>
                         </td>
                     </tr>
                     <tr>
