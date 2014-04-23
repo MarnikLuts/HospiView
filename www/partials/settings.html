@@ -1,35 +1,20 @@
 <nav class="navbar navbar-default" role="navigation">
     <button type="submit" class="btn btn-sm-back" ng-click="save()" ng-disabled="settingsForm.$invalid">
         <span class="glyphicon glyphicon-chevron-left"></span>
-        {{ getLocalizedString('back')}}
+        {{getLocalizedString('back')}}
     </button>
-    <div class="title">{{ getLocalizedString('settings')}}</div>
+    <div class="title">{{getLocalizedString('settings')}}</div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
 <div class="widthPercent">
     <form name="settingsForm" class="widthPercent" novalidate>
-        <!--<div class="col-md-12 form-group">
-            <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers">
-            </select>
-        </div>-->
-        <div class="col-md-12">
-            <div class="shortcutButtons">
-                <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server1Select()" 
-                        btn-radio="servers[0]">{{abbreviation1}}<br/><img src="{{server1Img}}" alt="hospi" width="64" height="90"></button>
-                <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server2Select()" 
-                        btn-radio="servers[1]">{{abbreviation2}}<br/><img src="{{server2Img}}" alt="hospi" width="64" height="90" ng-show="showServer2"><span class="glyphicon glyphicon-plus" ng-hide="showServer2"></span></button>
-                <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server3Select()" 
-                        btn-radio="servers[2]">{{abbreviation3}}<br/><img src="{{server3Img}}" alt="hospi" width="64" height="90" ng-show="showServer3"><span class="glyphicon glyphicon-plus" ng-hide="showServer3"></span></button>
-            </div>
-        </div>
-        </br>
         <div class="col-md-12 list">
             <div class="well">
-                <h4>{{ getLocalizedString('settingsCellcontent')}}:</h4>
+                <h4>{{getLocalizedString('settingsCellcontent')}}:</h4>
                 <table class="table table-condensed list">
                     <tr>
                         <td>
-                            <label id="settingsPatient" class="checkbox">{{ getLocalizedString('settingsPatient')}}</label>
+                            <label id="settingsPatient" class="tableLabel">{{getLocalizedString('settingsPatient')}}</label>
                         </td>
                         <td>
                             <input class="form-control" id="patientCheckbox" type="checkbox"/>
@@ -37,7 +22,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label id="settingsTitle" class="checkbox">{{ getLocalizedString('settingsTitle')}}</label>
+                            <label id="settingsTitle" class="tableLabel">{{getLocalizedString('settingsTitle')}}</label>
                         </td>
                         <td>
                             <input class="form-control" id="titleCheckbox" type="checkbox"/>
@@ -45,64 +30,23 @@
                     </tr>
                     <tr>
                         <td>
-                            <label id="settingsDepartment" class="checkbox">{{ getLocalizedString('settingsDepartment')}}</label>
+                            <label id="settingsDepartment" class="tableLabel">{{getLocalizedString('settingsDepartment')}}</label>
                         </td>
                         <td>
                             <input class="form-control" id="departmentCheckbox" type="checkbox"/>
                         </td>
                     </tr>
                 </table>
-                <!--<h4>{{ getLocalizedString('settingsCellcontent')}}:</h4>
-                <div class="settingsCellcontentDetail">
-                    <span class="checkbox">         
-                        <label id="settingsPatient" class="checkbox width30Percent">
-                            <input id="patientCheckbox" type="checkbox">
-                            {{ getLocalizedString('settingsPatient')}}   
-                        </label>
-                    </span>
-                    <span class="checkbox">         
-                        <label id="settingsTitle" class="checkbox width30Percent">
-                            <input id="titleCheckbox" type="checkbox">
-                            {{ getLocalizedString('settingsTitle')}}   
-                        </label>
-                    </span>
-                    <span class="checkbox">         
-                        <label id="settingsDepartment" class="checkbox width30Percent">
-                            <input id="departmentCheckbox" type="checkbox">
-                            {{ getLocalizedString('settingsDepartment')}}   
-                        </label>
-                    </span>
-                </div>
-                &nbsp;-->
             </div>
         </div>
-        <!--<div class="col-md-12">
-            <div class="well">
-                <div class="form-group widthPercent settingsCellcontent">   
-                    <h4>{{ getLocalizedString('settingsCellcontent')}}:</h4>
-                    <div class="btn-group" class="settingsCellcontentDetail" data-toggle="buttons">
-                        <label id="settingsPatient" class="btn btn-default width30Percent">
-                            <input id="patientCheckbox" type="checkbox"> {{ getLocalizedString('settingsPatient')}}
-                        </label>
-                        <label id="settingsTitle" class="btn btn-default width30Percent">
-                            <input id="titleCheckbox" type="checkbox"> {{ getLocalizedString('settingsTitle')}}
-                        </label>
-                        <label id="settingsDepartment" class="btn btn-default width30Percent">
-                            <input id="departmentCheckbox" type="checkbox"> {{ getLocalizedString('settingsDepartment')}}
-                        </label>
-                    </div>
-                    &nbsp;
-                </div>
-            </div>
-        </div>-->
+
         <div class="col-md-12 list widthPercent">
             <div class="well widthPercent">          
-                <h4>{{ getLocalizedString('settingsApplicationSettings')}}: </h4>
+                <h4>{{getLocalizedString('settingsApplicationSettings')}}: </h4>
                 <div class="form-group widthPercent">
                     <div class="input-group widthPercent">
                         <span class="input-group-addon widthSettingsLabels">{{getLocalizedString('settingsRefresh')}}:</span>
                         <input id="refresh" name="refreshrate" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="60" ng-pattern="/^[0-6]?[0-9]$/" required/>
-                        <span class="input-group-addon">{{getLocalizedString('settingsRefreshUnit')}}</span>
                     </div>
                     <div class="alert alert-danger input-group widthPercent" ng-show="settingsForm.refreshrate.$dirty && settingsForm.refreshrate.$invalid">
                         <span ng-show="settingsForm.refreshrate.$error.min">{{getLocalizedString('settingsRefreshMin')}}</span>
@@ -114,7 +58,7 @@
 
                 <table class="table table-condensed list">
                     <tr>
-                        <td class="widthSettingsTabelLabel"><label>{{ getLocalizedString('settingsLanguage')}}</label></td>
+                        <td class="widthSettingsTabelLabel"><label class="tableLabel">{{getLocalizedString('settingsLanguage')}}</label></td>
                         <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(1)"
                                     btn-radio="1"><img src="img/flag_netherlands.png" alt="flag_netherlands" width="30" height="19"></button>
                         </td>
@@ -125,11 +69,18 @@
                                     btn-radio="3"><img src="img/flag_uk.png" alt="flag_uk" width="30" height="19"></button>
                         </td>
                     </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-12 list">
+            <div class="well">
+                <h4>{{getLocalizedString('settingsUserSettings')}}: </h4>
+                <table class="table table-condensed list">
                     <tr>
-                        <td class="widthSettingsTabelLabel"><label>{{ getLocalizedString('settingsUser')}}</label></td>
-                        <td><button type="button" class="btn btn-sm-add btn-default" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-user"></span></button></td>
-                        <td><button type="button" class="btn btn-sm-add btn-danger" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-minus"></span> <span class="glyphicon glyphicon-user"></span></button></td>
-                        <td>&nbsp;</td>
+                        <td class="widthSettingsTabelLabel"><label class="tableLabel">{{getLocalizedString('settingsAddDelete')}}</label></td>
+                        <td><button type="button" class="btn btn-sm-add btn-default" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-user"></span></button></td>
+                        <td><button type="button" class="btn btn-sm-add btn-danger" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-minus"></span><span class="glyphicon glyphicon-user"></span></button></td>
                     </tr>
                 </table>
             </div>
@@ -138,54 +89,41 @@
         <div class="col-md-12 widthPercent">
             <div class="well widthPercent">
                 <h4>{{ getLocalizedString('settingsServerSettings')}}: </h4>
+                <div class="col-md-12">
+                    <div class="shortcutButtons">
+                        <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server1Select()" 
+                                btn-radio="servers[0]">{{abbreviation1}}<br/><img src="{{server1Img}}" alt="hospi" width="64" height="90"></button>
+                        <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server2Select()" 
+                                btn-radio="servers[1]">{{abbreviation2}}<br/><img src="{{server2Img}}" alt="hospi" width="64" height="90" ng-show="showServer2"><span class="glyphicon glyphicon-plus" ng-hide="showServer2"></span></button>
+                        <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server3Select()" 
+                                btn-radio="servers[2]">{{abbreviation3}}<br/><img src="{{server3Img}}" alt="hospi" width="64" height="90" ng-show="showServer3"><span class="glyphicon glyphicon-plus" ng-hide="showServer3"></span></button>
+                    </div>
+                </div>
                 <div class="input-group form-group">
-                    <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('settingsUser')}}:</span>
+                    <span class="input-group-addon widthSettingsLabels">{{getLocalizedString('settingsUser')}}:</span>
                     <input id="username" class="form-control input-lg" type="text" ng-model="serverLogin" ng-disabled="true"/>
                 </div>
                 <div class="input-group form-group">
-                    <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('loginPassword')}}:</span>
+                    <span class="input-group-addon widthSettingsLabels">{{getLocalizedString('loginPassword')}}:</span>
                     <input id="password" class="form-control input-lg" type="password" ng-model="serverPassword" ng-disabled="true"/>
                 </div>
 
-                <div class="form-group">
-                    <button type="button" class="btn btn-default form-control input-lg" ng-click="addOrEditServer('edit', serverRadio)">
-                        <span class="glyphicon glyphicon-transfer"></span>
-                        {{ getLocalizedString('settingsEditServer')}}
-                    </button>
-                </div>
-
-                <div class="form-group" ng-show="servers.length > 1 || true">
-                    <button type="button" class="btn btn-danger form-control input-lg" ng-click="deleteServer()">
-                        <span class="glyphicon glyphicon-remove"></span>
-                        {{ getLocalizedString('settingsDeleteServer')}}
-                    </button>
-                </div>
+                <table class="table table-condensed list">
+                    <tr>
+                        <td class="widthSettingsTabelLabel"><label class="tableLabel">{{getLocalizedString('settingsEditDelete')}}</label></td>
+                        <td>
+                            <button type="button" class="btn btn-default btn btn-sm-add" ng-click="addOrEditServer('edit', serverRadio)">
+                                <span class="glyphicon glyphicon-transfer"></span>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn btn-sm-add" ng-click="deleteServer()">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </form>
-    <!--<div class="col-md-12">
-        <div class="well">
-            Snelkoppeling 1:
-            <select class="form-control input-xl" ng-model="server.shortcut1.unit" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in unitsandgroups" ng-change="loadDep(1)">
-                <option value="">- Selecteer een dokter -</option>
-            </select></br>
-            <select class="form-control input-xl" ng-model="server.shortcut1.department" ng-options="dep as dep.dep_name for dep in departments1.Dep" ng-hide="disableS1">
-                <option value="">- Selecteer een departement -</option>
-            </select></br>
-            Snelkoppeling 2:
-            <select class="form-control input-xl" ng-model="server.shortcut2.unit" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in unitsandgroups" ng-change="loadDep(2)">
-                <option value="">- Selecteer een dokter -</option>
-            </select></br>
-            <select class="form-control input-xl" ng-model="server.shortcut2.department" ng-options="dep as dep.dep_name for dep in departments2.Dep" ng-hide="disableS2">
-                <option value="">- Selecteer een departement -</option>
-            </select></br>
-            Snelkoppeling 3:
-            <select class="form-control input-xl" ng-model="server.shortcut3.unit" ng-options="unitorgroup as unitorgroup.Header.name group by unitorgroup.type for unitorgroup in unitsandgroups" ng-change="loadDep(3)">
-                <option value="">- Selecteer een dokter -</option>
-            </select></br>
-            <select class="form-control input-xl" ng-model="server.shortcut3.department" ng-options="dep as dep.dep_name for dep in departments3.Dep" ng-hide="disableS3">
-                <option value="">- Selecteer een departement -</option>
-            </select></br>
-        </div>
-    </div>-->
 </div>

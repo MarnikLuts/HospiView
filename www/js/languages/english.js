@@ -29,6 +29,9 @@ var englishStrings = {
         appointmentsFilterRemove: "Remove filter",
         appointmentsFilterApply: "Apply filter",
         appointmentsFilterAllDepartments: "All",
+        appointmentsFilterServer: "Select a server",
+        appointmentsFilterUnitOrGroup: "Select a unit or group",
+        appointmentsFilterDepartment: "Select a department",
         
         //AppointmentDetail
         appointmentDetail: "Reservation info",
@@ -112,6 +115,8 @@ var englishStrings = {
         settingsUser: "User",
         settingsRefresh: "Refresh rate",
         settingsRefreshUnit: "seconds",
+        settingsAddDelete: "Add or delete",
+        settingsEditDelete: "Edit or delete",
         settingsCellcontent: "Reservation settings",
         settingsPatient: "Patient",
         settingsTitle: "Title",
@@ -119,6 +124,7 @@ var englishStrings = {
         settingsAddUser: "Add application user",
         settingsServerSettings: "Server settings",
         settingsApplicationSettings: "Application settings",
+        settingsUserSettings: "User settings",
         settingsLanguage: "Language",
         settingsRefreshMin: "Minimum 30",
         settingsRefreshMax: "Maximum 60",

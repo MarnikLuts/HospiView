@@ -48,7 +48,7 @@ angular.module('myApp.controllers', []).
             $rootScope.filterActive = '';
             $rootScope.serverFilter = '';
             $rootScope.unitFilter = '';
-            $rootScope.departmentFilter = '';
+            $rootScope.depFilter = '';
 
             /**
              * $rootScope.searchRangeStart tracks the earliest date checked
@@ -934,9 +934,11 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.loadUnit = function() {
+                $scope.disableDepartments = true;
+                $scope.unitFilter = '';
+                $scope.depFilter = '';
                 if ($scope.serverFilter === null) {
                     $scope.disableUnits = true;
-                    $scope.disableDepartments = true;
                 }
                 else {
                     $scope.disableUnits = false;
@@ -956,15 +958,15 @@ angular.module('myApp.controllers', []).
              * will be filled.
              */
             $scope.loadDep = function() {
+                $scope.depFilter = '';
                 if ($scope.unitFilter === null || $scope.unitFilter.type === "group") {
                     $scope.disableDepartments = true;
-                    $rootScope.departmentFilter = '';
                 }
                 else {
                     $scope.disableDepartments = false;
                     for (var i = 0; i < $scope.unitFilter.Detail.Dep.length; i++) {
                         if ($scope.unitFilter.Detail.Dep[i].dep_name === "") {
-                            $scope.unitFilter.Detail.Dep[i].dep_name = $rootScope.getLocalizedString('appointmentsFilterAllDepartments');
+                            $scope.unitFilter.Detail.Dep.splice(i, 1);
                             break;
                         }
                     }
@@ -1081,23 +1083,24 @@ angular.module('myApp.controllers', []).
              * the application. Redirects to appointments screen.
              */
             $scope.applyFilter = function() {
-                console.log($scope.depFilter);
-                console.log($scope.unitFilter);
-                console.log($rootScope.getLocalizedString('appointmentsFilterAllDepartments'));
-                if (angular.isDefined($scope.depFilter)) {
-                    if ($scope.depFilter.dep_name === $rootScope.getLocalizedString('appointmentsFilterAllDepartments'))
-                        $scope.depFilter = '';
-                }
-                if ($scope.serverFilter !== '')
-                    $rootScope.serverFilter = $scope.serverFilter;
-                if ($scope.unitFilter !== '')
-                    $rootScope.unitFilter = $scope.unitFilter;
-                if (angular.isUndefined($scope.depFilter))
+                if (!$scope.unitFilter)
+                    $rootScope.unitFilter = '';
+                
+                if (!$scope.depFilter)
                     $rootScope.depFilter = '';
-                if ($scope.depFilter !== '')
-                    $rootScope.depFilter = $scope.depFilter;
+                
+                $rootScope.serverFilter = $scope.serverFilter;
+                $rootScope.unitFilter = $scope.unitFilter;
+                $rootScope.depFilter = $scope.depFilter;
 
                 $rootScope.filterActive = true;
+                
+                console.log($scope.serverFilter);
+                if(!$scope.serverFilter){
+                    console.log("remove filter");
+                    $scope.removeFilter();
+                }
+                
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/doctor/appointmentsView');
             };
@@ -1111,6 +1114,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.serverFilter = '';
                 $rootScope.unitFilter = '';
                 $rootScope.depFilter = '';
+                
                 $rootScope.filterActive = false;
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');

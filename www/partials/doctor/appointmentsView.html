@@ -93,10 +93,10 @@
                             <img ng-show="reservation.the_comment !== ''" ng-src="img/comment.png" alt="appointment comment" height="20" width="20"/>
                         </div>
                         <div class="col-xs-1">
-                            <img ng-show="getStatusIcon(reservation) !== 'none'" ng-src="img/{{ getStatusIcon(reservation)}}" alt="appointment status" height="20" width="20"/>
+                            <img ng-show="reservation.application === '1'" ng-src="img/Internet Explorer.png" alt="appointment reservationtype" height="15" width="15"/>
                         </div>
                         <div class="col-xs-1">
-                            <img ng-show="reservation.application === '1'" ng-src="img/Internet Explorer.png" alt="appointment reservationtype" height="15" width="15"/>
+                            <img ng-show="getStatusIcon(reservation) !== 'none'" ng-src="img/{{ getStatusIcon(reservation)}}" alt="appointment status" height="20" width="20"/>
                         </div>
                     </div>
                 </div>

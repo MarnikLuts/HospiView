@@ -29,6 +29,9 @@ var dutchStrings = {
         appointmentsFilterRemove: "Verwijder filter",
         appointmentsFilterApply: "Voer filter uit",
         appointmentsFilterAllDepartments: "Allemaal",
+        appointmentsFilterServer: "Selecteer een server",
+        appointmentsFilterUnitOrGroup: "Selecteer een unit of groep",
+        appointmentsFilterDepartment: "Selecteer een departement",
         
         //AppointmentDetail
         appointmentDetail: "Reservatie info",
@@ -112,6 +115,8 @@ var dutchStrings = {
         settingsUser: "Gebruiker",
         settingsRefresh: "Verversing",
         settingsRefreshUnit: "seconden",
+        settingsAddDelete: "Toevoegen of verwijderen",
+        settingsEditDelete: "Wijzigen of verwijderen",
         settingsCellcontent: "Reservatie instellingen",
         settingsPatient: "Patiënt",
         settingsTitle: "Titel",
@@ -119,6 +124,7 @@ var dutchStrings = {
         settingsAddUser: "Voeg applicatiegebruiker toe",
         settingsServerSettings: "Server instellingen",
         settingsApplicationSettings: "Applicatie instellingen",
+        settingsUserSettings: "Gebruiker instellingen",
         settingsLanguage: "Taal",
         settingsRefreshMin: "Minimum 30",
         settingsRefreshMax: "Maximum 60",
