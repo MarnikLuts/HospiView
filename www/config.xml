@@ -25,6 +25,11 @@
         <gap:splash src="res/splash/ios/Default-Landscape~ipad.png" gap:platform="ios" width="1024" height="768" />
 	<gap:splash src="res/splash/ios/Default-Landscape@2x~ipad.png" gap:platform="ios" width="2048" height="1536" />
 
+        <gap:splash src="res/splash/android/drawable-ldpi/splash.png" gap:platform="android" width="320" height="426" />
+	<gap:splash src="res/splash/android/drawable-mdpi/splash.png" gap:platform="android" width="352" height="470" />
+	<gap:splash src="res/splash/android/drawable-hdpi/splash.png" gap:platform="android" width="480" height="640" />
+	<gap:splash src="res/splash/android/drawable-xhdpi/splash.png" gap:platform="android" width="720" height="960" />
+
 	<gap:plugin name="org.apache.cordova.dialogs" />
 	<gap:plugin name="org.apache.cordova.inappbrowser"/>
         <gap:plugin name="org.apache.cordova.splashscreen"/>
