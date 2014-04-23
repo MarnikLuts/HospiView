@@ -17,12 +17,15 @@
 	<icon gap:platform="ios" height="114" src="res/icon/ios/icon-57-2x.png" width="114" />
 	<icon gap:platform="ios" height="144" src="res/icon/ios/icon-72-2x.png" width="144" />
 	
-	<gap:splash src="res/splash/ios/Default.png" gap:platform="ios" width="320" height="480" />
-	<gap:splash src="res/splash/ios/Default_at_2x.png" gap:platform="ios" width="640" height="960" />
-	<gap:splash src="res/splash/ios/Default_iphone5.png" gap:platform="ios" width="640" height="1136" />
-	<gap:splash src="res/splash/ios/Default-Portrait-ipad.png" gap:platform="ios" width="768" height="1024" />
-	<gap:splash src="res/splash/ios/Default-Portrait_at_2x.png" gap:platform="ios" width="1536" height="2048" />
+	<gap:splash src="res/splash/ios/Default~iphone.png" gap:platform="ios" width="320" height="480" />
+	<gap:splash src="res/splash/ios/Default@2x~iphone.png" gap:platform="ios" width="640" height="960" />
+	<gap:splash src="res/splash/ios/Default-568h@2x~iphone.png" gap:platform="ios" width="640" height="1136" />
+	<gap:splash src="res/splash/ios/Default-Portrait~ipad.png" gap:platform="ios" width="768" height="1024" />
+	<gap:splash src="res/splash/ios/Default-Portrait@2x~ipad.png" gap:platform="ios" width="1536" height="2048" />
+        <gap:splash src="res/splash/ios/Default-Landscape~ipad.png" gap:platform="ios" width="1024" height="768" />
+	<gap:splash src="res/splash/ios/Default-Landscape@2x~ipad.png" gap:platform="ios" width="2048" height="1536" />
 
 	<gap:plugin name="org.apache.cordova.dialogs" />
 	<gap:plugin name="org.apache.cordova.inappbrowser"/>
+        <gap:plugin name="org.apache.cordova.splashscreen"/>
 </widget>
