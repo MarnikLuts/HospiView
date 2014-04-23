@@ -61,7 +61,7 @@
     margin-right: 20%;
 }
 .heightPercent{
-    height:100%;
+    /* height:100%; */
 }
 .widthPercent{
     width: 100%;
@@ -340,6 +340,11 @@ ul li{
 .AppointmentsList {
     -webkit-overflow-scrolling: touch;
     -webkit-transform: translate3d(0, 0, 0);
+}
+
+.AppointmentsListFill {
+    top: 0px;
+    height: 100%;
 }
 
 .btn-appointments-filter{
