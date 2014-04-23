@@ -612,6 +612,6 @@ table.fc-border-separate {
 }
 
         
-.fc-event :hover{
+.fc-event :active{
     background-color: gray;
 }
