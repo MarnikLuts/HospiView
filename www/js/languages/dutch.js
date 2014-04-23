@@ -11,6 +11,7 @@ var dutchStrings = {
         loginPasswordCheckedMessage: "Opgelet! Door uw wachtwoord automatisch te laten invullen kan elke gebruiker van dit toestel inloggen met uw account.",
         loginNoReservationsFound: "Er zijn de volgende 14 dagen geen afspraken gevonden. Wilt u verder zoeken?",
         loginNoConnection: "Er is geen internetconnectie of er kan geen connectie worden gemaakt met de server. Offline kan u nog steeds de laatst opgehaalde afspraken bekijken. Wilt u offline doorgaan?",
+        loginServerListFailed: "Inloggen is mislukt op de volgende servers:",
         
         //AppointmentsView
         appointmentsViewReservations: "Afspraken",
@@ -122,5 +123,7 @@ var dutchStrings = {
         settingsRefreshMax: "Maximum 60",
         settingsRefreshDecimal: "Mag geen komma getal zijn",
         settingsDeleteServer: "Verwijder server",
-        settingsDeleteCurrentUser: "Verwijder gebruiker"
+        settingsDeleteCurrentUser: "Verwijder gebruiker",
+        settingsDeleteServerConfirm: "Weet u zeker dat u de geselecteerde server wil verwijderen?",
+        settingsDeleteCurrentUserConfirm: "Weet u zeker dat u de huidige gebruiker wil verwijderen?"
 };

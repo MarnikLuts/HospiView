@@ -351,7 +351,7 @@ angular.module('myApp.controllers', []).
                     for (var i = 0; i < $scope.failedServers.length; i++) {
                         servers += "\n" + $scope.failedServers[i];
                     }
-                    alert("Inloggen is mislukt op de volgende servers:" + servers);
+                    alert($rootScope.getLocalizedString('loginServerListFailed') + servers);
                 }
 
                 if ($rootScope[$rootScope.searchString].length === 0) {
@@ -1551,26 +1551,54 @@ angular.module('myApp.controllers', []).
 
                 $location.path('/selectserver/' + action);
             };
-            
-            $scope.deleteServer = function(){
-                window.confirm(
-                        "Are you sure?",
-                        function(response){
-                            if(response==1){
-                                $rootScope.pageClass = "left-to-right";
-                                alert('delete user');
-                            }
-                        }
-                );
+            /**
+             * Prompts the user with a confirmation dialog,
+             * Deletes the user currently logged in  and redirect to the login page
+             * 
+             * @returns {undefined}
+             */
+            $scope.deleteCurrentUser = function(){
+                //Only works on mobile devices
+//                window.confirm(
+//                        $rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'),
+//                        function(response){
+//                            if(response==1){
+//                                $rootScope.pageClass = "left-to-right";
+//                                alert('delete user');
+//                            }
+//                        }
+//                );
+        
+                //Works in browser
+                var response = window.confirm($rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'));
+                if(response){
+                    var users = JSON.parse(localStorage.getItem('users'));
+                    if(users.length==1)
+                        localStorage.removeItem('users');
+                    
+                    localStorage.removeItem($rootScope.user);
+                    localStorage.removeItem($rootScope.user + 'AbsentDays');
+                    localStorage.removeItem($rootScope.user + 'PublicHolidays');
+                    localStorage.removeItem($rootScope.user + 'Reservations');
+                    localStorage.removeItem($rootScope.user + 'SearchRangeStart');
+                    localStorage.removeItem($rootScope.user + 'SearchRangeEnd');
+                    $rootScope.pageClass = "left-to-right";
+                    $location.path('/login');
+                }
             };
             
+            /**
+             * Prompts the user with a confirmation dialog,
+             * Deletes the selected server
+             * @returns {undefined}
+             */
             $scope.deleteServer = function(){
                 var lsObject = JSON.parse(localStorage.getItem($rootScope.user)),
                     servers = lsObject.servers;
                 //Only works on mobile device
                 if(servers.length>1){
                     window.confirm(
-                        "are you sure?",
+                        $rootScope.getLocalizedString('settingsDeleteServerConfirm'),
                         function(response){
                             if(response==1){
                                 var id = $scope.serverRadio.id,

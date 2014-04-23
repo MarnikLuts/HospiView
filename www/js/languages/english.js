@@ -11,6 +11,7 @@ var englishStrings = {
         loginPasswordCheckedMessage: "Attention! By automatically entering your password every user of this device can log in with your account.",
         loginNoReservationsFound: "There are no reservations found in the next 14 days. Would you like to continue searching?",
         loginNoConnection: "There is no internet connection or a connection to the server can't be made. Offline you can still view the reservations from the last time you logged in. Would you like to continue offline?",
+        loginServerListFailed: "Login failed on the following servers:",
         
         //AppointmentsView
         appointmentsViewReservations: "Reservations",
@@ -122,5 +123,7 @@ var englishStrings = {
         settingsRefreshMax: "Maximum 60",
         settingsRefreshDecimal: "Has to be decimal",
         settingsDeleteServer: "Delete server",
-        settingsDeleteCurrentUser: "Delete user"
+        settingsDeleteCurrentUser: "Delete user",
+        settingsDeleteServerConfirm: "Are you sure you want to delete the selected server?",
+        settingsDeleteCurrentUserConfirm: "Are you sure you want to delete the current user?"
  };
