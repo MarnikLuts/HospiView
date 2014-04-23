@@ -2377,21 +2377,6 @@ fieldset[disabled] .btn-link:focus {
 }
 
 /* ADDED: square buttons and other color */
-.btn-xl-red,
-.btn-group-xl-red > .btn {
-    padding: 40px 16px;
-    width: 80%;
-    height: 20%;
-    font-size: 25px;
-    text-align: center;
-    line-height: 1.5;
-    border-radius: 8px;
-    color: #fff;
-    background-color: rgba(106, 202, 238, 1);
-    word-wrap: break-word;
-    max-width: 100%;
-}
-
 .btn-settings{
     margin-top:20%;
 }
@@ -2432,7 +2417,7 @@ fieldset[disabled] .btn-link:focus {
 }
 /* Button added*/
 .btn-sm-settings,
-.btn-group-sm-back > .btn {
+.btn-group-sm-settings > .btn {
     position: relative;
     padding: 9px 14px;
     height:50px;
@@ -2456,6 +2441,31 @@ fieldset[disabled] .btn-link:focus {
     background-color: white;
     color: #3044B5;
 }
+
+/* Button added*/
+.btn-sm-add,
+.btn-group-sm-add > .btn {
+    position: relative;
+    padding: 9px 14px;
+    height:50px;
+    width: 100%;
+    max-width: 100px;
+    min-width:10px;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: black;
+    font-size: 12px;
+    border-color: #DADADA;
+}
+.btn-sm-add .glyphicon{
+    font-size: 20px;
+}
+.btn-sm-add:active{
+    background-color: white;
+    color: #3044B5;
+}
+
 /* Button added*/
 .btn-sm-calendar,
 .btn-group-sm-calendar> .btn {

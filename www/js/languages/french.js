@@ -111,6 +111,7 @@ var frenchStrings = {
         settingsEditServer: "Changez le serveur",
         settingsUser: "Utilisateur",
         settingsRefresh: "Le taux de rafraîchissement",
+        settingsRefreshUnit: "secondes",
         settingsCellcontent: "Paramètres des réservations",
         settingsPatient: "Patient",
         settingsTitle: "Titre",

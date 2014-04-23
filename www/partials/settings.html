@@ -102,6 +102,7 @@
                     <div class="input-group widthPercent">
                         <span class="input-group-addon widthSettingsLabels">{{ getLocalizedString('settingsRefresh')}}:</span>
                         <input id="refresh" name="refreshrate" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="60" ng-pattern="/^[0-6]?[0-9]$/" required/>
+                        <span class="input-group-addon">{{ getLocalizedString('settingsRefreshUnit')}}</span>
                     </div>
                     <div class="alert alert-danger input-group widthPercent" ng-show="settingsForm.refreshrate.$dirty && settingsForm.refreshrate.$invalid">
                         <span ng-show="settingsForm.refreshrate.$error.min">{{ getLocalizedString('settingsRefreshMin')}}</span>
@@ -111,21 +112,26 @@
                     </div>
                 </div>
 
-                <div class="input-group widthPercent btn-group languages">
-                    <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(1)"
-                            btn-radio="1">Nederlands<br/><img src="img/flag_netherlands.png" alt="flag_netherlands" width="60" height="38"></button>
-                    <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(2)"
-                            btn-radio="2">français<br/><img src="img/flag_france.png" alt="flag_france" width="60" height="38"></button>
-                    <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(3)"
-                            btn-radio="3">English<br/><img src="img/flag_uk.png" alt="flag_uk" width="60" height="38"></button>
-                </div>
-
-                <div class="form-group">
-                    <button type="button" class="btn btn-default input-lg form-control" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-user"></span> {{ getLocalizedString('settingsAddUser')}}</button>
-                </div>
-                <div class="form-group">
-                    <button type="button" class="btn btn-danger input-lg form-control" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-remove"></span> {{ getLocalizedString('settingsDeleteCurrentUser')}}</button>
-                </div>
+                <table class="table list">
+                    <tr>
+                        <td class="widthSettingsTabelLabel"><label>{{ getLocalizedString('settingsLanguage')}}</label></td>
+                        <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(1)"
+                                    btn-radio="1">Nederlands<br/><img src="img/flag_netherlands.png" alt="flag_netherlands" width="30" height="19"></button>
+                        </td>
+                        <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(2)"
+                                    btn-radio="2">français<br/><img src="img/flag_france.png" alt="flag_france" width="30" height="19"></button>
+                        </td>
+                        <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(3)"
+                                    btn-radio="3">English<br/><img src="img/flag_uk.png" alt="flag_uk" width="30" height="19"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="widthSettingsTabelLabel"><label>{{ getLocalizedString('settingsUser')}}</label></td>
+                        <td></td>
+                        <td><button type="button" class="btn btn-sm-add btn-default" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-user"></span></button></td>
+                        <td><button type="button" class="btn btn-sm-add btn-danger" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-minus"></span> <span class="glyphicon glyphicon-user"></span></button></td>
+                    </tr>
+                </table>
             </div>
         </div>
 
@@ -147,8 +153,8 @@
                         {{ getLocalizedString('settingsEditServer')}}
                     </button>
                 </div>
-                
-                <div class="form-group" ng-show="servers.length>1||true">
+
+                <div class="form-group" ng-show="servers.length > 1 || true">
                     <button type="button" class="btn btn-danger form-control input-lg" ng-click="deleteServer()">
                         <span class="glyphicon glyphicon-remove"></span>
                         {{ getLocalizedString('settingsDeleteServer')}}

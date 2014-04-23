@@ -81,6 +81,9 @@
 .widthSettingsLabels {
     min-width: 130px;
 }
+.widthSettingsTabelLabel {
+    width: 130px;
+}
 .width25Percent{
     width:25%;
 }
@@ -213,6 +216,9 @@
     font-size: 1.4em;
 }
 
+.clearboth{
+    clear:both;
+}
 .filterText{
     padding: 5px;
     color: black;
