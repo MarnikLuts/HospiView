@@ -26,7 +26,7 @@
         <div class="col-md-12 list">
             <div class="well">
                 <h4>{{ getLocalizedString('settingsCellcontent')}}:</h4>
-                <table class="table table-striped list">
+                <table class="table table-condensed list">
                     <tr>
                         <td>
                             <label id="settingsPatient" class="checkbox">{{ getLocalizedString('settingsPatient')}}</label>
@@ -95,7 +95,7 @@
                 </div>
             </div>
         </div>-->
-        <div class="col-md-12 widthPercent">
+        <div class="col-md-12 list widthPercent">
             <div class="well widthPercent">          
                 <h4>{{ getLocalizedString('settingsApplicationSettings')}}: </h4>
                 <div class="form-group widthPercent">
@@ -112,7 +112,7 @@
                     </div>
                 </div>
 
-                <table class="table list">
+                <table class="table table-condensed list">
                     <tr>
                         <td class="widthSettingsTabelLabel"><label>{{ getLocalizedString('settingsLanguage')}}</label></td>
                         <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(1)"
@@ -127,9 +127,9 @@
                     </tr>
                     <tr>
                         <td class="widthSettingsTabelLabel"><label>{{ getLocalizedString('settingsUser')}}</label></td>
-                        <td></td>
                         <td><button type="button" class="btn btn-sm-add btn-default" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-user"></span></button></td>
                         <td><button type="button" class="btn btn-sm-add btn-danger" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-minus"></span> <span class="glyphicon glyphicon-user"></span></button></td>
+                        <td>&nbsp;</td>
                     </tr>
                 </table>
             </div>
