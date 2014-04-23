@@ -95,8 +95,8 @@
                 </div>
             </div>
         </div>-->
-        <div class="col-md-12">
-            <div class="well">          
+        <div class="col-md-12 widthPercent">
+            <div class="well widthPercent">          
                 <h4>{{ getLocalizedString('settingsApplicationSettings')}}: </h4>
                 <div class="form-group widthPercent">
                     <div class="input-group widthPercent">
@@ -121,10 +121,10 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="button" class="btn btn-default btn-lg form-control" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-user"></span> {{ getLocalizedString('settingsAddUser')}}</button>
+                    <button type="button" class="btn btn-default input-lg form-control" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-user"></span> {{ getLocalizedString('settingsAddUser')}}</button>
                 </div>
                 <div class="form-group">
-                    <button type="button" class="btn btn-danger btn-lg form-control" ng-click=""><span class="glyphicon glyphicon-remove"></span> {{ getLocalizedString('settingsDeleteCurrentUser')}}</button>
+                    <button type="button" class="btn btn-danger input-lg form-control" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-remove"></span> {{ getLocalizedString('settingsDeleteCurrentUser')}}</button>
                 </div>
             </div>
         </div>
@@ -148,7 +148,7 @@
                     </button>
                 </div>
                 
-                <div class="form-group" ng-show="servers.length>1">
+                <div class="form-group" ng-show="servers.length>1||true">
                     <button type="button" class="btn btn-danger form-control input-lg" ng-click="deleteServer()">
                         <span class="glyphicon glyphicon-remove"></span>
                         {{ getLocalizedString('settingsDeleteServer')}}
