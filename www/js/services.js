@@ -7,14 +7,14 @@ angular.module('myApp.services', []).
          * Variable containing the base url.
          */
         constant('base_url', 'cfcs/webservices/reservations_service.cfc?').
-        /**
-         * Factory containing methods for the different requests.
+        constant('kiosk_url', 'cfcs/webservices/kiosk_service.cfc?').
+        /** Factory containing methods for the different requests.
          * 
          * @param {type} $http
          * @param {type} base_url
          * @returns {_L13.Anonym$1}.
          */
-        factory('hospiviewFactory', function($http, $rootScope, base_url) {
+        factory('hospiviewFactory', function($http, $rootScope, base_url, kiosk_url) {
             return{
                 getHospiViewServerList: function() {
                     $rootScope.requestCounter++;
@@ -22,39 +22,43 @@ angular.module('myApp.services', []).
                 },
                 getAuthentication: function(username, password, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + base_url + "method=GetAuthentication&user_login=" + username + "&user_password=" + password + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetAuthentication&user_login=" + username + "&user_password=" + password + "&count=" + $rootScope.requestCounter);
+                },
+                checkForKiosk: function(server_url){
+                    $rootScope.requestCounter++;
+                    return $http.get(server_url + kiosk_url + "method=GetAuthentication&user_login=user&user_password=pass&count=" + $rootScope.requestCounter);
                 },
                 getUnitAndDepList: function(uuid, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + base_url + "method=GetUnitAndDepList&UUID=" + uuid + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetUnitAndDepList&UUID=" + uuid + "&count=" + $rootScope.requestCounter);
                 },
                 getUnitDepGroups: function(uuid, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + base_url + "method=getUnitDepGroups&UUID=" + uuid + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=getUnitDepGroups&UUID=" + uuid + "&count=" + $rootScope.requestCounter);
                 },
                 getReservationsOnUnit: function(uuid, unit_id, dep_id, start_date, end_date, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + base_url + "method=GetReservationsOnUnit&UUID=" + uuid + "&unit_id=" + unit_id + "&dep_id=" + dep_id + "&start_date=" + start_date + "&end_date=" + end_date + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetReservationsOnUnit&UUID=" + uuid + "&unit_id=" + unit_id + "&dep_id=" + dep_id + "&start_date=" + start_date + "&end_date=" + end_date + "&count=" + $rootScope.requestCounter);
                 },
                 getReservationsOnPatient: function(uuid, pid_or_regno, patsearchvar, start_date, end_date, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + base_url + "method=GetReservationsOnPatient&UUID=" + uuid + "&pid_or_regno=" + pid_or_regno + "&patsearchvar=" + patsearchvar + "&start_date=" + start_date + "&end_date=" + end_date + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetReservationsOnPatient&UUID=" + uuid + "&pid_or_regno=" + pid_or_regno + "&patsearchvar=" + patsearchvar + "&start_date=" + start_date + "&end_date=" + end_date + "&count=" + $rootScope.requestCounter);
                 },
                 getPublicHolidays: function(Language_Id, year, month, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + base_url + "method=GetPublicHolidays&Language_Id=" + Language_Id + "&Year=" + year + "&Month=" + month + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetPublicHolidays&Language_Id=" + Language_Id + "&Year=" + year + "&Month=" + month + "&count=" + $rootScope.requestCounter);
                 },
                 getUnitAbsentDays: function(uuid, year, month, unit_id, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + base_url + "method=GetUnitAbsentDays&UUID=" + uuid + "&Year=" + year + "&Month=" + month + "&Unit_Id=" + unit_id + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetUnitAbsentDays&UUID=" + uuid + "&Year=" + year + "&Month=" + month + "&Unit_Id=" + unit_id + "&count=" + $rootScope.requestCounter);
                 },
                 getLanguageStrings: function(language_Id, listOfPidsSids, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + base_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids + "&count=" + $rootScope.requestCounter);
                 },
                 getLogin: function(USER_NAME, USER_REGNO, USER_EMAIL, USER_MOB, LanguageId, Update_NameEmailTel, server_url){
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + base_url + "method=GetLogin&USER_NAME=" + USER_NAME + "&USER_REGNO=" + USER_REGNO + "&USER_EMAIL=" + USER_EMAIL + "&USER_MOB=" + USER_MOB + "&LanguageId=" + LanguageId + "&Update_NameEmailTel=" + Update_NameEmailTel);
+                    return $http.get(server_url + "method=GetLogin&USER_NAME=" + USER_NAME + "&USER_REGNO=" + USER_REGNO + "&USER_EMAIL=" + USER_EMAIL + "&USER_MOB=" + USER_MOB + "&LanguageId=" + LanguageId + "&Update_NameEmailTel=" + Update_NameEmailTel + "&count=" + $rootScope.requestCounter);
                 }
 
             };

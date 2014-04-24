@@ -29,7 +29,7 @@
                     <td>{{ getLocalizedString('newInfo').split("_")[5] }}</td>
                 </tr>
             </table><br/>
-                <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers" ng-change="serverSelected = true;
+                <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers" ng-change="serverSelected = true; checkForKiosk();
                     accountRadio = null; accountTrue = null;">
                     <option value="">- {{ getLocalizedString('newServerSelectDefault') }} -</option>
                 </select> 
@@ -47,6 +47,7 @@
             </div>
         </div>
         <br>
+        <div ng-show="checkingForKiosk">Checking...</div>
         <div class="form-group" ng-show="accountTrue">
             <p>{{requestMessage}}{{ getLocalizedString('newServerEnterAccount') }}</p>
             <form name="loginForm" novalidate ng-submit="login()">
@@ -84,8 +85,8 @@
                 </div>
             </form>
         </div>
-        
-        <div class="form-group" ng-show="accountFalse">
+        <div ng-show="!hasKiosk&&accountFalse&&!checkingForKiosk">Deze instelling heeft geen kiosk</div>
+        <div class="form-group" ng-show="accountFalse&&hasKiosk">
             <select name="userFunctionSelect" class="form-control input-xl" ng-model="userFunctionSelect" ng-options="userFunction for userFunction in userFunctionList" ng-change="userFunctionSelected = true;
                 accountRadio = null">
                 <option value="">- {{ getLocalizedString('newFunctionSelectDefault') }} -</option>
