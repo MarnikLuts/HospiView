@@ -1028,7 +1028,6 @@ angular.module('myApp.controllers', []).
                     $scope.units = $rootScope['allUnitsAndGroups' + $scope.serverFilter.id];
                     console.log($scope.serverFilter.id);
                     console.log($scope.units);
-                    alert($scope.units);
                 }
             };
 
