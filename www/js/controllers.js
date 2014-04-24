@@ -921,6 +921,91 @@ angular.module('myApp.controllers', []).
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.servers = user.servers;
 
+/**
+             * 26.03.2014 Stijn Ceunen
+             * This will do a request to get all the units, groups and departments
+             * of all the saved servers of the user. It will only be executed if 
+             * the user has added a server, changed a saved server or the page 
+             * is not visited yet since the user started the application.
+             * First, the variables that record the add or edit of a server are
+             * set back to false. After, a loop of all the servers the user has
+             * saved will start. For each server the getUnitAndDepList and
+             * getUnitDepGroups requests will be executed. The results will be
+             * pushed into the unitsandgroups array which will be pushed in the 
+             * rootScope at the end of the second request. In the getUnitAndDepList
+             * request, there is a loop that will add the "type" property to the 
+             * objects and it will be set to "doctor". The same will be done in
+             * the getUnitDepGroups but is will be set to "group" in that loop.
+             * This is used to group them in the select box. 
+             */
+            var startIndex = 0;
+            if ($rootScope.serverAdded === true || $rootScope.serverChanged === true || !$rootScope['allUnitsAndGroups' + user.servers[0]] || !$rootScope['allUnitsAndGroups' + user.servers[1]] || !$rootScope['allUnitsAndGroups' + user.servers[2]]) {
+                $rootScope.serverChanger = false;
+                $rootScope.serverAdded = false;
+                var unitsandgroups = [];
+                startSearchUnitsAndGroups(startIndex);
+            }
+            
+            function startSearchUnitsAndGroups(index){
+                if (!(index + 1 === $rootScope.currentServers.length)) {
+                    getUnitsAndGroups(index);
+                } else {
+                    startIndex = 0;
+                }
+            }
+            
+            
+            function getUnitsAndGroups(index){
+                var selectedServer = user.servers[index];
+                hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
+                        success(function(data) {
+                            console.log($scope.selectedFilterServer);
+                            /*variable created to refresh the scope of the user variable*/
+                            var json = parseJson(data);
+                            if (json !== null) {
+                                if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                                    var units = json.UnitsAndDeps.Detail.Unit;
+                                    for (var i = 0; i < units.length; i++) {
+                                        units[i].type = "doctor";
+                                        units[i].Header.name = units[i].Header.unit_name;
+                                        unitsandgroups.push(units[i]);
+                                    }
+                                } else {
+                                    $scope.error = true;
+                                    $scope.errormessage = "Fout in de gegevens.";
+                                }
+                            }
+                        }).
+                        error(function() {
+                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                        });
+                hospiviewFactory.getUnitDepGroups(selectedServer.uuid, selectedServer.hosp_url).
+                        success(function(data) {
+                            var json = parseJson(data);
+                            if (json !== null) {
+                                if (json.UnitDepGroups.Header.StatusCode == 1) {
+                                    var groups = json.UnitDepGroups.Detail.Group;
+                                    for (var i = 0; i < groups.length; i++) {
+                                        groups[i].type = "group";
+                                        groups[i].Header.name = groups[i].Header.group_name;
+                                        unitsandgroups.push(groups[i]);
+                                    }
+                                    var rootScopeString = 'allUnitsAndGroups' + selectedServer.id;
+                                    $rootScope[rootScopeString] = unitsandgroups;
+                                    console.log(rootScopeString);
+                                } else {
+                                    $scope.error = true;
+                                    $scope.errormessage = "Fout in de ingevoerde login gegevens.";
+                                }
+                            }
+                        }).
+                        error(function() {
+                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                        });
+                index++;
+                startSearchUnitsAndGroups(index);
+            }
+            
             /**
              * 25.03.2014 Stijn Ceunen
              * This function is used when the state of the server select box is
@@ -940,8 +1025,10 @@ angular.module('myApp.controllers', []).
                 }
                 else {
                     $scope.disableUnits = false;
-                    $scope.units = $rootScope['allUnitsAndGroups.' + $scope.serverFilter.id];
+                    $scope.units = $rootScope['allUnitsAndGroups' + $scope.serverFilter.id];
+                    console.log($scope.serverFilter.id);
                     console.log($scope.units);
+                    alert($scope.units);
                 }
             };
 
@@ -1007,88 +1094,7 @@ angular.module('myApp.controllers', []).
                 }
             }
 
-            /**
-             * 26.03.2014 Stijn Ceunen
-             * This will do a request to get all the units, groups and departments
-             * of all the saved servers of the user. It will only be executed if 
-             * the user has added a server, changed a saved server or the page 
-             * is not visited yet since the user started the application.
-             * First, the variables that record the add or edit of a server are
-             * set back to false. After, a loop of all the servers the user has
-             * saved will start. For each server the getUnitAndDepList and
-             * getUnitDepGroups requests will be executed. The results will be
-             * pushed into the unitsandgroups array which will be pushed in the 
-             * rootScope at the end of the second request. In the getUnitAndDepList
-             * request, there is a loop that will add the "type" property to the 
-             * objects and it will be set to "doctor". The same will be done in
-             * the getUnitDepGroups but is will be set to "group" in that loop.
-             * This is used to group them in the select box. 
-             */
-            var startIndex = 0;
-            if ($rootScope.serverAdded === true || $rootScope.serverChanged === true || angular.isUndefined($rootScope.allUnitsAndGroups)) {
-                $rootScope.serverChanger = false;
-                $rootScope.serverAdded = false;
-                var unitsandgroups = [];
-                getUnitsAndGroups(startIndex);
-            }
             
-            function startSearchUnitsAndGroups(index){
-                if (!(index + 1 === $rootScope.currentServers.length)) {
-                    getUnitsAndGroups(index);
-                }   
-            }
-            
-            
-            function getUnitsAndGroups(index){
-                var selectedServer = user.servers[index];
-                hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
-                        success(function(data) {
-                            console.log($scope.selectedFilterServer);
-                            /*variable created to refresh the scope of the user variable*/
-                            var json = parseJson(data);
-                            if (json !== null) {
-                                if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                                    var units = json.UnitsAndDeps.Detail.Unit;
-                                    for (var i = 0; i < units.length; i++) {
-                                        units[i].type = "doctor";
-                                        units[i].Header.name = units[i].Header.unit_name;
-                                        unitsandgroups.push(units[i]);
-                                    }
-                                } else {
-                                    $scope.error = true;
-                                    $scope.errormessage = "Fout in de gegevens.";
-                                }
-                            }
-                        }).
-                        error(function() {
-                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                        });
-                hospiviewFactory.getUnitDepGroups(selectedServer.uuid, selectedServer.hosp_url).
-                        success(function(data) {
-                            var json = parseJson(data);
-                            if (json !== null) {
-                                if (json.UnitDepGroups.Header.StatusCode == 1) {
-                                    var groups = json.UnitDepGroups.Detail.Group;
-                                    for (var i = 0; i < groups.length; i++) {
-                                        groups[i].type = "group";
-                                        groups[i].Header.name = groups[i].Header.group_name;
-                                        unitsandgroups.push(groups[i]);
-                                    }
-                                    var rootScopeString = 'allUnitsAndGroups.' + selectedServer.id;
-                                    $rootScope[rootScopeString] = unitsandgroups;
-                                    console.log(rootScopeString);
-                                } else {
-                                    $scope.error = true;
-                                    $scope.errormessage = "Fout in de ingevoerde login gegevens.";
-                                }
-                            }
-                        }).
-                        error(function() {
-                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                        });
-                index++;
-                startSearchUnitsAndGroups(index);
-            }
 
             /**
              * 26.03.2014 Stijn Ceunen
