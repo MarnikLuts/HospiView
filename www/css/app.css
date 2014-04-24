@@ -240,7 +240,7 @@ table td {
     clear:both;
 }
 .filterText{
-    padding: 5px;
+    padding-left: 15px;
     color: black;
     font-size: 1.3em;
 }
@@ -364,7 +364,7 @@ ul li{
 
 .AppointmentsListFill {
     position: absolute;
-    top: 150px;
+    top: 180px;
     bottom: 50px;
 }
 

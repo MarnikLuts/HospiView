@@ -493,7 +493,6 @@ angular.module('myApp.controllers', []).
 
 
             $rootScope.$on('setReservationsEvent', function(event, args) {
-                console.log("setReservationsEvent");
                 $scope.reservations = [];
                 $scope.reservations = $rootScope[$rootScope.searchString];
                 if ($scope.reservations.length === 0) {
