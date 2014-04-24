@@ -273,9 +273,10 @@ angular.module('myApp.controllers', []).
              */
             function getReservations(index) {
                 var year = new Date().getFullYear().toString(),
-                        server = $rootScope.currentServers[index];
+                server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
-
+                console.log(server.uuid + " " + server.hosp_url);
+              
                 hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
                         .then(function(response) {
                             return dataFactory.setSearchUnits(response, server);
@@ -941,6 +942,7 @@ angular.module('myApp.controllers', []).
                 else {
                     $scope.disableUnits = false;
                     $scope.units = $rootScope['allUnitsAndGroups.' + $scope.serverFilter.id];
+                    console.log($scope.units);
                 }
             };
 
@@ -1023,56 +1025,70 @@ angular.module('myApp.controllers', []).
              * the getUnitDepGroups but is will be set to "group" in that loop.
              * This is used to group them in the select box. 
              */
+            var startIndex = 0;
             if ($rootScope.serverAdded === true || $rootScope.serverChanged === true || angular.isUndefined($rootScope.allUnitsAndGroups)) {
                 $rootScope.serverChanger = false;
                 $rootScope.serverAdded = false;
                 var unitsandgroups = [];
-                for (var j = 0; j < user.servers.length; j++) {
-                    var selectedServer = user.servers[j];
-                    hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
-                            success(function(data) {
-                                /*variable created to refresh the scope of the user variable*/
-                                var json = parseJson(data);
-                                if (json !== null) {
-                                    if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                                        var units = json.UnitsAndDeps.Detail.Unit;
-                                        for (var i = 0; i < units.length; i++) {
-                                            units[i].type = "doctor";
-                                            units[i].Header.name = units[i].Header.unit_name;
-                                            unitsandgroups.push(units[i]);
-                                        }
-                                    } else {
-                                        $scope.error = true;
-                                        $scope.errormessage = "Fout in de gegevens.";
+                getUnitsAndGroups(startIndex);
+            }
+            
+            function startSearchUnitsAndGroups(index){
+                if (!(index + 1 === $rootScope.currentServers.length)) {
+                    getUnitsAndGroups(index);
+                }   
+            }
+            
+            
+            function getUnitsAndGroups(index){
+                var selectedServer = user.servers[index];
+                hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
+                        success(function(data) {
+                            console.log($scope.selectedFilterServer);
+                            /*variable created to refresh the scope of the user variable*/
+                            var json = parseJson(data);
+                            if (json !== null) {
+                                if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                                    var units = json.UnitsAndDeps.Detail.Unit;
+                                    for (var i = 0; i < units.length; i++) {
+                                        units[i].type = "doctor";
+                                        units[i].Header.name = units[i].Header.unit_name;
+                                        unitsandgroups.push(units[i]);
                                     }
+                                } else {
+                                    $scope.error = true;
+                                    $scope.errormessage = "Fout in de gegevens.";
                                 }
-                            }).
-                            error(function() {
-                                alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                            });
-                    hospiviewFactory.getUnitDepGroups(selectedServer.uuid, selectedServer.hosp_url).
-                            success(function(data) {
-                                var json = parseJson(data);
-                                if (json !== null) {
-                                    if (json.UnitDepGroups.Header.StatusCode == 1) {
-                                        var groups = json.UnitDepGroups.Detail.Group;
-                                        for (var i = 0; i < groups.length; i++) {
-                                            groups[i].type = "group";
-                                            groups[i].Header.name = groups[i].Header.group_name;
-                                            unitsandgroups.push(groups[i]);
-                                        }
-                                        var rootScopeString = 'allUnitsAndGroups.' + selectedServer.id;
-                                        $rootScope[rootScopeString] = unitsandgroups;
-                                    } else {
-                                        $scope.error = true;
-                                        $scope.errormessage = "Fout in de ingevoerde login gegevens.";
+                            }
+                        }).
+                        error(function() {
+                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                        });
+                hospiviewFactory.getUnitDepGroups(selectedServer.uuid, selectedServer.hosp_url).
+                        success(function(data) {
+                            var json = parseJson(data);
+                            if (json !== null) {
+                                if (json.UnitDepGroups.Header.StatusCode == 1) {
+                                    var groups = json.UnitDepGroups.Detail.Group;
+                                    for (var i = 0; i < groups.length; i++) {
+                                        groups[i].type = "group";
+                                        groups[i].Header.name = groups[i].Header.group_name;
+                                        unitsandgroups.push(groups[i]);
                                     }
+                                    var rootScopeString = 'allUnitsAndGroups.' + selectedServer.id;
+                                    $rootScope[rootScopeString] = unitsandgroups;
+                                    console.log(rootScopeString);
+                                } else {
+                                    $scope.error = true;
+                                    $scope.errormessage = "Fout in de ingevoerde login gegevens.";
                                 }
-                            }).
-                            error(function() {
-                                alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
-                            });
-                }
+                            }
+                        }).
+                        error(function() {
+                            alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
+                        });
+                index++;
+                startSearchUnitsAndGroups(index);
             }
 
             /**
@@ -1093,9 +1109,7 @@ angular.module('myApp.controllers', []).
 
                 $rootScope.filterActive = true;
 
-                console.log($scope.serverFilter);
                 if (!$scope.serverFilter) {
-                    console.log("remove filter");
                     $scope.removeFilter();
                 }
 

@@ -76,11 +76,6 @@
                     <div class="savePasswordText">
                         <img ng-src="img/checkbox{{checkboxImgServer}}.png" ng-click="changeCheckbox()" height="25" width="25"/> {{ getLocalizedString('loginAutomaticallyEnterPassword')}}
                     </div>
-                    <div class="checkbox">         
-                        <label class="checkbox">
-                            <input type="checkbox" ng-model="savePassword" ng-click="savePasswordWarning()">{{ getLocalizedString('loginAutomaticallyEnterPassword') }}
-                        </label>
-                    </div>
                     <div class="alert alert-danger" ng-show="error">{{errormessage}}</div>
                     <div class="form-group text-center">
                         <button type="submit" class="btn btn-xl has-spinner" ng-disabled="loginForm.$invalid||loggingIn">

@@ -105,6 +105,7 @@ angular.module('myApp.services', []).
                 setSearchUnits: function(response, server) {
                     var defer = $q.defer();
                     var json = parseJson(response.data);
+                    console.log(json);
                     if (json.UnitsAndDeps.Header.StatusCode == 1) {
                         var units = json.UnitsAndDeps.Detail.Unit;
                         for (var i = 0; i < units.length; i++) {
