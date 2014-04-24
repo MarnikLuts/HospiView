@@ -171,9 +171,9 @@ angular.module('myApp.controllers', []).
                 $scope.loggingIn = true;
                 $scope.error = false;
                 var promises = [],
-                        invalidFields = [],
-                        authFailed = false,
-                        validServers = [];
+                    invalidFields = [],
+                    authFailed = false,
+                    validServers = [];
 
                 $rootScope.currentServers = [];
                 $scope.failedServers = [];
@@ -205,11 +205,8 @@ angular.module('myApp.controllers', []).
                             console.log(validServers[r].hosp_full_name + " auth success " + r);
                             $scope.error = false;
                             $rootScope.user = $scope.user;
-                            if (json.Authentication.Detail.isexternal == 0) {
-                                $rootScope.type = 0;
-                            } else {
-                                $rootScope.type = 1;
-                            }
+                            $rootScope.type = parseInt(json.Authentication.Detail.isexternal);
+                            
 
                             validServers[r].uuid = json.Authentication.Detail.uuid;
                             console.log(json.Authentication.Detail.uuid + " ");
@@ -226,7 +223,15 @@ angular.module('myApp.controllers', []).
                     console.log("auth failed: " + authFailed);
                     if (!authFailed) {
                         setDates();
-                        postLogin();
+                        switch($rootScope.type){
+                            case 0:
+                            case 1:
+                                postLoginDoctor();
+                                break;
+                            case 2:
+                                postLoginPatient();
+                                break;
+                        }
                     } else {
                         $scope.loggingIn = false;
                         $scope.error = true;
@@ -242,7 +247,7 @@ angular.module('myApp.controllers', []).
              * loads all the necessary data from the server using the methods of hospiviewfactory and datafactory
              * 
              */
-            function postLogin() {
+            function postLoginDoctor() {
                 console.log("postLogin");
                 var year = new Date().getFullYear().toString(),
                         holidayPromise = [];
@@ -424,8 +429,9 @@ angular.module('myApp.controllers', []).
                     controller: $rootScope.ModalInstance
                 });
                 modalInstance.result.then(function(answer) {
-                    if (answer === true) {
-                        if ($scope.server.user_login === $scope.username && $scope.server.user_password === $scope.password) {
+                    if (answer) {
+                        console.log($rootScope.selecterServers);
+                        if ($scope.server.user_login === $scope.selectedUser.servers[0].user_login && $scope.server.user_password === $scope.selectedUser.servers[0].user_password) {
                             $rootScope.user = $scope.user;
                             $rootScope.searchString = $rootScope.user + 'Reservations';
                             $rootScope[$rootScope.searchString] = JSON.parse(localStorage.getItem($rootScope.searchString));
@@ -435,13 +441,17 @@ angular.module('myApp.controllers', []).
                             $rootScope.publicHolidays = JSON.parse(localStorage.getItem($scope.user + "PublicHolidays"));
                             $rootScope.currentdate = new Date();
                             $rootScope.isOffline = true;
-                            $location.path('/doctor/appointmentsView');
+                            $rootScope.type = 0;
+                            if($rootScope.type==0||$rootScope.type==1)
+                                $location.path('/doctor/appointmentsView');
+                            else if($rootScope.type==2)
+                                $location.path('/patient/appointmentsView');
                         }
                         else {
+                            alert('nope');
                             $scope.loggingIn = false;
                             $scope.error = true;
                             $scope.errormessage = $rootScope.getLocalizedString('loginError');
-                            ;
                         }
                     }
                 }, function() {
@@ -1620,8 +1630,26 @@ angular.module('myApp.controllers', []).
 //                        $rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'),
 //                        function(response){
 //                            if(response==1){
+//                                var users = JSON.parse(localStorage.getItem('users')),
+//                                index = users.indexOf($rootScope.user);
+//
+//                                if (users.length == 1)
+//                                    localStorage.removeItem('users');
+//                                else{
+//                                    users.splice(index, 1);
+//                                    localStorage.setItem('users', JSON.stringify(users));
+//                                }
+//
+//
+//                                localStorage.removeItem($rootScope.user);
+//                                localStorage.removeItem($rootScope.user + 'AbsentDays');
+//                                localStorage.removeItem($rootScope.user + 'PublicHolidays');
+//                                localStorage.removeItem($rootScope.user + 'Reservations');
+//                                localStorage.removeItem($rootScope.user + 'SearchRangeStart');
+//                                localStorage.removeItem($rootScope.user + 'SearchRangeEnd');
 //                                $rootScope.pageClass = "left-to-right";
-//                                alert('delete user');
+//                                $location.path('/login');
+//                                $scope.$apply();
 //                            }
 //                        }
 //                );
@@ -1629,10 +1657,17 @@ angular.module('myApp.controllers', []).
                 //Works in browser
                 var response = window.confirm($rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'));
                 if (response) {
-                    var users = JSON.parse(localStorage.getItem('users'));
+                    var users = JSON.parse(localStorage.getItem('users')),
+                        index = users.indexOf($rootScope.user);
+                
                     if (users.length == 1)
                         localStorage.removeItem('users');
-
+                    else{
+                        users.splice(index, 1);
+                        localStorage.setItem('users', JSON.stringify(users));
+                    }
+                    
+                    
                     localStorage.removeItem($rootScope.user);
                     localStorage.removeItem($rootScope.user + 'AbsentDays');
                     localStorage.removeItem($rootScope.user + 'PublicHolidays');
@@ -2008,8 +2043,8 @@ angular.module('myApp.controllers', []).
 
             function postLoginDoctor() {
                 var year = new Date().getFullYear().toString(),
-                        holidayPromise = [],
-                        UnitPromise;
+                    holidayPromise = [],
+                    UnitPromise;
                 //Holidays
                 $rootScope.publicHolidays = [];
                 //SearchUnits
@@ -2089,6 +2124,9 @@ angular.module('myApp.controllers', []).
             }
 
             function setReservations(reservations) {
+                for(var i=0;i<reservations.length;i++){
+                    reservations[i].hosp_short_name = $scope.server.hosp_short_name;
+                }
                 $rootScope[$rootScope.searchString] = reservations;
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
