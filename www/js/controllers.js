@@ -8,9 +8,8 @@ angular.module('myApp.controllers', []).
                 loadURL(url);
             });
 
-            $scope.hideOnLogout={};
-            if (angular.isUndefined($rootScope.requestCounter))
-                $rootScope.requestCounter = 1;
+            $("#server1form").removeClass("invisible");
+            $("#server2form").removeClass("invisible");
 
             /**
              * Set the counter for the refresh back to 0. The interval depends on
