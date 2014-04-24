@@ -1518,15 +1518,37 @@ angular.module('myApp.controllers', []).
                     }
                 };
 
-                if ($scope.selectedUser.cellcontent.patient === true)
+                /*if ($scope.selectedUser.cellcontent.patient === true)
                     $('#patientCheckbox').prop('checked', true);
                 if ($scope.selectedUser.cellcontent.title === true)
                     $('#titleCheckbox').prop('checked', true);
                 if ($scope.selectedUser.cellcontent.department === true)
-                    $('#departmentCheckbox').prop('checked', true);
+                    $('#departmentCheckbox').prop('checked', true);*/
+                
+                if ($scope.selectedUser.cellcontent.patient === true)
+                    $scope.checkboxImgPatient = 1;
+                else
+                    $scope.checkboxImgPatient = 0;
+                if ($scope.selectedUser.cellcontent.title === true)
+                    $scope.checkboxImgTitle = 1;
+                else
+                    $scope.checkboxImgTitle = 0;
+                if ($scope.selectedUser.cellcontent.department === true)
+                    $scope.checkboxImgDepartment = 1;
+                else
+                    $scope.checkboxImgDepartment = 0;
             }
             
-
+            $scope.checkboxImg = 0;
+            $scope.changeCheckbox = function(setting){
+                var checkboxString = "checkboxImg" + setting;
+                if($scope[checkboxString] === 0){
+                    $scope[checkboxString] = 1;
+                } else {
+                    $scope[checkboxString] = 0;
+                }
+            }
+            
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
                 localStorage.setItem("language", id);
@@ -1537,9 +1559,23 @@ angular.module('myApp.controllers', []).
 
 
             $scope.save = function() {
+                if($scope.checkboxImgPatient === 1)
+                    $scope.selectedUser.cellcontent.patient = true;
+                else
+                    $scope.selectedUser.cellcontent.patient = false;
+                if($scope.checkboxImgTitle === 1)
+                    $scope.selectedUser.cellcontent.title = true;
+                else
+                    $scope.selectedUser.cellcontent.title = false;
+                if($scope.checkboxImgDepartment === 1)
+                    $scope.selectedUser.cellcontent.department = true;
+                else
+                    $scope.selectedUser.cellcontent.department = false;
+                
+                /*
                 $scope.selectedUser.cellcontent.patient = $('#patientCheckbox').prop('checked');
                 $scope.selectedUser.cellcontent.title = $('#titleCheckbox').prop('checked');
-                $scope.selectedUser.cellcontent.department = $('#departmentCheckbox').prop('checked');
+                $scope.selectedUser.cellcontent.department = $('#departmentCheckbox').prop('checked');*/
 
                 localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
                 $rootScope.pageClass = "left-to-right";

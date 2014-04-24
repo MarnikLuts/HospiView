@@ -11,29 +11,29 @@
         <div class="col-md-12 list">
             <div class="well">
                 <h4>{{getLocalizedString('settingsCellcontent')}}:</h4>
-                <table class="table table-condensed list">
+                <table class="table">
                     <tr>
                         <td>
                             <label id="settingsPatient" class="tableLabel">{{getLocalizedString('settingsPatient')}}</label>
                         </td>
-                        <td>
-                            <input class="form-control" id="patientCheckbox" type="checkbox"/>
+                        <td class="text-right">
+                            <img ng-src="img/checkbox{{checkboxImgPatient}}.png" ng-click="changeCheckbox('Patient')"/>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <label id="settingsTitle" class="tableLabel">{{getLocalizedString('settingsTitle')}}</label>
                         </td>
-                        <td>
-                            <input class="form-control" id="titleCheckbox" type="checkbox"/>
+                        <td class="text-right">
+                            <img ng-src="img/checkbox{{checkboxImgTitle}}.png" ng-click="changeCheckbox('Title')"/>  
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <label id="settingsDepartment" class="tableLabel">{{getLocalizedString('settingsDepartment')}}</label>
                         </td>
-                        <td>
-                            <input class="form-control" id="departmentCheckbox" type="checkbox"/>
+                        <td class="text-right">
+                            <img ng-src="img/checkbox{{checkboxImgDepartment}}.png" ng-click="changeCheckbox('Department')"/>
                         </td>
                     </tr>
                 </table>
