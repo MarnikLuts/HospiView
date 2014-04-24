@@ -7,10 +7,7 @@ angular.module('myApp.controllers', []).
                 var url = $(this).attr("rel");
                 loadURL(url);
             });
-
-            $("#server1form").removeClass("invisible");
-            $("#server2form").removeClass("invisible");
-
+            
             /**
              * Set the counter for the refresh back to 0. The interval depends on
              * the user.
@@ -1589,7 +1586,7 @@ angular.module('myApp.controllers', []).
                     if (action === "edit")
                         $rootScope.editServer = server;
                 }
-
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/selectserver/' + action);
             };
             /**
@@ -1700,8 +1697,13 @@ angular.module('myApp.controllers', []).
             if ($routeParams.action === "new")
                 $scope.newBoolean = true;
             else
-                $scope.newBoolean = false;
+                $("#selectServerButton").removeClass("invisible");
 
+            $scope.back = function() {
+                $rootScope.pageClass = "left-to-right";
+                $location.path('/settings/default');
+            };
+            
             $scope.languageSelected = false;
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
@@ -1746,6 +1748,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.showPasswordBoolean = false;
             $scope.savePassword = false;
+            $scope.checkboxImgServer = 0;
 
             /**
              * Array of functions a user can have.
@@ -1786,14 +1789,18 @@ angular.module('myApp.controllers', []).
                 $scope.accountFalse = false;
             };
 
-            /**
-             * Throws an alert in case the checkbox to save the password is checked.
-             */
-            $scope.savePasswordWarning = function() {
-                if (!$scope.savePassword[0])
+            $scope.changeCheckbox = function() {
+                if ($scope.checkboxImgServer === 0) {
+                    $scope.checkboxImgServer = 1;
+                    $scope.savePassword = true;
+                } else {
+                    $scope.checkboxImgServer = 0;
+                    $scope.savePassword = false;
+                }
+                if($scope.checkboxImgServer === 1)
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
-            };
-
+            }
+            
             /**
              * 
              * TODO: write documentation

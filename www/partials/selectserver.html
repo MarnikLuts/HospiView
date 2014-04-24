@@ -1,5 +1,8 @@
 <nav class="navbar navbar-default" role="navigation">
-    <button class="btn btn-sm-back invisible"></button>
+    <button id="selectServerButton" class="btn btn-sm-back invisible" ng-click="back()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        {{ getLocalizedString('back')}}
+    </button>
     <div class="title">{{ getLocalizedString('settings')}}</div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
@@ -68,6 +71,9 @@
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-show="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
                             <input type="text" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword') }}" ng-model="password" required>
                         </div>
+                    </div>
+                    <div class="savePasswordText">
+                        <img ng-src="img/checkbox{{checkboxImgServer}}.png" ng-click="changeCheckbox()" height="25" width="25"/> {{ getLocalizedString('loginAutomaticallyEnterPassword')}}
                     </div>
                     <div class="checkbox">         
                         <label class="checkbox">
