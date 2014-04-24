@@ -1704,6 +1704,10 @@ angular.module('myApp.controllers', []).
             $scope.languageSelected = false;
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
+                $scope.userFunctionList = [$rootScope.getLocalizedString('newFunctionPatient'),
+                $rootScope.getLocalizedString('newFunctionRepresentative'),
+                $rootScope.getLocalizedString('newFunctionHouseDoctor'),
+                $rootScope.getLocalizedString('newFunctionDoctor')];
                 localStorage.setItem("language", id);
                 $scope.languageSelected = true;
             }
@@ -1758,6 +1762,10 @@ angular.module('myApp.controllers', []).
              * @returns {Boolean}           boolean setting 
              */
             $scope.needsNationalReg = function(userFunction) {
+                console.log($scope.userFunctionList);
+                console.log(userFunction);
+                console.log($rootScope.getLocalizedString('newFunctionPatient'));
+                console.log($rootScope.getLocalizedString('newFunctionRepresentative'));
                 return userFunction === $rootScope.getLocalizedString('newFunctionPatient') || userFunction === $rootScope.getLocalizedString('newFunctionRepresentative');
             };
             $scope.needsRiziv = function(userFunction) {

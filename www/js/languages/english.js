@@ -133,4 +133,4 @@ var englishStrings = {
         settingsDeleteCurrentUser: "Delete user",
         settingsDeleteServerConfirm: "Are you sure you want to delete the selected server?",
         settingsDeleteCurrentUserConfirm: "Are you sure you want to delete the current user?"
- };
+};
