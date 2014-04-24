@@ -8,6 +8,7 @@ angular.module('myApp.controllers', []).
                 loadURL(url);
             });
 
+            $scope.hideOnLogout={};
             if (angular.isUndefined($rootScope.requestCounter))
                 $rootScope.requestCounter = 1;
 
