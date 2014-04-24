@@ -8,27 +8,13 @@ angular.module('myApp.controllers', []).
                 loadURL(url);
             });
 
-            $scope.loadUrl = function(url) {
-                navigator.app.loadUrl(url, {openExternal: true});
-                return false;
-            };
-
             if (angular.isUndefined($rootScope.requestCounter))
                 $rootScope.requestCounter = 1;
-            /**
-             * Checks if the refresh of appointments is initiated. If it is,
-             * it will be set to undifined so no refreshes happen on the login
-             * screen.
-             */
-            /*$interval.cancel($rootScope.requestTimer);
-             $rootScope.requestTimer = undefined;
-             delete $rootScope.requestTimer;/*
-             if (angular.isDefined($rootScope.requestTimer)) {
-             alert("defined");
-             $interval.cancel($rootScope.requestTimer);
-             $rootScope.requestTimer = undefined;
-             }*/
 
+            /**
+             * Set the counter for the refresh back to 0. The interval depends on
+             * the user.
+             */
             $rootScope.refreshCounter = 0;
 
             /**
@@ -61,10 +47,9 @@ angular.module('myApp.controllers', []).
             $rootScope.searchRangeEnd = undefined;
 
             /**
-             * showPasswordBoolean and savePassword will be set to false.
+             * showPasswordBoolean will be set to false.
              */
             $scope.showPasswordBoolean = false;
-            $scope.savePassword = false;
 
             /**
              * Check if the localStorage item "users" exists. If is doesn't,
@@ -99,9 +84,15 @@ angular.module('myApp.controllers', []).
                     $scope.selectedUser = JSON.parse(localStorage.getItem($scope.user));
                     $scope.servers = $scope.selectedUser.servers;
                     $scope.serverRadio = $scope.servers[0];
-                    for (var i = 0; i < $scope.servers.length; i++)
-                        $scope.savePassword[i] = $scope.selectedUser.servers[i].save_password;
-
+                    for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
+                        var checkboxString = "checkboxImgServer" + i;
+                        if ($scope.selectedUser.servers[i].save_password === false) {
+                            $scope[checkboxString] = 0;
+                            $scope.selectedUser.servers[i].user_password = "";
+                        } else {
+                            $scope[checkboxString] = 1;
+                        }
+                    }
                     $scope.getLoginUser(0);
                 } else {
                     $scope.servers[0] = undefined;
@@ -121,11 +112,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.getLoginUser = function(index) {
                 if (angular.isDefined($scope.servers[index])) {
-                    $scope.username[index] = $scope.servers[index].user_login;
-                    if ($scope.selectedUser.servers[index].save_password) {
-                        $scope.password[index] = $scope.servers[index].user_password;
-                        $scope.savePassword[index] = $scope.selectedUser.servers[index].save_password;
-                    }
+
                 } else {
                     $scope.username[index] = "";
                     $scope.password[index] = "";
@@ -150,12 +137,25 @@ angular.module('myApp.controllers', []).
                     console.log($scope.servers);
                 }
 
+            $scope.changeCheckbox = function(serverNr) {
+                var checkboxString = "checkboxImgServer" + serverNr;
+                $scope.selectedUser.servers[serverNr].save_password = !$scope.selectedUser.servers[serverNr].save_password;
+                if ($scope[checkboxString] === 0) {
+                    $scope[checkboxString] = 1;
+                    console.log(checkboxString);
+                } else {
+                    $scope[checkboxString] = 0;
+                    console.log(checkboxString);
+                }
+                if($scope[checkboxString] === 1)
+                    alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
+            }
+
             /**
              * Throw a warning if the user checks the savePassword checkbox.
              */
             $scope.savePasswordWarning = function(savePassword) {
-                if (savePassword === false || savePassword === undefined)
-                    alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
+               alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             };
 
             /**
@@ -182,21 +182,18 @@ angular.module('myApp.controllers', []).
                 $scope.failedServers = [];
                 console.log("all servers: " + $scope.selectedUser.servers.length);
                 for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
-                    console.log($scope.password[i]);
-                    if ($scope.selectedUser.servers[i].save_password === true) {
-                        $scope.username[i] = $scope.selectedUser.servers[i].user_login;
-                        $scope.password[i] = $scope.selectedUser.servers[i].user_password;
-                        $scope.selectedUser.servers[i].save_password = true;
-                    }
-                    invalidFields[i] = angular.isUndefined($scope.password[i]);
+                    console.log($scope.selectedUser.servers[i].user_password);
+
+                    invalidFields[i] = angular.isUndefined($scope.selectedUser.servers[i].user_password);
                     if (!invalidFields[i]) {
-                        promises.push(hospiviewFactory.getAuthentication($scope.username[i], $scope.password[i], $scope.selectedUser.servers[i].hosp_url));
+                        promises.push(hospiviewFactory.getAuthentication($scope.selectedUser.servers[i].user_login, $scope.selectedUser.servers[i].user_password, $scope.selectedUser.servers[i].hosp_url));
                         validServers.push($scope.selectedUser.servers[i]);
                     } else
                         $scope.failedServers.push($scope.selectedUser.servers[i].hosp_short_name);
                 }
 
                 $q.all(promises).then(function(responses) {
+                    console.log($scope.selectedUser);
                     console.log("servers with valid fields: " + promises.length);
                     if (responses.length == 0)
                         authFailed = true;
@@ -216,13 +213,17 @@ angular.module('myApp.controllers', []).
                             } else {
                                 $rootScope.type = 1;
                             }
+
                             validServers[r].uuid = json.Authentication.Detail.uuid;
                             console.log(json.Authentication.Detail.uuid + " ");
-                            validServers[r].save_password = $scope.savePassword[r];
-                            console.log($scope.savePassword[r]);
+                            validServers[r].save_password = $scope.selectedUser.servers[r].save_password;
+                            console.log($scope.selectedUser.servers[r].save_password);
                             $rootScope.currentServers.push(validServers[r]);
                             console.log($scope.selectedUser);
-                            localStorage.setItem($scope.user, JSON.stringify($scope.selectedUser));
+                            var saveUserSettings = JSON.parse(localStorage.getItem($scope.user));
+                            console.log(saveUserSettings);
+                            saveUserSettings.servers[r] = validServers[r];
+                            localStorage.setItem($scope.user, JSON.stringify(saveUserSettings));
                         }
                     }
                     console.log("auth failed: " + authFailed);
@@ -513,7 +514,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.getStatusIcon = function(reservation) {
                 var stepAmount = reservation.step_buttons;
-                
+
                 if (stepAmount == 4) {
                     if (reservation.time_gone !== "00:00:00")
                         return "out.png";
@@ -845,7 +846,7 @@ angular.module('myApp.controllers', []).
                     callModal();
                 } else {
                     if ($scope.loadingCalendar) {
-                        $rootScope.pageClass = "right-to-left"; 
+                        $rootScope.pageClass = "right-to-left";
                         $location.path('/appointmentsCalendar');
                         $rootScope.searchInProgress = false;
                         $scope.loadingCalendar = false;
@@ -1085,22 +1086,22 @@ angular.module('myApp.controllers', []).
             $scope.applyFilter = function() {
                 if (!$scope.unitFilter)
                     $rootScope.unitFilter = '';
-                
+
                 if (!$scope.depFilter)
                     $rootScope.depFilter = '';
-                
+
                 $rootScope.serverFilter = $scope.serverFilter;
                 $rootScope.unitFilter = $scope.unitFilter;
                 $rootScope.depFilter = $scope.depFilter;
 
                 $rootScope.filterActive = true;
-                
+
                 console.log($scope.serverFilter);
-                if(!$scope.serverFilter){
+                if (!$scope.serverFilter) {
                     console.log("remove filter");
                     $scope.removeFilter();
                 }
-                
+
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/doctor/appointmentsView');
             };
@@ -1114,7 +1115,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.serverFilter = '';
                 $rootScope.unitFilter = '';
                 $rootScope.depFilter = '';
-                
+
                 $rootScope.filterActive = false;
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
@@ -1456,8 +1457,8 @@ angular.module('myApp.controllers', []).
         }).
         controller('SettingsCtrl', function($scope, $location, $rootScope, $routeParams, $timeout) {
             loadSettings();
-            
-            function loadSettings(){
+
+            function loadSettings() {
                 $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
                 $scope.servers = $scope.selectedUser.servers;
 
@@ -1519,12 +1520,12 @@ angular.module('myApp.controllers', []).
                 };
 
                 /*if ($scope.selectedUser.cellcontent.patient === true)
-                    $('#patientCheckbox').prop('checked', true);
-                if ($scope.selectedUser.cellcontent.title === true)
-                    $('#titleCheckbox').prop('checked', true);
-                if ($scope.selectedUser.cellcontent.department === true)
-                    $('#departmentCheckbox').prop('checked', true);*/
-                
+                 $('#patientCheckbox').prop('checked', true);
+                 if ($scope.selectedUser.cellcontent.title === true)
+                 $('#titleCheckbox').prop('checked', true);
+                 if ($scope.selectedUser.cellcontent.department === true)
+                 $('#departmentCheckbox').prop('checked', true);*/
+
                 if ($scope.selectedUser.cellcontent.patient === true)
                     $scope.checkboxImgPatient = 1;
                 else
@@ -1538,17 +1539,17 @@ angular.module('myApp.controllers', []).
                 else
                     $scope.checkboxImgDepartment = 0;
             }
-            
+
             $scope.checkboxImg = 0;
-            $scope.changeCheckbox = function(setting){
+            $scope.changeCheckbox = function(setting) {
                 var checkboxString = "checkboxImg" + setting;
-                if($scope[checkboxString] === 0){
+                if ($scope[checkboxString] === 0) {
                     $scope[checkboxString] = 1;
                 } else {
                     $scope[checkboxString] = 0;
                 }
             }
-            
+
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
                 localStorage.setItem("language", id);
@@ -1559,23 +1560,23 @@ angular.module('myApp.controllers', []).
 
 
             $scope.save = function() {
-                if($scope.checkboxImgPatient === 1)
+                if ($scope.checkboxImgPatient === 1)
                     $scope.selectedUser.cellcontent.patient = true;
                 else
                     $scope.selectedUser.cellcontent.patient = false;
-                if($scope.checkboxImgTitle === 1)
+                if ($scope.checkboxImgTitle === 1)
                     $scope.selectedUser.cellcontent.title = true;
                 else
                     $scope.selectedUser.cellcontent.title = false;
-                if($scope.checkboxImgDepartment === 1)
+                if ($scope.checkboxImgDepartment === 1)
                     $scope.selectedUser.cellcontent.department = true;
                 else
                     $scope.selectedUser.cellcontent.department = false;
-                
+
                 /*
-                $scope.selectedUser.cellcontent.patient = $('#patientCheckbox').prop('checked');
-                $scope.selectedUser.cellcontent.title = $('#titleCheckbox').prop('checked');
-                $scope.selectedUser.cellcontent.department = $('#departmentCheckbox').prop('checked');*/
+                 $scope.selectedUser.cellcontent.patient = $('#patientCheckbox').prop('checked');
+                 $scope.selectedUser.cellcontent.title = $('#titleCheckbox').prop('checked');
+                 $scope.selectedUser.cellcontent.department = $('#departmentCheckbox').prop('checked');*/
 
                 localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
                 $rootScope.pageClass = "left-to-right";
@@ -1597,7 +1598,7 @@ angular.module('myApp.controllers', []).
              * 
              * @returns {undefined}
              */
-            $scope.deleteCurrentUser = function(){
+            $scope.deleteCurrentUser = function() {
                 //Only works on mobile devices
 //                window.confirm(
 //                        $rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'),
@@ -1608,14 +1609,14 @@ angular.module('myApp.controllers', []).
 //                            }
 //                        }
 //                );
-        
+
                 //Works in browser
                 var response = window.confirm($rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'));
-                if(response){
+                if (response) {
                     var users = JSON.parse(localStorage.getItem('users'));
-                    if(users.length==1)
+                    if (users.length == 1)
                         localStorage.removeItem('users');
-                    
+
                     localStorage.removeItem($rootScope.user);
                     localStorage.removeItem($rootScope.user + 'AbsentDays');
                     localStorage.removeItem($rootScope.user + 'PublicHolidays');
@@ -1626,38 +1627,38 @@ angular.module('myApp.controllers', []).
                     $location.path('/login');
                 }
             };
-            
+
             /**
              * Prompts the user with a confirmation dialog,
              * Deletes the selected server
              * @returns {undefined}
              */
-            $scope.deleteServer = function(){
+            $scope.deleteServer = function() {
                 var lsObject = JSON.parse(localStorage.getItem($rootScope.user)),
-                    servers = lsObject.servers;
+                        servers = lsObject.servers;
                 //Only works on mobile device
-                if(servers.length>1){
+                if (servers.length > 1) {
                     window.confirm(
-                        $rootScope.getLocalizedString('settingsDeleteServerConfirm'),
-                        function(response){
-                            if(response==1){
-                                var id = $scope.serverRadio.id,
-                                    user_login = $scope.serverRadio.user_login,
-                                    user_password = $scope.serverRadio.user_password;
-                            
-                                for(var i=0;i<servers.length;i++){
-                                    if(servers[i].id==id && servers[i].user_login==user_login && servers[i].user_password==user_password){
-                                        $rootScope.currentServers.splice(i,1);
-                                        servers.splice(i,1);
-                                        lsObject.servers = servers;
-                                        localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
-                                        $rootScope.pageClass = "left-to-right";
-                                        $location.path("/login");
-                                        $scope.$apply();
+                            $rootScope.getLocalizedString('settingsDeleteServerConfirm'),
+                            function(response) {
+                                if (response == 1) {
+                                    var id = $scope.serverRadio.id,
+                                            user_login = $scope.serverRadio.user_login,
+                                            user_password = $scope.serverRadio.user_password;
+
+                                    for (var i = 0; i < servers.length; i++) {
+                                        if (servers[i].id == id && servers[i].user_login == user_login && servers[i].user_password == user_password) {
+                                            $rootScope.currentServers.splice(i, 1);
+                                            servers.splice(i, 1);
+                                            lsObject.servers = servers;
+                                            localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
+                                            $rootScope.pageClass = "left-to-right";
+                                            $location.path("/login");
+                                            $scope.$apply();
+                                        }
                                     }
                                 }
                             }
-                        }
                     );
                 }
                 //Works in browser
@@ -1682,7 +1683,7 @@ angular.module('myApp.controllers', []).
 //                    }
 //                }
             };
-            
+
             $timeout(function() {
                 if ($routeParams.action === "new")
                     alert($rootScope.getLocalizedString("settingsNew"));
@@ -1705,9 +1706,9 @@ angular.module('myApp.controllers', []).
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
                 $scope.userFunctionList = [$rootScope.getLocalizedString('newFunctionPatient'),
-                $rootScope.getLocalizedString('newFunctionRepresentative'),
-                $rootScope.getLocalizedString('newFunctionHouseDoctor'),
-                $rootScope.getLocalizedString('newFunctionDoctor')];
+                    $rootScope.getLocalizedString('newFunctionRepresentative'),
+                    $rootScope.getLocalizedString('newFunctionHouseDoctor'),
+                    $rootScope.getLocalizedString('newFunctionDoctor')];
                 localStorage.setItem("language", id);
                 $scope.languageSelected = true;
             }

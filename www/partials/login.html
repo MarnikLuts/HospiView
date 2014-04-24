@@ -16,100 +16,85 @@
                 </select>
             </div>
             <div>
-                <button type="button" class="btn btn-primary" ng-click="getLoginUser(0)" ng-model="serverRadio" ng-show="servers[0] !== undefined" btn-radio="servers[0]">{{servers[0].hosp_short_name}}</button>
-                <button type="button" class="btn btn-primary" ng-click="getLoginUser(1)" ng-model="serverRadio" ng-show="servers[1] !== undefined" btn-radio="servers[1]">{{servers[1].hosp_short_name}}</button>
-                <button type="button" class="btn btn-primary" ng-click="getLoginUser(2)" ng-model="serverRadio" ng-show="servers[2] !== undefined" btn-radio="servers[2]">{{servers[2].hosp_short_name}}</button>
+                <button type="button" class="btn btn-primary" ng-click="getLoginUser(0)" ng-model="serverRadio" ng-show="selectedUser.servers[0] !== undefined" btn-radio="selectedUser.servers[0]">{{selectedUser.servers[0].hosp_short_name}}</button>
+                <button type="button" class="btn btn-primary" ng-click="getLoginUser(1)" ng-model="serverRadio" ng-show="selectedUser.servers[1] !== undefined" btn-radio="selectedUser.servers[1]">{{selectedUser.servers[1].hosp_short_name}}</button>
+                <button type="button" class="btn btn-primary" ng-click="getLoginUser(2)" ng-model="serverRadio" ng-show="selectedUser.servers[2] !== undefined" btn-radio="selectedUser.servers[2]">{{selectedUser.servers[2].hosp_short_name}}</button>
             </div><br/>
 
-            <div ng-show="serverRadio === servers[0]">
+            <div ng-show="serverRadio === selectedUser.servers[0]">
                 <div class="form-group">
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                            <input type="text" id="username" class="form-control input-lg" placeholder="{{ getLocalizedString('loginUsername')}}" ng-model="username
-                                [0]">
+                            <input type="text" id="username" class="form-control input-lg" placeholder="{{ getLocalizedString('loginUsername')}}" ng-model="selectedUser.servers[0].user_login">
                         </div>
                     </div>
                     <div class="form-group" ng-hide="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-hide="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
-                            <input type="password" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="password
-                                [0]">
+                            <input type="password" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="selectedUser.servers[0].user_password">
                         </div>
                     </div>
                     <div class="form-group" ng-show="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-show="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
-                            <input type="text" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="password[0]" />
+                            <input type="text" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="selectedUser.servers[0].user_password" />
                         </div>
                     </div>
-                    <div class="checkbox">         
-                        <label class="checkbox">
-                            <input type="checkbox" ng-model="savePassword[0]" ng-click="savePasswordWarning(savePassword[0])" />
-                            {{ getLocalizedString('loginAutomaticallyEnterPassword')}}   
-                        </label>
+                    <div class="savePasswordText">
+                        <img ng-src="img/checkbox{{checkboxImgServer0}}.png" ng-click="changeCheckbox('0')" height="25" width="25"/> {{ getLocalizedString('loginAutomaticallyEnterPassword')}}
                     </div>
                 </div>
             </div>
 
-            <div ng-show="serverRadio === servers[1]">
+            <div ng-show="serverRadio === selectedUser.servers[1]">
                 <div class="form-group">
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                            <input type="text" id="username" class="form-control input-lg" placeholder="{{ getLocalizedString('loginUsername')}}" ng-model="username
-                                [1]" >
+                            <input type="text" id="username" class="form-control input-lg" placeholder="{{ getLocalizedString('loginUsername')}}" ng-model="selectedUser.servers[1].user_login" >
                         </div>
                     </div>
                     <div class="form-group" ng-hide="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-hide="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
-                            <input type="password" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="password
-                                [1]" >
+                            <input type="password" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="selectedUser.servers[1].user_password" >
                         </div>
                     </div>
                     <div class="form-group" ng-show="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-show="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
-                            <input type="text" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="password[1]"  >
+                            <input type="text" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="selectedUser.servers[1].user_password"  >
                         </div>
                     </div>
-                    <div class="checkbox">         
-                        <label class="checkbox">
-                            <input type="checkbox" ng-model="savePassword[1]" ng-click="savePasswordWarning(savePassword[1])" />
-                            {{ getLocalizedString('loginAutomaticallyEnterPassword')}}   
-                        </label>
+                    <div class="savePasswordText">
+                        <img ng-src="img/checkbox{{checkboxImgServer1}}.png" ng-click="changeCheckbox('1')" height="25" width="25"/> {{ getLocalizedString('loginAutomaticallyEnterPassword')}}
                     </div>
                 </div>
             </div>
 
-            <div ng-show="serverRadio === servers[2]">
+            <div ng-show="serverRadio === selectedUser.servers[2]">
                 <div class="form-group">
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                            <input type="text" id="username" class="form-control input-lg" placeholder="{{ getLocalizedString('loginUsername')}}" ng-model="username
-                                [2]" >
+                            <input type="text" id="username" class="form-control input-lg" placeholder="{{ getLocalizedString('loginUsername')}}" ng-model="selectedUser.servers[2].user_login" >
                         </div>
                     </div>
                     <div class="form-group" ng-hide="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-hide="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
-                            <input type="password" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="password
-                                [2]" >
+                            <input type="password" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="selectedUser.servers[2].user_password" >
                         </div>
                     </div>
                     <div class="form-group" ng-show="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-show="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
-                            <input type="text" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="password[2]" >
+                            <input type="text" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword')}}" ng-model="selectedUser.servers[2].user_password" >
                         </div>
                     </div>
-                    <div class="checkbox">         
-                        <label class="checkbox">
-                            <input type="checkbox" ng-model="savePassword[2]" ng-click="savePasswordWarning(savePassword[2])" />
-                            {{ getLocalizedString('loginAutomaticallyEnterPassword')}}   
-                        </label>
+                    <div class="savePasswordText">
+                        <img ng-src="img/checkbox{{checkboxImgServer2}}.png" ng-click="changeCheckbox('2')" height="25" width="25"/> {{ getLocalizedString('loginAutomaticallyEnterPassword')}}
                     </div>
                 </div>
             </div>

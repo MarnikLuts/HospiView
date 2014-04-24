@@ -28,7 +28,9 @@
     content: "";
     padding: 0;
 }
-
+.savePasswordText{
+    font-size: 1.2em;
+}
 .list_overflow{
     height:250px;
     width:90%;
