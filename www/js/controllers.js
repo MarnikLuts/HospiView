@@ -1688,7 +1688,7 @@ angular.module('myApp.controllers', []).
 
 
         }).
-        controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory, dataFactory, languageFactory, $q, $modal) {
+        controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory, dataFactory, languageFactory, $q, $modal, kiosk_url, base_url) {
 
             /**
              * If it's the first time a user uses the application, the back button
@@ -1733,7 +1733,20 @@ angular.module('myApp.controllers', []).
              * a hospital, it will be set to true.
              */
             $scope.serverSelected = false;
-
+            $scope.checkForKiosk = function(){
+                $scope.checkingForKiosk = true;
+                hospiviewFactory.checkForKiosk($scope.server.hosp_url)
+                    .then(function(){
+                        $scope.checkingForKiosk = false;
+                        $scope.hasKiosk = true;
+                        $scope.server.hosp_url += kiosk_url;
+                },function(){
+                    $scope.checkingForKiosk = false;
+                    $scope.hasKiosk = false;
+                    $scope.server.hosp_url += base_url;
+                });
+            };
+            
             /**
              * Set to null so no radioButton is selected. The moment a radioButton
              * is selected the other, the right information will be shown.
@@ -1766,15 +1779,20 @@ angular.module('myApp.controllers', []).
              * @returns {Boolean}           boolean setting 
              */
             $scope.needsNationalReg = function(userFunction) {
-                console.log($scope.userFunctionList);
-                console.log(userFunction);
-                console.log($rootScope.getLocalizedString('newFunctionPatient'));
-                console.log($rootScope.getLocalizedString('newFunctionRepresentative'));
                 return userFunction === $rootScope.getLocalizedString('newFunctionPatient') || userFunction === $rootScope.getLocalizedString('newFunctionRepresentative');
             };
             $scope.needsRiziv = function(userFunction) {
                 return userFunction === $rootScope.getLocalizedString('newFunctionDoctor') || userFunction === $rootScope.getLocalizedString('newFunctionHouseDoctor');
             };
+
+            //TEST DATA
+            $scope.firstName = "Voornaam";
+            $scope.lastName = "Achternaam";
+            $scope.dateOfBirth = "18/05/1993";
+            $scope.emailAddress = "Frank.Goyens@icasa-group.com";
+            $scope.confirmEmailAddress = "Frank.Goyens@icasa-group.com";
+            $scope.nationalRegister = "93051822361";
+            
 
             /**
              * Webservice request to request an account. The div will will be hidden
@@ -1783,10 +1801,25 @@ angular.module('myApp.controllers', []).
              * TODO: implement webservice request
              */
             $scope.requestAccount = function() {
-                $scope.requestMessage = $rootScope.getLocalizedString('newUserRequestMessage');
-                $scope.accountRadio = $rootScope.getLocalizedString('yes');
-                $scope.accountTrue = true;
-                $scope.accountFalse = false;
+                if($scope.userFunctionSelect === $rootScope.getLocalizedString('newFunctionPatient')){
+                    alert('request will be sent');
+                    //USER_NAME, USER_REGNO, USER_EMAIL, USER_MOB, LanguageId, Update_NameEmailTel, server_url
+                    hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, '021545214', $rootScope.languageID, 0, $scope.server.hosp_url)
+                        .then(function(response){
+                            var json = parseJson(response.data);
+                            $scope.accountTrue = true;
+                            $scope.accountFalse = false;
+                            console.log(json);
+                            postAuthentication(json.Authentication);
+                        }, function(errorData){
+                           error(errorData); 
+                        });
+                }else{
+                    $scope.requestMessage = $rootScope.getLocalizedString('newUserRequestMessage');
+                    $scope.accountRadio = $rootScope.getLocalizedString('yes');
+                    $scope.accountTrue = true;
+                    $scope.accountFalse = false;  
+                }
             };
 
             $scope.changeCheckbox = function() {
@@ -1815,106 +1848,9 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
+                                console.log(json);
                                 if (json.Authentication.Header.StatusCode == 1) {
-                                    var localStorageName = json.Authentication.Detail.user_name;
-                                    if ($routeParams.action === "new" || $routeParams.action === "newLocalUser") {
-                                        if (localStorage.getItem(localStorageName) === null) {
-                                            $scope.error = false;
-                                            $rootScope.user = localStorageName;
-                                            $rootScope.currentServer = $scope.server;
-                                            $rootScope.currentServers = [$scope.server];
-                                            $rootScope.currentServers[0].uuid = json.Authentication.Detail.uuid;
-                                            if ($routeParams.action === "new")
-                                                addToLocalStorage("users", [{"username": localStorageName}]);
-                                            else {
-                                                var localUsers = JSON.parse(localStorage.getItem("users"));
-                                                localUsers.push({"username": localStorageName});
-                                                localStorage.setItem("users", JSON.stringify(localUsers));
-                                            }
-                                            addToLocalStorage(localStorageName,
-                                                    {"servers": [{"id": $rootScope.currentServer.id,
-                                                                "hosp_short_name": $rootScope.currentServer.hosp_short_name,
-                                                                "hosp_full_name": $rootScope.currentServer.hosp_full_name,
-                                                                "hosp_url": $rootScope.currentServer.hosp_url,
-                                                                "user_password": $scope.password,
-                                                                "user_login": $scope.username,
-                                                                "reg_no": json.Authentication.Detail.reg_no,
-                                                                "unique_pid": json.Authentication.Detail.unique_pid,
-                                                                "uuid": json.Authentication.Detail.uuid,
-                                                                "isexternal": json.Authentication.Detail.isexternal,
-                                                                "save_password": $scope.savePassword,
-                                                                "shortcut1": {"unit": "", "department": ""},
-                                                                "shortcut2": {"unit": "", "department": ""},
-                                                                "shortcut3": {"unit": "", "department": ""}}],
-                                                        "language_id": json.Authentication.Detail.language_id,
-                                                        "cellcontent": {"patient": true,
-                                                            "title": true,
-                                                            "department": true},
-                                                        "refreshrate": 60});
-                                            if (json.Authentication.Detail.isexternal == 0)
-                                                $rootScope.type = 0;
-                                            else
-                                                $rootScope.type = 1;
-//                                            $rootScope.user = null;
-//                                            $rootScope.type = null;
-                                            postLogin();
-//                                            $location.path('/login');
-                                        } else {
-                                            $scope.loggingIn = false;
-                                            $scope.error = true;
-                                            $scope.errormessage = "Account is reeds op dit toestel toegevoegd.";
-                                        }
-                                    } else {
-                                        if ($routeParams.action === "add") {
-                                            var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-                                            var addServer = {"id": $scope.server.id,
-                                                "hosp_short_name": $scope.server.hosp_short_name,
-                                                "hosp_full_name": $scope.server.hosp_full_name,
-                                                "hosp_url": $scope.server.hosp_url,
-                                                "user_password": $scope.password,
-                                                "user_login": $scope.username,
-                                                "reg_no": json.Authentication.Detail.reg_no,
-                                                "unique_pid": json.Authentication.Detail.unique_pid,
-                                                "uuid": json.Authentication.Detail.uuid,
-                                                "isexternal": json.Authentication.Detail.isexternal,
-                                                "save_password": $scope.savePassword,
-                                                "shortcut1": {"unit": "", "department": ""},
-                                                "shortcut2": {"unit": "", "department": ""},
-                                                "shortcut3": {"unit": "", "department": ""}};
-                                            selectedUser.servers.push(addServer);
-                                            localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
-                                            $rootScope.serverAdded = true;
-                                        } else {
-                                            var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-                                            for (var i = 0; i < selectedUser.servers.length; i++) {
-                                                if (selectedUser.servers[i].id === $rootScope.editServer.id && selectedUser.servers[i].user_name === $rootScope.editServer.user_name) {
-                                                    var editServer = {"id": $scope.server.id,
-                                                        "hosp_short_name": $scope.server.hosp_short_name,
-                                                        "hosp_full_name": $scope.server.hosp_full_name,
-                                                        "hosp_url": $scope.server.hosp_url,
-                                                        "user_password": $scope.password,
-                                                        "user_login": $scope.username,
-                                                        "reg_no": json.Authentication.Detail.reg_no,
-                                                        "unique_pid": json.Authentication.Detail.unique_pid,
-                                                        "uuid": json.Authentication.Detail.uuid,
-                                                        "isexternal": json.Authentication.Detail.isexternal,
-                                                        "save_password": $scope.savePassword,
-                                                        "shortcut1": {"unit": "", "department": ""},
-                                                        "shortcut2": {"unit": "", "department": ""},
-                                                        "shortcut3": {"unit": "", "department": ""}};
-                                                    selectedUser.servers[i] = editServer;
-                                                }
-                                            }
-                                            localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
-                                            $rootScope.serverChanged = true;
-                                        }
-
-                                        $rootScope.user = null;
-                                        $rootScope.type = null;
-                                        $rootScope.pageClass = "right-to-left";
-                                        $location.path('/login');
-                                    }
-
+                                    postAuthentication(json.Authentication);
                                 } else {
                                     $scope.loggingIn = false;
                                     $scope.error = true;
@@ -1927,8 +1863,131 @@ angular.module('myApp.controllers', []).
                             });
                 }
             };
+            
+            /**
+             * Handles the data object returned by the server on a successful authentication
+             * Whether or not the authentication is successful should be checked before this function is called 
+             * 
+             * @param {type} json
+             * @returns {undefined}
+             */
+            function postAuthentication(json){
+                var localStorageName = json.Detail.user_name;
+                if ($routeParams.action === "new" || $routeParams.action === "newLocalUser") {
+                    if (localStorage.getItem(localStorageName) === null) {
+                        $scope.error = false;
+                        $rootScope.user = localStorageName;
+                        $rootScope.currentServer = $scope.server;
+                        $rootScope.currentServers = [$scope.server];
+                        $rootScope.currentServers[0].uuid = json.Detail.uuid;
+                        if ($routeParams.action === "new")
+                            addToLocalStorage("users", [{"username": localStorageName}]);
+                        else {
+                            var localUsers = JSON.parse(localStorage.getItem("users"));
+                            localUsers.push({"username": localStorageName});
+                            localStorage.setItem("users", JSON.stringify(localUsers));
+                        }
+                        addToLocalStorage(localStorageName,
+                                {"servers": [{"id": $rootScope.currentServer.id,
+                                            "hosp_short_name": $rootScope.currentServer.hosp_short_name,
+                                            "hosp_full_name": $rootScope.currentServer.hosp_full_name,
+                                            "hosp_url": $rootScope.currentServer.hosp_url,
+                                            "user_password": $scope.password,
+                                            "user_login": $scope.username,
+                                            "reg_no": json.Detail.reg_no,
+                                            "unique_pid": json.Detail.unique_pid,
+                                            "uuid": json.Detail.uuid,
+                                            "isexternal": json.Detail.isexternal,
+                                            "save_password": $scope.savePassword,
+                                            "shortcut1": {"unit": "", "department": ""},
+                                            "shortcut2": {"unit": "", "department": ""},
+                                            "shortcut3": {"unit": "", "department": ""}}],
+                                            "language_id": json.Detail.language_id,
+                                            "cellcontent": {"patient": true,
+                                            "title": true,
+                                            "department": true},
+                                            "refreshrate": 60});
+                        /*
+                         * 0: dokter (oude hospiview service)
+                         * 1: dokter (nieuwe hospiview service)
+                         * 2: patiënt
+                         * 3: huisarts
+                         * 4: kiosk
+                         * 5: vertegenwoordiger
+                         */
+                        $rootScope.type = parseInt(json.Detail.isexternal);
+                        console.log($rootScope.type);
+                        switch($rootScope.type){
+                            case 0:
+                            case 1:
+                                postLoginDoctor();
+                                break;
+                            case 2:
+                                postLoginPatient();
+                                break;
+                        }
+                    } else {
+                        $scope.loggingIn = false;
+                        $scope.error = true;
+                        $scope.errormessage = "Account is reeds op dit toestel toegevoegd.";
+                    }
+                } else {
+                    if ($routeParams.action === "add") {
+                        var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
+                        var addServer = {"id": $scope.server.id,
+                            "hosp_short_name": $scope.server.hosp_short_name,
+                            "hosp_full_name": $scope.server.hosp_full_name,
+                            "hosp_url": $scope.server.hosp_url,
+                            "user_password": $scope.password,
+                            "user_login": $scope.username,
+                            "reg_no": json.Detail.reg_no,
+                            "unique_pid": json.Detail.unique_pid,
+                            "uuid": json.Detail.uuid,
+                            "isexternal": json.Detail.isexternal,
+                            "save_password": $scope.savePassword,
+                            "shortcut1": {"unit": "", "department": ""},
+                            "shortcut2": {"unit": "", "department": ""},
+                            "shortcut3": {"unit": "", "department": ""}};
+                        selectedUser.servers.push(addServer);
+                        localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
+                        $rootScope.serverAdded = true;
+                    } else {
+                        var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
+                        for (var i = 0; i < selectedUser.servers.length; i++) {
+                            if (selectedUser.servers[i].id === $rootScope.editServer.id && selectedUser.servers[i].user_name === $rootScope.editServer.user_name) {
+                                var editServer = {"id": $scope.server.id,
+                                    "hosp_short_name": $scope.server.hosp_short_name,
+                                    "hosp_full_name": $scope.server.hosp_full_name,
+                                    "hosp_url": $scope.server.hosp_url,
+                                    "user_password": $scope.password,
+                                    "user_login": $scope.username,
+                                    "reg_no": json.Detail.reg_no,
+                                    "unique_pid": json.Detail.unique_pid,
+                                    "uuid": json.Detail.uuid,
+                                    "isexternal": json.Detail.isexternal,
+                                    "save_password": $scope.savePassword,
+                                    "shortcut1": {"unit": "", "department": ""},
+                                    "shortcut2": {"unit": "", "department": ""},
+                                    "shortcut3": {"unit": "", "department": ""}};
+                                selectedUser.servers[i] = editServer;
+                            }
+                        }
+                        localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
+                        $rootScope.serverChanged = true;
+                    }
 
-            function postLogin() {
+                    $rootScope.user = null;
+                    $rootScope.type = null;
+                    $rootScope.pageClass = "right-to-left";
+                    $location.path('/login');
+                }
+            }
+            
+            function postLoginPatient(){
+                $location.path("/patient/appointmentsPatient");
+            }
+
+            function postLoginDoctor() {
                 var year = new Date().getFullYear().toString(),
                         holidayPromise = [],
                         UnitPromise;
@@ -1965,15 +2024,15 @@ angular.module('myApp.controllers', []).
             }
 
             /**
-             * When a promise gets rejected during postLogin() this method be used to properly handle the error
+             * When a promise gets rejected during postLogin() this method is used to properly handle the error
              * 
              * @param {type} data
              */
             function error(data) {
                 $scope.loggingIn = false;
                 $scope.error = true;
-//                $scope.errormessage = "Geen afspraken gevonden";
-                $scope.errormessage = data;
+                $scope.errormessage = "Geen afspraken gevonden";
+//                $scope.errormessage = data;
             }
 
             /**
