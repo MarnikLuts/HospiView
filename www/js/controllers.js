@@ -1112,6 +1112,7 @@ angular.module('myApp.controllers', []).
                 if (!$scope.serverFilter) {
                     $scope.removeFilter();
                 }
+                console.log($rootScope.serverFilter.hosp_short_name);
 
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/doctor/appointmentsView');
