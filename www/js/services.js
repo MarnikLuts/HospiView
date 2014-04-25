@@ -365,6 +365,16 @@ angular.module('myApp.services', []).
                             $rootScope[$rootScope.searchString].push(allReservations[i]);
 
                         $rootScope.$emit('setReservationsEvent', {});
+                        
+                        $rootScope.refresh = false;
+                        $rootScope.searchInProgress = false;
+                        if ($rootScope[$rootScope.searchString].length === 0) {
+                            $rootScope.isOffline = true;
+                            alert($rootScope.getLocalizedString('uuidExpiredMessage'));
+                            $rootScope.user = null;
+                            $rootScope.type = null;
+                        }
+                        
                         console.log($rootScope[$rootScope.searchString]);
                     }
 

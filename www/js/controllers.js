@@ -2218,15 +2218,5 @@ angular.module('myApp.controllers', []).
                 $interval.cancel(requestTimer);
             });
 
-            $rootScope.$on('setReservationsEvent', function(event, args) {
-                $rootScope.refresh = false;
-                $rootScope.searchInProgress = false;
-                if ($rootScope[$rootScope.searchString].length === 0) {
-                    $rootScope.isOffline = true;
-                    alert($rootScope.getLocalizedString('uuidExpiredMessage'));
-                    $rootScope.user = null;
-                    $rootScope.type = null;
-                }
-            });
         });
 
