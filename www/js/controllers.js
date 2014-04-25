@@ -184,7 +184,7 @@ angular.module('myApp.controllers', []).
                 for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                     console.log($scope.selectedUser.servers[i].user_password);
 
-                    invalidFields[i] = angular.isUndefined($scope.selectedUser.servers[i].user_password);
+                    invalidFields[i] = angular.isUndefined($scope.selectedUser.servers[i].user_password)  || $scope.selectedUser.servers[i].user_password==="";
                     if (!invalidFields[i]) {
                         promises.push(hospiviewFactory.getAuthentication($scope.selectedUser.servers[i].user_login, $scope.selectedUser.servers[i].user_password, $scope.selectedUser.servers[i].hosp_url));
                         validServers.push($scope.selectedUser.servers[i]);
@@ -251,7 +251,6 @@ angular.module('myApp.controllers', []).
              * 
              */
             function postLoginDoctor() {
-                console.log("postLogin");
                 var year = new Date().getFullYear().toString(),
                         holidayPromise = [];
 
@@ -311,14 +310,12 @@ angular.module('myApp.controllers', []).
                     allReservations = [];
                 }
                 firstCycle = false;
-                console.log(responseCount + " " + reservations);
                 if (reservations !== undefined)
                     for (var r = 0; r < reservations.length; r++) {
                         reservations[r].hosp_short_name = $rootScope.currentServers[responseCount].hosp_short_name;
                         allReservations.push(reservations[r]);
                     }
                 if (responseCount + 1 === $rootScope.currentServers.length) {
-                    console.log("setting reservations");
                     setReservations(allReservations);
                 } else {
                     responseCount++;
@@ -351,7 +348,6 @@ angular.module('myApp.controllers', []).
 
             function setReservations(reservations) {
                 firstCycle = true;
-                console.log("reservation count: " + reservations.length);
                 $rootScope[$rootScope.searchString] = reservations;
                 if ($scope.failedServers.length !== 0) {
                     var servers = "";
@@ -609,20 +605,21 @@ angular.module('myApp.controllers', []).
             $scope.reservations = $rootScope[$rootScope.searchString];
 
             $scope.loadingNext = false;
-
-
+            
+            var daySearchLoopCount = 0;
             $scope.nextDay = function() {
                 console.log($rootScope.searchRangeStart);
                 console.log($rootScope.searchRangeEnd);
                 var count = 0;
+                daySearchLoopCount++;
                 $rootScope.searchType = '';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
-                if ($rootScope.nextDayRequest !== true)
+                if (!$rootScope.nextDayRequest)
                     newDate.setDate(newDate.getDate() + 1);
                 $scope.date = formatDate(newDate);
                 $rootScope.nextDayRequest = false;
-                if (new Date($scope.date) > new Date($rootScope.searchRangeEnd)) {
+                if (new Date($scope.date) > new Date($rootScope.searchRangeEnd) && !$rootScope.isOffline) {
                     $rootScope.searchInProgress = true;
                     $rootScope.startDate = formatDate(new Date(newDate));
                     $rootScope.endDate = formatDate(new Date(newDate.setDate(newDate.getDate() + 14)));
@@ -638,13 +635,20 @@ angular.module('myApp.controllers', []).
                         if (filterDate.getTime() === check.getTime())
                             count++;
                     }
-                    if (count === 0) {
-                        $scope.nextDay();
+                    
+                    if(daySearchLoopCount==182){
+                        alert('too many loops');
+                        daySearchLoopCount=0;
+                    }else{
+                       if (count === 0) {
+                            $scope.nextDay();
+                        }
+                        else {
+                            $scope.lastKnownDate = new Date($scope.date);
+                            $scope.loadingNext = false;
+                        } 
                     }
-                    else {
-                        $scope.lastKnownDate = new Date($scope.date);
-                        $scope.loadingNext = false;
-                    }
+                    
                 }
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
@@ -652,14 +656,15 @@ angular.module('myApp.controllers', []).
                 console.log($rootScope.searchRangeStart);
                 console.log($rootScope.searchRangeEnd);
                 var count = 0;
+                daySearchLoopCount++;
                 $rootScope.searchType = '';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
-                if ($rootScope.nextDayRequest !== true)
+                if (!$rootScope.nextDayRequest)
                     newDate.setDate(newDate.getDate() - 1);
                 $scope.date = formatDate(newDate);
                 $rootScope.nextDayRequest = false;
-                if (new Date($scope.date) < new Date($rootScope.searchRangeStart)) {
+                if (new Date($scope.date) < new Date($rootScope.searchRangeStart) && !$rootScope.isOffline) {
                     $rootScope.searchInProgress = true;
                     $rootScope.endDate = formatDate(new Date(newDate));
                     $rootScope.startDate = formatDate(new Date(newDate.setDate(newDate.getDate() - 14)));
@@ -677,12 +682,17 @@ angular.module('myApp.controllers', []).
                         if (filterDate.getTime() === check.getTime())
                             count++;
                     }
-                    if (count === 0)
-                        $scope.previousDay();
-                    else {
-                        $scope.lastKnownDate = new Date($scope.date);
-                        $scope.loadingNext = false;
+                    if(daySearchLoopCount==365){
+                        daySearchLoopCount=0;
+                    }else{
+                        if (count === 0)
+                            $scope.previousDay();
+                        else {
+                            $scope.lastKnownDate = new Date($scope.date);
+                            $scope.loadingNext = false;
+                        } 
                     }
+                    
                 }
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
@@ -1827,8 +1837,6 @@ angular.module('myApp.controllers', []).
              */
             $scope.requestAccount = function() {
                 if ($scope.userFunctionSelect === $rootScope.getLocalizedString('newFunctionPatient')) {
-                    alert('request will be sent');
-                    //USER_NAME, USER_REGNO, USER_EMAIL, USER_MOB, LanguageId, Update_NameEmailTel, server_url
                     hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, '021545214', $rootScope.languageID, 0, $scope.server.hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
@@ -1957,25 +1965,34 @@ angular.module('myApp.controllers', []).
                         $scope.errormessage = "Account is reeds op dit toestel toegevoegd.";
                     }
                 } else {
+                    var selectedUser = JSON.parse(localStorage.getItem($rootScope.user)),
+                        invalidUser = false;
                     if ($routeParams.action === "add") {
-                        var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-                        var addServer = {"id": $scope.server.id,
-                            "hosp_short_name": $scope.server.hosp_short_name,
-                            "hosp_full_name": $scope.server.hosp_full_name,
-                            "hosp_url": $scope.server.hosp_url,
-                            "user_password": $scope.password,
-                            "user_login": $scope.username,
-                            "reg_no": json.Detail.reg_no,
-                            "unique_pid": json.Detail.unique_pid,
-                            "uuid": json.Detail.uuid,
-                            "isexternal": json.Detail.isexternal,
-                            "save_password": $scope.savePassword,
-                            "shortcut1": {"unit": "", "department": ""},
-                            "shortcut2": {"unit": "", "department": ""},
-                            "shortcut3": {"unit": "", "department": ""}};
-                        selectedUser.servers.push(addServer);
-                        localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
-                        $rootScope.serverAdded = true;
+                        if(json.Detail.isexternal == selectedUser.servers[0].isexternal){
+                            var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
+                            var addServer = {"id": $scope.server.id,
+                                "hosp_short_name": $scope.server.hosp_short_name,
+                                "hosp_full_name": $scope.server.hosp_full_name,
+                                "hosp_url": $scope.server.hosp_url,
+                                "user_password": $scope.password,
+                                "user_login": $scope.username,
+                                "reg_no": json.Detail.reg_no,
+                                "unique_pid": json.Detail.unique_pid,
+                                "uuid": json.Detail.uuid,
+                                "isexternal": json.Detail.isexternal,
+                                "save_password": $scope.savePassword,
+                                "shortcut1": {"unit": "", "department": ""},
+                                "shortcut2": {"unit": "", "department": ""},
+                                "shortcut3": {"unit": "", "department": ""}};
+                            selectedUser.servers.push(addServer);
+                            localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
+                            $rootScope.serverAdded = true;
+                        }else{
+                            invalidUser = true;
+                            $scope.loggingIn = false;
+                            $scope.error = true;
+                            $scope.errormessage = "Het opgegeven account is niet van hetzelfde type als de reeds toegevoegde account(s). Om dit account te gebruiken gelieve een nieuwe gebruiker toe te voegen op dit toestel.";
+                        }
                     } else {
                         var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
                         for (var i = 0; i < selectedUser.servers.length; i++) {
@@ -2000,11 +2017,12 @@ angular.module('myApp.controllers', []).
                         localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
                         $rootScope.serverChanged = true;
                     }
-
-                    $rootScope.user = null;
-                    $rootScope.type = null;
-                    $rootScope.pageClass = "right-to-left";
-                    $location.path('/login');
+                    if(!invalidUser){
+                        $rootScope.user = null;
+                        $rootScope.type = null;
+                        $rootScope.pageClass = "right-to-left";
+                        $location.path('/login');
+                    }
                 }
             }
 
