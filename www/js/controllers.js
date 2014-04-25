@@ -1039,6 +1039,7 @@ angular.module('myApp.controllers', []).
                                         groups[i].Header.name = groups[i].Header.group_name;
                                         unitsandgroups.push(groups[i]);
                                     }
+                                    alert("id: " + selectedServer.id);
                                     var rootScopeString = 'allUnitsAndGroups' + selectedServer.id;
                                     $rootScope[rootScopeString] = unitsandgroups;
                                     console.log($rootScope[rootScopeString]);
