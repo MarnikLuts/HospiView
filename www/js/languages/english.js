@@ -16,6 +16,7 @@ var englishStrings = {
         //AppointmentsView
         appointmentsViewReservations: "Reservations",
         appointmentsViewNoReservations: "No reservations.",
+        appointmentsViewEndOfDateRange: "There are no more reservations.",
         
         //AppointmentsCalendar
         appointmentsCalendarToday: "Today",

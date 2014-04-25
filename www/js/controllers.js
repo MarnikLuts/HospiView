@@ -445,11 +445,14 @@ angular.module('myApp.controllers', []).
                                 reservations = JSON.parse(localStorage.getItem($scope.user + "Reservations")),
                                 resLength = reservations.length,
                                 absLength = absentDays.length;
+                        $rootScope.currentServers = servers;
                         for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                             console.log(servers[i].user_password === $scope.selectedUser.servers[i].user_password);
                             if (servers[i].user_login === $scope.selectedUser.servers[i].user_login && servers[i].user_password === $scope.selectedUser.servers[i].user_password) {
                                 hasAuthenticated = true;
                             } else {
+                                var index = $rootScope.currentServers.indexOf(servers[i]);
+                                $rootScope.currentServers.splice(index, 1);
                                 while (resLength--) {
                                     if (reservations[resLength].hosp_short_name === servers[i].hosp_short_name) {
                                         console.log('splice res' + servers[i].hosp_short_name);
@@ -636,6 +639,7 @@ angular.module('myApp.controllers', []).
                     }
                     
                     if(daySearchLoopCount==182){
+                        alert($rootScope.getLocalizedString('appointmentsViewEndOfDateRange'));
                         $scope.date = formatDate(new Date($scope.lastKnownDate));
                         $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                         $scope.loadingNext = false;
@@ -683,7 +687,8 @@ angular.module('myApp.controllers', []).
                         if (filterDate.getTime() === check.getTime())
                             count++;
                     }
-                    if(daySearchLoopCount==365){
+                    if(daySearchLoopCount==182){
+                        alert($rootScope.getLocalizedString('appointmentsViewEndOfDateRange'));
                         $scope.date = formatDate(new Date($scope.lastKnownDate));
                         $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                         $scope.loadingNext = false;

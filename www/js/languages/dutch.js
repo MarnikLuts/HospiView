@@ -16,6 +16,7 @@ var dutchStrings = {
         //AppointmentsView
         appointmentsViewReservations: "Afspraken",
         appointmentsViewNoReservations: "Geen afspraken op deze dag.",
+        appointmentsViewEndOfDateRange: "Er zijn geen afspraken meer gevonden.",
         
         //AppointmentsCalendar
         appointmentsCalendarToday: "Vandaag",
