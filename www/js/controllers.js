@@ -443,25 +443,49 @@ angular.module('myApp.controllers', []).
                 });
                 modalInstance.result.then(function(answer) {
                     if (answer) {
-                        console.log($scope.failedServers);
-                        if ($scope.server.user_login === $scope.selectedUser.servers[0].user_login && $scope.server.user_password === $scope.selectedUser.servers[0].user_password) {
+                        var servers  = JSON.parse(localStorage.getItem($scope.user)).servers,
+                            hasAuthenticated = false,
+                            absentDays = JSON.parse(localStorage.getItem($scope.user + "AbsentDays")),
+                            reservations = JSON.parse(localStorage.getItem($scope.user + "Reservations")),
+                            resLength = reservations.length,
+                            absLength = absentDays.length;
+                        for(var i=0;i<$scope.selectedUser.servers.length;i++){
+                            console.log(servers[i].user_password === $scope.selectedUser.servers[i].user_password);
+                            if(servers[i].user_login === $scope.selectedUser.servers[i].user_login && servers[i].user_password === $scope.selectedUser.servers[i].user_password){
+                                hasAuthenticated = true;
+                            }else{
+                                while(resLength--){
+                                    if(reservations[resLength].hosp_short_name === servers[i].hosp_short_name){
+                                        console.log('splice res' + servers[i].hosp_short_name);
+                                        reservations.splice(resLength, 1);
+                                    }
+                                }
+                                while(absLength--){
+                                    if(absentDays[absLength].hosp_short_name === servers[i].hosp_short_name){
+                                        console.log('splice abs' + servers[i].hosp_short_name);
+                                        absentDays.splice(absLength, 1);
+                                    }
+                                }
+                            }
+                        }
+                        if (hasAuthenticated) {
                             $rootScope.user = $scope.user;
                             $rootScope.searchString = $rootScope.user + 'Reservations';
-                            $rootScope[$rootScope.searchString] = JSON.parse(localStorage.getItem($rootScope.searchString));
+                            $rootScope[$rootScope.searchString] = reservations;
                             $rootScope.searchRangeStart = localStorage.getItem($scope.user + "SearchRangeStart");
                             $rootScope.searchRangeEnd = localStorage.getItem($scope.user + "SearchRangeEnd");
-                            $rootScope.absentDays = JSON.parse(localStorage.getItem($scope.user + "AbsentDays"));
+                            $rootScope.absentDays = absentDays;
                             $rootScope.publicHolidays = JSON.parse(localStorage.getItem($scope.user + "PublicHolidays"));
                             $rootScope.currentdate = new Date();
                             $rootScope.isOffline = true;
-                            $rootScope.type = $scope.selectedUser.servers[0].isExternal;
+                            $rootScope.type = servers[0].isexternal;
+                            $rootScope.pageClass="right-to-left";
                             if ($rootScope.type == 0 || $rootScope.type == 1)
                                 $location.path('/doctor/appointmentsView');
                             else if ($rootScope.type == 2)
                                 $location.path('/patient/appointmentsView');
                         }
                         else {
-                            alert('nope');
                             $scope.loggingIn = false;
                             $scope.error = true;
                             $scope.errormessage = $rootScope.getLocalizedString('loginError');
@@ -558,20 +582,6 @@ angular.module('myApp.controllers', []).
 
                 return "none";
             };
-
-            /**
-             * Gets the amount of steps used in the given unit (some use 3, some use 4)
-             * 
-             * @param {type} unit_id
-             * @returns {unresolved}
-             */
-            function getSteps(unit_id) {
-                for (var i = 0; i < $rootScope.searchUnits.length; i++) {
-                    if (unit_id == $rootScope.searchUnits[i].Header.unit_id) {
-                        return $rootScope.searchUnits[i].Header.step_buttons;
-                    }
-                }
-            }
 
             $scope.details = function(reservation) {
                 $rootScope.eventClick = true;
