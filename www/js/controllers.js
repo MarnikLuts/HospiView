@@ -1022,10 +1022,12 @@ angular.module('myApp.controllers', []).
                             if (json !== null) {
                                 if (json.UnitsAndDeps.Header.StatusCode == 1) {
                                     var units = json.UnitsAndDeps.Detail.Unit;
+                                    var rootScopeString = 'allUnitsAndGroups' + selectedServer.id;
+                                    $rootScope[rootScopeString] = [];
                                     for (var i = 0; i < units.length; i++) {
                                         units[i].type = "doctor";
                                         units[i].Header.name = units[i].Header.unit_name;
-                                        unitsandgroups.push(units[i]);
+                                        $rootScope[rootScopeString].push(units[i]);
                                     }
                                 } else {
                                     $scope.error = true;
@@ -1042,14 +1044,12 @@ angular.module('myApp.controllers', []).
                             if (json !== null) {
                                 if (json.UnitDepGroups.Header.StatusCode == 1) {
                                     var groups = json.UnitDepGroups.Detail.Group;
+                                    var rootScopeString = 'allUnitsAndGroups' + selectedServer.id;
                                     for (var i = 0; i < groups.length; i++) {
                                         groups[i].type = "group";
                                         groups[i].Header.name = groups[i].Header.group_name;
-                                        unitsandgroups.push(groups[i]);
+                                        $rootScope[rootScopeString].push(groups[i]);
                                     }
-                                    alert("id: " + selectedServer.id);
-                                    var rootScopeString = 'allUnitsAndGroups' + selectedServer.id;
-                                    $rootScope[rootScopeString] = unitsandgroups;
                                     console.log($rootScope[rootScopeString]);
                                 } else {
                                     $scope.error = true;
