@@ -1983,6 +1983,10 @@ angular.module('myApp.controllers', []).
                 } else {
                     var selectedUser = JSON.parse(localStorage.getItem($rootScope.user)),
                         invalidUser = false;
+                    if(json.Detail.isexternal==0)
+                        json.Detail.isexternal++;
+                    if(selectedUser.servers[0].isexternal==0)
+                        selectedUser.servers[0].isexternal++;
                     if ($routeParams.action === "add") {
                         if(json.Detail.isexternal == selectedUser.servers[0].isexternal){
                             var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
