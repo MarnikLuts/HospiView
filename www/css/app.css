@@ -168,8 +168,14 @@
     font-size: 0.7em;
 }
 
-.reservationComment{
-    font-size: 0.8em;
+.reservationIcon{
+    display: inline-block;
+    float:right;
+    width:40px;
+}
+
+.reservationIconBoundary{
+   padding-right: 10px;
 }
 
 .detailTitle{

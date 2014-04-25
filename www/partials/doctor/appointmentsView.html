@@ -48,15 +48,16 @@
                 <div class=".container-fluid">
                     <div class="row">
                         &nbsp;
-                        <div class="col-xs-1 reservationHour">
+                        <div class="col-xs-2 reservationHour">
                             {{reservation.time_from}} 
-                        </div>
-                        <div class="col-xs-1 reservationHour">
                             <span ng-switch on="oneServer">
                                 <span ng-switch-when="true"></span>
                                 <span ng-switch-default>{{reservation.hosp_short_name}}</span>
                             </span>
                         </div>
+                        <!--<div class="col-xs-1 reservationHour">
+                            
+                        </div>-->
 
                         <div class="col-xs-6 reservationTitle">
                             <span ng-switch on="cellcontentPatient">
