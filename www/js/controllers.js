@@ -7,7 +7,7 @@ angular.module('myApp.controllers', []).
                 var url = $(this).attr("rel");
                 loadURL(url);
             });
-            
+
             /**
              * Set the counter for the refresh back to 0. The interval depends on
              * the user.
@@ -144,7 +144,7 @@ angular.module('myApp.controllers', []).
                     $scope[checkboxString] = 0;
                     console.log(checkboxString);
                 }
-                if($scope[checkboxString] === 1)
+                if ($scope[checkboxString] === 1)
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             }
 
@@ -152,7 +152,7 @@ angular.module('myApp.controllers', []).
              * Throw a warning if the user checks the savePassword checkbox.
              */
             $scope.savePasswordWarning = function(savePassword) {
-               alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
+                alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             };
 
             /**
@@ -171,9 +171,9 @@ angular.module('myApp.controllers', []).
                 $scope.loggingIn = true;
                 $scope.error = false;
                 var promises = [],
-                    invalidFields = [],
-                    authFailed = false,
-                    validServers = [];
+                        invalidFields = [],
+                        authFailed = false,
+                        validServers = [];
 
                 $rootScope.currentServers = [];
                 $scope.failedServers = [];
@@ -206,7 +206,7 @@ angular.module('myApp.controllers', []).
                             $scope.error = false;
                             $rootScope.user = $scope.user;
                             $rootScope.type = parseInt(json.Authentication.Detail.isexternal);
-                            
+
 
                             validServers[r].uuid = json.Authentication.Detail.uuid;
                             console.log(json.Authentication.Detail.uuid + " ");
@@ -223,7 +223,7 @@ angular.module('myApp.controllers', []).
                     console.log("auth failed: " + authFailed);
                     if (!authFailed) {
                         setDates();
-                        switch($rootScope.type){
+                        switch ($rootScope.type) {
                             case 0:
                             case 1:
                                 postLoginDoctor();
@@ -278,10 +278,10 @@ angular.module('myApp.controllers', []).
              */
             function getReservations(index) {
                 var year = new Date().getFullYear().toString(),
-                server = $rootScope.currentServers[index];
+                        server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
                 console.log(server.uuid + " " + server.hosp_url);
-              
+
                 hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
                         .then(function(response) {
                             return dataFactory.setSearchUnits(response, server);
@@ -387,7 +387,7 @@ angular.module('myApp.controllers', []).
                         newEndDate.setDate(newEndDate.getDate() + 14);
                         $rootScope.startDate = formatDate(newStartDate);
                         $rootScope.endDate = formatDate(newEndDate);
-                        switch($rootScope.type){
+                        switch ($rootScope.type) {
                             case 0:
                             case 1:
                                 postLoginDoctor();
@@ -396,7 +396,7 @@ angular.module('myApp.controllers', []).
                                 postLoginPatient();
                                 break;
                         }
-                        
+
                     } else {
                         $scope.loggingIn = false;
                     }
@@ -451,9 +451,9 @@ angular.module('myApp.controllers', []).
                             $rootScope.currentdate = new Date();
                             $rootScope.isOffline = true;
                             $rootScope.type = $scope.selectedUser.servers[0].isExternal;
-                            if($rootScope.type==0||$rootScope.type==1)
+                            if ($rootScope.type == 0 || $rootScope.type == 1)
                                 $location.path('/doctor/appointmentsView');
-                            else if($rootScope.type==2)
+                            else if ($rootScope.type == 2)
                                 $location.path('/patient/appointmentsView');
                         }
                         else {
@@ -940,7 +940,7 @@ angular.module('myApp.controllers', []).
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.servers = user.servers;
 
-/**
+            /**
              * 26.03.2014 Stijn Ceunen
              * This will do a request to get all the units, groups and departments
              * of all the saved servers of the user. It will only be executed if 
@@ -964,17 +964,17 @@ angular.module('myApp.controllers', []).
                 var unitsandgroups = [];
                 startSearchUnitsAndGroups(startIndex);
             }
-            
-            function startSearchUnitsAndGroups(index){
+
+            function startSearchUnitsAndGroups(index) {
                 if (!(index + 1 === $rootScope.currentServers.length)) {
                     getUnitsAndGroups(index);
                 } else {
                     startIndex = 0;
                 }
             }
-            
-            
-            function getUnitsAndGroups(index){
+
+
+            function getUnitsAndGroups(index) {
                 var selectedServer = user.servers[index];
                 hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
                         success(function(data) {
@@ -1024,7 +1024,7 @@ angular.module('myApp.controllers', []).
                 index++;
                 startSearchUnitsAndGroups(index);
             }
-            
+
             /**
              * 25.03.2014 Stijn Ceunen
              * This function is used when the state of the server select box is
@@ -1112,7 +1112,7 @@ angular.module('myApp.controllers', []).
                 }
             }
 
-            
+
 
             /**
              * 26.03.2014 Stijn Ceunen
@@ -1212,7 +1212,9 @@ angular.module('myApp.controllers', []).
                         request1 = true;
                     }
                 }
+                console.log("voor if");
                 if (searchStart.getMonth() >= current.getMonth() && searchStart.getDate() > 1 && searchStart.getFullYear() == current.getFullYear()) {
+                    console.log("in if");
                     searchStart.setDate(searchStart.getDate() - 1);
                     $rootScope.endDate = new Date(searchStart);
                     searchStart.setMonth(current.getMonth());
@@ -1287,13 +1289,13 @@ angular.module('myApp.controllers', []).
                         request1 = true;
                     }
                     else {
-                        if (searchStart.getMonth() > current.getMonth() + nextMonthCount && searchStart.getFullYear() == current.getFullYear()) {
+                        if ((searchStart.getMonth() > current.getMonth() + nextMonthCount || (searchStart.getMonth() >= current.getMonth() + nextMonthCount && searchStart.getDate() > 1)) && searchStart.getFullYear() == current.getFullYear()) {
                             $rootScope.endDate = formatDate(new Date(searchStart.setDate(searchStart.getDate() - 1)));
                             searchStart.setMonth(current.getMonth() + nextMonthCount);
                             searchStart.setDate(1);
                             $rootScope.startDate = formatDate(new Date(searchStart));
                             request2 = true;
-                        }
+                        } 
                     }
                 }
                 if (request1 === true || request2 === true) {
@@ -1667,16 +1669,16 @@ angular.module('myApp.controllers', []).
                 var response = window.confirm($rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'));
                 if (response) {
                     var users = JSON.parse(localStorage.getItem('users')),
-                        index = users.indexOf($rootScope.user);
-                
+                            index = users.indexOf($rootScope.user);
+
                     if (users.length == 1)
                         localStorage.removeItem('users');
-                    else{
+                    else {
                         users.splice(index, 1);
                         localStorage.setItem('users', JSON.stringify(users));
                     }
-                    
-                    
+
+
                     localStorage.removeItem($rootScope.user);
                     localStorage.removeItem($rootScope.user + 'AbsentDays');
                     localStorage.removeItem($rootScope.user + 'PublicHolidays');
@@ -1766,7 +1768,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/settings/default');
             };
-            
+
             $scope.languageSelected = false;
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
@@ -1796,20 +1798,20 @@ angular.module('myApp.controllers', []).
              * a hospital, it will be set to true.
              */
             $scope.serverSelected = false;
-            $scope.checkForKiosk = function(){
+            $scope.checkForKiosk = function() {
                 $scope.checkingForKiosk = true;
                 hospiviewFactory.checkForKiosk($scope.server.hosp_url)
-                    .then(function(){
-                        $scope.checkingForKiosk = false;
-                        $scope.hasKiosk = true;
-                        $scope.server.hosp_url += kiosk_url;
-                },function(){
-                    $scope.checkingForKiosk = false;
-                    $scope.hasKiosk = false;
-                    $scope.server.hosp_url += base_url;
-                });
+                        .then(function() {
+                            $scope.checkingForKiosk = false;
+                            $scope.hasKiosk = true;
+                            $scope.server.hosp_url += kiosk_url;
+                        }, function() {
+                            $scope.checkingForKiosk = false;
+                            $scope.hasKiosk = false;
+                            $scope.server.hosp_url += base_url;
+                        });
             };
-            
+
             /**
              * Set to null so no radioButton is selected. The moment a radioButton
              * is selected the other, the right information will be shown.
@@ -1855,7 +1857,7 @@ angular.module('myApp.controllers', []).
             $scope.emailAddress = "Frank.Goyens@icasa-group.com";
             $scope.confirmEmailAddress = "Frank.Goyens@icasa-group.com";
             $scope.nationalRegister = "93051822361";
-            
+
 
             /**
              * Webservice request to request an account. The div will will be hidden
@@ -1864,24 +1866,24 @@ angular.module('myApp.controllers', []).
              * TODO: implement webservice request
              */
             $scope.requestAccount = function() {
-                if($scope.userFunctionSelect === $rootScope.getLocalizedString('newFunctionPatient')){
+                if ($scope.userFunctionSelect === $rootScope.getLocalizedString('newFunctionPatient')) {
                     alert('request will be sent');
                     //USER_NAME, USER_REGNO, USER_EMAIL, USER_MOB, LanguageId, Update_NameEmailTel, server_url
                     hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, '021545214', $rootScope.languageID, 0, $scope.server.hosp_url)
-                        .then(function(response){
-                            var json = parseJson(response.data);
-                            $scope.accountTrue = true;
-                            $scope.accountFalse = false;
-                            console.log(json);
-                            postAuthentication(json.Authentication);
-                        }, function(errorData){
-                           error(errorData); 
-                        });
-                }else{
+                            .then(function(response) {
+                                var json = parseJson(response.data);
+                                $scope.accountTrue = true;
+                                $scope.accountFalse = false;
+                                console.log(json);
+                                postAuthentication(json.Authentication);
+                            }, function(errorData) {
+                                error(errorData);
+                            });
+                } else {
                     $scope.requestMessage = $rootScope.getLocalizedString('newUserRequestMessage');
                     $scope.accountRadio = $rootScope.getLocalizedString('yes');
                     $scope.accountTrue = true;
-                    $scope.accountFalse = false;  
+                    $scope.accountFalse = false;
                 }
             };
 
@@ -1893,10 +1895,10 @@ angular.module('myApp.controllers', []).
                     $scope.checkboxImgServer = 0;
                     $scope.savePassword = false;
                 }
-                if($scope.checkboxImgServer === 1)
+                if ($scope.checkboxImgServer === 1)
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             }
-            
+
             /**
              * 
              * TODO: write documentation
@@ -1926,7 +1928,7 @@ angular.module('myApp.controllers', []).
                             });
                 }
             };
-            
+
             /**
              * Handles the data object returned by the server on a successful authentication
              * Whether or not the authentication is successful should be checked before this function is called 
@@ -1934,7 +1936,7 @@ angular.module('myApp.controllers', []).
              * @param {type} json
              * @returns {undefined}
              */
-            function postAuthentication(json){
+            function postAuthentication(json) {
                 var localStorageName = json.Detail.user_name;
                 if ($routeParams.action === "new" || $routeParams.action === "newLocalUser") {
                     if (localStorage.getItem(localStorageName) === null) {
@@ -1965,11 +1967,11 @@ angular.module('myApp.controllers', []).
                                             "shortcut1": {"unit": "", "department": ""},
                                             "shortcut2": {"unit": "", "department": ""},
                                             "shortcut3": {"unit": "", "department": ""}}],
-                                            "language_id": json.Detail.language_id,
-                                            "cellcontent": {"patient": true,
-                                            "title": true,
-                                            "department": true},
-                                            "refreshrate": 60});
+                                    "language_id": json.Detail.language_id,
+                                    "cellcontent": {"patient": true,
+                                        "title": true,
+                                        "department": true},
+                                    "refreshrate": 60});
                         /*
                          * 0: dokter (oude hospiview service)
                          * 1: dokter (nieuwe hospiview service)
@@ -1980,7 +1982,7 @@ angular.module('myApp.controllers', []).
                          */
                         $rootScope.type = parseInt(json.Detail.isexternal);
                         console.log($rootScope.type);
-                        switch($rootScope.type){
+                        switch ($rootScope.type) {
                             case 0:
                             case 1:
                                 postLoginDoctor();
@@ -2045,15 +2047,15 @@ angular.module('myApp.controllers', []).
                     $location.path('/login');
                 }
             }
-            
-            function postLoginPatient(){
+
+            function postLoginPatient() {
                 $location.path("/patient/appointmentsPatient");
             }
 
             function postLoginDoctor() {
                 var year = new Date().getFullYear().toString(),
-                    holidayPromise = [],
-                    UnitPromise;
+                        holidayPromise = [],
+                        UnitPromise;
                 //Holidays
                 $rootScope.publicHolidays = [];
                 //SearchUnits
@@ -2133,7 +2135,7 @@ angular.module('myApp.controllers', []).
             }
 
             function setReservations(reservations) {
-                for(var i=0;i<reservations.length;i++){
+                for (var i = 0; i < reservations.length; i++) {
                     reservations[i].hosp_short_name = $scope.server.hosp_short_name;
                 }
                 $rootScope[$rootScope.searchString] = reservations;
