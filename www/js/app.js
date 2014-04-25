@@ -32,7 +32,7 @@ angular.module('myApp', [
             FastClick.attach(document.body);
             //default languageID
             $rootScope.languageID = 3;
-            
+            $rootScope.requestCounter = 0;
             /**
             * Gets a language string from one of the loaded language files
             * 

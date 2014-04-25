@@ -58,7 +58,8 @@ angular.module('myApp.services', []).
                 },
                 getLogin: function(USER_NAME, USER_REGNO, USER_EMAIL, USER_MOB, LanguageId, Update_NameEmailTel, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetLogin&USER_NAME=" + USER_NAME + "&USER_REGNO=" + USER_REGNO + "&USER_EMAIL=" + USER_EMAIL + "&USER_MOB=" + USER_MOB + "&LanguageId=" + LanguageId + "&Update_NameEmailTel=" + Update_NameEmailTel + "&count=" + $rootScope.requestCounter);
+                    alert($rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetLogin&USER_NAME=" + USER_NAME + "&USER_REGNO=" + USER_REGNO + "&USER_EMAIL=" + USER_EMAIL + "&USER_MOB=" + USER_MOB + "&LANGUAGE_ID=" + LanguageId + "&Update_NameEmailTel=" + Update_NameEmailTel + "&count=" + $rootScope.requestCounter);
                 }
 
             };
