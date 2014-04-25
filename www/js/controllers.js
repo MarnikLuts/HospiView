@@ -3,6 +3,11 @@
 
 angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $route, $q, $rootScope, $modal, hospiviewFactory, dataFactory) {
+            
+            /**
+             * Adds an event listener to the ICASA logo to redirect the user
+             * to the ICASA site.
+             */
             $('.icasaLogo').live('tap', function() {
                 var url = $(this).attr("rel");
                 loadURL(url);
@@ -139,10 +144,8 @@ angular.module('myApp.controllers', []).
                 $scope.selectedUser.servers[serverNr].save_password = !$scope.selectedUser.servers[serverNr].save_password;
                 if ($scope[checkboxString] === 0) {
                     $scope[checkboxString] = 1;
-                    console.log(checkboxString);
                 } else {
                     $scope[checkboxString] = 0;
-                    console.log(checkboxString);
                 }
                 if ($scope[checkboxString] === 1)
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
