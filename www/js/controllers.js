@@ -493,7 +493,7 @@ angular.module('myApp.controllers', []).
             }
 
         }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $route, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
+        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
             /**
              * Initiating variables. 
              * searchInProgress is used to disable the refresh if another

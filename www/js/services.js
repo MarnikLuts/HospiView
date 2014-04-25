@@ -360,19 +360,19 @@ angular.module('myApp.services', []).
                     }
 
                     function setReservations() {
-                        $rootScope[$rootScope.searchString] = [];
-                        for (var i = 0; i < allReservations.length; i++)
-                            $rootScope[$rootScope.searchString].push(allReservations[i]);
-
-                        $rootScope.$emit('setReservationsEvent', {});
+                        if(allReservations.length !== 0){
+                            $rootScope[$rootScope.searchString] = [];
+                            for (var i = 0; i < allReservations.length; i++)
+                                $rootScope[$rootScope.searchString].push(allReservations[i]);
+                            $rootScope.$emit('setReservationsEvent', {});
                         
-                        $rootScope.refresh = false;
-                        $rootScope.searchInProgress = false;
-                        if ($rootScope[$rootScope.searchString].length === 0) {
+                            $rootScope.refresh = false;
+                            $rootScope.searchInProgress = false;
+                        }
+                        
+                        if (allReservations.length === 0) {
                             $rootScope.isOffline = true;
                             alert($rootScope.getLocalizedString('uuidExpiredMessage'));
-                            $rootScope.user = null;
-                            $rootScope.type = null;
                         }
                         
                         console.log($rootScope[$rootScope.searchString]);
