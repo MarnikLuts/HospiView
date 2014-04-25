@@ -6,7 +6,7 @@
     <access origin="*"/>
     <preference name="fullscreen" value="true"/>
     <preference name="webviewbounce" value="false"/>
-    <gap:plugin name="de.phonostar.softkeyboard"/>
+    <preference name="android-windowSoftInputMode" value="stateVisible|adjustResize" />
 
 	<icon gap:density="ldpi" gap:platform="android" src="res/icon/android/icon-36-ldpi.png" />
 	<icon gap:density="mdpi" gap:platform="android" src="res/icon/android/icon-48-mdpi.png" />
