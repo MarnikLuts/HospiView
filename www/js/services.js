@@ -305,7 +305,6 @@ angular.module('myApp.services', []).
 
                     //var index = 0;
                     var allReservations = [];
-                    var responseCount = 0;
                     var index = 0;
 
                     var self = this;
@@ -314,6 +313,7 @@ angular.module('myApp.services', []).
                     getReservations(index);
                     
                     function getReservations(index) {
+                        console.log($rootScope.currentServers);
                         var server = $rootScope.currentServers[index];
                         $rootScope.searchUnits = [];
                         hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
@@ -334,24 +334,19 @@ angular.module('myApp.services', []).
                                 allReservations.push(reservations[r]);
                             }
                         }
-                        if (responseCount + 1 === $rootScope.currentServers.length) {
+                        if (index + 1 === $rootScope.currentServers.length) {
                             setReservations(allReservations);
                         } else {
-                            responseCount++;
-                            index = index + 1;
+                            index++;
                             getReservations(index);
                         }
                     }
 
                     function setReservations() {
-                        if (firstCycle) {
-                            $rootScope[$rootScope.searchString] = [];
-                            firstCycle = false;
-                        }
+                        $rootScope[$rootScope.searchString] = [];
                         for (var i = 0; i < allReservations.length; i++)
                             $rootScope[$rootScope.searchString].push(allReservations[i]);
-                        $rootScope.refresh = false;
-                        $rootScope.searchInProgress = false;
+                        
                         $rootScope.$emit('setReservationsEvent', {});
                         console.log($rootScope[$rootScope.searchString]);
                     }

@@ -387,6 +387,7 @@ angular.module('myApp.controllers', []).
                         newEndDate.setDate(newEndDate.getDate() + 14);
                         $rootScope.startDate = formatDate(newStartDate);
                         $rootScope.endDate = formatDate(newEndDate);
+                        dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
                         switch ($rootScope.type) {
                             case 0:
                             case 1:
@@ -512,12 +513,9 @@ angular.module('myApp.controllers', []).
 
 
             $rootScope.$on('setReservationsEvent', function(event, args) {
-                $scope.reservations = [];
-                $scope.reservations = $rootScope[$rootScope.searchString];
                 if ($scope.reservations.length === 0) {
-                    $rootScope.isOffline = true;
-                    alert($rootScope.getLocalizedString('uuidExpiredMessage'));
-                    $scope.logout();
+                    $scope.reservations = [];
+                    $scope.reservations = $rootScope[$rootScope.searchString];
                 }
             });
 
@@ -601,6 +599,8 @@ angular.module('myApp.controllers', []).
 
 
             $scope.nextDay = function() {
+                console.log($rootScope.searchRangeStart);
+                console.log($rootScope.searchRangeEnd);
                 var count = 0;
                 $rootScope.searchType = '';
                 $scope.loadingNext = true;
@@ -636,6 +636,8 @@ angular.module('myApp.controllers', []).
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
             $scope.previousDay = function() {
+                console.log($rootScope.searchRangeStart);
+                console.log($rootScope.searchRangeEnd);
                 var count = 0;
                 $rootScope.searchType = '';
                 $scope.loadingNext = true;
@@ -1474,15 +1476,9 @@ angular.module('myApp.controllers', []).
             };
 
             $rootScope.$on('setReservationsEvent', function(event, args) {
-                countEvent = dataFactory.loadCalendar();
-                $scope.eventSources = [countEvent];
-                if ($rootScope[$rootScope.searchString].length === 0) {
-                    $rootScope.isOffline = true;
-                    alert($rootScope.getLocalizedString('uuidExpiredMessage'));
-                    $rootScope.user = null;
-                    $rootScope.type = null;
-                    $rootScope.pageClass = "right-to-left";
-                    $location.path('/login');
+                if ($rootScope[$rootScope.searchString].length !== 0) {
+                    countEvent = dataFactory.loadCalendar();
+                    $scope.eventSources = [countEvent];
                 }
             });
         }).
@@ -2209,7 +2205,16 @@ angular.module('myApp.controllers', []).
             $scope.$on("$destroy", function(event) {
                 $interval.cancel(requestTimer);
             });
-
-            $scope.$emit('refreshEvent', {});
+            
+            $rootScope.$on('setReservationsEvent', function(event, args) {
+                $rootScope.refresh = false;
+                $rootScope.searchInProgress = false;
+                if ($rootScope[$rootScope.searchString].length === 0) {
+                    $rootScope.isOffline = true;
+                    alert($rootScope.getLocalizedString('uuidExpiredMessage'));
+                    $rootScope.user = null;
+                    $rootScope.type = null;
+                }
+            });
         });
 
