@@ -387,7 +387,16 @@ angular.module('myApp.controllers', []).
                         newEndDate.setDate(newEndDate.getDate() + 14);
                         $rootScope.startDate = formatDate(newStartDate);
                         $rootScope.endDate = formatDate(newEndDate);
-                        postLogin();
+                        switch($rootScope.type){
+                            case 0:
+                            case 1:
+                                postLoginDoctor();
+                                break;
+                            case 2:
+                                postLoginPatient();
+                                break;
+                        }
+                        
                     } else {
                         $scope.loggingIn = false;
                     }
@@ -430,7 +439,7 @@ angular.module('myApp.controllers', []).
                 });
                 modalInstance.result.then(function(answer) {
                     if (answer) {
-                        console.log($rootScope.selecterServers);
+                        console.log($scope.failedServers);
                         if ($scope.server.user_login === $scope.selectedUser.servers[0].user_login && $scope.server.user_password === $scope.selectedUser.servers[0].user_password) {
                             $rootScope.user = $scope.user;
                             $rootScope.searchString = $rootScope.user + 'Reservations';
@@ -441,7 +450,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.publicHolidays = JSON.parse(localStorage.getItem($scope.user + "PublicHolidays"));
                             $rootScope.currentdate = new Date();
                             $rootScope.isOffline = true;
-                            $rootScope.type = 0;
+                            $rootScope.type = $scope.selectedUser.servers[0].isExternal;
                             if($rootScope.type==0||$rootScope.type==1)
                                 $location.path('/doctor/appointmentsView');
                             else if($rootScope.type==2)
