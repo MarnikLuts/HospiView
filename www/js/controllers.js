@@ -509,6 +509,7 @@ angular.module('myApp.controllers', []).
              */
             if ($rootScope.eventClick) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
+                $scope.lastKnownDate = new Date($scope.date);
                 $scope.showDate = formatShowDate(new Date($scope.date), $rootScope.languageID);
                 $rootScope.eventClick = false;
             } else {
@@ -608,8 +609,6 @@ angular.module('myApp.controllers', []).
             
             var daySearchLoopCount = 0;
             $scope.nextDay = function() {
-                console.log($rootScope.searchRangeStart);
-                console.log($rootScope.searchRangeEnd);
                 var count = 0;
                 daySearchLoopCount++;
                 $rootScope.searchType = '';
@@ -648,6 +647,7 @@ angular.module('myApp.controllers', []).
                         }
                         else {
                             $scope.lastKnownDate = new Date($scope.date);
+                            console.log($scope.lastKnownDate);
                             $scope.loadingNext = false;
                         } 
                     }
@@ -656,8 +656,6 @@ angular.module('myApp.controllers', []).
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
             $scope.previousDay = function() {
-                console.log($rootScope.searchRangeStart);
-                console.log($rootScope.searchRangeEnd);
                 var count = 0;
                 daySearchLoopCount++;
                 $rootScope.searchType = '';
