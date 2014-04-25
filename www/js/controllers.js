@@ -3,7 +3,7 @@
 
 angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $route, $q, $rootScope, $modal, hospiviewFactory, dataFactory) {
-            
+
             /**
              * Adds an event listener to the ICASA logo to redirect the user
              * to the ICASA site.
@@ -443,25 +443,25 @@ angular.module('myApp.controllers', []).
                 });
                 modalInstance.result.then(function(answer) {
                     if (answer) {
-                        var servers  = JSON.parse(localStorage.getItem($scope.user)).servers,
-                            hasAuthenticated = false,
-                            absentDays = JSON.parse(localStorage.getItem($scope.user + "AbsentDays")),
-                            reservations = JSON.parse(localStorage.getItem($scope.user + "Reservations")),
-                            resLength = reservations.length,
-                            absLength = absentDays.length;
-                        for(var i=0;i<$scope.selectedUser.servers.length;i++){
+                        var servers = JSON.parse(localStorage.getItem($scope.user)).servers,
+                                hasAuthenticated = false,
+                                absentDays = JSON.parse(localStorage.getItem($scope.user + "AbsentDays")),
+                                reservations = JSON.parse(localStorage.getItem($scope.user + "Reservations")),
+                                resLength = reservations.length,
+                                absLength = absentDays.length;
+                        for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                             console.log(servers[i].user_password === $scope.selectedUser.servers[i].user_password);
-                            if(servers[i].user_login === $scope.selectedUser.servers[i].user_login && servers[i].user_password === $scope.selectedUser.servers[i].user_password){
+                            if (servers[i].user_login === $scope.selectedUser.servers[i].user_login && servers[i].user_password === $scope.selectedUser.servers[i].user_password) {
                                 hasAuthenticated = true;
-                            }else{
-                                while(resLength--){
-                                    if(reservations[resLength].hosp_short_name === servers[i].hosp_short_name){
+                            } else {
+                                while (resLength--) {
+                                    if (reservations[resLength].hosp_short_name === servers[i].hosp_short_name) {
                                         console.log('splice res' + servers[i].hosp_short_name);
                                         reservations.splice(resLength, 1);
                                     }
                                 }
-                                while(absLength--){
-                                    if(absentDays[absLength].hosp_short_name === servers[i].hosp_short_name){
+                                while (absLength--) {
+                                    if (absentDays[absLength].hosp_short_name === servers[i].hosp_short_name) {
                                         console.log('splice abs' + servers[i].hosp_short_name);
                                         absentDays.splice(absLength, 1);
                                     }
@@ -479,7 +479,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.currentdate = new Date();
                             $rootScope.isOffline = true;
                             $rootScope.type = servers[0].isexternal;
-                            $rootScope.pageClass="right-to-left";
+                            $rootScope.pageClass = "right-to-left";
                             if ($rootScope.type == 0 || $rootScope.type == 1)
                                 $location.path('/doctor/appointmentsView');
                             else if ($rootScope.type == 2)
@@ -698,11 +698,12 @@ angular.module('myApp.controllers', []).
                     $scope.loadingCalendar = true;
                     var searchStart = new Date($rootScope.searchRangeStart);
                     var searchEnd = new Date($rootScope.searchRangeEnd);
-                    
+
                     var current = new Date($rootScope.currentdate);
                     var request1 = false;
                     var request2 = false;
                     if (searchEnd.getMonth() <= current.getMonth() && searchEnd.getFullYear() == current.getFullYear()) {
+                        searchEnd.setDate(searchEnd.getDate() + 1);
                         $rootScope.startDate = formatDate(new Date(searchEnd));
                         searchEnd.setMonth(current.getMonth() + 1);
                         searchEnd.setDate(1);
@@ -710,6 +711,7 @@ angular.module('myApp.controllers', []).
                         request1 = true;
                     } else {
                         if (searchEnd.getFullYear() < current.getFullYear()) {
+                            searchEnd.setDate(searchEnd.getDate() + 1);
                             $rootScope.startDate = formatDate(new Date(searchEnd));
                             searchEnd.setMonth(current.getMonth() + 1);
                             searchEnd.setYear(current.getYear());
@@ -872,7 +874,7 @@ angular.module('myApp.controllers', []).
                 for (var i = 0; i < reservations.length; i++)
                     $rootScope[$rootScope.searchString].push(reservations[i]);
                 $scope.reservations = $rootScope[$rootScope.searchString];
-                if (reservations.length === 0) {
+                if (reservations.length === 0 && !$scope.loadingCalendar) {
                     console.log("modal");
                     callModal();
                 } else {
@@ -912,6 +914,7 @@ angular.module('myApp.controllers', []).
                     if (answer === true) {
                         if ($rootScope.searchType === 'next') {
                             var endSearch = new Date($rootScope.endDate);
+                            endSearch.setDate(endSearch.getDate() + 1);
                             $rootScope.startDate = formatDate(new Date(endSearch));
                             endSearch.setDate(endSearch.getDate() + 14);
                             $rootScope.endDate = formatDate(new Date(endSearch));
@@ -1204,7 +1207,7 @@ angular.module('myApp.controllers', []).
                 }
             };
             $scope.loadingMonth = false;
-            
+
             function calendarView(calendarBrows) {
                 console.log(calendarBrows);
                 var searchStart = new Date($rootScope.searchRangeStart);
@@ -1232,6 +1235,7 @@ angular.module('myApp.controllers', []).
                                 nextMonthCount--;
                             else
                                 nextMonthCount++;
+                            searchEnd.setDate(searchEnd.getDate() + 1);
                             $rootScope.startDate = formatDate(new Date(searchEnd));
                             searchEnd.setMonth(current.getMonth() + nextMonthCount);
                             searchEnd.setDate(1);
@@ -1256,7 +1260,7 @@ angular.module('myApp.controllers', []).
                             searchStart.setDate(1);
                             $rootScope.startDate = formatDate(new Date(searchStart));
                             request2 = true;
-                        } 
+                        }
                     }
                 }
                 if (request1 === true || request2 === true) {
@@ -1389,6 +1393,7 @@ angular.module('myApp.controllers', []).
             var current = new Date($rootScope.currentdate);
             var showWeekends = false;
             $scope.back = function() {
+                $rootScope.eventClick = true;
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
@@ -2149,7 +2154,7 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller('refreshCtrl', function($scope, $rootScope, $interval, dataFactory) {
-            
+
             /**
              * Get saved refreshrate. $interval needs the intervaltime in 
              * milliseconds, while the refreshrate will be saved in seconds, so
@@ -2176,7 +2181,7 @@ angular.module('myApp.controllers', []).
             $scope.$on("$destroy", function(event) {
                 $interval.cancel(requestTimer);
             });
-            
+
             $rootScope.$on('setReservationsEvent', function(event, args) {
                 $rootScope.refresh = false;
                 $rootScope.searchInProgress = false;
