@@ -24,7 +24,7 @@ angular.module('myApp.services', []).
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetAuthentication&user_login=" + username + "&user_password=" + password + "&count=" + $rootScope.requestCounter);
                 },
-                checkForKiosk: function(server_url){
+                checkForKiosk: function(server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + kiosk_url + "method=GetAuthentication&user_login=user&user_password=pass&count=" + $rootScope.requestCounter);
                 },
@@ -56,7 +56,7 @@ angular.module('myApp.services', []).
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids + "&count=" + $rootScope.requestCounter);
                 },
-                getLogin: function(USER_NAME, USER_REGNO, USER_EMAIL, USER_MOB, LanguageId, Update_NameEmailTel, server_url){
+                getLogin: function(USER_NAME, USER_REGNO, USER_EMAIL, USER_MOB, LanguageId, Update_NameEmailTel, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetLogin&USER_NAME=" + USER_NAME + "&USER_REGNO=" + USER_REGNO + "&USER_EMAIL=" + USER_EMAIL + "&USER_MOB=" + USER_MOB + "&LanguageId=" + LanguageId + "&Update_NameEmailTel=" + Update_NameEmailTel + "&count=" + $rootScope.requestCounter);
                 }
@@ -64,7 +64,7 @@ angular.module('myApp.services', []).
             };
         }).
         factory('dataFactory', function($rootScope, $q, hospiviewFactory) {
-            
+
             function getSteps(unit_id) {
                 for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                     if (unit_id == $rootScope.searchUnits[i].Header.unit_id) {
@@ -72,7 +72,7 @@ angular.module('myApp.services', []).
                     }
                 }
             }
-            
+
             return{
                 /**
                  * Function that handles the resolved promise from hospiviewFactory.getPublicHolidays
@@ -165,6 +165,8 @@ angular.module('myApp.services', []).
                     var defer = $q.defer(),
                             reservations = [],
                             promises = [];
+                    console.log($rootScope.startDate);
+                    console.log($rootScope.endDate);
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                         var depIds = [];
                         var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -183,12 +185,26 @@ angular.module('myApp.services', []).
                     $q.all(promises).then(function(responses) {
                         for (var l = 0; l < responses.length; l++) {
                             var json = parseJson(responses[l].data);
-                            if (!(angular.isUndefined(json.ReservationsOnUnit.Detail))) {
+                            console.log(json);
+                            if (angular.isDefined(json.ReservationsOnUnit.Detail)) {
                                 if (json.ReservationsOnUnit.Header.StatusCode === "1") {
-                                    for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
-                                        var reservation = json.ReservationsOnUnit.Detail.Reservation[s];
+                                    /**
+                                     * We needed to add a check for the length of the amount of reservations.
+                                     * This because, if only one reservation is returned by the webservice, the
+                                     * parser won't put it in an array, but just pass it as object. This results
+                                     * in not being able to use the .length method of an array, since it's not an array,
+                                     * which would return undefined and cause the application to not show the reservation.
+                                     */
+                                    if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
+                                        var reservation = json.ReservationsOnUnit.Detail.Reservation;
                                         reservation.step_buttons = getSteps(reservation.unit_id);
                                         reservations.push(reservation);
+                                    } else {
+                                        for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
+                                            var reservation = json.ReservationsOnUnit.Detail.Reservation[s];
+                                            reservation.step_buttons = getSteps(reservation.unit_id);
+                                            reservations.push(reservation);
+                                        }
                                     }
                                 } else {
                                     defer.reject($rootScope.getLocalizedString('internalError'));
@@ -299,7 +315,7 @@ angular.module('myApp.services', []).
                     $rootScope.searchType = '';
                     $rootScope.startDate = new Date($rootScope.searchRangeStart);
                     $rootScope.endDate = new Date($rootScope.searchRangeEnd);
-                    
+
 
                     $rootScope.searchString = $rootScope.user + 'Reservations';
 
@@ -311,7 +327,7 @@ angular.module('myApp.services', []).
                     var firstCycle = true;
 
                     getReservations(index);
-                    
+
                     function getReservations(index) {
                         console.log($rootScope.currentServers);
                         var server = $rootScope.currentServers[index];
@@ -326,7 +342,7 @@ angular.module('myApp.services', []).
                             addReservations(reservations);
                         });
                     }
-                    
+
                     function addReservations(reservations) {
                         if (reservations !== undefined) {
                             for (var r = 0; r < reservations.length; r++) {
@@ -346,11 +362,11 @@ angular.module('myApp.services', []).
                         $rootScope[$rootScope.searchString] = [];
                         for (var i = 0; i < allReservations.length; i++)
                             $rootScope[$rootScope.searchString].push(allReservations[i]);
-                        
+
                         $rootScope.$emit('setReservationsEvent', {});
                         console.log($rootScope[$rootScope.searchString]);
                     }
-                    
+
                     function error(data) {
                         var loggingIn = false;
                         var error = true;
