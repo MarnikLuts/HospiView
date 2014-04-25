@@ -464,7 +464,7 @@ angular.module('myApp.controllers', []).
                                 }
                             }
                         }
-                        if (hasAuthenticated) {
+                        if (hasAuthenticated && reservations.length!=0) {
                             $rootScope.user = $scope.user;
                             $rootScope.searchString = $rootScope.user + 'Reservations';
                             $rootScope[$rootScope.searchString] = reservations;
@@ -637,7 +637,10 @@ angular.module('myApp.controllers', []).
                     }
                     
                     if(daySearchLoopCount==182){
-                        alert('too many loops');
+                        $scope.date = formatDate(new Date($scope.lastKnownDate));
+                        $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
+                        $scope.loadingNext = false;
+                        $rootScope.nextDayRequest = false;
                         daySearchLoopCount=0;
                     }else{
                        if (count === 0) {
@@ -683,6 +686,10 @@ angular.module('myApp.controllers', []).
                             count++;
                     }
                     if(daySearchLoopCount==365){
+                        $scope.date = formatDate(new Date($scope.lastKnownDate));
+                        $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
+                        $scope.loadingNext = false;
+                        $rootScope.nextDayRequest = false;
                         daySearchLoopCount=0;
                     }else{
                         if (count === 0)
@@ -1609,60 +1616,62 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.deleteCurrentUser = function() {
+                if(navigator.notification){
                 //Only works on mobile devices
-//                window.confirm(
-//                        $rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'),
-//                        function(response){
-//                            if(response==1){
-//                                var users = JSON.parse(localStorage.getItem('users')),
-//                                index = users.indexOf($rootScope.user);
-//
-//                                if (users.length == 1)
-//                                    localStorage.removeItem('users');
-//                                else{
-//                                    users.splice(index, 1);
-//                                    localStorage.setItem('users', JSON.stringify(users));
-//                                }
-//
-//
-//                                localStorage.removeItem($rootScope.user);
-//                                localStorage.removeItem($rootScope.user + 'AbsentDays');
-//                                localStorage.removeItem($rootScope.user + 'PublicHolidays');
-//                                localStorage.removeItem($rootScope.user + 'Reservations');
-//                                localStorage.removeItem($rootScope.user + 'SearchRangeStart');
-//                                localStorage.removeItem($rootScope.user + 'SearchRangeEnd');
-//                                $rootScope.pageClass = "left-to-right";
-//                                $location.path('/login');
-//                                $scope.$apply();
-//                            }
-//                        }
-//                );
+                    window.confirm(
+                            $rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'),
+                            function(response){
+                                if(response==1){
+                                    var users = JSON.parse(localStorage.getItem('users')),
+                                    index = users.indexOf($rootScope.user);
 
-                //Works in browser
-                var response = window.confirm($rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'));
-                if (response) {
-                    var users = JSON.parse(localStorage.getItem('users')),
-                            index = users.indexOf($rootScope.user);
+                                    if (users.length == 1)
+                                        localStorage.removeItem('users');
+                                    else{
+                                        users.splice(index, 1);
+                                        localStorage.setItem('users', JSON.stringify(users));
+                                    }
 
-                    if (users.length == 1)
-                        localStorage.removeItem('users');
-                    else {
-                        users.splice(index, 1);
-                        localStorage.setItem('users', JSON.stringify(users));
+
+                                    localStorage.removeItem($rootScope.user);
+                                    localStorage.removeItem($rootScope.user + 'AbsentDays');
+                                    localStorage.removeItem($rootScope.user + 'PublicHolidays');
+                                    localStorage.removeItem($rootScope.user + 'Reservations');
+                                    localStorage.removeItem($rootScope.user + 'SearchRangeStart');
+                                    localStorage.removeItem($rootScope.user + 'SearchRangeEnd');
+                                    $rootScope.pageClass = "left-to-right";
+                                    $location.path('/login');
+                                    $scope.$apply();
+                                }
+                            }
+                    );
+                }else{
+                    //Works in browser
+                    var response = window.confirm($rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'));
+                    if (response) {
+                        var users = JSON.parse(localStorage.getItem('users')),
+                                index = users.indexOf($rootScope.user);
+
+                        if (users.length == 1)
+                            localStorage.removeItem('users');
+                        else {
+                            users.splice(index, 1);
+                            localStorage.setItem('users', JSON.stringify(users));
+                        }
+
+
+                        localStorage.removeItem($rootScope.user);
+                        localStorage.removeItem($rootScope.user + 'AbsentDays');
+                        localStorage.removeItem($rootScope.user + 'PublicHolidays');
+                        localStorage.removeItem($rootScope.user + 'Reservations');
+                        localStorage.removeItem($rootScope.user + 'SearchRangeStart');
+                        localStorage.removeItem($rootScope.user + 'SearchRangeEnd');
+                        $rootScope.pageClass = "left-to-right";
+                        $location.path('/login');
                     }
-
-
-                    localStorage.removeItem($rootScope.user);
-                    localStorage.removeItem($rootScope.user + 'AbsentDays');
-                    localStorage.removeItem($rootScope.user + 'PublicHolidays');
-                    localStorage.removeItem($rootScope.user + 'Reservations');
-                    localStorage.removeItem($rootScope.user + 'SearchRangeStart');
-                    localStorage.removeItem($rootScope.user + 'SearchRangeEnd');
-                    $rootScope.pageClass = "left-to-right";
-                    $location.path('/login');
                 }
             };
-
+            
             /**
              * Prompts the user with a confirmation dialog,
              * Deletes the selected server
@@ -1671,52 +1680,57 @@ angular.module('myApp.controllers', []).
             $scope.deleteServer = function() {
                 var lsObject = JSON.parse(localStorage.getItem($rootScope.user)),
                         servers = lsObject.servers;
-                //Only works on mobile device
-                if (servers.length > 1) {
-                    window.confirm(
-                            $rootScope.getLocalizedString('settingsDeleteServerConfirm'),
-                            function(response) {
-                                if (response == 1) {
-                                    var id = $scope.serverRadio.id,
-                                            user_login = $scope.serverRadio.user_login,
-                                            user_password = $scope.serverRadio.user_password;
+                if(navigator.notification){
+                    //Only works on mobile device
+                    if (servers.length > 1) {
+                        window.confirm(
+                                $rootScope.getLocalizedString('settingsDeleteServerConfirm'),
+                                function(response) {
+                                    if (response == 1) {
+                                        var id = $scope.serverRadio.id,
+                                                user_login = $scope.serverRadio.user_login,
+                                                user_password = $scope.serverRadio.user_password;
 
-                                    for (var i = 0; i < servers.length; i++) {
-                                        if (servers[i].id == id && servers[i].user_login == user_login && servers[i].user_password == user_password) {
-                                            $rootScope.currentServers.splice(i, 1);
-                                            servers.splice(i, 1);
-                                            lsObject.servers = servers;
-                                            localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
-                                            $rootScope.pageClass = "left-to-right";
-                                            $location.path("/login");
-                                            $scope.$apply();
+                                        for (var i = 0; i < servers.length; i++) {
+                                            if (servers[i].id == id && servers[i].user_login == user_login && servers[i].user_password == user_password) {
+                                                $rootScope.currentServers.splice(i, 1);
+                                                servers.splice(i, 1);
+                                                lsObject.servers = servers;
+                                                localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
+                                                $rootScope.pageClass = "left-to-right";
+                                                $location.path("/login");
+                                                $scope.$apply();
+                                                break;
+                                            }
                                         }
                                     }
                                 }
+                        );
+                    }
+                }else{
+                    //Works in browser
+                    if(servers.length>1){
+                        var response = window.confirm($rootScope.getLocalizedString('settingsDeleteServerConfirm'));
+                        if(response){
+                            var id = $scope.serverRadio.id,
+                                user_login = $scope.serverRadio.user_login,
+                                user_password = $scope.serverRadio.user_password;
+
+                            for(var i=0;i<servers.length;i++){
+                                if(servers[i].id==id && servers[i].user_login==user_login && servers[i].user_password==user_password){
+                                    $rootScope.currentServers.splice(i, 1);
+                                    servers.splice(i, 1);
+                                    lsObject.servers = servers;
+                                    localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
+                                    $rootScope.pageClass = "left-to-right";
+                                    $location.path("/login");
+                                    $scope.$apply();
+                                    break;
+                                }
                             }
-                    );
+                        }
+                    }
                 }
-                //Works in browser
-//                if(servers.length>1){
-//                    var response = window.confirm("are you sure?");
-//                    if(response){
-//                        var id = $scope.serverRadio.id,
-//                            user_login = $scope.serverRadio.user_login,
-//                            user_password = $scope.serverRadio.user_password;
-//
-//                        for(var i=0;i<servers.length;i++){
-//                            if(servers[i].id==id && servers[i].user_login==user_login && servers[i].user_password==user_password){
-//                                $rootScope.currentServers.splice(i,1);
-//                                servers.splice(i,1);
-//                                lsObject.servers = servers;
-//                                localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
-//                                window.location.href = "/HospiView/index.html#/login";
-////                                loadSettings();
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
             };
 
             $timeout(function() {
