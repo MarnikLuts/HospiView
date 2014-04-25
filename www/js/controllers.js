@@ -996,6 +996,7 @@ angular.module('myApp.controllers', []).
             function startSearchUnitsAndGroups(index) {
                 if (!(index === $rootScope.currentServers.length)) {
                     console.log(index);
+                    unitsandgroups = [];
                     getUnitsAndGroups(index);
                 } else {
                     startIndex = 0;
@@ -1039,7 +1040,6 @@ angular.module('myApp.controllers', []).
                                         groups[i].Header.name = groups[i].Header.group_name;
                                         unitsandgroups.push(groups[i]);
                                     }
-                                    alert("id: " + selectedServer.id);
                                     var rootScopeString = 'allUnitsAndGroups' + selectedServer.id;
                                     $rootScope[rootScopeString] = unitsandgroups;
                                     console.log($rootScope[rootScopeString]);
