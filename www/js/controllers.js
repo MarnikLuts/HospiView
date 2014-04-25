@@ -994,7 +994,8 @@ angular.module('myApp.controllers', []).
             }
 
             function startSearchUnitsAndGroups(index) {
-                if (!(index + 1 === $rootScope.currentServers.length)) {
+                if (!(index === $rootScope.currentServers.length)) {
+                    console.log(index);
                     getUnitsAndGroups(index);
                 } else {
                     startIndex = 0;
@@ -1004,6 +1005,7 @@ angular.module('myApp.controllers', []).
 
             function getUnitsAndGroups(index) {
                 var selectedServer = user.servers[index];
+                console.log(selectedServer);
                 hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
                         success(function(data) {
                             console.log($scope.selectedFilterServer);
@@ -1039,7 +1041,7 @@ angular.module('myApp.controllers', []).
                                     }
                                     var rootScopeString = 'allUnitsAndGroups' + selectedServer.id;
                                     $rootScope[rootScopeString] = unitsandgroups;
-                                    console.log(rootScopeString);
+                                    console.log($rootScope[rootScopeString]);
                                 } else {
                                     $scope.error = true;
                                     $scope.errormessage = "Fout in de ingevoerde login gegevens.";
