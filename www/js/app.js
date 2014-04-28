@@ -14,6 +14,8 @@ angular.module('myApp', [
     'ui.bootstrap',
     'ui.calendar'
 ]).
+        /*Configuration of the routs. If the url is entered, the declared templateUrl 
+         * will be loaded with the declared controller.*/
         config(['$routeProvider', function($routeProvider) {
                 $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginCtrl'});
                 $routeProvider.when('/mainmenu', {templateUrl: 'partials/mainmenu.html', controller: 'MainmenuCtrl'});
