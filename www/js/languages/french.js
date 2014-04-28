@@ -130,7 +130,7 @@ var frenchStrings = {
         settingsUserSettings: "Paramètres de l'utilisateur",
         settingsLanguage: "Langue",
         settingsRefreshMin: "Minimum 30",
-        settingsRefreshMax: "Maximum 60",
+        settingsRefreshMax: "Maximum 7200",
         settingsRefreshDecimal: "Doit être décimal",
         settingsDeleteServer: "Delete server",
         settingsDeleteCurrentUser: "Delete user",

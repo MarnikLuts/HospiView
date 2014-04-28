@@ -130,7 +130,7 @@ var dutchStrings = {
         settingsUserSettings: "Gebruiker instellingen",
         settingsLanguage: "Taal",
         settingsRefreshMin: "Minimum 30",
-        settingsRefreshMax: "Maximum 60",
+        settingsRefreshMax: "Maximum 7200",
         settingsRefreshDecimal: "Mag geen komma getal zijn",
         settingsDeleteServer: "Verwijder server",
         settingsDeleteCurrentUser: "Verwijder gebruiker",

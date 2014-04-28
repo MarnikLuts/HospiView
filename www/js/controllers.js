@@ -245,8 +245,7 @@ angular.module('myApp.controllers', []).
             }
 
             /**
-             * loads all the necessary data from the server in case a patient logs in 
-             * 
+             * loads all the necessary data from the server using the methods of hospiviewfactory and datafactory
              */
             function postLoginDoctor() {
                 var year = new Date().getFullYear().toString(),
@@ -435,7 +434,7 @@ angular.module('myApp.controllers', []).
                     $scope.proceed = false;
                     $modalInstance.close($scope.proceed);
                 };
-            }
+            };
 
             /**
              * Dialog box to ask the user if he wants to continue offline. 
@@ -507,7 +506,7 @@ angular.module('myApp.controllers', []).
             }
 
         }).
-        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
+        controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $modal, hospiviewFactory, dataFactory) {
             
             /**
              * Initiating variables. 
@@ -520,7 +519,10 @@ angular.module('myApp.controllers', []).
             $scope.loadingCalendar = false;
 
             /**
-             * 
+             * If this page was entered from an other screen than the login screen,
+             * the last day the user was looking at reservations for will be used
+             * as filter date.
+             * Else, the first date with reservations will be searched and used.
              */
             if ($rootScope.eventClick) {
                 $scope.date = formatDate(new Date($rootScope.currentdate));
@@ -541,23 +543,31 @@ angular.module('myApp.controllers', []).
                 $scope.lastKnownDate = new Date($scope.date);
                 $scope.showDate = formatShowDate(lowestDate, $rootScope.languageID);
             }
+            
+            /**
+             * localStorage data will be loaded and used to set the user preferences.
+             */
             var user = JSON.parse(localStorage.getItem($rootScope.user));
 
             $scope.cellcontentPatient = user.cellcontent.patient;
             $scope.cellcontentTitle = user.cellcontent.title;
             $scope.cellcontentDepartment = user.cellcontent.department;
 
+            /**
+             * Used to determine if the shortname should be displayed or not.
+             * Won't be displayed on true.
+             */
             if ($rootScope.currentServers.length === 1)
                 $scope.oneServer = true;
 
-
-            $rootScope.$on('setReservationsEvent', function(event, args) {
-                if ($scope.reservations.length === 0) {
+            /**
+             * e
+             */
+            var removeEvent = $rootScope.$on('setReservationsEvent', function(event, args) {
+                    console.log("setNewReservations");
                     $scope.reservations = [];
                     $scope.reservations = $rootScope[$rootScope.searchString];
-                }
             });
-
 
             /**
              * Gets the name of the icon that matches the current status of the given reservation
@@ -604,6 +614,7 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.settings = function() {
+                removeEvent();
                 $rootScope.eventClick = true;
                 $rootScope.currentdate = new Date($scope.date);
                 console.log($rootScope.currentdate);
@@ -612,6 +623,7 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.filter = function() {
+                removeEvent();
                 $rootScope.eventClick = true;
                 $rootScope.currentdate = $scope.date;
                 $rootScope.pageClass = "right-to-left";
@@ -721,6 +733,7 @@ angular.module('myApp.controllers', []).
 
 
             $scope.calendarView = function() {
+                removeEvent();
                 $rootScope.searchInProgress = true;
                 $rootScope.currentdate = $scope.date;
                 if ($rootScope.isOffline) {
@@ -828,6 +841,7 @@ angular.module('myApp.controllers', []).
                 }
             };
             $scope.logout = function() {
+                removeEvent();
                 $rootScope.user = null;
                 $rootScope.type = null;
                 $rootScope.pageClass = "left-to-right";
@@ -1467,6 +1481,7 @@ angular.module('myApp.controllers', []).
                         day: 'd/m'
                     },
                     eventClick: function(calEvent, jsEvent, view) {
+                        removeEvent();
                         var getClickedDay = calEvent.start;
                         $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
                         $rootScope.eventClick = true;
@@ -1493,10 +1508,14 @@ angular.module('myApp.controllers', []).
                 $scope.uiConfig.calendar.weekends = !$scope.uiConfig.calendar.weekends;
             };
 
-            $rootScope.$on('setReservationsEvent', function(event, args) {
+            var removeEvent = $rootScope.$on('setReservationsEvent', function(event, args) {
                 if ($rootScope[$rootScope.searchString].length !== 0) {
                     countEvent = dataFactory.loadCalendar();
                     $scope.eventSources = [countEvent];
+                    var countEvent = dataFactory.loadCalendar();
+                    localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
+                    $('#doctorCalendar').fullCalendar('removeEvents');
+                    $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
                 }
             });
         }).
@@ -2236,7 +2255,10 @@ angular.module('myApp.controllers', []).
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             var refreshrate = user.refreshrate * 1000;
 
-
+            /**
+             * The refresh will happen if the user is not offline or another
+             * search being done.
+             */
             var requestTimer = $interval(function() {
                 if (!$rootScope.isOffline) {
                     $rootScope.refreshCounter = $rootScope.refreshCounter + 1000;
