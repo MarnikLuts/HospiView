@@ -386,6 +386,20 @@ ul li{
     color: black;   
 }
 
+.connection-status{
+    display: inline;
+    font-size: 15px;
+    position: relative;
+}
+
+.positionRelative{
+    position: relative;
+}
+
+.connection-status .glyphicon-remove{
+    color: red;
+}
+
 @media screen and (max-width: 400px) {// Smartphones in portrait mode
     .dateAppointmentsViewScaled{
         width: 100px;

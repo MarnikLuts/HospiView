@@ -3,7 +3,11 @@
         <span class="glyphicon glyphicon-chevron-left"></span>
         {{ getLocalizedString('back')}}
     </button>
-    <div class="title">{{ getLocalizedString('appointmentsFilterTitle')}}</div>
+    <div class="title">{{ getLocalizedString('appointmentsFilterTitle')}}
+        <div class="connection-status">
+            <span class="glyphicon glyphicon-signal" ></span>  <span ng-show="isOffline" ng-class="{positionRelative: isOffline}" class="glyphicon glyphicon-remove"></span>
+        </div>
+    </div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
 <div class="col-md-12">

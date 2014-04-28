@@ -16,6 +16,7 @@ var frenchStrings = {
         //AppointmentsView
         appointmentsViewReservations: "Réservations",
         appointmentsViewNoReservations: "Pas de Réservation",
+        appointmentsViewEndOfDateRange: "Er zijn geen afspraken meer gevonden",
         
         //AppointmentsCalendar
         appointmentsCalendarToday: "Aujourd'hui",
