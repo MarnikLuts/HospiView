@@ -561,7 +561,11 @@ angular.module('myApp.controllers', []).
                 $scope.oneServer = true;
 
             /**
-             * e
+             * This function is set in the rootscope and will be triggered by
+             * an $emit from the refresh function in services.js. Will empty
+             * the reservations model and refill it with new data. Is put in the
+             * variable removeEvent, this way the $rootScope can be unset by 
+             * calling removeEvent(). 
              */
             var removeEvent = $rootScope.$on('setReservationsEvent', function(event, args) {
                     console.log("setNewReservations");
@@ -572,8 +576,8 @@ angular.module('myApp.controllers', []).
             /**
              * Gets the name of the icon that matches the current status of the given reservation
              * 
-             * @param {type} reservation
-             * @returns {String}
+             * @param {object} reservation  reservation of which the icon needs to be determined
+             * @returns {String}            image name needed to be used for the status
              */
             $scope.getStatusIcon = function(reservation) {
                 var stepAmount = reservation.step_buttons;
@@ -604,6 +608,8 @@ angular.module('myApp.controllers', []).
 
                 return "none";
             };
+            
+            
 
             $scope.details = function(reservation) {
                 $rootScope.eventClick = true;
@@ -1889,15 +1895,6 @@ angular.module('myApp.controllers', []).
             $scope.needsRiziv = function(userFunction) {
                 return userFunction === $rootScope.getLocalizedString('newFunctionDoctor') || userFunction === $rootScope.getLocalizedString('newFunctionHouseDoctor');
             };
-
-            //TEST DATA
-            $scope.firstName = "Voornaam";
-            $scope.lastName = "Achternaam";
-            $scope.dateOfBirth = "18/05/1993";
-            $scope.emailAddress = "Frank.Goyens@icasa-group.com";
-            $scope.confirmEmailAddress = "Frank.Goyens@icasa-group.com";
-            $scope.nationalRegister = "93051822361";
-
 
             /**
              * Webservice request to request an account. The div will will be hidden
