@@ -128,7 +128,7 @@ var englishStrings = {
         settingsUserSettings: "User settings",
         settingsLanguage: "Language",
         settingsRefreshMin: "Minimum 30",
-        settingsRefreshMax: "Maximum 60",
+        settingsRefreshMax: "Maximum 7200",
         settingsRefreshDecimal: "Has to be decimal",
         settingsDeleteServer: "Delete server",
         settingsDeleteCurrentUser: "Delete user",
