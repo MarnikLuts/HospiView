@@ -245,9 +245,18 @@ angular.module('myApp.controllers', []).
                     callOfflineModal();
                 });
             };
+            
+            /**
+             * Loads all the necessary data from the server in case a patient logs in
+             * 
+             * @returns {undefined}
+             */
+            function postLoginPatient() {
+                $location.path("/patient/appointmentsPatient");
+            }
 
             /**
-             * loads all the necessary data from the server using the methods of hospiviewfactory and datafactory
+             * loads all the necessary data from the server in case a patient logs in 
              * 
              */
             function postLoginDoctor() {

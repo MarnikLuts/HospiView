@@ -50,7 +50,7 @@
             </div>
         </div>
         <br>
-        <div ng-show="checkingForKiosk">Checking...</div>
+        <div ng-show="checkingForKiosk">{{getLocalizedString('wait')}}</div>
         <div class="form-group" ng-show="accountTrue">
             <p>{{requestMessage}}{{ getLocalizedString('newServerEnterAccount') }}</p>
             <form name="loginForm" novalidate ng-submit="login()">
@@ -86,7 +86,7 @@
                 </div>
             </form>
         </div>
-        <div ng-show="!hasKiosk&&accountFalse&&!checkingForKiosk">Deze instelling heeft geen kiosk</div>
+        <div ng-show="!hasKiosk&&accountFalse&&!checkingForKiosk">{{getLocalizedString('newUserNoKiosk')}}</div>
         <div class="form-group" ng-show="accountFalse&&hasKiosk">
             <select name="userFunctionSelect" class="form-control input-xl" ng-model="userFunctionSelect" ng-options="userFunction for userFunction in userFunctionList" ng-change="userFunctionSelected = true;
                 accountRadio = null">

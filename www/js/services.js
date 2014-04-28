@@ -16,46 +16,157 @@ angular.module('myApp.services', []).
          */
         factory('hospiviewFactory', function($http, $rootScope, base_url, kiosk_url) {
             return{
+                /**
+                 * Gets All the HospiView servers
+                 * @returns {unresolved}
+                 */
                 getHospiViewServerList: function() {
                     $rootScope.requestCounter++;
                     return $http.get("http://agenda.agendaview.be/cfcs/webservices/agendaview/hospiview_servers.cfc?method=GetHospiviewServerList");
                 },
+                /**
+                 * Gets a UUID from the server if the given username and password are valid
+                 * This UUID is required to use other webservices
+                 * 
+                 * @param {type} username
+                 * @param {type} password
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getAuthentication: function(username, password, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetAuthentication&user_login=" + username + "&user_password=" + password + "&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Checks if the given Hospiview server has a kiosk webservice
+                 * 
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 checkForKiosk: function(server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + kiosk_url + "method=GetAuthentication&user_login=user&user_password=pass&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Gets all units and departments for which the requesting user has permissions
+                 * 
+                 * @param {type} uuid
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getUnitAndDepList: function(uuid, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetUnitAndDepList&UUID=" + uuid + "&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Gets all unit groups for which the requesting user has permissions
+                 * 
+                 * @param {type} uuid
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getUnitDepGroups: function(uuid, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=getUnitDepGroups&UUID=" + uuid + "&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Gets all the reservation from a given unit and department between the start date and end date
+                 * 
+                 * @param {type} uuid
+                 * @param {type} unit_id
+                 * @param {type} dep_id
+                 * @param {type} start_date
+                 * @param {type} end_date
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getReservationsOnUnit: function(uuid, unit_id, dep_id, start_date, end_date, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetReservationsOnUnit&UUID=" + uuid + "&unit_id=" + unit_id + "&dep_id=" + dep_id + "&start_date=" + start_date + "&end_date=" + end_date + "&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Gets the reservations for a particular patient
+                 * either with the patient's PID or RegNo
+                 * 
+                 * PID_OR_RegNo should be:
+                 * 1 for PID
+                 * 2 for RegNo
+                 * 
+                 * @param {type} uuid
+                 * @param {type} pid_or_regno
+                 * @param {type} patsearchvar
+                 * @param {type} start_date
+                 * @param {type} end_date
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getReservationsOnPatient: function(uuid, pid_or_regno, patsearchvar, start_date, end_date, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetReservationsOnPatient&UUID=" + uuid + "&pid_or_regno=" + pid_or_regno + "&patsearchvar=" + patsearchvar + "&start_date=" + start_date + "&end_date=" + end_date + "&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Gets the dates for public holidays
+                 * 
+                 * @param {type} Language_Id
+                 * @param {type} year
+                 * @param {type} month
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getPublicHolidays: function(Language_Id, year, month, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetPublicHolidays&Language_Id=" + Language_Id + "&Year=" + year + "&Month=" + month + "&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Gets all the dates where doctors are reported as absent
+                 * 
+                 * month should be 0 if you need the dates for the entire year
+                 * 
+                 * @param {type} uuid
+                 * @param {type} year
+                 * @param {type} month
+                 * @param {type} unit_id
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getUnitAbsentDays: function(uuid, year, month, unit_id, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetUnitAbsentDays&UUID=" + uuid + "&Year=" + year + "&Month=" + month + "&Unit_Id=" + unit_id + "&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Gets all the localized strings that are stored remotely
+                 * 
+                 * 1 for Dutch
+                 * 2 for French
+                 * 3 for English
+                 * 
+                 * listOsPidsSids format should be:
+                 * 201,4,5,8,7;202,2,5,4,8
+                 * 
+                 * @param {type} language_Id
+                 * @param {type} listOfPidsSids
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getLanguageStrings: function(language_Id, listOfPidsSids, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids + "&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Registers a new patient using the kiosk service
+                 * The user will recieve an email with an automatically generated password
+                 * 
+                 * This method also returns a UUID 
+                 * 
+                 * @param {type} USER_NAME
+                 * @param {type} USER_REGNO
+                 * @param {type} USER_EMAIL
+                 * @param {type} USER_MOB
+                 * @param {type} LanguageId
+                 * @param {type} Update_NameEmailTel
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getLogin: function(USER_NAME, USER_REGNO, USER_EMAIL, USER_MOB, LanguageId, Update_NameEmailTel, server_url) {
                     $rootScope.requestCounter++;
                     alert($rootScope.requestCounter);
@@ -65,7 +176,12 @@ angular.module('myApp.services', []).
             };
         }).
         factory('dataFactory', function($rootScope, $q, hospiviewFactory) {
-
+            /**
+             * Check if the given unit uses a 3 step or 4 step system for their reservations
+             * 
+             * @param {type} unit_id
+             * @returns {unresolved}
+             */
             function getSteps(unit_id) {
                 for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                     if (unit_id == $rootScope.searchUnits[i].Header.unit_id) {
@@ -220,6 +336,13 @@ angular.module('myApp.services', []).
                     });
                     return defer.promise;
                 },
+                /**
+                 * Sets the start date and end date to limit the amount of reservations that will be requested remotely
+                 * 
+                 * @param {type} startDate
+                 * @param {type} endDate
+                 * @returns {undefined}
+                 */
                 setSearchDates: function(startDate, endDate) {
                     startDate = new Date(startDate);
                     endDate = new Date(endDate);
@@ -309,6 +432,11 @@ angular.module('myApp.services', []).
                     }
                     return countEvent;
                 },
+                /**
+                 * Refreshes all the reservations between the start date and end date
+                 * 
+                 * @returns {undefined}
+                 */
                 refresh: function() {
                     console.log("refresh");
                     $rootScope.refresh = true;

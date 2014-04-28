@@ -53,12 +53,12 @@ var dutchStrings = {
         
         //Selectserver/new
         newGreeting: "Welkom bij Hospiview",
-        newInfo: "Selecteer de instelling waarmee u verbinding wil maken:_"
+        newInfo: "Selecteer de zorginstelling waarmee u verbinding wil maken:_"
                 +"Om onze demoserver te gebruiken selecteer \"Agendaview Demo\" en gebruik de volgende login gegevens:_"
                 +"Gebruikersnaam:_apple-user_"
                 +"Wachtwoord:_apple-user",
         newServerSelectDefault: "Klik hier om te selecteren",
-        newServerHasAccount: "Heeft u een account bij deze instelling?",
+        newServerHasAccount: "Heeft u een account bij deze zorginstelling?",
         newServerEnterAccount: "Geef uw login gegevens in:",
         
         newFunctionSelectDefault: "Selecteer een functie",
@@ -78,6 +78,7 @@ var dutchStrings = {
         newUserNatReg: "Rijksregisternummer",
         newUserFirm: "Firma",
         newUserRiziv: "RIZIV nummer",
+        newUserNoKiosk: "Deze zorginstelling heeft ervoor gekozen om patiënten momenteel geen afspraken te laten maken via deze app. Hierdoor kan u zich niet registreren",
         
         //Selectserver/new validation
         newUserDateIncorrect: "Geboortedatum moet volgend formaat hebben:",
@@ -102,6 +103,7 @@ var dutchStrings = {
         yes: "Ja",
         no: "Nee",
         cancel: "annuleer",
+        wait: "Even geduld a.u.b.",
         
         //Connection messages
         internalError: "Interne fout in de server.",
