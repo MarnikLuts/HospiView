@@ -49,7 +49,8 @@ angular.module('myApp.controllers', []).
             $rootScope.searchRangeEnd = undefined;
 
             /**
-             * showPasswordBoolean will be set to false.
+             * showPasswordBoolean will be set to false. If true, the password
+             * field will show text instead of dots.
              */
             $scope.showPasswordBoolean = false;
 
@@ -72,16 +73,12 @@ angular.module('myApp.controllers', []).
              * Will be called on change in the select. Checks if the user model
              * (this is the local user of the application, not the username for
              * the server) is empty. If it isn't, the localStorage data of that
-             * user will be loaded. With this data, the servers model will be set.
+             * user will be loaded. With this data, the servers model will be set,
+             * username field will be filled and, depending on the usersettings,
+             * the password field will be set.
              * Otherwise the servers model will be emptied.
-             * 
-             * The username and password field will be emptied and savePassword
-             * will be set to false.
              */
             $scope.getServersUser = function() {
-                $scope.username = [];
-                $scope.password = [];
-                $scope.savePassword = [];
                 if (angular.isDefined($scope.user)) {
                     $scope.selectedUser = JSON.parse(localStorage.getItem($scope.user));
                     $scope.servers = $scope.selectedUser.servers;
@@ -95,30 +92,11 @@ angular.module('myApp.controllers', []).
                             $scope[checkboxString] = 1;
                         }
                     }
-                    $scope.getLoginUser(0);
+                    //$scope.getLoginUser(0);
                 } else {
                     $scope.servers[0] = undefined;
                     $scope.servers[1] = undefined;
                     $scope.servers[2] = undefined;
-                    $scope.username[0] = "";
-                    $scope.password[0] = "";
-                    $scope.savePassword[0] = false;
-                }
-            };
-
-            /**
-             * Will be called on change in the select. Checks if the server model
-             * is empty. If it isn't, the username will be automatically filled
-             * out. Depending on the usersettings, the passwordfield will be 
-             * filled out and the savePassword checkbox will be checked.
-             */
-            $scope.getLoginUser = function(index) {
-                if (angular.isDefined($scope.servers[index])) {
-
-                } else {
-                    $scope.username[index] = "";
-                    $scope.password[index] = "";
-                    $scope.savePassword[index] = false;
                 }
             };
 
@@ -136,9 +114,15 @@ angular.module('myApp.controllers', []).
                     }
                 } else {
                     $scope.serverRadio = false;
-                    console.log($scope.servers);
                 }
 
+            /**
+             * Custom checkboxes are used to change the save_password checkbox 
+             * of the server. This function will change the checkbox image and
+             * throw a warning if the user decides to save their password.
+             * 
+             * @param {integer} serverNr   determines which server
+             */
             $scope.changeCheckbox = function(serverNr) {
                 var checkboxString = "checkboxImgServer" + serverNr;
                 $scope.selectedUser.servers[serverNr].save_password = !$scope.selectedUser.servers[serverNr].save_password;
@@ -149,13 +133,6 @@ angular.module('myApp.controllers', []).
                 }
                 if ($scope[checkboxString] === 1)
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
-            }
-
-            /**
-             * Throw a warning if the user checks the savePassword checkbox.
-             */
-            $scope.savePasswordWarning = function(savePassword) {
-                alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             };
 
             /**
@@ -168,7 +145,22 @@ angular.module('myApp.controllers', []).
             };
 
             /**
-             * 
+             * The login requests will be done in this function. loggingIn will
+             * be set to true, this will display an animition to show the user
+             * he is being logged in. For each server the user has configured,
+             * the input fields will be checked. If every field of a server
+             * has text, a login request for that server will happen. The
+             * returned data will be pushed in the promises array and the
+             * server will be pushed in the validServers array. $q.all will
+             * make sure all requests are done before continuing with the function.
+             * The received data will be checked on length and the statuscode in the
+             * header of the returned data, to make sure the authentication
+             * succeeded. The data will be parsed from XML to JSON. The needed
+             * data (user, UUID of the servers, type of user) will be set in 
+             * the rootScope for later use and saved in the localStorage. Depending
+             * on the type of user, a postLogin method will be called. If
+             * no requests could be done, the user will be asked if he wants
+             * to continue offline.
              */
             $scope.login = function() {
                 $scope.loggingIn = true;
@@ -182,9 +174,7 @@ angular.module('myApp.controllers', []).
                 $scope.failedServers = [];
                 console.log("all servers: " + $scope.selectedUser.servers.length);
                 for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
-                    console.log($scope.selectedUser.servers[i].user_password);
-
-                    invalidFields[i] = angular.isUndefined($scope.selectedUser.servers[i].user_password)  || $scope.selectedUser.servers[i].user_password==="";
+                    invalidFields[i] = angular.isUndefined($scope.selectedUser.servers[i].user_password) || $scope.selectedUser.servers[i].user_password === "";
                     if (!invalidFields[i]) {
                         promises.push(hospiviewFactory.getAuthentication($scope.selectedUser.servers[i].user_login, $scope.selectedUser.servers[i].user_password, $scope.selectedUser.servers[i].hosp_url));
                         validServers.push($scope.selectedUser.servers[i]);
@@ -202,14 +192,13 @@ angular.module('myApp.controllers', []).
                         if (json.Authentication.Header.StatusCode != 1) {
                             console.log(validServers[r].hosp_full_name + " auth failed " + r);
                             $scope.failedServers.push(validServers[r].hosp_short_name);
-                            if ($scope.failedServers.length == $scope.selectedUser.servers.length)
+                            if ($scope.failedServers.length === $scope.selectedUser.servers.length)
                                 authFailed = true;
                         } else {
                             console.log(validServers[r].hosp_full_name + " auth success " + r);
                             $scope.error = false;
                             $rootScope.user = $scope.user;
                             $rootScope.type = parseInt(json.Authentication.Detail.isexternal);
-
 
                             validServers[r].uuid = json.Authentication.Detail.uuid;
                             console.log(json.Authentication.Detail.uuid + " ");
@@ -275,8 +264,7 @@ angular.module('myApp.controllers', []).
 
             /**
              * Gets the reservations from the server identified by a given index, when done it will call addReservations
-             * @param {type} index
-             * @returns {undefined}
+             * @param {integer} index      determines the server
              */
             function getReservations(index) {
                 var year = new Date().getFullYear().toString(),
@@ -296,13 +284,18 @@ angular.module('myApp.controllers', []).
                 });
             }
 
+            /**
+             * Initialise needed variables.
+             */
             var responseCount = 0;
             var allReservations = [];
             var firstCycle = true;
+
             /**
              * The reservations from every server get added into one array, 
-             * when this function is executed for every server, the data will be handled by the setReservations function
-             * @type Number
+             * when this function is executed for every server, the data will be 
+             * handled by the setReservations function
+             * @param {object} reservations     reservations that need to be added to the array of all reservations
              */
             function addReservations(reservations) {
                 if (firstCycle) {
@@ -335,8 +328,7 @@ angular.module('myApp.controllers', []).
             }
 
             /**
-             * Sets the dates between which reservations will be searched
-             * 
+             * Sets the dates between which reservations will be searched.
              */
             function setDates() {
                 var today = new Date();
@@ -346,6 +338,16 @@ angular.module('myApp.controllers', []).
                 dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
             }
 
+            /**
+             * Sets the reservations in the rootScope. Alerts the user on which
+             * servers the authentication failed. If no reservations are found,
+             * a modal will be called to ask the user if he wants to continue 
+             * searching for reservations. Else, the reservations will be saved
+             * in localStorage so the reservations can be viewed in the offline
+             * mode and the user is redirected to the appointmentsView.
+             * 
+             * @param {object} reservations
+             */
             function setReservations(reservations) {
                 firstCycle = true;
                 $rootScope[$rootScope.searchString] = reservations;
@@ -467,7 +469,7 @@ angular.module('myApp.controllers', []).
                                 }
                             }
                         }
-                        if (hasAuthenticated && reservations.length!=0) {
+                        if (hasAuthenticated && reservations.length != 0) {
                             $rootScope.user = $scope.user;
                             $rootScope.searchString = $rootScope.user + 'Reservations';
                             $rootScope[$rootScope.searchString] = reservations;
@@ -497,6 +499,7 @@ angular.module('myApp.controllers', []).
 
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $interval, $modal, hospiviewFactory, dataFactory) {
+            
             /**
              * Initiating variables. 
              * searchInProgress is used to disable the refresh if another
@@ -609,7 +612,7 @@ angular.module('myApp.controllers', []).
             $scope.reservations = $rootScope[$rootScope.searchString];
 
             $scope.loadingNext = false;
-            
+
             var daySearchLoopCount = 0;
             $scope.nextDay = function() {
                 var count = 0;
@@ -637,25 +640,25 @@ angular.module('myApp.controllers', []).
                         if (filterDate.getTime() === check.getTime())
                             count++;
                     }
-                    
-                    if(daySearchLoopCount==182){
+
+                    if (daySearchLoopCount == 182) {
                         alert($rootScope.getLocalizedString('appointmentsViewEndOfDateRange'));
                         $scope.date = formatDate(new Date($scope.lastKnownDate));
                         $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                         $scope.loadingNext = false;
                         $rootScope.nextDayRequest = false;
-                        daySearchLoopCount=0;
-                    }else{
-                       if (count === 0) {
+                        daySearchLoopCount = 0;
+                    } else {
+                        if (count === 0) {
                             $scope.nextDay();
                         }
                         else {
                             $scope.lastKnownDate = new Date($scope.date);
                             console.log($scope.lastKnownDate);
                             $scope.loadingNext = false;
-                        } 
+                        }
                     }
-                    
+
                 }
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
@@ -687,22 +690,22 @@ angular.module('myApp.controllers', []).
                         if (filterDate.getTime() === check.getTime())
                             count++;
                     }
-                    if(daySearchLoopCount==182){
+                    if (daySearchLoopCount == 182) {
                         alert($rootScope.getLocalizedString('appointmentsViewEndOfDateRange'));
                         $scope.date = formatDate(new Date($scope.lastKnownDate));
                         $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
                         $scope.loadingNext = false;
                         $rootScope.nextDayRequest = false;
-                        daySearchLoopCount=0;
-                    }else{
+                        daySearchLoopCount = 0;
+                    } else {
                         if (count === 0)
                             $scope.previousDay();
                         else {
                             $scope.lastKnownDate = new Date($scope.date);
                             $scope.loadingNext = false;
-                        } 
+                        }
                     }
-                    
+
                 }
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
@@ -1620,18 +1623,18 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.deleteCurrentUser = function() {
-                if(navigator.notification){
-                //Only works on mobile devices
+                if (navigator.notification) {
+                    //Only works on mobile devices
                     window.confirm(
                             $rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'),
-                            function(response){
-                                if(response==1){
+                            function(response) {
+                                if (response == 1) {
                                     var users = JSON.parse(localStorage.getItem('users')),
-                                    index = users.indexOf($rootScope.user);
+                                            index = users.indexOf($rootScope.user);
 
                                     if (users.length == 1)
                                         localStorage.removeItem('users');
-                                    else{
+                                    else {
                                         users.splice(index, 1);
                                         localStorage.setItem('users', JSON.stringify(users));
                                     }
@@ -1649,7 +1652,7 @@ angular.module('myApp.controllers', []).
                                 }
                             }
                     );
-                }else{
+                } else {
                     //Works in browser
                     var response = window.confirm($rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'));
                     if (response) {
@@ -1675,7 +1678,7 @@ angular.module('myApp.controllers', []).
                     }
                 }
             };
-            
+
             /**
              * Prompts the user with a confirmation dialog,
              * Deletes the selected server
@@ -1684,7 +1687,7 @@ angular.module('myApp.controllers', []).
             $scope.deleteServer = function() {
                 var lsObject = JSON.parse(localStorage.getItem($rootScope.user)),
                         servers = lsObject.servers;
-                if(navigator.notification){
+                if (navigator.notification) {
                     //Only works on mobile device
                     if (servers.length > 1) {
                         window.confirm(
@@ -1711,17 +1714,17 @@ angular.module('myApp.controllers', []).
                                 }
                         );
                     }
-                }else{
+                } else {
                     //Works in browser
-                    if(servers.length>1){
+                    if (servers.length > 1) {
                         var response = window.confirm($rootScope.getLocalizedString('settingsDeleteServerConfirm'));
-                        if(response){
+                        if (response) {
                             var id = $scope.serverRadio.id,
-                                user_login = $scope.serverRadio.user_login,
-                                user_password = $scope.serverRadio.user_password;
+                                    user_login = $scope.serverRadio.user_login,
+                                    user_password = $scope.serverRadio.user_password;
 
-                            for(var i=0;i<servers.length;i++){
-                                if(servers[i].id==id && servers[i].user_login==user_login && servers[i].user_password==user_password){
+                            for (var i = 0; i < servers.length; i++) {
+                                if (servers[i].id == id && servers[i].user_login == user_login && servers[i].user_password == user_password) {
                                     $rootScope.currentServers.splice(i, 1);
                                     servers.splice(i, 1);
                                     lsObject.servers = servers;
@@ -1987,13 +1990,13 @@ angular.module('myApp.controllers', []).
                     }
                 } else {
                     var selectedUser = JSON.parse(localStorage.getItem($rootScope.user)),
-                        invalidUser = false;
-                    if(json.Detail.isexternal==0)
+                            invalidUser = false;
+                    if (json.Detail.isexternal == 0)
                         json.Detail.isexternal++;
-                    if(selectedUser.servers[0].isexternal==0)
+                    if (selectedUser.servers[0].isexternal == 0)
                         selectedUser.servers[0].isexternal++;
                     if ($routeParams.action === "add") {
-                        if(json.Detail.isexternal == selectedUser.servers[0].isexternal){
+                        if (json.Detail.isexternal == selectedUser.servers[0].isexternal) {
                             var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
                             var addServer = {"id": $scope.server.id,
                                 "hosp_short_name": $scope.server.hosp_short_name,
@@ -2012,7 +2015,7 @@ angular.module('myApp.controllers', []).
                             selectedUser.servers.push(addServer);
                             localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
                             $rootScope.serverAdded = true;
-                        }else{
+                        } else {
                             invalidUser = true;
                             $scope.loggingIn = false;
                             $scope.error = true;
@@ -2042,7 +2045,7 @@ angular.module('myApp.controllers', []).
                         localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
                         $rootScope.serverChanged = true;
                     }
-                    if(!invalidUser){
+                    if (!invalidUser) {
                         $rootScope.user = null;
                         $rootScope.type = null;
                         $rootScope.pageClass = "right-to-left";
