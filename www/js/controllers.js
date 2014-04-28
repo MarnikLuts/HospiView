@@ -110,7 +110,7 @@ angular.module('myApp.controllers', []).
                     $scope.getServersUser();
                     if ($scope.servers.length === 1) {
                         $scope.server = $scope.servers[0];
-                        $scope.getLoginUser();
+//                        $scope.getLoginUser();
                     }
                 } else {
                     $scope.serverRadio = false;
@@ -1045,7 +1045,12 @@ angular.module('myApp.controllers', []).
                 }
             }
 
-
+            /**
+             * Gets the units and groups for the selected index
+             * 
+             * @param {type} index
+             * @returns {undefined}
+             */
             function getUnitsAndGroups(index) {
                 var selectedServer = user.servers[index];
                 console.log(selectedServer);
@@ -1231,6 +1236,11 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller('searchCtrl', function($scope, $rootScope, hospiviewFactory, dataFactory) {
+            /**
+             * Calendar shows the next month
+             * 
+             * @returns {undefined}
+             */
             $scope.next = function() {
                 var calDate = $("#doctorCalendar").fullCalendar('getDate');
                 var months = getMonthNames($rootScope.languageID);
@@ -1246,6 +1256,12 @@ angular.module('myApp.controllers', []).
                     calendarView('next');
                 }
             };
+            
+            /**
+             * Calendar shows the previous month
+             * 
+             * @returns {undefined}
+             */
             $scope.prev = function() {
                 var calDate = $("#doctorCalendar").fullCalendar('getDate');
                 var months = getMonthNames($rootScope.languageID);
@@ -1256,7 +1272,7 @@ angular.module('myApp.controllers', []).
                 else
                     $rootScope.displayMonthDate = months[11] + " " + (calDate.getFullYear() - 1);
 
-                if ($rootScope.isOffline === true) {
+                if ($rootScope.isOffline) {
                     $('#doctorCalendar').fullCalendar('prev');
                 } else {
                     calendarView('prev');
@@ -1475,6 +1491,8 @@ angular.module('myApp.controllers', []).
                         var getClickedDay = calEvent.start;
                         $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
                         $rootScope.eventClick = true;
+                        $rootScope.pageClass = "left-to-right";
+                        $rootScope.$apply();
                         window.location.href = 'index.html#/doctor/appointmentsView';
                     }
                 }
