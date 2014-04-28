@@ -609,9 +609,17 @@ angular.module('myApp.controllers', []).
                 return "none";
             };
             
-            
-
+            /**
+             * Redirects to the detail screen. The reservationDetail will be set 
+             * with the data of the reservation the user wants to know the details of.
+             * The refresh is stopped with removeEvent().
+             * eventClick is set to true, when the user returns to this screen he will
+             * see the last day he was looking at. The currentdate is set to the
+             * day the user was looking at.
+             * @param {object} reservation    reservation of which the user wants to see the details
+             */
             $scope.details = function(reservation) {
+                removeEvent();
                 $rootScope.eventClick = true;
                 $rootScope.reservationDetail = reservation;
                 $rootScope.currentdate = reservation.the_date;
@@ -619,15 +627,26 @@ angular.module('myApp.controllers', []).
                 $location.path('/doctor/appointmentDetail');
             };
 
+            /**
+             * Redirects to the settings screen. The refresh is stopped with removeEvent().
+             * eventClick is set to true, when the user returns to this screen he will
+             * see the last day he was looking at. The currentdate is set to the
+             * day the user was looking at.
+             */
             $scope.settings = function() {
                 removeEvent();
                 $rootScope.eventClick = true;
                 $rootScope.currentdate = new Date($scope.date);
-                console.log($rootScope.currentdate);
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/settings/default');
             };
-
+            
+            /**
+             * Redirects to the filter screen. The refresh is stopped with removeEvent().
+             * eventClick is set to true, when the user returns to this screen he will
+             * see the last day he was looking at. The currentdate is set to the
+             * day the user was looking at.
+             */
             $scope.filter = function() {
                 removeEvent();
                 $rootScope.eventClick = true;
@@ -636,14 +655,40 @@ angular.module('myApp.controllers', []).
                 $location.path('/appointmentsFilter');
             };
 
+            /**
+             * The reservations are set from the rootScope.
+             */
             $scope.reservations = $rootScope[$rootScope.searchString];
 
+            /**
+             * Used to display an animation when loading reservations.
+             */
             $scope.loadingNext = false;
 
+            /**
+             * daySearchLoopCount counts the days the application skips to get
+             * to the next day with reservations. This is used in the offline mode
+             * to prevent an infinite loop.
+             */
             var daySearchLoopCount = 0;
+            
+            /**
+             * count keeps track of the amount of reservations.
+             * daySearchLoopCount is increased everytime the function is called.
+             * searchType is used in other functions to determine what should happen.
+             * 
+             * If the date passes the search range and the user is not offline,
+             * A start and enddate will be set to search new appointments and
+             * the search() function will be called.
+             * Otherwise, the already retrieved reservations will be searched for
+             * reservations on the requested day. If this is the 182th time the
+             * function is called after each other, the user will get a message
+             * that no other reservations were found.
+             */
             $scope.nextDay = function() {
                 var count = 0;
-                daySearchLoopCount++;
+                if($rootScope.isOffline)
+                    daySearchLoopCount++;
                 $rootScope.searchType = '';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
@@ -691,7 +736,8 @@ angular.module('myApp.controllers', []).
             };
             $scope.previousDay = function() {
                 var count = 0;
-                daySearchLoopCount++;
+                if($rootScope.isOffline)
+                    daySearchLoopCount++;
                 $rootScope.searchType = '';
                 $scope.loadingNext = true;
                 var newDate = new Date($scope.date);
@@ -953,9 +999,10 @@ angular.module('myApp.controllers', []).
             }
 
             /**
-             * First calls the instance of the modal. The modal template is 
-             * declared in login.html. The controller 
-             * @returns {undefined}
+             * Calls a dialog box and asks if the user wants to continue searching.
+             * If yes, appointments will be searched for the next or previous
+             * 14 days.
+             * 
              */
             function callModal() {
                 var modalInstance = $modal.open({
