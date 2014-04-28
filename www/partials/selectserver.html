@@ -32,10 +32,13 @@
                     <td>{{ getLocalizedString('newInfo').split("_")[5] }}</td>
                 </tr>
             </table><br/>
-                <select class="form-control input-xl" ng-model="server" ng-options="server as server.hosp_full_name for server in servers" ng-change="serverSelected = true; checkForKiosk();
+            <div class="btn-group">
+                <select class="form-control input-lg" ng-model="server" ng-options="server as server.hosp_full_name for server in servers" ng-change="serverSelected = true; checkForKiosk();
                     accountRadio = null; accountTrue = null;">
                     <option value="">- {{ getLocalizedString('newServerSelectDefault') }} -</option>
-                </select> 
+                </select><button class="btn btn-default btn-lg"><span class="glyphicon glyphicon-refresh"></span></button>
+            </div>
+                
         </div>
         <br>
         <div class="form-group" ng-show="serverSelected">
