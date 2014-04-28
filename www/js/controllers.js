@@ -2011,8 +2011,8 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
-                                console.log(json);
-                                if (json.Authentication.Header.StatusCode == 1) {
+                                console.log(data);
+                                if (json!==null&&json.Authentication.Header.StatusCode == 1) {
                                     postAuthentication(json.Authentication);
                                 } else {
                                     $scope.loggingIn = false;
