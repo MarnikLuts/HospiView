@@ -684,6 +684,9 @@ angular.module('myApp.controllers', []).
              * reservations on the requested day. If this is the 182th time the
              * function is called after each other, the user will get a message
              * that no other reservations were found.
+             * If no reservations were found, this is not the 182th time, the
+             * function will be called again. If reservations were foun, the
+             * filter will be set to that day.
              */
             $scope.nextDay = function() {
                 var count = 0;
@@ -734,6 +737,10 @@ angular.module('myApp.controllers', []).
                 }
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
+            
+            /**
+             * Uses the same logic as nextDay but searches backwards instead.
+             */
             $scope.previousDay = function() {
                 var count = 0;
                 if($rootScope.isOffline)
@@ -783,7 +790,9 @@ angular.module('myApp.controllers', []).
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
 
-
+            /**
+             * 
+             */
             $scope.calendarView = function() {
                 removeEvent();
                 $rootScope.searchInProgress = true;
@@ -847,15 +856,17 @@ angular.module('myApp.controllers', []).
                         $location.path('/appointmentsCalendar');
                     }
                 }
-            };
-            $scope.style = function(value) {
-                var color = '#' + value;
-                return {"background-color": color};
-            };
-            $scope.styleTest = function(reservation) {
+            };       
+            
+            /**
+             * Used to set the background color of reservations. First the amount
+             * of markings are counted and saved in an array. Depending on the length,
+             * the right CSS is created and returned.
+             * @param {object} reservation reservation object, which includes the colors
+             */
+            $scope.style = function(reservation) {
                 var colors = [];
                 var color;
-                var color2;
                 if (reservation.color !== "")
                     colors.push(reservation.color);
                 if (reservation.color2 !== "")
@@ -872,26 +883,27 @@ angular.module('myApp.controllers', []).
                     return {"background-color": color};
                 }
                 if (colors.length === 2) {
-                    color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 50%, #' + colors[1] + ' 50%, #' + colors[1] + ' 100%)';
-                    color2 = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 50%, #' + colors[1] + ' 50%, #' + colors[1] + ' 100%)';
-                    return {"background": color2};
+                    color = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 50%, #' + colors[1] + ' 50%, #' + colors[1] + ' 100%)';
+                    return {"background": color};
                 }
                 if (colors.length === 3) {
-                    color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 33%, #' + colors[1] + ' 33%, #' + colors[1] + ' 66%, #' + colors[2] + ' 66%, #' + colors[2] + ' 100%)';
-                    color2 = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 33%, #' + colors[1] + ' 33%, #' + colors[1] + ' 66%, #' + colors[2] + ' 66%, #' + colors[2] + ' 100%)';
-                    return {"background": color2};
+                    color = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 33%, #' + colors[1] + ' 33%, #' + colors[1] + ' 66%, #' + colors[2] + ' 66%, #' + colors[2] + ' 100%)';
+                    return {"background": color};
                 }
                 if (colors.length === 4) {
-                    color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 25%, #' + colors[1] + ' 25%, #' + colors[1] + ' 50%, #' + colors[2] + ' 50%, #' + colors[2] + ' 75%, #' + colors[3] + ' 75%, #' + colors[3] + ' 100%)';
-                    color2 = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 25%, #' + colors[1] + ' 25%, #' + colors[1] + ' 50%, #' + colors[2] + ' 50%, #' + colors[2] + ' 75%, #' + colors[3] + ' 75%, #' + colors[3] + ' 100%)';
-                    return {"background": color2};
+                    color = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 25%, #' + colors[1] + ' 25%, #' + colors[1] + ' 50%, #' + colors[2] + ' 50%, #' + colors[2] + ' 75%, #' + colors[3] + ' 75%, #' + colors[3] + ' 100%)';
+                    return {"background": color};
                 }
                 if (colors.length === 5) {
-                    color = 'linear-gradient(to right, #' + colors[0] + ' 0%, #' + colors[0] + ' 20%, #' + colors[1] + ' 20%, #' + colors[1] + ' 40%, #' + colors[2] + ' 40%, #' + colors[2] + ' 60%, #' + colors[3] + ' 60%, #' + colors[3] + ' 80%, #' + colors[4] + ' 80%, #' + colors[4] + ' 100%)';
-                    color2 = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 20%, #' + colors[1] + ' 20%, #' + colors[1] + ' 40%, #' + colors[2] + ' 40%, #' + colors[2] + ' 60%, #' + colors[3] + ' 60%, #' + colors[3] + ' 80%, #' + colors[4] + ' 80%, #' + colors[4] + ' 100%)';
-                    return {"background": color2};
+                    color = '-webkit-linear-gradient(right, #' + colors[0] + ' 0%, #' + colors[0] + ' 20%, #' + colors[1] + ' 20%, #' + colors[1] + ' 40%, #' + colors[2] + ' 40%, #' + colors[2] + ' 60%, #' + colors[3] + ' 60%, #' + colors[3] + ' 80%, #' + colors[4] + ' 80%, #' + colors[4] + ' 100%)';
+                    return {"background": color};
                 }
             };
+            
+            /**
+             * Function to log the user out. The refresh is unset and the user 
+             * and type are removed from the rootScope.
+             */
             $scope.logout = function() {
                 removeEvent();
                 $rootScope.user = null;
