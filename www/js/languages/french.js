@@ -106,7 +106,7 @@ var frenchStrings = {
         //Connection messages
         internalError: "Erreur interne du serveur.",
         connectionError: "Erreur de connexion.",
-        uuidExpiredMessage: "Vous aurez déconnecterez. Votre temps de connexion est expirer ou vous avez connecté sur un autre appareil mobile. Vous vous connectez de nouveau pour voir vos réservations.",
+        uuidExpiredMessage: "Votre temps de connexion est expirer ou vous avez connecté sur un autre appareil mobile. Vous êtes hors ligne",
         
         //Settings
         settingsNew: "Dit zijn de instellingen, hier kan u nieuwe gebruikers en servers toevoegen.\n\nOm uit dit scherm te gaan klik op 'Opslaan'.",

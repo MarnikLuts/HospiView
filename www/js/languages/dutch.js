@@ -105,8 +105,8 @@ var dutchStrings = {
         
         //Connection messages
         internalError: "Interne fout in de server.",
-        connectionError: "Kan geen verbinding maken met de server.",
-        uuidExpiredMessage: "U wordt nu uitgelogd. Uw login tijd is verlopen of u bent op een ander mobile toestel ingelogd. Log u opnieuw in om uw afspraken te bekijken.",
+        connectionError: "Kan geen verbU wordt nu uitgelogd. Uw login tijd is veinding maken met de server.",
+        uuidExpiredMessage: "Uw login tijd is verlopen of u bent op een ander mobile toestel ingelogd. U bent nu in offline mode.",
         
         //Settings
         settingsNew: "Dit zijn de instellingen, hier kan u nieuwe gebruikers en servers toevoegen.\n\nOm uit dit scherm te gaan klik op 'Terug'.",
