@@ -78,6 +78,7 @@ var frenchStrings = {
         newUserNatReg: "Numéro de registre national",
         newUserFirm: "Entreprise",
         newUserRiziv: "Numéro INAMI",
+        newUserNoKiosk: "Cette institution de santé a choisi de ne pas permettre aux patients de fixer un rendez-vous en utilisant cette app. Ainsi vous ne pouvez pas enregistrer.",
         
         //Selectserver/new validation
         newUserDateIncorrect: "La date de naissance doit être ce format: ",
@@ -102,6 +103,7 @@ var frenchStrings = {
         yes: "Oui",
         no: "Non",
         cancel: "annuler",
+        wait: "Please wait...",
         
         //Connection messages
         internalError: "Erreur interne du serveur.",

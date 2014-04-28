@@ -78,6 +78,7 @@ var englishStrings = {
         newUserNatReg: "National register number",
         newUserFirm: "Firm",
         newUserRiziv: "RIZIV number",
+        newUserNoKiosk: "This health institution has chosen not to allow patients to make reservations using this app. Therefore you can't register",
         
         //Selectserver/new validation
         newUserDateIncorrect: "Date of birth must have the following format:",
@@ -102,6 +103,7 @@ var englishStrings = {
         yes: "Yes",
         no: "No",
         cancel: "cancel",
+        wait: "Please wait...",
         
         //Connection messages
         internalError: "Internal server error.",
