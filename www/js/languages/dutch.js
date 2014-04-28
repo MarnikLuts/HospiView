@@ -78,7 +78,8 @@ var dutchStrings = {
         newUserNatReg: "Rijksregisternummer",
         newUserFirm: "Firma",
         newUserRiziv: "RIZIV nummer",
-        newUserNoKiosk: "Deze zorginstelling heeft ervoor gekozen om patiënten momenteel geen afspraken te laten maken via deze app. Hierdoor kan u zich niet registreren",
+        newUserNoKiosk: "Deze zorginstelling heeft ervoor gekozen om patiënten momenteel geen afspraken te laten maken via deze app. Hierdoor kan u zich niet registreren.",
+        newUserNoAccountCreation: "Functie nog niet beschikbaar in deze versie van de app.",
         
         //Selectserver/new validation
         newUserDateIncorrect: "Geboortedatum moet volgend formaat hebben:",

@@ -1803,7 +1803,7 @@ angular.module('myApp.controllers', []).
                 $scope.newBoolean = true;
             else
                 $("#selectServerButton").removeClass("invisible");
-
+            
             $scope.back = function() {
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/settings/default');

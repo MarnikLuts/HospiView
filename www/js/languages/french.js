@@ -79,6 +79,7 @@ var frenchStrings = {
         newUserFirm: "Entreprise",
         newUserRiziv: "Numéro INAMI",
         newUserNoKiosk: "Cette institution de santé a choisi de ne pas permettre aux patients de fixer un rendez-vous en utilisant cette app. Ainsi vous ne pouvez pas enregistrer.",
+        newUserNoAccountCreation: "Fonction n'est pas encore disponible dans cette version de l'App.",
         
         //Selectserver/new validation
         newUserDateIncorrect: "La date de naissance doit être ce format: ",

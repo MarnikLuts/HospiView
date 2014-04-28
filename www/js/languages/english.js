@@ -78,7 +78,8 @@ var englishStrings = {
         newUserNatReg: "National register number",
         newUserFirm: "Firm",
         newUserRiziv: "RIZIV number",
-        newUserNoKiosk: "This health institution has chosen not to allow patients to make reservations using this app. Therefore you can't register",
+        newUserNoKiosk: "This health institution has chosen not to allow patients to make reservations using this app. Therefore you can't register.",
+        newUserNoAccountCreation: "Function not yet available in this version of the App.",
         
         //Selectserver/new validation
         newUserDateIncorrect: "Date of birth must have the following format:",
