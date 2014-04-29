@@ -1225,24 +1225,23 @@ angular.module('myApp.controllers', []).
                 else {
                     $scope.disableUnits = false;
                     $scope.units = $rootScope['allUnitsAndGroups' + $scope.serverFilter.id];
-                    console.log($scope.units);
-                    console.log($scope.unitFilter);
                     var unitOfServer = false;
-                    for (var i = 0; i < $scope.units.length; i++){
-                        if ($rootScope.unitFilter.Header.name === $scope.units[i].Header.name) {
-                            if($scope.units[i].type === "group"){
-                                if($rootScope.unitFilter.Header.group_id == $scope.units[i].Header.group_id){
-                                     unitOfServer = true;
-                                     break;
+                    if(angular.isDefined($rootScope.unitFilter.Header))
+                        for (var i = 0; i < $scope.units.length; i++){
+                            if ($rootScope.unitFilter.Header.name === $scope.units[i].Header.name) {
+                                if($scope.units[i].type === "group"){
+                                    if($rootScope.unitFilter.Header.group_id == $scope.units[i].Header.group_id){
+                                         unitOfServer = true;
+                                         break;
+                                    }
+                                } else {
+                                    if($rootScope.unitFilter.Header.unit_id == $scope.units[i].Header.unit_id){
+                                         unitOfServer = true;
+                                         break;
+                                    }
                                 }
-                            } else {
-                                if($rootScope.unitFilter.Header.unit_id == $scope.units[i].Header.unit_id){
-                                     unitOfServer = true;
-                                     break;
-                                }
-                            }
-                        }                  
-                    }
+                            }                  
+                        }
                     if (!unitOfServer) {
                         $scope.unitFilter = '';
                         unitOfServer = false;
