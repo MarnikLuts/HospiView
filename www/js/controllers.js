@@ -82,6 +82,7 @@ angular.module('myApp.controllers', []).
                 if (angular.isDefined($scope.user)) {
                     $scope.selectedUser = JSON.parse(localStorage.getItem($scope.user));
                     $scope.servers = $scope.selectedUser.servers;
+                    console.log($scope.servers);
                     $scope.serverRadio = $scope.servers[0];
                     for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                         var checkboxString = "checkboxImgServer" + i;
@@ -1102,7 +1103,7 @@ angular.module('myApp.controllers', []).
                 if (!(index === $rootScope.currentServers.length)) {
                     console.log(index);
                     unitsandgroups = [];
-                    getUnitsAndGroups(index);
+                    getUnits(index);
                 } else {
                     startIndex = 0;
                 }
@@ -1114,7 +1115,7 @@ angular.module('myApp.controllers', []).
              * @param {type} index
              * @returns {undefined}
              */
-            function getUnitsAndGroups(index) {
+            function getUnits(index) {
                 var selectedServer = $rootScope.currentServers[index];
                 
                 hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
@@ -1131,15 +1132,22 @@ angular.module('myApp.controllers', []).
                                         units[i].Header.name = units[i].Header.unit_name;
                                         $rootScope[rootScopeString].push(units[i]);
                                     }
+                                    getGroups(index)
                                 } else {
                                     $scope.error = true;
                                     $scope.errormessage = "Fout in de gegevens.";
                                 }
                             }
+                            
                         }).
                         error(function() {
                             alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                         });
+            }
+            
+            function getGroups(index) {
+                var selectedServer = $rootScope.currentServers[index];
+                
                 hospiviewFactory.getUnitDepGroups(selectedServer.uuid, selectedServer.hosp_url).
                         success(function(data) {
                             console.log("getunitdepgroups");
@@ -1153,6 +1161,8 @@ angular.module('myApp.controllers', []).
                                         groups[i].Header.name = groups[i].Header.group_name;
                                         $rootScope[rootScopeString].push(groups[i]);
                                     }
+                                    index++;
+                                    startSearchUnitsAndGroups(index);
                                     console.log($rootScope[rootScopeString]);
                                 } else {
                                     $scope.error = true;
@@ -1163,8 +1173,6 @@ angular.module('myApp.controllers', []).
                         error(function() {
                             alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                         });
-                index++;
-                startSearchUnitsAndGroups(index);
             }
 
             /**
@@ -2015,7 +2023,6 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
-                                console.log(data);
                                 if (json!==null&&json.Authentication.Header.StatusCode == 1) {
                                     postAuthentication(json.Authentication);
                                 } else {
@@ -2133,8 +2140,9 @@ angular.module('myApp.controllers', []).
                         }
                     } else {
                         var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
+                        console.log(selectedUser);
                         for (var i = 0; i < selectedUser.servers.length; i++) {
-                            if (selectedUser.servers[i].id === $rootScope.editServer.id && selectedUser.servers[i].user_name === $rootScope.editServer.user_name) {
+                            if (selectedUser.servers[i].id === $rootScope.editServer.id && selectedUser.servers[i].user_login === $rootScope.editServer.user_login) {
                                 var editServer = {"id": $scope.server.id,
                                     "hosp_short_name": $scope.server.hosp_short_name,
                                     "hosp_full_name": $scope.server.hosp_full_name,
@@ -2152,6 +2160,7 @@ angular.module('myApp.controllers', []).
                                 selectedUser.servers[i] = editServer;
                             }
                         }
+                        console.log(selectedUser);
                         localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
                         $rootScope.serverChanged = true;
                     }
