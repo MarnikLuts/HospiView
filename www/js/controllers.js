@@ -1294,7 +1294,7 @@ angular.module('myApp.controllers', []).
                     if ($scope.servers[i].id === $rootScope.serverFilter.id)
                         $scope.serverFilter = $scope.servers[i];
                 $scope.loadUnit();
-                if (angular.isUndefined($rootScope.unitFilter) || $rootScope.unitFilter === '' || $rootScope.unitFilter === null) {
+                if (!$rootScope.unitFilter) {
                     $rootScope.unitFilter = '';
                     $rootScope.depFilter = '';
                     $scope.disableDepartments = true;
@@ -1303,8 +1303,8 @@ angular.module('myApp.controllers', []).
                         if ($scope.units[i].Header.name === $rootScope.unitFilter)
                             $scope.unitFilter = $scope.units[i];
                     $scope.loadDep();
-                    if (angular.isUndefined($rootScope.depFilter) || $rootScope.depFilter === '' || $rootScope.depFilter == null) {
-                        $rootScope.depFilter = '';
+                    if (!$rootScope.depFilter) {
+                        $scope.depFilter = '';
                     } else {
                         for (var i = 0; i < $scope.departments.length; i++)
                             if ($scope.departments[i].dep_name === $rootScope.depFilter.dep_name)
