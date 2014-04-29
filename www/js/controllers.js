@@ -2230,7 +2230,14 @@ angular.module('myApp.controllers', []).
             }
 
             function postLoginPatient() {
-                $location.path("/patient/mainmenu");
+                languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
+                    .then(function(){
+                        console.log($rootScope.nlRemoteDict);
+                        console.log($rootScope.enRemoteDict);
+                        console.log($rootScope.frRemoteDict);
+                        $rootScope.pageClass = 'right-to-left';
+                        $location.path("/patient/mainmenu");
+                    }, error);
             }
 
             function postLoginDoctor() {
