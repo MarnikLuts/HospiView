@@ -82,6 +82,7 @@ angular.module('myApp.controllers', []).
                 if (angular.isDefined($scope.user)) {
                     $scope.selectedUser = JSON.parse(localStorage.getItem($scope.user));
                     $scope.servers = $scope.selectedUser.servers;
+                    console.log($scope.servers);
                     $scope.serverRadio = $scope.servers[0];
                     for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                         var checkboxString = "checkboxImgServer" + i;
@@ -2022,7 +2023,6 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
-                                console.log(data);
                                 if (json!==null&&json.Authentication.Header.StatusCode == 1) {
                                     postAuthentication(json.Authentication);
                                 } else {
@@ -2140,8 +2140,9 @@ angular.module('myApp.controllers', []).
                         }
                     } else {
                         var selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
+                        console.log(selectedUser);
                         for (var i = 0; i < selectedUser.servers.length; i++) {
-                            if (selectedUser.servers[i].id === $rootScope.editServer.id && selectedUser.servers[i].user_name === $rootScope.editServer.user_name) {
+                            if (selectedUser.servers[i].id === $rootScope.editServer.id && selectedUser.servers[i].user_login === $rootScope.editServer.user_login) {
                                 var editServer = {"id": $scope.server.id,
                                     "hosp_short_name": $scope.server.hosp_short_name,
                                     "hosp_full_name": $scope.server.hosp_full_name,
@@ -2159,6 +2160,7 @@ angular.module('myApp.controllers', []).
                                 selectedUser.servers[i] = editServer;
                             }
                         }
+                        console.log(selectedUser);
                         localStorage.setItem($rootScope.user, JSON.stringify(selectedUser));
                         $rootScope.serverChanged = true;
                     }
