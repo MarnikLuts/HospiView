@@ -1080,9 +1080,6 @@ angular.module('myApp.controllers', []).
         }).
         controller('FilterCtrl', function($scope, $rootScope, $location, $q, hospiviewFactory) {
 
-            console.log($rootScope.serverFilter);
-            console.log($rootScope.unitFilter);
-            console.log($rootScope.depFilter);
             /** 
              * 25.03.2014 Stijn Ceunen
              * Redirects back to the appointments screen.
@@ -1226,21 +1223,21 @@ angular.module('myApp.controllers', []).
                     $scope.disableUnits = false;
                     $scope.units = $rootScope['allUnitsAndGroups' + $scope.serverFilter.id];
                     var unitOfServer = false;
-                    if(angular.isDefined($rootScope.unitFilter.Header))
-                        for (var i = 0; i < $scope.units.length; i++){
+                    if (angular.isDefined($rootScope.unitFilter.Header))
+                        for (var i = 0; i < $scope.units.length; i++) {
                             if ($rootScope.unitFilter.Header.name === $scope.units[i].Header.name) {
-                                if($scope.units[i].type === "group"){
-                                    if($rootScope.unitFilter.Header.group_id == $scope.units[i].Header.group_id){
-                                         unitOfServer = true;
-                                         break;
+                                if ($scope.units[i].type === "group") {
+                                    if ($rootScope.unitFilter.Header.group_id == $scope.units[i].Header.group_id) {
+                                        unitOfServer = true;
+                                        break;
                                     }
                                 } else {
-                                    if($rootScope.unitFilter.Header.unit_id == $scope.units[i].Header.unit_id){
-                                         unitOfServer = true;
-                                         break;
+                                    if ($rootScope.unitFilter.Header.unit_id == $scope.units[i].Header.unit_id) {
+                                        unitOfServer = true;
+                                        break;
                                     }
                                 }
-                            }                  
+                            }
                         }
                     if (!unitOfServer) {
                         $scope.unitFilter = '';
@@ -1261,8 +1258,7 @@ angular.module('myApp.controllers', []).
              * will be filled.
              */
             $scope.loadDep = function() {
-                console.log("loadDep");
-                console.log($scope.unitFilter);
+                console.log($rootScope.depFilter);
                 if (!$scope.unitFilter || $scope.unitFilter.type === "group") {
                     $scope.disableDepartments = true;
                     $scope.depFilter = '';
@@ -1276,6 +1272,19 @@ angular.module('myApp.controllers', []).
                         }
                     }
                     $scope.departments = $scope.unitFilter.Detail.Dep;
+                    var departmentOfUnit = false;
+
+                    if (angular.isDefined($rootScope.depFilter))
+                        for (var i = 0; i < $scope.departments.length; i++) {
+                            if ($rootScope.depFilter.dep_name === $scope.departments[i].dep_name && $rootScope.depFilter.dep_id == $scope.departments[i].dep_id) {
+                                departmentOfUnit = true;
+                                break;
+                            }
+                        }
+                    if (!departmentOfUnit) {
+                        $scope.depFilter = '';
+                        departmentOfUnit = false;
+                    }
                 }
             };
 
