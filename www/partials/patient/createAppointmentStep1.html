@@ -1,16 +1,25 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<nav class="navbar navbar-default" role="navigation" ng-controller="BackButtonCtrl">
+    <button type="submit" class="btn btn-sm-back" ng-click="back()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        {{ getLocalizedString('back')}}
+    </button>
+    <div class="title">{{ getLocalizedString('createAppointmentStep1')}}</div>
+    <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
+</nav>
+<div class="well">
+    <form name="step1Form" novalidate>
+        <p>{{getLocalizedString('createAppointmentStep1Info')}}</p>
+        <div class="form-group">
+            <select class="form-control input-xl" name="unitSelect" ng-required="group==null" ng-change="group=null" ng-model="unit" ng-options="unit as unit.Header.unit_name for unit in unitList" ng-change="getServersUser()" required>
+                <option value="">- {{ getLocalizedString('createAppointmentStep1SelectDoctor')}} -</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <select class="form-control input-xl"  name="groupSelect" ng-required="unit==null" ng-change="unit=null" ng-model="group" ng-options="group as group.Header.group_name for group in groupList" ng-change="getServersUser()" required>
+                <option value="">- {{ getLocalizedString('createAppointmentStep1SelectSection')}} -</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-xl" ng-disabled="step1Form.$invalid">{{getLocalizedString('createAppointmentNext')}}</button>
+    </form>
+</div>
+
