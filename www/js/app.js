@@ -20,7 +20,6 @@ angular.module('myApp', [
          */
         config(['$routeProvider', function($routeProvider) {
                 $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginCtrl'});
-                $routeProvider.when('/mainmenu', {templateUrl: 'partials/mainmenu.html', controller: 'MainmenuCtrl'});
                 $routeProvider.when('/doctor/appointmentsSearch', {templateUrl: 'partials/doctor/appointmentsSearch.html', controller: 'DoctorSearchAppointmentsCtrl'});
                 $routeProvider.when('/doctor/appointmentsView', {templateUrl: 'partials/doctor/appointmentsView.html', controller: 'DoctorViewAppointmentsCtrl'});
                 $routeProvider.when('/doctor/appointmentDetail', {templateUrl: 'partials/doctor/appointmentDetail.html', controller: 'DoctorViewappointmentDetailCtrl'});
@@ -29,6 +28,10 @@ angular.module('myApp', [
                 $routeProvider.when('/selectserver/:action', {templateUrl: 'partials/selectserver.html', controller: 'SelectserverCtrl'});
                 $routeProvider.when('/appointmentsCalendar', {templateUrl: 'partials/doctor/appointmentsCalendar.html', controller: 'DoctorViewAppointmentsCalendarCtrl'});
                 $routeProvider.when('/appointmentsFilter', {templateUrl: 'partials/doctor/appointmentsFilter.html', controller: 'FilterCtrl'});
+                
+                $routeProvider.when('/patient/mainmenu', {templateUrl: 'partials/patient/mainmenu.html', controller: 'MainmenuCtrl'});
+                $routeProvider.when('/settingsPatient', {templateUrl: 'partials/patient/settingsPatient.html', controller: 'SettingsCtrl'});
+                $routeProvider.when('/patient/step1', {templateUrl: 'partials/patient/createAppointmentStep1.html', controller: 'SettingsCtrl'});
                 
                 $routeProvider.otherwise({redirectTo: '/login'});
             }]).

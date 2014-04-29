@@ -1,0 +1,64 @@
+<nav class="navbar navbar-default" role="navigation" ng-controller="SettingsPatientCtrl">
+    <button type="submit" class="btn btn-sm-back" ng-click="save()" ng-disabled="settingsForm.$invalid">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        {{getLocalizedString('back')}}
+    </button>
+    <div class="title">{{getLocalizedString('settings')}}
+        <div class="connection-status">
+            <span class="glyphicon glyphicon-signal" ></span>  <span ng-show="isOffline" ng-class="{positionRelative: isOffline}" class="glyphicon glyphicon-remove"></span>
+        </div>
+    </div>
+    <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
+</nav>
+<div class="widthPercent">
+    <form name="settingsForm" class="widthPercent" novalidate>
+        <div class="col-md-12 list widthPercent">
+            <div class="well widthPercent">          
+                <h4>{{getLocalizedString('settingsLanguage')}}</h4>
+                <table class="table table-condensed list">
+                    <tr>
+                        <td class="widthSettingsTabelLabel"><label class="tableLabel"></label></td>
+                        <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(1)"
+                                    btn-radio="1"><img src="img/flag_netherlands.png" alt="flag_netherlands" width="30" height="19"></button>
+                        </td>
+                        <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(2)"
+                                    btn-radio="2"><img src="img/flag_france.png" alt="flag_france" width="30" height="19"></button>
+                        </td>
+                        <td><button type="button" class="btn btn-sm-add btn-default" ng-model="languageRadio" ng-click="changeLanguage(3)"
+                                    btn-radio="3"><img src="img/flag_uk.png" alt="flag_uk" width="30" height="19"></button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-12 list">
+            <div class="well">
+                <h4>{{getLocalizedString('settingsUserSettings')}}: </h4>
+                <table class="table table-condensed list">
+                    <tr>
+                        <td class="widthSettingsTabelLabel"><label class="tableLabel">{{getLocalizedString('settingsAddDelete')}}</label></td>
+                        <td><button type="button" class="btn btn-sm-add btn-default" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-user"></span></button></td>
+                        <td><button type="button" class="btn btn-sm-add btn-danger" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-minus"></span><span class="glyphicon glyphicon-user"></span></button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-12 widthPercent">
+            <div class="well widthPercent">
+               
+                <div class="input-group form-group">
+                    <span class="input-group-addon widthSettingsLabels">{{getLocalizedString('settingsUser')}}:</span>
+                    <input id="username" class="form-control input-lg" type="text" ng-model="serverLogin" ng-disabled="true"/>
+                </div>
+                <div class="input-group form-group">
+                    <span class="input-group-addon widthSettingsLabels">{{getLocalizedString('loginPassword')}}:</span>
+                    <input id="password" class="form-control input-lg" type="password" ng-model="serverPassword" ng-disabled="true"/>
+                </div>
+
+                
+            </div>
+        </div>
+    </form>
+</div>
