@@ -242,7 +242,8 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function postLoginPatient() {
-                $location.path("/patient/appointmentsPatient");
+                $rootScope.pageClass = 'right-to-left';
+                $location.path("/patient/mainmenu");
             }
 
             /**
@@ -1883,7 +1884,8 @@ angular.module('myApp.controllers', []).
             
             $scope.back = function() {
                 $rootScope.pageClass = "left-to-right";
-                $location.path('/settings/default');
+                history.back();
+//                $location.path('/settings/default');
             };
 
             $scope.languageSelected = false;
@@ -2174,7 +2176,7 @@ angular.module('myApp.controllers', []).
             }
 
             function postLoginPatient() {
-                $location.path("/patient/appointmentsPatient");
+                $location.path("/patient/mainmenu");
             }
 
             function postLoginDoctor() {
@@ -2350,5 +2352,20 @@ angular.module('myApp.controllers', []).
                 $interval.cancel(requestTimer);
             });
 
+        }).controller("MainmenuCtrl", function($rootScope, $scope, $location){
+            $scope.logout = function(){
+                $rootScope.pageClass = 'left-to-right';
+                $location.path('/login');
+            };
+            
+            $scope.settings = function(){
+                $rootScope.pageClass = 'right-to-left';
+                $location.path('/settingsPatient');
+            };
+        }).controller("SettingsPatientCtrl", function($rootScope, $scope, $location){
+            $scope.save = function(){
+                $rootScope.pageClass = 'left-to-right';
+                $location.path('/patient/mainmenu');
+            };
         });
 

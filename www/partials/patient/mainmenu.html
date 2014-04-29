@@ -1,0 +1,25 @@
+ <nav class="navbar navbar-default" role="navigation">
+    <button class="btn btn-sm-back" ng-click="logout()">
+        <span class="glyphicon glyphicon-off"></span>
+    </button>
+    <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}</div>
+    <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
+</nav>
+<div>
+    <div class="col-md-12">
+        <div class="well">Welkom, {{user}}.</div>
+    </div>
+    <div class="col-md-6 form-group text-center">
+        <button type="submit" class="btn btn-xl-red" ng-click="createAppointment()">Afspraak maken</button>
+    </div>
+    <div class="col-md-6 form-group text-center">
+        <button type="submit" class="btn btn-xl-red" ng-click="viewAppointments()">Afspraken bekijken</button>
+    </div>
+</div>
+<div class="nav navbar-fixed-bottom">
+    <div class="text-center">
+        <button class="btn btn-sm-settings" ng-click="settings()">
+            <span class="glyphicon glyphicon-cog"></span>
+        </button>
+    </div>
+</div>
