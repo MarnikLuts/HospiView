@@ -235,7 +235,7 @@ angular.module('myApp.controllers', []).
                     callOfflineModal();
                 });
             };
-            
+
             /**
              * Loads all the necessary data from the server in case a patient logs in
              * 
@@ -508,7 +508,7 @@ angular.module('myApp.controllers', []).
 
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $modal, hospiviewFactory, dataFactory) {
-            
+
             /**
              * Initiating variables. 
              * searchInProgress is used to disable the refresh if another
@@ -544,7 +544,7 @@ angular.module('myApp.controllers', []).
                 $scope.lastKnownDate = new Date($scope.date);
                 $scope.showDate = formatShowDate(lowestDate, $rootScope.languageID);
             }
-            
+
             /**
              * localStorage data will be loaded and used to set the user preferences.
              */
@@ -569,9 +569,9 @@ angular.module('myApp.controllers', []).
              * calling removeEvent(). 
              */
             var removeEvent = $rootScope.$on('setReservationsEvent', function(event, args) {
-                    console.log("setNewReservations");
-                    $scope.reservations = [];
-                    $scope.reservations = $rootScope[$rootScope.searchString];
+                console.log("setNewReservations");
+                $scope.reservations = [];
+                $scope.reservations = $rootScope[$rootScope.searchString];
             });
 
             /**
@@ -609,7 +609,7 @@ angular.module('myApp.controllers', []).
 
                 return "none";
             };
-            
+
             /**
              * Redirects to the detail screen. The reservationDetail will be set 
              * with the data of the reservation the user wants to know the details of.
@@ -641,7 +641,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/settings/default');
             };
-            
+
             /**
              * Redirects to the filter screen. The refresh is stopped with removeEvent().
              * eventClick is set to true, when the user returns to this screen he will
@@ -654,6 +654,27 @@ angular.module('myApp.controllers', []).
                 $rootScope.currentdate = $scope.date;
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/appointmentsFilter');
+            };
+
+            $scope.unitAndDepFilterFunction = function(reservation) {
+                if ($rootScope.unitFilter === '') {
+                    return true;
+                } else {
+                    if ($rootScope.unitFilter.type === "group") {
+                        for (var i = 0; i < $rootScope.unitFilter.Detail.UnitAndDep.length; i++){
+                            if (reservation.unit_name.indexOf($rootScope.unitFilter.Detail.UnitAndDep[i].unit_name) != -1)
+                                if(reservation.dep_name.indexOf($rootScope.unitFilter.Detail.UnitAndDep[i].dep_name) != -1)
+                                    return true;
+                        }
+                        return false;
+                    } else {
+                        if (reservation.unit_name.indexOf($rootScope.unitFilter.Header.name) != -1){
+                            if(reservation.dep_name.indexOf($rootScope.depFilter.dep_name) != -1 || $rootScope.unitFilter === '')
+                                return true;
+                        }
+                        return false;
+                    }
+                }
             };
 
             /**
@@ -672,7 +693,7 @@ angular.module('myApp.controllers', []).
              * to prevent an infinite loop.
              */
             var daySearchLoopCount = 0;
-            
+
             /**
              * count keeps track of the amount of reservations.
              * daySearchLoopCount is increased everytime the function is called.
@@ -691,7 +712,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.nextDay = function() {
                 var count = 0;
-                if($rootScope.isOffline)
+                if ($rootScope.isOffline)
                     daySearchLoopCount++;
                 $rootScope.searchType = '';
                 $scope.loadingNext = true;
@@ -738,13 +759,13 @@ angular.module('myApp.controllers', []).
                 }
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
-            
+
             /**
              * Uses the same logic as nextDay but searches backwards instead.
              */
             $scope.previousDay = function() {
                 var count = 0;
-                if($rootScope.isOffline)
+                if ($rootScope.isOffline)
                     daySearchLoopCount++;
                 $rootScope.searchType = '';
                 $scope.loadingNext = true;
@@ -861,8 +882,8 @@ angular.module('myApp.controllers', []).
                         $location.path('/appointmentsCalendar');
                     }
                 }
-            };       
-            
+            };
+
             /**
              * Used to set the background color of reservations. First the amount
              * of markings are counted and saved in an array. Depending on the length,
@@ -904,7 +925,7 @@ angular.module('myApp.controllers', []).
                     return {"background": color};
                 }
             };
-            
+
             /**
              * Function to log the user out. The refresh is unset and the user 
              * and type are removed from the rootScope.
@@ -1058,6 +1079,9 @@ angular.module('myApp.controllers', []).
         }).
         controller('FilterCtrl', function($scope, $rootScope, $location, $q, hospiviewFactory) {
 
+            console.log($rootScope.serverFilter);
+            console.log($rootScope.unitFilter);
+            console.log($rootScope.depFilter);
             /** 
              * 25.03.2014 Stijn Ceunen
              * Redirects back to the appointments screen.
@@ -1072,7 +1096,7 @@ angular.module('myApp.controllers', []).
              * Gets the servers the user saved and puts them in the scope.
              */
             var user = JSON.parse(localStorage.getItem($rootScope.user));
-            $scope.servers = user.servers;
+            $scope.servers = $rootScope.currentServers;
 
             /**
              * 26.03.2014 Stijn Ceunen
@@ -1092,8 +1116,15 @@ angular.module('myApp.controllers', []).
              * This is used to group them in the select box. 
              */
             var startIndex = 0;
-            if ($rootScope.serverAdded === true || $rootScope.serverChanged === true || !$rootScope['allUnitsAndGroups' + user.servers[0]] || !$rootScope['allUnitsAndGroups' + user.servers[1]] || !$rootScope['allUnitsAndGroups' + user.servers[2]]) {
-                $rootScope.serverChanger = false;
+            for(var i = 0; i < $rootScope.currentServers.length; i++){
+                if(!$rootScope['allUnitsAndGroups' + $rootScope.currentServers[i].id]){
+                    var checkSavedServersUnitsAndGroups = true;
+                    console.log("niet");
+                }
+            }
+            if ($rootScope.serverAdded === true || $rootScope.serverChanged === true || checkSavedServersUnitsAndGroups) {
+                checkSavedServersUnitsAndGroups = false;
+                $rootScope.serverChanged = false;
                 $rootScope.serverAdded = false;
                 var unitsandgroups = [];
                 startSearchUnitsAndGroups(startIndex);
@@ -1117,7 +1148,7 @@ angular.module('myApp.controllers', []).
              */
             function getUnits(index) {
                 var selectedServer = $rootScope.currentServers[index];
-                
+
                 hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
                         success(function(data) {
                             console.log("getunitanddep");
@@ -1138,16 +1169,16 @@ angular.module('myApp.controllers', []).
                                     $scope.errormessage = "Fout in de gegevens.";
                                 }
                             }
-                            
+
                         }).
                         error(function() {
                             alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                         });
             }
-            
+
             function getGroups(index) {
                 var selectedServer = $rootScope.currentServers[index];
-                
+
                 hospiviewFactory.getUnitDepGroups(selectedServer.uuid, selectedServer.hosp_url).
                         success(function(data) {
                             console.log("getunitdepgroups");
@@ -1187,15 +1218,14 @@ angular.module('myApp.controllers', []).
              */
             $scope.loadUnit = function() {
                 $scope.disableDepartments = true;
-                $scope.unitFilter = '';
-                $scope.depFilter = '';
-                if ($scope.serverFilter === null) {
+                if (!$scope.serverFilter) {
                     $scope.disableUnits = true;
+                    $scope.unitFilter = '';
+                    $scope.depFilter = '';
                 }
                 else {
                     $scope.disableUnits = false;
                     $scope.units = $rootScope['allUnitsAndGroups' + $scope.serverFilter.id];
-                    console.log($scope.serverFilter.id);
                     console.log($scope.units);
                 }
             };
@@ -1212,9 +1242,10 @@ angular.module('myApp.controllers', []).
              * will be filled.
              */
             $scope.loadDep = function() {
-                $scope.depFilter = '';
-                if ($scope.unitFilter === null || $scope.unitFilter.type === "group") {
+                console.log($scope.unitFilter);
+                if (!$scope.unitFilter || $scope.unitFilter.type === "group") {
                     $scope.disableDepartments = true;
+                    $scope.depFilter = '';
                 }
                 else {
                     $scope.disableDepartments = false;
@@ -1249,7 +1280,7 @@ angular.module('myApp.controllers', []).
                     $scope.disableDepartments = true;
                 } else {
                     for (var i = 0; i < $scope.units.length; i++)
-                        if ($scope.units[i].Header.name === $rootScope.unitFilter.Header.name)
+                        if ($scope.units[i].Header.name === $rootScope.unitFilter)
                             $scope.unitFilter = $scope.units[i];
                     $scope.loadDep();
                     if (angular.isUndefined($rootScope.depFilter) || $rootScope.depFilter === '' || $rootScope.depFilter == null) {
@@ -1261,8 +1292,6 @@ angular.module('myApp.controllers', []).
                     }
                 }
             }
-
-
 
             /**
              * 26.03.2014 Stijn Ceunen
@@ -1285,8 +1314,8 @@ angular.module('myApp.controllers', []).
                 if (!$scope.serverFilter) {
                     $scope.removeFilter();
                 }
-                console.log($rootScope.serverFilter.hosp_short_name);
-
+                console.log($rootScope.unitFilter);
+                
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/doctor/appointmentsView');
             };
@@ -1327,7 +1356,7 @@ angular.module('myApp.controllers', []).
                     calendarView('next');
                 }
             };
-            
+
             /**
              * Calendar shows the previous month
              * 
@@ -1880,7 +1909,7 @@ angular.module('myApp.controllers', []).
                 $scope.newBoolean = true;
             else
                 $("#selectServerButton").removeClass("invisible");
-            
+
             $scope.back = function() {
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/settings/default');
@@ -1896,21 +1925,21 @@ angular.module('myApp.controllers', []).
                 localStorage.setItem("language", id);
                 $scope.languageSelected = true;
             };
-            
+
             /**
              * Uses hospiviewFactory to do a request. On success the XML will be
              * parsed too JSON. The servers will be put in the $scope servers.
              * @param {type} data   returned data from the webservice
              */
-            $scope.refreshServerList = function(){
+            $scope.refreshServerList = function() {
                 hospiviewFactory.getHospiViewServerList().
-                    success(function(data) {
-                        var json = parseJson(data);
-                        $scope.servers = json.HospiviewServerList.Detail.Server;
-                    }).
-                    error(function() {
-                        alert($rootScope.getLocalizedString('connectionError'));
-                    });
+                        success(function(data) {
+                            var json = parseJson(data);
+                            $scope.servers = json.HospiviewServerList.Detail.Server;
+                        }).
+                        error(function() {
+                            alert($rootScope.getLocalizedString('connectionError'));
+                        });
             };
             $scope.refreshServerList();
 
@@ -2023,7 +2052,7 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
-                                if (json!==null&&json.Authentication.Header.StatusCode == 1) {
+                                if (json !== null && json.Authentication.Header.StatusCode == 1) {
                                     postAuthentication(json.Authentication);
                                 } else {
                                     $scope.loggingIn = false;
