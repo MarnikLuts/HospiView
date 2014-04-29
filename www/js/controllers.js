@@ -1888,12 +1888,14 @@ angular.module('myApp.controllers', []).
                 localStorage.setItem("language", id);
                 $scope.languageSelected = true;
             };
+            
             /**
              * Uses hospiviewFactory to do a request. On success the XML will be
              * parsed too JSON. The servers will be put in the $scope servers.
              * @param {type} data   returned data from the webservice
              */
-            hospiviewFactory.getHospiViewServerList().
+            $scope.refreshServerList = function(){
+                hospiviewFactory.getHospiViewServerList().
                     success(function(data) {
                         var json = parseJson(data);
                         $scope.servers = json.HospiviewServerList.Detail.Server;
@@ -1901,6 +1903,8 @@ angular.module('myApp.controllers', []).
                     error(function() {
                         alert($rootScope.getLocalizedString('connectionError'));
                     });
+            };
+            $scope.refreshServerList();
 
             /**
              * Set to false to hide the next part of the form. If the user selected
@@ -2011,8 +2015,8 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getAuthentication($scope.username, $scope.password, $scope.server.hosp_url).
                             success(function(data) {
                                 var json = parseJson(data);
-                                console.log(json);
-                                if (json.Authentication.Header.StatusCode == 1) {
+                                console.log(data);
+                                if (json!==null&&json.Authentication.Header.StatusCode == 1) {
                                     postAuthentication(json.Authentication);
                                 } else {
                                     $scope.loggingIn = false;
