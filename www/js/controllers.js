@@ -662,15 +662,15 @@ angular.module('myApp.controllers', []).
                     return true;
                 } else {
                     if ($rootScope.unitFilter.type === "group") {
-                        for (var i = 0; i < $rootScope.unitFilter.Detail.UnitAndDep.length; i++){
+                        for (var i = 0; i < $rootScope.unitFilter.Detail.UnitAndDep.length; i++) {
                             if (reservation.unit_name.indexOf($rootScope.unitFilter.Detail.UnitAndDep[i].unit_name) != -1)
-                                if(reservation.dep_name.indexOf($rootScope.unitFilter.Detail.UnitAndDep[i].dep_name) != -1)
+                                if (reservation.dep_name.indexOf($rootScope.unitFilter.Detail.UnitAndDep[i].dep_name) != -1)
                                     return true;
                         }
                         return false;
                     } else {
-                        if (reservation.unit_name.indexOf($rootScope.unitFilter.Header.name) != -1){
-                            if(reservation.dep_name.indexOf($rootScope.depFilter.dep_name) != -1 || $rootScope.depFilter === '')
+                        if (reservation.unit_name.indexOf($rootScope.unitFilter.Header.name) != -1) {
+                            if (reservation.dep_name.indexOf($rootScope.depFilter.dep_name) != -1 || $rootScope.depFilter === '')
                                 return true;
                         }
                         return false;
@@ -1117,8 +1117,8 @@ angular.module('myApp.controllers', []).
              * This is used to group them in the select box. 
              */
             var startIndex = 0;
-            for(var i = 0; i < $rootScope.currentServers.length; i++){
-                if(!$rootScope['allUnitsAndGroups' + $rootScope.currentServers[i].id]){
+            for (var i = 0; i < $rootScope.currentServers.length; i++) {
+                if (!$rootScope['allUnitsAndGroups' + $rootScope.currentServers[i].id]) {
                     var checkSavedServersUnitsAndGroups = true;
                 }
             }
@@ -1225,7 +1225,14 @@ angular.module('myApp.controllers', []).
                 else {
                     $scope.disableUnits = false;
                     $scope.units = $rootScope['allUnitsAndGroups' + $scope.serverFilter.id];
-                    console.log($scope.units);
+                    var unitOfServer = false;
+                    for (var i = 0; i < $scope.units.length; i++)
+                        if ($scope.units[i] === $scope.unitFilter)
+                            unitOfServer = true;
+                    if (unitOfServer) {
+                        $scope.unitFilter = '';
+                        unitOfServer = false;
+                    }
                 }
             };
 
@@ -1314,7 +1321,7 @@ angular.module('myApp.controllers', []).
                     $scope.removeFilter();
                 }
                 console.log($rootScope.unitFilter);
-                
+
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/doctor/appointmentsView');
             };
@@ -2379,20 +2386,20 @@ angular.module('myApp.controllers', []).
                 $interval.cancel(requestTimer);
             });
 
-        }).controller("MainmenuCtrl", function($rootScope, $scope, $location){
-            $scope.logout = function(){
-                $rootScope.pageClass = 'left-to-right';
-                $location.path('/login');
-            };
-            
-            $scope.settings = function(){
-                $rootScope.pageClass = 'right-to-left';
-                $location.path('/settingsPatient');
-            };
-        }).controller("SettingsPatientCtrl", function($rootScope, $scope, $location){
-            $scope.save = function(){
-                $rootScope.pageClass = 'left-to-right';
-                $location.path('/patient/mainmenu');
-            };
-        });
+        }).controller("MainmenuCtrl", function($rootScope, $scope, $location) {
+    $scope.logout = function() {
+        $rootScope.pageClass = 'left-to-right';
+        $location.path('/login');
+    };
+
+    $scope.settings = function() {
+        $rootScope.pageClass = 'right-to-left';
+        $location.path('/settingsPatient');
+    };
+}).controller("SettingsPatientCtrl", function($rootScope, $scope, $location) {
+    $scope.save = function() {
+        $rootScope.pageClass = 'left-to-right';
+        $location.path('/patient/mainmenu');
+    };
+});
 
