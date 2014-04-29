@@ -7,7 +7,9 @@
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none;
+    -webkit-user-select: none;                  /* prevent selecting text */
+    -ms-content-zooming: none;                  /* disable zooming (WP) */
+    
 }
 
 .menu {
@@ -275,6 +277,12 @@ table td {
     to {-webkit-transform: rotate(360deg);}
 }
 
+@keyframes spinning
+{
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
 .has-spinner .glyphicon-refresh {
     -webkit-animation: spinning 1s linear infinite;
     animation: spinning 1s linear infinite;
@@ -427,17 +435,35 @@ ul li{
     to {-webkit-transform: translate3d(0,0,0); }
 }
 
+@keyframes slideInRight {
+    from {transform: translate3d(100%,0,0); }
+    to {transform: translate3d(0,0,0); }
+}
+
 @-webkit-keyframes slideInLeft {
     from {-webkit-transform: translate3d(-100%,0,0); }
     to {-webkit-transform: translate3d(0,0,0); }
+}
+
+@keyframes slideInLeft {
+    from {transform: translate3d(-100%,0,0); }
+    to {transform: translate3d(0,0,0); }
 }
 
 @-webkit-keyframes slideOutLeft {
     to { -webkit-transform: translate3d(-100%,0,0); }
 }
 
+@keyframes slideOutLeft {
+    to { transform: translate3d(-100%,0,0); }
+}
+
 @-webkit-keyframes slideOutRight {
     to { -webkit-transform: translate3d(100%,0,0); }
+}
+
+@keyframes slideOutRight {
+    to { transform: translate3d(100%,0,0); }
 }
 
 .page{
@@ -457,19 +483,23 @@ ul li{
 
 .left-to-right.ng-enter{
     -webkit-animation: slideInLeft 0.5s both ease-in; 
+    animation: slideInLeft 0.5s both ease-in; 
 }
 
 .left-to-right.ng-leave{
     -webkit-animation: slideOutRight 0.5s both ease-in; 
+    animation: slideOutRight 0.5s both ease-in; 
     /*-webkit-animation: slideOutLeft 0.5s both ease-in;*/ 
 }
 
 .right-to-left.ng-enter{
     -webkit-animation: slideInRight 0.5s both ease-in; 
+    animation: slideInRight 0.5s both ease-in; 
 }
 
 .right-to-left.ng-leave{
     -webkit-animation: slideOutLeft 0.5s both ease-in;
+    animation: slideOutLeft 0.5s both ease-in;
     /*-webkit-animation: slideOutRight 0.5s both ease-in;*/ 
 }
 
