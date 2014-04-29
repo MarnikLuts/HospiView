@@ -670,7 +670,7 @@ angular.module('myApp.controllers', []).
                         return false;
                     } else {
                         if (reservation.unit_name.indexOf($rootScope.unitFilter.Header.name) != -1){
-                            if(reservation.dep_name.indexOf($rootScope.depFilter.dep_name) != -1 || $rootScope.unitFilter === '')
+                            if(reservation.dep_name.indexOf($rootScope.depFilter.dep_name) != -1 || $rootScope.depFilter === '')
                                 return true;
                         }
                         return false;
