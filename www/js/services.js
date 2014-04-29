@@ -536,7 +536,7 @@ angular.module('myApp.services', []).
          * @returns {unresolved}
          */
         initRemoteLanguageStrings: function(hosp_url) {
-            var listOfPidsSids = "204,1,2,3,4,5,6",
+            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;214,1,2,3,5,6,7;204,1,2,3,4,5;205,1,2,4,5",
                     promises = [],
                     defer = $q.defer();
 
@@ -550,7 +550,25 @@ angular.module('myApp.services', []).
 
                     if (json.LanguageStrings.Header.StatusCode === "1") {
                         var remoteDict = {
+                            createAppointmentStep2Error: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 92, 75),
+                            
+                            createAppointmentSection: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 55),
+                            createAppointmentCampus: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 56),
+                            createAppointmentDoctor: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 57).split('/')[0],
+                            createAppointmentReservationInfo: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 60),
+                            
+                            createAppointmentType: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 94, 10),
+                            
                             createAppointmentGreeting: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 1),
+                            createAppointmentInfo: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 2),
+                            createAppointmentMakeChoice: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 3),
+                            createAppointmentRequest: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 4),
+                            createAppointmentView: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 5),
+                            
+                            createAppointmentStep1: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 1),
+                            createAppointmentStep1Info: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 2),
+                            createAppointmentNext: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 4),
+                            createAppointmentStep1Error: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 5),
                         };
 
                         switch (j) {

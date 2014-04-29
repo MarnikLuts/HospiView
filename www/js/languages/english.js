@@ -136,5 +136,9 @@ var englishStrings = {
         settingsDeleteServer: "Delete server",
         settingsDeleteCurrentUser: "Delete user",
         settingsDeleteServerConfirm: "Are you sure you want to delete the selected server?",
-        settingsDeleteCurrentUserConfirm: "Are you sure you want to delete the current user?"
+        settingsDeleteCurrentUserConfirm: "Are you sure you want to delete the current user?",
+        
+        //patient/step1
+        createAppointmentStep1SelectDoctor: "Select a doctor",
+        createAppointmentStep1SelectSection: "Select a section",
 };

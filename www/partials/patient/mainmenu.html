@@ -2,18 +2,22 @@
     <button class="btn btn-sm-back" ng-click="logout()">
         <span class="glyphicon glyphicon-off"></span>
     </button>
-    <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}</div>
+    <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}
+        <div class="connection-status">
+            <span class="glyphicon glyphicon-signal" ></span>  <span ng-show="isOffline" ng-class="{positionRelative: isOffline}" class="glyphicon glyphicon-remove"></span>
+        </div>
+    </div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
 <div>
     <div class="col-md-12">
-        <div class="well">Welkom, {{user}}.</div>
+        <div class="well">{{getLocalizedString('createAppointmentGreeting')}}, {{user}}.</div>
     </div>
     <div class="col-md-6 form-group text-center">
-        <button type="submit" class="btn btn-xl-red" ng-click="createAppointment()">Afspraak maken</button>
+        <button type="submit" class="btn btn-xl-red" ng-click="createAppointment()">{{getLocalizedString('createAppointmentRequest')}}</button>
     </div>
     <div class="col-md-6 form-group text-center">
-        <button type="submit" class="btn btn-xl-red" ng-click="viewAppointments()">Afspraken bekijken</button>
+        <button type="submit" class="btn btn-xl-red" ng-click="viewAppointments()">{{getLocalizedString('createAppointmentView')}}</button>
     </div>
 </div>
 <div class="nav navbar-fixed-bottom">

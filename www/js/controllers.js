@@ -2,7 +2,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-        controller('LoginCtrl', function($scope, $location, $route, $q, $rootScope, $modal, hospiviewFactory, dataFactory) {
+        controller('LoginCtrl', function($scope, $location, $route, $q, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
 
             /**
              * Adds an event listener to the ICASA logo to redirect the user
@@ -100,7 +100,7 @@ angular.module('myApp.controllers', []).
                     $scope.servers[2] = undefined;
                 }
             };
-
+            $scope.user = null;
             /**
              * 27.03.2014 Stijn Ceunen
              * If only 1 user is saved, this one will automatically be selected.
@@ -242,8 +242,14 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function postLoginPatient() {
-                $rootScope.pageClass = 'right-to-left';
-                $location.path("/patient/mainmenu");
+                languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
+                    .then(function(){
+                        console.log($rootScope.nlRemoteDict);
+                        console.log($rootScope.enRemoteDict);
+                        console.log($rootScope.frRemoteDict);
+                        $rootScope.pageClass = 'right-to-left';
+                        $location.path("/patient/mainmenu");
+                    }, error);
             }
 
             /**
@@ -2400,20 +2406,62 @@ angular.module('myApp.controllers', []).
                 $interval.cancel(requestTimer);
             });
 
-        }).controller("MainmenuCtrl", function($rootScope, $scope, $location) {
-    $scope.logout = function() {
-        $rootScope.pageClass = 'left-to-right';
-        $location.path('/login');
-    };
-
-    $scope.settings = function() {
-        $rootScope.pageClass = 'right-to-left';
-        $location.path('/settingsPatient');
-    };
-}).controller("SettingsPatientCtrl", function($rootScope, $scope, $location) {
-    $scope.save = function() {
-        $rootScope.pageClass = 'left-to-right';
-        $location.path('/patient/mainmenu');
-    };
-});
-
+        }).controller("MainmenuCtrl", function($rootScope, $scope, $location){
+            $scope.logout = function(){
+                $rootScope.pageClass = 'left-to-right';
+                $location.path('/login');
+            };
+            
+            $scope.settings = function(){
+                $rootScope.pageClass = 'right-to-left';
+                $location.path('/settingsPatient');
+            };
+            
+            $scope.createAppointment = function(){
+                $rootScope.pageClass = 'right-to-left';
+                $location.path('patient/step1');
+            };
+        }).controller("SettingsPatientCtrl", function($rootScope, $scope, $location){
+            $scope.save = function(){
+                $rootScope.pageClass = 'left-to-right';
+                $location.path('/patient/mainmenu');
+            };
+        }).controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $timeout){
+            hospiviewFactory.getUnitAndDepList($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
+                .then(function(response){
+                    var json = parseJson(response.data);
+                    console.log(json);
+                    if(json.UnitsAndDeps.Header.StatusCode==1){
+                        $scope.unitList = json.UnitsAndDeps.Detail.Unit;
+                        if($scope.unitList.length==1)
+                            $scope.unit = $scope.unitList[0];
+                    }
+                }, error);
+                
+            hospiviewFactory.getUnitDepGroups($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
+                .then(function(response){
+                    var json = parseJson(response.data);
+                    console.log(json);
+                    if(json.UnitDepGroups.Header.StatusCode==1){
+                        $scope.groupList = json.UnitDepGroups.Detail.Group;
+                        if($scope.groupList.length==1&&$scope.unitList.length!=1)
+                            $scope.group = $scope.groupList[0];
+                        console.log($scope.groupList);
+                    }
+                    
+                }, error);
+                    
+                function error(data){
+                    $scope.error = true;
+                }
+                
+        }).controller("BackButtonCtrl", function($rootScope, $scope){
+            /**
+             * This controller is used for every page that uses a back button that can go back to any page
+             * @returns {undefined}
+             */
+            $scope.back = function(){
+                $rootScope.pageClass = 'left-to-right';
+                history.back();
+            };
+        });

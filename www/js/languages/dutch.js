@@ -136,5 +136,9 @@ var dutchStrings = {
         settingsDeleteServer: "Verwijder server",
         settingsDeleteCurrentUser: "Verwijder gebruiker",
         settingsDeleteServerConfirm: "Weet u zeker dat u de geselecteerde server wil verwijderen?",
-        settingsDeleteCurrentUserConfirm: "Weet u zeker dat u de huidige gebruiker wil verwijderen?"
+        settingsDeleteCurrentUserConfirm: "Weet u zeker dat u de huidige gebruiker wil verwijderen?",
+        
+        //patient/step1
+        createAppointmentStep1SelectDoctor: "Selecteer een dokter",
+        createAppointmentStep1SelectSection: "Selecteer een afdeling",
 };

@@ -31,7 +31,7 @@ angular.module('myApp', [
                 
                 $routeProvider.when('/patient/mainmenu', {templateUrl: 'partials/patient/mainmenu.html', controller: 'MainmenuCtrl'});
                 $routeProvider.when('/settingsPatient', {templateUrl: 'partials/patient/settingsPatient.html', controller: 'SettingsCtrl'});
-                $routeProvider.when('/patient/step1', {templateUrl: 'partials/patient/createAppointmentStep1.html', controller: 'SettingsCtrl'});
+                $routeProvider.when('/patient/step1', {templateUrl: 'partials/patient/createAppointmentStep1.html', controller: 'CreateAppointmentStep1Ctrl'});
                 
                 $routeProvider.otherwise({redirectTo: '/login'});
             }]).
