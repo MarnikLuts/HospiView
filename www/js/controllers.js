@@ -1119,7 +1119,6 @@ angular.module('myApp.controllers', []).
             for(var i = 0; i < $rootScope.currentServers.length; i++){
                 if(!$rootScope['allUnitsAndGroups' + $rootScope.currentServers[i].id]){
                     var checkSavedServersUnitsAndGroups = true;
-                    console.log("niet");
                 }
             }
             if ($rootScope.serverAdded === true || $rootScope.serverChanged === true || checkSavedServersUnitsAndGroups) {
@@ -1132,7 +1131,6 @@ angular.module('myApp.controllers', []).
 
             function startSearchUnitsAndGroups(index) {
                 if (!(index === $rootScope.currentServers.length)) {
-                    console.log(index);
                     unitsandgroups = [];
                     getUnits(index);
                 } else {
