@@ -1217,10 +1217,10 @@ angular.module('myApp.controllers', []).
              */
             $scope.loadUnit = function() {
                 $scope.disableDepartments = true;
+                $scope.depFilter = '';
                 if (!$scope.serverFilter) {
                     $scope.disableUnits = true;
                     $scope.unitFilter = '';
-                    $scope.depFilter = '';
                 }
                 else {
                     $scope.disableUnits = false;
