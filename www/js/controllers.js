@@ -791,6 +791,10 @@ angular.module('myApp.controllers', []).
             };
 
             /**
+             * Function for the calendar button. Redirects to the calendar view
+             * and loads the remainder of the month's reservations. 
+             * 
+             * If the user is not offline, the searchranges will be checked. 
              * 
              */
             $scope.calendarView = function() {
@@ -1051,7 +1055,7 @@ angular.module('myApp.controllers', []).
                 });
             }
         }).
-        controller('FilterCtrl', function($scope, $rootScope, $location, hospiviewFactory) {
+        controller('FilterCtrl', function($scope, $rootScope, $location, $q, hospiviewFactory) {
 
             /** 
              * 25.03.2014 Stijn Ceunen
@@ -1111,12 +1115,11 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function getUnitsAndGroups(index) {
-                var selectedServer = user.servers[index];
-                console.log(selectedServer);
+                var selectedServer = $rootScope.currentServers[index];
+                
                 hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
                         success(function(data) {
-                            console.log($scope.selectedFilterServer);
-                            /*variable created to refresh the scope of the user variable*/
+                            console.log("getunitanddep");
                             var json = parseJson(data);
                             if (json !== null) {
                                 if (json.UnitsAndDeps.Header.StatusCode == 1) {
@@ -1139,6 +1142,7 @@ angular.module('myApp.controllers', []).
                         });
                 hospiviewFactory.getUnitDepGroups(selectedServer.uuid, selectedServer.hosp_url).
                         success(function(data) {
+                            console.log("getunitdepgroups");
                             var json = parseJson(data);
                             if (json !== null) {
                                 if (json.UnitDepGroups.Header.StatusCode == 1) {
@@ -1552,7 +1556,7 @@ angular.module('myApp.controllers', []).
                         $rootScope.eventClick = true;
                         $rootScope.pageClass = "left-to-right";
                         $rootScope.$apply();
-                        window.location.href = 'index.html#/doctor/appointmentsView';
+                        $location.path('/doctor/appointmentsView');
                     }
                 }
             };
