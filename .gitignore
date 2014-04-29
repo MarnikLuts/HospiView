@@ -36,6 +36,7 @@ local.properties
 
 
 nbproject/
+.cordova/
 
 .DS_store
 platforms/
