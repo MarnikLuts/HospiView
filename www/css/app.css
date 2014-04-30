@@ -94,12 +94,14 @@ body {
 }
 .widthSettingsLabels {
     font-size: 1em;
+    font-weight: normal;
     min-width: 80px;
 }
 
 @media screen and (min-width: 768px) {
     .widthSettingsLabels {
         font-size: 1.2em;
+        font-weight: normal;
         min-width: 130px;
     }
 }
