@@ -50,7 +50,7 @@
                 <div class="form-group widthPercent">
                     <div class="input-group widthPercent">
                         <span class="input-group-addon widthSettingsLabels">{{getLocalizedString('settingsRefresh')}}:</span>
-                        <input id="refresh" name="refreshrate" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="7200" ng-pattern="/^[0-7]?[0-9]?[0-9][0-9]$/" required/>
+                        <input id="refresh" name="refreshrate" type="text" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="7200" ng-pattern="/^[0-7]?[0-9]?[0-9][0-9]$/" required/>
                         <span class="input-group-addon">{{getLocalizedString('settingsRefreshUnit')}}</span>
                     </div>
                     <div class="alert alert-danger input-group widthPercent" ng-show="settingsForm.refreshrate.$dirty && settingsForm.refreshrate.$invalid">
@@ -84,8 +84,8 @@
                 <table class="table table-condensed list">
                     <tr>
                         <td class="widthSettingsTabelLabel"><label class="tableLabel">{{getLocalizedString('settingsAddDelete')}}</label></td>
-                        <td><button type="button" class="btn btn-sm-add btn-default" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-user"></span></button></td>
-                        <td><button type="button" class="btn btn-sm-add btn-danger" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-minus"></span><span class="glyphicon glyphicon-user"></span></button></td>
+                        <td><button type="button" class="btn btn-sm-add btn-default" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-plus"></span></button></td>
+                        <td><button type="button" class="btn btn-sm-add btn-danger" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-minus"></span></button></td>
                     </tr>
                 </table>
             </div>

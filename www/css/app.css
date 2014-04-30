@@ -93,8 +93,17 @@ body {
     width:33.33%;
 }
 .widthSettingsLabels {
-    min-width: 130px;
+    font-size: 1em;
+    min-width: 80px;
 }
+
+@media screen and (min-width: 768px) {
+    .widthSettingsLabels {
+        font-size: 1.2em;
+        min-width: 130px;
+    }
+}
+
 .widthSettingsTabelLabel {
     width: 130px;
 }
