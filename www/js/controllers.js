@@ -243,13 +243,13 @@ angular.module('myApp.controllers', []).
              */
             function postLoginPatient() {
                 languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
-                    .then(function(){
-                        console.log($rootScope.nlRemoteDict);
-                        console.log($rootScope.enRemoteDict);
-                        console.log($rootScope.frRemoteDict);
-                        $rootScope.pageClass = 'right-to-left';
-                        $location.path("/patient/mainmenu");
-                    }, error);
+                        .then(function() {
+                            console.log($rootScope.nlRemoteDict);
+                            console.log($rootScope.enRemoteDict);
+                            console.log($rootScope.frRemoteDict);
+                            $rootScope.pageClass = 'right-to-left';
+                            $location.path("/patient/mainmenu");
+                        }, error);
             }
 
             /**
@@ -663,6 +663,16 @@ angular.module('myApp.controllers', []).
                 $location.path('/appointmentsFilter');
             };
 
+            /** Stijn Ceunen - 29.04.2014
+             * Function to use the unit and department filter. If a unit filter
+             * is defined, unit filter is checked on type. If it is a group,
+             * the reservation's unit_name and dep_name will be compared with
+             * each of the UnitsAndDep in the unitFilter. If not a group,
+             * the reservation will be checked for 
+             * 
+             * @param {type} reservation    reservation needed to be checked
+             * @returns {Boolean}           true will make the reservation visible
+             */
             $scope.unitAndDepFilterFunction = function(reservation) {
                 if ($rootScope.unitFilter === '') {
                     return true;
@@ -2240,13 +2250,13 @@ angular.module('myApp.controllers', []).
 
             function postLoginPatient() {
                 languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
-                    .then(function(){
-                        console.log($rootScope.nlRemoteDict);
-                        console.log($rootScope.enRemoteDict);
-                        console.log($rootScope.frRemoteDict);
-                        $rootScope.pageClass = 'right-to-left';
-                        $location.path("/patient/mainmenu");
-                    }, error);
+                        .then(function() {
+                            console.log($rootScope.nlRemoteDict);
+                            console.log($rootScope.enRemoteDict);
+                            console.log($rootScope.frRemoteDict);
+                            $rootScope.pageClass = 'right-to-left';
+                            $location.path("/patient/mainmenu");
+                        }, error);
             }
 
             function postLoginDoctor() {
@@ -2422,61 +2432,65 @@ angular.module('myApp.controllers', []).
                 $interval.cancel(requestTimer);
             });
 
-        }).controller("MainmenuCtrl", function($rootScope, $scope, $location){
-            $scope.logout = function(){
+        }).
+        controller("MainmenuCtrl", function($rootScope, $scope, $location) {
+            $scope.logout = function() {
                 $rootScope.pageClass = 'left-to-right';
                 $location.path('/login');
             };
-            
-            $scope.settings = function(){
+
+            $scope.settings = function() {
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('/settingsPatient');
             };
-            
-            $scope.createAppointment = function(){
+
+            $scope.createAppointment = function() {
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('patient/step1');
             };
-        }).controller("SettingsPatientCtrl", function($rootScope, $scope, $location){
-            $scope.save = function(){
+        }).
+        controller("SettingsPatientCtrl", function($rootScope, $scope, $location) {
+            $scope.save = function() {
                 $rootScope.pageClass = 'left-to-right';
                 $location.path('/patient/mainmenu');
             };
-        }).controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $timeout){
+        }).
+        controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $timeout) {
             hospiviewFactory.getUnitAndDepList($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
-                .then(function(response){
-                    var json = parseJson(response.data);
-                    console.log(json);
-                    if(json.UnitsAndDeps.Header.StatusCode==1){
-                        $scope.unitList = json.UnitsAndDeps.Detail.Unit;
-                        if($scope.unitList.length==1)
-                            $scope.unit = $scope.unitList[0];
-                    }
-                }, error);
-                
+                    .then(function(response) {
+                        var json = parseJson(response.data);
+                        console.log(json);
+                        if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                            $scope.unitList = json.UnitsAndDeps.Detail.Unit;
+                            if ($scope.unitList.length == 1)
+                                $scope.unit = $scope.unitList[0];
+                        }
+                    }, error);
+
             hospiviewFactory.getUnitDepGroups($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
-                .then(function(response){
-                    var json = parseJson(response.data);
-                    console.log(json);
-                    if(json.UnitDepGroups.Header.StatusCode==1){
-                        $scope.groupList = json.UnitDepGroups.Detail.Group;
-                        if($scope.groupList.length==1&&$scope.unitList.length!=1)
-                            $scope.group = $scope.groupList[0];
-                        console.log($scope.groupList);
-                    }
-                    
-                }, error);
-                    
-                function error(data){
-                    $scope.error = true;
-                }
-                
-        }).controller("BackButtonCtrl", function($rootScope, $scope){
+                    .then(function(response) {
+                        var json = parseJson(response.data);
+                        console.log(json);
+                        if (json.UnitDepGroups.Header.StatusCode == 1) {
+                            $scope.groupList = json.UnitDepGroups.Detail.Group;
+                            if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
+                                $scope.group = $scope.groupList[0];
+                            console.log($scope.groupList);
+                        }
+
+                    }, error);
+
+            function error(data) {
+                $scope.error = true;
+            }
+
+        }).
+        controller("BackButtonCtrl", function($rootScope, $scope) {
             /**
              * This controller is used for every page that uses a back button that can go back to any page
              * @returns {undefined}
              */
-            $scope.back = function(){
+            $scope.back = function() {
                 $rootScope.pageClass = 'left-to-right';
                 history.back();
             };
