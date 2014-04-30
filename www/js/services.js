@@ -571,7 +571,7 @@ angular.module('myApp.services', []).
                             createAppointmentSection: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 55),
                             createAppointmentCampus: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 56),
                             createAppointmentDoctor: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 57).split('/')[0],
-                            createAppointmentReservationInfo: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 60),
+                            createAppointmentStep2ReservationInfo: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 60),
                             
                             createAppointmentType: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 94, 10),
                             
