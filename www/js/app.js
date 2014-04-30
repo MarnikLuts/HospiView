@@ -71,13 +71,5 @@ angular.module('myApp', [
                             return $rootScope.enRemoteDict[key];
                 }
             };
-
-            alert("app");
-            var nua = navigator.userAgent;
-            var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
-            if (is_android) {
-                alert("appif");
-                $('select.form-control').removeClass('form-control').css('width', '100%');
-            }
         });
 //angular.module('myModule',['ui.bootstrap']);
