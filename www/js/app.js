@@ -28,11 +28,11 @@ angular.module('myApp', [
                 $routeProvider.when('/selectserver/:action', {templateUrl: 'partials/selectserver.html', controller: 'SelectserverCtrl'});
                 $routeProvider.when('/appointmentsCalendar', {templateUrl: 'partials/doctor/appointmentsCalendar.html', controller: 'DoctorViewAppointmentsCalendarCtrl'});
                 $routeProvider.when('/appointmentsFilter', {templateUrl: 'partials/doctor/appointmentsFilter.html', controller: 'FilterCtrl'});
-                
+
                 $routeProvider.when('/patient/mainmenu', {templateUrl: 'partials/patient/mainmenu.html', controller: 'MainmenuCtrl'});
                 $routeProvider.when('/settingsPatient', {templateUrl: 'partials/patient/settingsPatient.html', controller: 'SettingsCtrl'});
                 $routeProvider.when('/patient/step1', {templateUrl: 'partials/patient/createAppointmentStep1.html', controller: 'CreateAppointmentStep1Ctrl'});
-                
+
                 $routeProvider.otherwise({redirectTo: '/login'});
             }]).
         run(function($rootScope) {
@@ -41,35 +41,42 @@ angular.module('myApp', [
             $rootScope.languageID = 3;
             $rootScope.requestCounter = 0;
             /**
-            * Gets a language string from one of the loaded language files
-            * 
-            * languageID:
-            * 1 for Dutch
-            * 2 for French
-            * 3 for English
-            * 
-            * @param {type} languageID
-            * @param {type} key
-            * @returns {_L164.enDict|enDict|_L164.frDict|frDict|_L164.nlDict|nlDict}
-            */
-           $rootScope.getLocalizedString=function(key){
-               switch($rootScope.languageID){
-                   case 1:
-                        if(key in dutchStrings)
+             * Gets a language string from one of the loaded language files
+             * 
+             * languageID:
+             * 1 for Dutch
+             * 2 for French
+             * 3 for English
+             * 
+             * @param {type} languageID
+             * @param {type} key
+             * @returns {_L164.enDict|enDict|_L164.frDict|frDict|_L164.nlDict|nlDict}
+             */
+            $rootScope.getLocalizedString = function(key) {
+                switch ($rootScope.languageID) {
+                    case 1:
+                        if (key in dutchStrings)
                             return dutchStrings[key];
                         else
                             return $rootScope.nlRemoteDict[key];
-                   case 2:
-                       if(key in frenchStrings)
+                    case 2:
+                        if (key in frenchStrings)
                             return frenchStrings[key];
                         else
                             return $rootScope.frRemoteDict[key];
-                   case 3:
-                       if(key in englishStrings)
+                    case 3:
+                        if (key in englishStrings)
                             return englishStrings[key];
                         else
                             return $rootScope.enRemoteDict[key];
-               }
-           };
+                }
+            };
+
+            var nua = navigator.userAgent;
+            var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
+            if (is_android) {
+                $('select.form-control').removeClass('form-control').css('width', '100%');
+
+            }
         });
 //angular.module('myModule',['ui.bootstrap']);
