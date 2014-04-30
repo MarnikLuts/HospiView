@@ -51,6 +51,7 @@
                     <div class="input-group widthPercent">
                         <span class="input-group-addon widthSettingsLabels">{{getLocalizedString('settingsRefresh')}}:</span>
                         <input id="refresh" name="refreshrate" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="7200" ng-pattern="/^[0-7]?[0-9]?[0-9][0-9]$/" required/>
+                        <span class="input-group-addon">{{getLocalizedString('settingsRefreshUnit')}}</span>
                     </div>
                     <div class="alert alert-danger input-group widthPercent" ng-show="settingsForm.refreshrate.$dirty && settingsForm.refreshrate.$invalid">
                         <span ng-show="settingsForm.refreshrate.$error.min">{{getLocalizedString('settingsRefreshMin')}}</span>
@@ -131,3 +132,10 @@
         </div>
     </form>
 </div>
+<script>
+    var nua = navigator.userAgent;
+    var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
+    if (is_android) {
+        $('select.form-control').css('-webkit-appearance', 'none');
+    }
+</script>
