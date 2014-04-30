@@ -11,7 +11,7 @@
         <h2>{{ getLocalizedString('loginGreeting')}}</h2>
         <form name="loginForm" novalidate ng-submit="login()">
             <div class="form-group">
-                <select class="form-control input-xl" ng-model="user" ng-options="user.username as user.username for user in users" ng-change="getServersUser()" required>
+                <select class="form-control" ng-model="user" ng-options="user.username as user.username for user in users" ng-change="getServersUser()" required>
                     <option value="">- {{ getLocalizedString('loginUserSelectDefault')}} -</option>
                 </select>
             </div>
@@ -135,4 +135,11 @@
     </div>
     </div>
     </div>
+</script>
+<script>
+    var nua = navigator.userAgent;
+    var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
+    if (is_android) {
+        $('select.form-control').removeClass('form-control').css('width', '100%');
+    }
 </script>

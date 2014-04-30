@@ -109,6 +109,7 @@ var frenchStrings = {
         //Connection messages
         internalError: "Erreur interne du serveur.",
         connectionError: "Erreur de connexion.",
+        connectionErrorSelectServer: "Erreur de connexion. Si vous avez connexion internet, utilise le bouton de rafraichir pour recueillir les serveurs.",
         uuidExpiredMessage: "Votre temps de connexion est expirer ou vous avez connecté sur un autre appareil mobile. Vous êtes hors ligne",
         
         //Settings

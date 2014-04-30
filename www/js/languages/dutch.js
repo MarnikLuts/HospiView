@@ -109,6 +109,7 @@ var dutchStrings = {
         //Connection messages
         internalError: "Interne fout in de server.",
         connectionError: "Kan geen verbinding maken met de server.",
+        connectionErrorSelectServer: "Kan geen verbinding maken met de server. Indien u internetconnectie heeft, gebruik dan de refreshknop om de lijst van servers op te halen.",
         uuidExpiredMessage: "Uw login tijd is verlopen of u bent op een ander mobile toestel ingelogd. U bent nu in offline mode.",
         
         //Settings

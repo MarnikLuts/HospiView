@@ -1974,7 +1974,7 @@ angular.module('myApp.controllers', []).
                             $scope.servers = json.HospiviewServerList.Detail.Server;
                         }).
                         error(function() {
-                            alert($rootScope.getLocalizedString('connectionError'));
+                            alert($rootScope.getLocalizedString('connectionErrorSelectServer'));
                         });
             };
             $scope.refreshServerList();
