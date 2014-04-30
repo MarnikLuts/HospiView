@@ -95,7 +95,7 @@ body {
 .settingsLabels {
     font-size: 1.1em;
     font-weight: normal;
-    min-width: 70px;
+    min-width: 40px;
 }
 
 @media screen and (min-width: 768px) {
