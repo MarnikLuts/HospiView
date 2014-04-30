@@ -19,7 +19,7 @@
                 <option value="">- {{ getLocalizedString('createAppointmentStep1SelectSection')}} -</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-xl" ng-disabled="step1Form.$invalid">{{getLocalizedString('createAppointmentNext')}}</button>
+        <button type="submit" class="btn btn-xl" ng-click="next()" ng-disabled="step1Form.$invalid">{{getLocalizedString('createAppointmentNext')}}</button>
     </form>
 </div>
 
