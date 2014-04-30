@@ -92,21 +92,21 @@ body {
 .width30Percent{
     width:33.33%;
 }
-.widthSettingsLabels {
+.settingsLabels {
     font-size: 1em;
     font-weight: normal;
     min-width: 80px;
 }
 
 @media screen and (min-width: 768px) {
-    .widthSettingsLabels {
+    .settingsLabels {
         font-size: 1.2em;
         font-weight: normal;
         min-width: 130px;
     }
 }
 
-.widthSettingsTabelLabel {
+.widthSettingsLabels {
     width: 130px;
 }
 .width25Percent{
