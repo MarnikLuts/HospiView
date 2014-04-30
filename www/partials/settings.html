@@ -50,7 +50,7 @@
                 <div class="form-group widthPercent">
                     <div class="input-group widthPercent">
                         <span class="input-group-addon widthSettingsLabels settingsLabels">{{getLocalizedString('settingsRefresh')}}:</span>
-                        <input id="refresh" name="refreshrate" type="text" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="7200" ng-pattern="/^[0-7]?[0-9]?[0-9][0-9]$/" required/>
+                        <input id="refresh" name="refreshrate" type="number" ng-model="selectedUser.refreshrate" class="form-control input-lg" min="30" max="7200" ng-pattern="/^[0-7]?[0-9]?[0-9][0-9]$/" required/>
                         <span class="input-group-addon settingsLabels">{{getLocalizedString('settingsRefreshUnit')}}</span>
                     </div>
                     <div class="alert alert-danger input-group widthPercent" ng-show="settingsForm.refreshrate.$dirty && settingsForm.refreshrate.$invalid">
