@@ -106,6 +106,18 @@ body {
     }
 }
 
+#serverImg{
+    width: 42px;
+    height: 60px;
+}
+
+@media screen and (min-width: 768px) {
+    #serverImg {
+        width: 64px;
+        height: 90px;
+    }
+}
+
 .widthSettingsLabels {
     width: 130px;
 }

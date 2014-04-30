@@ -100,11 +100,11 @@
                 <div class="col-md-12">
                     <div class="shortcutButtons">
                         <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server1Select()" 
-                                btn-radio="servers[0]">{{abbreviation1}}<br/><img src="{{server1Img}}" alt="hospi" width="64" height="90"></button>
+                                btn-radio="servers[0]">{{abbreviation1}}<br/><img src="{{server1Img}}" id="serverImg" alt="hospi"></button>
                         <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server2Select()" 
-                                btn-radio="servers[1]">{{abbreviation2}}<br/><img src="{{server2Img}}" alt="hospi" width="64" height="90" ng-show="showServer2"><span class="glyphicon glyphicon-plus" ng-hide="showServer2"></span></button>
+                                btn-radio="servers[1]">{{abbreviation2}}<br/><img src="{{server2Img}}" id="serverImg" alt="hospi" ng-show="showServer2"><span class="glyphicon glyphicon-plus" ng-hide="showServer2"></span></button>
                         <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server3Select()" 
-                                btn-radio="servers[2]">{{abbreviation3}}<br/><img src="{{server3Img}}" alt="hospi" width="64" height="90" ng-show="showServer3"><span class="glyphicon glyphicon-plus" ng-hide="showServer3"></span></button>
+                                btn-radio="servers[2]">{{abbreviation3}}<br/><img src="{{server3Img}}" id="serverImg" alt="hospi" ng-show="showServer3"><span class="glyphicon glyphicon-plus" ng-hide="showServer3"></span></button>
                     </div>
                 </div>
                 <div class="input-group form-group widthPercent">
