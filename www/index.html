@@ -5,25 +5,25 @@
         <title>HospiView</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        
+
         <!--Load CSS files-->
-        
+
         <link rel="stylesheet" href="css/bootstrap.css"/>
         <link rel="stylesheet" href="css/app.css"/>
-        
+
         <link rel="stylesheet" href="lib/fullcalendar/fullcalendar.css"/>
         <link rel="stylesheet" href="lib/fullcalendar/fullcalendar.print.css"/>
 
         <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     </head>
     <body>
-        
+
         <!--The interfaces will be loaded in this div tag. (SingleView architecture)-->
 
         <div ng-view class="heightPercent widthPercent page" ng-class="pageClass"></div>
-    
+
         <!--Load JavaScript files-->
-        
+
         <script src="js/helpers.js"></script>
         <script src="lib/jquery-1.7.min.js"></script>
         <script src="lib/jquery-ui-1.8.16.custom.min.js"></script>
@@ -43,19 +43,20 @@
         <script src="lib/bootstrap.min.js"></script>
         <script src="lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
         <script src="lib/dialogs.min.js"></script>
-        
+
         <script src='lib/fullcalendar/calendar.js'></script>
         <script src='lib/fullcalendar/fullcalendar.js'></script>
-        
+
         <script src="js/languages/dutch.js"></script>
         <script src="js/languages/french.js"></script>
         <script src="js/languages/english.js"></script>
 
         <script>
             var nua = navigator.userAgent;
-            var isAndroid = (nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1 && nua.indexOf('Chrome') === -1);
-            if (isAndroid) {
-              $('select.form-control').removeClass('form-control').css('width', '100%');
+            var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
+            if (is_android) {
+                $('select.form-control').removeClass('form-control').css('width', '100%');
+
             }
         </script>
     </body>
