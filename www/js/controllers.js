@@ -2442,7 +2442,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'left-to-right';
                 $location.path('/patient/mainmenu');
             };
-        }).controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $timeout){
+        }).controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location){
             hospiviewFactory.getUnitAndDepList($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
                 .then(function(response){
                     var json = parseJson(response.data);
@@ -2457,20 +2457,35 @@ angular.module('myApp.controllers', []).
             hospiviewFactory.getUnitDepGroups($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
                 .then(function(response){
                     var json = parseJson(response.data);
-                    console.log(json);
                     if(json.UnitDepGroups.Header.StatusCode==1){
                         $scope.groupList = json.UnitDepGroups.Detail.Group;
                         if($scope.groupList.length==1&&$scope.unitList.length!=1)
                             $scope.group = $scope.groupList[0];
-                        console.log($scope.groupList);
                     }
                     
                 }, error);
                     
-                function error(data){
-                    $scope.error = true;
-                }
+            function error(data){
+                $scope.error = true;
+            }
                 
+            $scope.next = function(){
+                $rootScope.pageClass = 'right-to-left';
+                $rootScope.newAppointment = null;
+                $rootScope.newAppointment = {
+                    unit: $scope.unit,
+                    group: $scope.group
+                };
+                $location.path('/patient/step2');
+            };
+                
+        }).controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location){
+            if($rootScope.newAppointment.unit===null){
+                $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
+            }else{
+                $scope.unitOrGroupName = $rootScope.newAppointment.unit.Header.unit_name;
+            }
+            
         }).controller("BackButtonCtrl", function($rootScope, $scope){
             /**
              * This controller is used for every page that uses a back button that can go back to any page

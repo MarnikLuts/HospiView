@@ -169,8 +169,24 @@ angular.module('myApp.services', []).
                  */
                 getLogin: function(USER_NAME, USER_REGNO, USER_EMAIL, USER_MOB, LanguageId, Update_NameEmailTel, server_url) {
                     $rootScope.requestCounter++;
-                    alert($rootScope.requestCounter);
                     return $http.get(server_url + "method=GetLogin&USER_NAME=" + USER_NAME + "&USER_REGNO=" + USER_REGNO + "&USER_EMAIL=" + USER_EMAIL + "&USER_MOB=" + USER_MOB + "&LANGUAGE_ID=" + LanguageId + "&Update_NameEmailTel=" + Update_NameEmailTel + "&count=" + $rootScope.requestCounter);
+                },
+                /**
+                 * Gets all the possible reservation types of the given department
+                 * 
+                 * 
+                 * @param {type} UUID
+                 * @param {type} Unit_Id
+                 * @param {type} Dep_Id
+                 * @param {type} GlobalTypes
+                 * @param {type} The_Online
+                 * @param {type} Language_Id
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
+                getTypes: function(UUID, Unit_Id, Dep_Id, GlobalTypes, The_Online, Language_Id, server_url){
+                    $rootScope.requestCounter++;
+                    return $http.get(server_url + "method=GetTypesOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&GlobalTypes=" + GlobalTypes + "&The_Online=" + The_Online + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter);
                 }
 
             };
@@ -536,7 +552,7 @@ angular.module('myApp.services', []).
          * @returns {unresolved}
          */
         initRemoteLanguageStrings: function(hosp_url) {
-            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;214,1,2,3,5,6,7;204,1,2,3,4,5;205,1,2,4,5",
+            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;214,1,2,3,5,6,7",
                     promises = [],
                     defer = $q.defer();
 
@@ -569,6 +585,12 @@ angular.module('myApp.services', []).
                             createAppointmentStep1Info: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 2),
                             createAppointmentNext: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 4),
                             createAppointmentStep1Error: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 5),
+                            
+                            createAppointmentStep2: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 214, 1),
+                            createAppointmentStep2Info1: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 214, 2),
+                            createAppointmentStep2Info2: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 214, 3),
+                            createAppointmentStep2ExtraInfo: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 214, 5),
+                            createAppointmentPrevious: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 214, 6),
                         };
 
                         switch (j) {
