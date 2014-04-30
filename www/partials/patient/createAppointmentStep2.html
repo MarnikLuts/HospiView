@@ -8,31 +8,52 @@
 </nav>
 <div class="col-md-12">
     <div class="well well-lg">
-        <p>{{getLocalizedString('createAppointmentStep2Info1')}} <b>{{unitOrGroupName}}</b> {{getLocalizedString('createAppointmentStep2Info2')}}</p>
+        <h4>{{getLocalizedString('createAppointmentStep2Info1')}} <b>{{unitOrGroupName}}</b> {{getLocalizedString('createAppointmentStep2Info2')}}</h4>
         <br>
         <form name="step2Form" novalidate>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-xs-2">
-                        <span>{{getLocalizedString('createAppointmentType')}}</span>
-                    </div>
-                    <div class="col-xs-6">
-                        <select class="form-control input-xl">
-                        <option value="">Selecteer een type</option>
-                        </select> 
-                    </div>
-                </div>
-            </div>
-                
-                
-            <h3>{{getLocalizedString('createAppointmentCampus')}}</h3>
-            <ul class="list-group">
-                <li class="list-group-item" ng-class="{'list-group-item-success' : waarde1}"><label class="widthPercent" style="font-size: 20px;"><input ng-init="waarde1=true" type="checkbox" ng-model="waarde1"/>Waarde1</label></li>
-            </ul>
-            <h3>{{getLocalizedString('createAppointmentStep2ReservationInfo')}}</h3>
-            <textarea class="form-control" rows="3" ng-model="reservationInfo" ></textarea>
-            <h3>{{getLocalizedString('createAppointmentStep2ExtraInfo')}}</h3>
-            <textarea class="form-control" rows="3" ng-model="extraInfo" ></textarea>
+            <table class="step2Table">
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentType')}}</b></p>
+                    </td>
+                    <td>
+                        <select class="form-control">
+                            <option value=""> - Selecteer een type - </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentCampus')}}</b></p>
+                    </td>
+                    <td>
+                        <div class="list-group"  style="font-size: 15px;">
+                            <a class="list-group-item"><label class="widthPercent" ><input type="checkbox" ng-model="waarde1"/>Waarde1</label></a>
+                            <a class="list-group-item"><label class="widthPercent" ><input type="checkbox" ng-model="waarde1"/>Waarde1</label></a>
+                            <a class="list-group-item"><label class="widthPercent" ><input type="checkbox" ng-model="waarde1"/>Waarde1</label></a>
+                            <a class="list-group-item"><label class="widthPercent" ><input type="checkbox" ng-model="waarde1"/>Waarde1</label></a>
+                            
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ReservationInfo')}}</b></p>
+                    </td>
+                    <td>
+                        <textarea class="form-control" rows="3" ng-model="reservationInfo" placeholder="Afspraak info" ></textarea>
+                    </td>    
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ExtraInfo')}}</b></p>
+                    </td>
+                    <td>
+                        <textarea class="form-control" rows="3" ng-model="extraInfo" placeholder="Extra info" ></textarea>
+                    </td>    
+                </tr>
+            </table>
+            <br>
             <button class="btn btn-xl" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
         </form>
     </div>

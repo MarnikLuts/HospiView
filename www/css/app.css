@@ -441,6 +441,24 @@ ul li{
     color: red;
 }
 
+.formLabel{
+    font-size: 15px;
+}
+
+.step2Table{
+    border-spacing: 10px; 
+    border-collapse:separate;
+    width:100%;
+}
+
+.step2Table tr td{
+    width: 90%;
+}
+
+.step2Table tr td:first-child{
+    width: 10%;
+}
+
 @media screen and (max-width: 400px) {// Smartphones in portrait mode
     .dateAppointmentsViewScaled{
         width: 100px;
