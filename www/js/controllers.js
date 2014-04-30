@@ -2543,6 +2543,12 @@ angular.module('myApp.controllers', []).
             };
                 
         }).controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location){
+            /*
+             * TODO:
+             * -Load types from server
+             * -Form validation
+             * -ICASA checkboxes
+             */
             $scope.locations = [];
             if($rootScope.newAppointment.unit===null){
                $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;

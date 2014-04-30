@@ -172,8 +172,7 @@ angular.module('myApp.services', []).
                     return $http.get(server_url + "method=GetLogin&USER_NAME=" + USER_NAME + "&USER_REGNO=" + USER_REGNO + "&USER_EMAIL=" + USER_EMAIL + "&USER_MOB=" + USER_MOB + "&LANGUAGE_ID=" + LanguageId + "&Update_NameEmailTel=" + Update_NameEmailTel + "&count=" + $rootScope.requestCounter);
                 },
                 /**
-                 * Gets all the possible reservation types of the given department
-                 * 
+                 * Gets all the possible reservation types of the given unit and department
                  * 
                  * @param {type} UUID
                  * @param {type} Unit_Id
