@@ -238,6 +238,9 @@ body {
         display: table-cell;
     }
 }
+.dayButtonWidth{
+    width:14%;
+}
 
 .detailTableRow{
     display: table-row;

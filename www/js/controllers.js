@@ -1383,7 +1383,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
-            
+
             /**
              * Check if the select box CSS needs to be changed.
              */
@@ -2411,7 +2411,7 @@ angular.module('myApp.controllers', []).
             $scope.showpassword = function() {
                 $scope.showPasswordBoolean = !$scope.showPasswordBoolean;
             };
-            
+
             /**
              * Check if the select box CSS needs to be changed.
              */
@@ -2471,7 +2471,8 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'left-to-right';
                 $location.path('/patient/mainmenu');
             };
-        }).controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location){
+        }).
+        controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location) {
             hospiviewFactory.getUnitAndDepList($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
                     .then(function(response) {
                         var json = parseJson(response.data);
@@ -2484,21 +2485,21 @@ angular.module('myApp.controllers', []).
                     }, error);
 
             hospiviewFactory.getUnitDepGroups($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
-                .then(function(response){
-                    var json = parseJson(response.data);
-                    if(json.UnitDepGroups.Header.StatusCode==1){
-                        $scope.groupList = json.UnitDepGroups.Detail.Group;
-                        if($scope.groupList.length==1&&$scope.unitList.length!=1)
-                            $scope.group = $scope.groupList[0];
-                    }
-                    
-                }, error);
-                    
-            function error(data){
+                    .then(function(response) {
+                        var json = parseJson(response.data);
+                        if (json.UnitDepGroups.Header.StatusCode == 1) {
+                            $scope.groupList = json.UnitDepGroups.Detail.Group;
+                            if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
+                                $scope.group = $scope.groupList[0];
+                        }
+
+                    }, error);
+
+            function error(data) {
                 $scope.error = true;
             }
-                
-            $scope.next = function(){
+
+            $scope.next = function() {
                 $rootScope.pageClass = 'right-to-left';
                 $rootScope.newAppointment = null;
                 $rootScope.newAppointment = {
@@ -2507,15 +2508,35 @@ angular.module('myApp.controllers', []).
                 };
                 $location.path('/patient/step2');
             };
-                
-        }).controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location){
-            if($rootScope.newAppointment.unit===null){
+
+        }).
+        controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location) {
+            if ($rootScope.newAppointment.unit === null) {
                 $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
-            }else{
+            } else {
                 $scope.unitOrGroupName = $rootScope.newAppointment.unit.Header.unit_name;
             }
-            
-        }).controller("BackButtonCtrl", function($rootScope, $scope){
+
+        }).
+        controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $location) {
+            $scope.filters = {monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true, morning: true, afternoon: true};
+
+            var width = window.innerWidth;
+
+            setDayNames();
+            window.onresize = setDayNames;
+
+            function setDayNames() {
+                width = window.innerWidth;
+                console.log(width);
+                if (width <= 768)
+                    $scope.days = getDayNamesShort($rootScope.languageID);
+                else
+                    $scope.days = getDayNames($rootScope.languageID);
+                console.log($scope.days);
+            }
+        }).
+        controller("BackButtonCtrl", function($rootScope, $scope) {
             /**
              * This controller is used for every page that uses a back button that can go back to any page
              * @returns {undefined}
