@@ -119,7 +119,7 @@ var frenchStrings = {
         settingsEditServer: "Changez le serveur",
         settingsUser: "Utilisateur",
         settingsRefresh: "Rafraîchissement",
-        settingsRefreshUnit: "secondes",
+        settingsRefreshUnit: "sec",
         settingsAddDelete: "Ajouter ou supprimer",
         settingsEditDelete: "Modifier ou supprimer",
         settingsCellcontent: "Paramètres des réservations",

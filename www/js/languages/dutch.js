@@ -119,7 +119,7 @@ var dutchStrings = {
         settingsEditServer: "Wijzig server",
         settingsUser: "Gebruiker",
         settingsRefresh: "Verversing",
-        settingsRefreshUnit: "seconden",
+        settingsRefreshUnit: "sec",
         settingsAddDelete: "Toevoegen of verwijderen",
         settingsEditDelete: "Wijzigen of verwijderen",
         settingsCellcontent: "Reservatie instellingen",

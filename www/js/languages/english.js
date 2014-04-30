@@ -119,7 +119,7 @@ var englishStrings = {
         settingsEditServer: "Edit server",
         settingsUser: "User",
         settingsRefresh: "Refresh rate",
-        settingsRefreshUnit: "seconds",
+        settingsRefreshUnit: "sec",
         settingsAddDelete: "Add or delete",
         settingsEditDelete: "Edit or delete",
         settingsCellcontent: "Reservation settings",
