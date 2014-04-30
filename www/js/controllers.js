@@ -1836,8 +1836,15 @@ angular.module('myApp.controllers', []).
                             function(response) {
                                 if (response == 1) {
                                     var users = JSON.parse(localStorage.getItem('users')),
-                                            index = users.indexOf($rootScope.user);
-
+                                        index = -1;
+                            
+                                    for(var i=0;i<users.length;i++){
+                                        if(users[i].username === $rootScope.user){
+                                            index=i;
+                                            break;
+                                        }
+                                    }
+                                    
                                     if (users.length == 1)
                                         localStorage.removeItem('users');
                                     else {
@@ -1863,8 +1870,15 @@ angular.module('myApp.controllers', []).
                     var response = window.confirm($rootScope.getLocalizedString('settingsDeleteCurrentUserConfirm'));
                     if (response) {
                         var users = JSON.parse(localStorage.getItem('users')),
-                                index = users.indexOf($rootScope.user);
-
+                            index = -1;
+                            
+                        for(var i=0;i<users.length;i++){
+                            if(users[i].username === $rootScope.user){
+                                index=i;
+                                break;
+                            }
+                        }
+                        
                         if (users.length == 1)
                             localStorage.removeItem('users');
                         else {
@@ -2473,19 +2487,20 @@ angular.module('myApp.controllers', []).
             };
         }).controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location){
             hospiviewFactory.getUnitAndDepList($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
-                    .then(function(response) {
-                        var json = parseJson(response.data);
-                        console.log(json);
-                        if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                            $scope.unitList = json.UnitsAndDeps.Detail.Unit;
-                            if ($scope.unitList.length == 1)
-                                $scope.unit = $scope.unitList[0];
-                        }
-                    }, error);
+                .then(function(response) {
+                    var json = parseJson(response.data);
+                    console.log(json);
+                    if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                        $scope.unitList = json.UnitsAndDeps.Detail.Unit;
+                        if ($scope.unitList.length == 1)
+                            $scope.unit = $scope.unitList[0];
+                    }
+                }, error);
 
             hospiviewFactory.getUnitDepGroups($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
                 .then(function(response){
                     var json = parseJson(response.data);
+                    console.log(json);
                     if(json.UnitDepGroups.Header.StatusCode==1){
                         $scope.groupList = json.UnitDepGroups.Detail.Group;
                         if($scope.groupList.length==1&&$scope.unitList.length!=1)
