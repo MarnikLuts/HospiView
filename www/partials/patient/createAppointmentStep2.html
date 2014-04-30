@@ -18,7 +18,7 @@
                     </td>
                     <td>
                         <select class="form-control">
-                            <option value=""> - Selecteer een type - </option>
+                            <option value=""> - {{getLocalizedString('createAppointmentStep2SelectType')}} - </option>
                         </select>
                     </td>
                 </tr>
@@ -28,11 +28,7 @@
                     </td>
                     <td>
                         <div class="list-group"  style="font-size: 15px;">
-                            <a class="list-group-item"><label class="widthPercent" ><input type="checkbox" ng-model="waarde1"/>Waarde1</label></a>
-                            <a class="list-group-item"><label class="widthPercent" ><input type="checkbox" ng-model="waarde1"/>Waarde1</label></a>
-                            <a class="list-group-item"><label class="widthPercent" ><input type="checkbox" ng-model="waarde1"/>Waarde1</label></a>
-                            <a class="list-group-item"><label class="widthPercent" ><input type="checkbox" ng-model="waarde1"/>Waarde1</label></a>
-                            
+                            <label ng-repeat="location in locations track by $index" class="widthPercent list-group-item" ng-class="{'list-group-item-success':location.checked}" ><input type="checkbox" ng-model="location.checked"/>{{location.location_name}}</label>
                         </div>
                     </td>
                 </tr>
@@ -41,7 +37,7 @@
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ReservationInfo')}}</b></p>
                     </td>
                     <td>
-                        <textarea class="form-control" rows="3" ng-model="reservationInfo" placeholder="Afspraak info" ></textarea>
+                        <textarea class="form-control" rows="3" ng-model="reservationInfo" placeholder="{{getLocalizedString('createAppointmentStep2ReservationInfo')}}" ></textarea>
                     </td>    
                 </tr>
                 <tr>
@@ -49,7 +45,7 @@
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ExtraInfo')}}</b></p>
                     </td>
                     <td>
-                        <textarea class="form-control" rows="3" ng-model="extraInfo" placeholder="Extra info" ></textarea>
+                        <textarea class="form-control" rows="3" ng-model="extraInfo" placeholder="{{getLocalizedString('createAppointmentStep2ExtraInfo')}}" ></textarea>
                     </td>    
                 </tr>
             </table>

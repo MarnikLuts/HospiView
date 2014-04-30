@@ -2512,8 +2512,27 @@ angular.module('myApp.controllers', []).
             function error(data){
                 $scope.error = true;
             }
-                
+            
             $scope.next = function(){
+                /**
+                 * Thanks Masood
+                 * 
+                 * use this loop to transfer important data from the unit list to the chosen group
+                 * @type Number
+                 */
+                if($scope.group!==null)
+                for(var i=0;i<$scope.unitList.length;i++){
+                    for(var j=0;j<$scope.unitList[i].Detail.Dep.length;j++){
+                        for(var k=0;k<$scope.group.Detail.UnitAndDep.length;k++){
+                            if($scope.unitList[i].Detail.Dep[j].dep_id===$scope.group.Detail.UnitAndDep[k].dep_id){
+                                $scope.group.Detail.UnitAndDep[k].location_name = $scope.unitList[i].Detail.Dep[j].location_name;
+                                $scope.group.Detail.UnitAndDep[k].location_id = $scope.unitList[i].Detail.Dep[j].location_id;
+                                break;
+                            }
+                        }
+                    }
+                }
+                console.log($scope.group);
                 $rootScope.pageClass = 'right-to-left';
                 $rootScope.newAppointment = null;
                 $rootScope.newAppointment = {
@@ -2524,10 +2543,25 @@ angular.module('myApp.controllers', []).
             };
                 
         }).controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location){
+            $scope.locations = [];
             if($rootScope.newAppointment.unit===null){
-                $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
+               $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
+               for(var i=0;i<$rootScope.newAppointment.group.Detail.UnitAndDep.length;i++){
+                   $scope.locations.push({
+                        checked: true,
+                        location_id: $rootScope.newAppointment.group.Detail.UnitAndDep[i].location_id,
+                        location_name: $rootScope.newAppointment.group.Detail.UnitAndDep[i].location_name
+                    });
+               }
             }else{
                 $scope.unitOrGroupName = $rootScope.newAppointment.unit.Header.unit_name;
+                for(var i=0;i<$rootScope.newAppointment.unit.Detail.Dep.length;i++){
+                    $scope.locations.push({
+                        checked: true,
+                        location_id: $rootScope.newAppointment.unit.Detail.Dep[i].location_id,
+                        location_name: $rootScope.newAppointment.unit.Detail.Dep[i].location_name,
+                    }); 
+                }
             }
             
         }).controller("BackButtonCtrl", function($rootScope, $scope){

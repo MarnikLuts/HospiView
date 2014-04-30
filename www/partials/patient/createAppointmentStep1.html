@@ -9,7 +9,7 @@
 <div class="col-md-12">
     <div class="well">
         <form name="step1Form" novalidate>
-            <p>{{getLocalizedString('createAppointmentStep1Info')}}</p>
+            <h4>{{getLocalizedString('createAppointmentStep1Info')}}</h4>
             <div class="form-group">
                 <select class="form-control input-xl" name="unitSelect" ng-required="group==null" ng-change="group=null" ng-model="unit" ng-options="unit as unit.Header.unit_name for unit in unitList" ng-change="getServersUser()" required>
                     <option value="">- {{ getLocalizedString('createAppointmentStep1SelectDoctor')}} -</option>
