@@ -513,6 +513,10 @@ angular.module('myApp.controllers', []).
                 });
             }
 
+            /**
+             * Check if the select box CSS needs to be changed.
+             */
+            changeSelect();
         }).
         controller('DoctorViewAppointmentsCtrl', function($scope, $rootScope, $location, $modal, hospiviewFactory, dataFactory) {
 
@@ -1379,6 +1383,11 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
+            
+            /**
+             * Check if the select box CSS needs to be changed.
+             */
+            changeSelect();
         }).
         controller('searchCtrl', function($scope, $rootScope, hospiviewFactory, dataFactory) {
             /**
@@ -1942,7 +1951,10 @@ angular.module('myApp.controllers', []).
                     alert($rootScope.getLocalizedString("settingsNew"));
             }, 1000);
 
-
+            /**
+             * Check if the select box CSS needs to be changed.
+             */
+            changeSelect();
         }).
         controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory, dataFactory, languageFactory, $q, $modal, kiosk_url, base_url) {
 
@@ -2399,6 +2411,11 @@ angular.module('myApp.controllers', []).
             $scope.showpassword = function() {
                 $scope.showPasswordBoolean = !$scope.showPasswordBoolean;
             };
+            
+            /**
+             * Check if the select box CSS needs to be changed.
+             */
+            changeSelect();
         }).
         controller('refreshCtrl', function($scope, $rootScope, $interval, dataFactory) {
 

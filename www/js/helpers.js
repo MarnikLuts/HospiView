@@ -163,3 +163,19 @@ function getDayNamesShort(languageID){
             return "Su_Mo_Tu_We_Th_Fr_Sa".split("_");
     } 
 }
+
+/**
+ * Checks which browser is being used and changes the CSS if it's an Android
+ * Browser. Older versions and some recent versions of Android use a different
+ * browser then Chrome. This problem won't percist in the future, it looks like
+ * devices with Android 4.4 have Chrome as standard browser.
+ * 
+ * @returns {undefined}
+ */
+function changeSelect(){
+    var nua = navigator.userAgent;
+    var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
+    if (is_android) {
+        $('select.form-control').css('-webkit-appearance', 'none');
+    }
+}
