@@ -100,7 +100,8 @@ angular.module('myApp.controllers', []).
                     $scope.servers[2] = undefined;
                 }
             };
-            $scope.user = null;
+                  
+            
             /**
              * 27.03.2014 Stijn Ceunen
              * If only 1 user is saved, this one will automatically be selected.
@@ -114,6 +115,7 @@ angular.module('myApp.controllers', []).
 //                        $scope.getLoginUser();
                     }
                 } else {
+                    $scope.user = null;
                     $scope.serverRadio = false;
                 }
 
@@ -837,8 +839,8 @@ angular.module('myApp.controllers', []).
              * Function for the calendar button. Redirects to the calendar view
              * and loads the remainder of the month's reservations. 
              * 
-             * If the user is not offline, the searchranges will be checked. 
-             * 
+             * If the user is not offline, the searchranges will be compared to
+             * the start and end date of the month. If 
              */
             $scope.calendarView = function() {
                 removeEvent();
@@ -862,17 +864,7 @@ angular.module('myApp.controllers', []).
                         searchEnd.setDate(1);
                         $rootScope.endDate = formatDate(new Date(searchEnd));
                         request1 = true;
-                    } else {
-                        if (searchEnd.getFullYear() < current.getFullYear()) {
-                            searchEnd.setDate(searchEnd.getDate() + 1);
-                            $rootScope.startDate = formatDate(new Date(searchEnd));
-                            searchEnd.setMonth(current.getMonth() + 1);
-                            searchEnd.setYear(current.getYear());
-                            searchEnd.setDate(1);
-                            $rootScope.endDate = formatDate(new Date(searchEnd));
-                            request1 = true;
-                        }
-                    }
+                    } 
                     if (searchStart.getMonth() >= current.getMonth() && searchStart.getDate() > 1 && searchStart.getFullYear() == current.getFullYear()) {
                         searchStart.setDate(searchStart.getDate() - 1);
                         $rootScope.endDate = formatDate(new Date(searchStart));
@@ -880,15 +872,6 @@ angular.module('myApp.controllers', []).
                         searchStart.setDate(1);
                         $rootScope.startDate = formatDate(new Date(searchStart));
                         request2 = true;
-                    } else {
-                        if (searchStart.getFullYear() > current.getFullYear()) {
-                            $rootScope.endDate = formatDate(new Date(searchStart));
-                            searchStart.setMonth(current.getMonth());
-                            searchStart.setFullYear(current.getFullYear());
-                            searchStart.setDate(1);
-                            $rootScope.startDate = formatDate(new Date(searchStart));
-                            request2 = true;
-                        }
                     }
                     if (request1 === true && request2 === true) {
                         $rootScope[$rootScope.searchString] = [];
@@ -1078,7 +1061,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.endDate = formatDate(new Date(endSearch));
                         }
                         if ($rootScope.searchType === 'prev') {
-                            var startSearch = formatDate(new Date($rootScope.startDate));
+                            var startSearch = new Date($rootScope.startDate);
                             $rootScope.endDate = formatDate(new Date(startSearch));
                             startSearch.setDate(startSearch.getDate() - 14);
                             $rootScope.startDate = formatDate(new Date(startSearch));
