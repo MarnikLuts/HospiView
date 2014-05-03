@@ -303,7 +303,12 @@ angular.module('myApp.controllers', []).
             }
 
             /**
-             * Initialise needed variables.
+             * Response count is used to track which server we are retrieving data 
+             * from. Is being increased every loop.
+             * AllReservations is an array where the new reservations are being
+             * pushed to before saving them in the rootScope.
+             * FirstCycle is used to reset above variables if a new search needs
+             * to be done.
              */
             var responseCount = 0;
             var allReservations = [];
@@ -840,7 +845,13 @@ angular.module('myApp.controllers', []).
              * and loads the remainder of the month's reservations. 
              * 
              * If the user is not offline, the searchranges will be compared to
-             * the start and end date of the month. If 
+             * the start and end date of the month. If the start and/or end date
+             * pass the searchrange dates, the needed dates will be set to
+             * retrieve the remainder of the reservations for that month. Each
+             * case has a boolean, if both booleans are true, we retrieve the whole
+             * month, if only one boolean is true, the needed part of the month,
+             * if none is true, the user will be redirected to the calendarView.
+             * 
              */
             $scope.calendarView = function() {
                 removeEvent();
@@ -942,6 +953,10 @@ angular.module('myApp.controllers', []).
                 $location.path('/login');
             };
 
+            /**
+             * Setting the string to save the reservations in the localStorage. 
+             * Setting the new searchranges.
+             */
             function search() {
                 console.log("searching through " + $rootScope.currentServers.length + " servers");
                 $rootScope.searchString = $rootScope.user + 'Reservations';
@@ -951,8 +966,7 @@ angular.module('myApp.controllers', []).
 
             /**
              * Gets the reservations from the server identified by a given index, when done it will call addReservations
-             * @param {type} index
-             * @returns {undefined}
+             * @param {type} index      index of the server.
              */
             function getReservations(index) {
                 console.log("start " + index);
@@ -969,13 +983,23 @@ angular.module('myApp.controllers', []).
                 });
             }
 
+            /**
+             * Response count is used to track which server we are retrieving data 
+             * from. Is being increased every loop.
+             * AllReservations is an array where the new reservations are being
+             * pushed to before saving them in the rootScope.
+             * FirstCycle is used to reset above variables if a new search needs
+             * to be done.
+             */
             var responseCount = 0;
             var allReservations = [];
             var firstCycle = true;
+            
             /**
              * The reservations from every server get added into one array, 
-             * when this function is executed for every server, the data will be handled by the setReservations function
-             * @type Number
+             * when this function is executed for every server, the data will be
+             * handled by the setReservations function
+             * @param {object} reservations     retrieved reservations
              */
             function addReservations(reservations) {
                 if (firstCycle) {
@@ -999,12 +1023,25 @@ angular.module('myApp.controllers', []).
                 }
             }
 
+            /**
+             * Logging the error.
+             * 
+             * @param {type} data   the error
+             */
             function error(data) {
-                $scope.loggingIn = false;
-                $scope.error = true;
-                $scope.errormessage = data;
+                console.log(data);
             }
 
+            /**
+             * For setting the reservations in the rootScope. If no reservations
+             * are to be added to the rootScope, the modal will be called to
+             * ask the user to continue searching. Otherwise, depending on the
+             * action of the user, he will be directed to the calendar or filtering
+             * the reservations for the appointmentView screen.
+             * 
+             * @param {type} reservations
+             * @returns {undefined}
+             */
             function setReservations(reservations) {
                 console.log("setting reservations");
                 firstCycle = true;
@@ -1018,18 +1055,13 @@ angular.module('myApp.controllers', []).
                     console.log("modal");
                     callModal();
                 } else {
+                    $rootScope.searchInProgress = false;
                     if ($scope.loadingCalendar) {
                         $rootScope.pageClass = "right-to-left";
-                        $location.path('/appointmentsCalendar');
-                        $rootScope.searchInProgress = false;
                         $scope.loadingCalendar = false;
+                        $location.path('/appointmentsCalendar');
                     }
                     else {
-                        if ($rootScope.refresh) {
-                            $scope.loadingNext = false;
-                        }
-                        $rootScope.refresh = false;
-                        $rootScope.searchInProgress = false;
                         if ($rootScope.searchType === 'next') {
                             $scope.nextDay();
                         }
@@ -1044,7 +1076,6 @@ angular.module('myApp.controllers', []).
              * Calls a dialog box and asks if the user wants to continue searching.
              * If yes, appointments will be searched for the next or previous
              * 14 days.
-             * 
              */
             function callModal() {
                 var modalInstance = $modal.open({
@@ -1100,21 +1131,11 @@ angular.module('myApp.controllers', []).
             $scope.servers = $rootScope.currentServers;
 
             /**
-             * 26.03.2014 Stijn Ceunen
+             * 28.03.2014 Stijn Ceunen
              * This will do a request to get all the units, groups and departments
              * of all the saved servers of the user. It will only be executed if 
              * the user has added a server, changed a saved server or the page 
              * is not visited yet since the user started the application.
-             * First, the variables that record the add or edit of a server are
-             * set back to false. After, a loop of all the servers the user has
-             * saved will start. For each server the getUnitAndDepList and
-             * getUnitDepGroups requests will be executed. The results will be
-             * pushed into the unitsandgroups array which will be pushed in the 
-             * rootScope at the end of the second request. In the getUnitAndDepList
-             * request, there is a loop that will add the "type" property to the 
-             * objects and it will be set to "doctor". The same will be done in
-             * the getUnitDepGroups but is will be set to "group" in that loop.
-             * This is used to group them in the select box. 
              */
             var startIndex = 0;
             for (var i = 0; i < $rootScope.currentServers.length; i++) {
@@ -1140,10 +1161,12 @@ angular.module('myApp.controllers', []).
             }
 
             /**
-             * Gets the units and groups for the selected index
+             * 28.04.2014 Stijn Ceunen
+             * Gets the units of a server and puts them in the rootScope for later
+             * use. Also, we add the type "doctor" to each unit, because we put
+             * the units and groups in the same array.
              * 
-             * @param {type} index
-             * @returns {undefined}
+             * @param {integer} index   defines the server
              */
             function getUnits(index) {
                 var selectedServer = $rootScope.currentServers[index];
@@ -1175,6 +1198,14 @@ angular.module('myApp.controllers', []).
                         });
             }
 
+            /** 
+             * 28.04.2014 Stijn Ceunen
+             * Gets the groups of a server and puts them in the rootScope for later
+             * use. Also, we add the type "group" to each unit, because we put
+             * the units and groups in the same array.
+             * 
+             * @param {integer} index   defines the server
+             */
             function getGroups(index) {
                 var selectedServer = $rootScope.currentServers[index];
 
@@ -1373,10 +1404,15 @@ angular.module('myApp.controllers', []).
             changeSelect();
         }).
         controller('searchCtrl', function($scope, $rootScope, hospiviewFactory, dataFactory) {
+            
             /**
-             * Calendar shows the next month
-             * 
-             * @returns {undefined}
+             * Setting the animation for loading another month to false.
+             */
+            $scope.loadingMonth = false;
+            
+            /**
+             * Calendar shows the next month. If the user is offline, new reservations
+             * will be searched.
              */
             $scope.next = function() {
                 var calDate = $("#doctorCalendar").fullCalendar('getDate');
@@ -1386,51 +1422,53 @@ angular.module('myApp.controllers', []).
                 else
                     $rootScope.displayMonthDate = months[0] + " " + (calDate.getFullYear() + 1);
 
-
+                $scope.calendarBrows = 'next';
                 if ($rootScope.isOffline) {
                     $('#doctorCalendar').fullCalendar('next');
                 } else {
-                    calendarView('next');
+                    calendarView();
                 }
             };
 
             /**
-             * Calendar shows the previous month
-             * 
-             * @returns {undefined}
+             * Calendar shows the previous month. If the user is offline, new reservations
+             * will be searched.
              */
             $scope.prev = function() {
                 var calDate = $("#doctorCalendar").fullCalendar('getDate');
                 var months = getMonthNames($rootScope.languageID);
-                //$rootScope.displayMonthDate = months[calDate.getMonth() - 1] + " " + calDate.getFullYear();
-                console.log(calDate.getMonth());
                 if (calDate.getMonth() - 1 > -1)
                     $rootScope.displayMonthDate = months[calDate.getMonth() - 1] + " " + calDate.getFullYear();
                 else
                     $rootScope.displayMonthDate = months[11] + " " + (calDate.getFullYear() - 1);
-
+                $scope.calendarBrows = 'prev';
                 if ($rootScope.isOffline) {
                     $('#doctorCalendar').fullCalendar('prev');
                 } else {
-                    calendarView('prev');
+                    calendarView();
                 }
             };
-            $scope.loadingMonth = false;
-
-            function calendarView(calendarBrows) {
-                console.log(calendarBrows);
+            
+            /**
+             * Used to determine if new reservations need to be requested when 
+             * navigating through the calendar. Like in the calendarView function
+             * of the DoctorViewAppointmentsCtrl controller, dates will be compared
+             * to set new searchdates and the searchranges but in this function extra
+             * checks are needed on years.
+             */
+            function calendarView() {
                 var searchStart = new Date($rootScope.searchRangeStart);
                 var searchEnd = new Date($rootScope.searchRangeEnd);
                 var calendarDate = $("#doctorCalendar").fullCalendar('getDate');
                 var current = new Date(calendarDate);
                 var nextMonthCount = 0;
-                if (calendarBrows === 'prev')
+                if ($scope.calendarBrows === 'prev')
                     nextMonthCount--;
                 else
                     nextMonthCount++;
                 var request1 = false;
                 var request2 = false;
-                if (calendarBrows === 'next') {
+                if ($scope.calendarBrows === 'next') {
                     if (current.getMonth() == 11 && searchEnd.getFullYear() == current.getFullYear()) {
                         $rootScope.endDate = formatDate(new Date(searchEnd.getFullYear() + 1, 0, 1));
                         searchStart.setMonth(current.getMonth() + nextMonthCount);
@@ -1440,7 +1478,7 @@ angular.module('myApp.controllers', []).
                     }
                     else {
                         if (searchEnd.getMonth() <= current.getMonth() + nextMonthCount && searchEnd.getFullYear() == current.getFullYear()) {
-                            if (calendarBrows === 'prev')
+                            if ($scope.calendarBrows === 'prev')
                                 nextMonthCount--;
                             else
                                 nextMonthCount++;
@@ -1454,7 +1492,7 @@ angular.module('myApp.controllers', []).
                     }
                 }
 
-                if (calendarBrows === 'prev') {
+                if ($scope.calendarBrows === 'prev') {
                     if (current.getMonth() == 0 && searchStart.getFullYear() == current.getFullYear()) {
                         $rootScope.startDate = formatDate(new Date(searchStart.getFullYear() - 1, 11, 1));
                         searchEnd.setMonth(current.getMonth() + nextMonthCount);
@@ -1473,14 +1511,16 @@ angular.module('myApp.controllers', []).
                     }
                 }
                 if (request1 === true || request2 === true) {
-                    search(calendarBrows);
+                    search();
                 } else {
-                    $('#doctorCalendar').fullCalendar(calendarBrows);
+                    $('#doctorCalendar').fullCalendar($scope.calendarBrows);
                 }
             }
 
-            function search(calendarBrows) {
-                $scope.calendarBrows = calendarBrows;
+            /**
+             * Set new searchranges and starts the loop to retrieve reservations.
+             */
+            function search() {
                 $scope.loadingMonth = true;
                 console.log("searching through " + $rootScope.currentServers.length + " servers");
                 $rootScope.searchString = $rootScope.user + 'Reservations';
@@ -1509,7 +1549,14 @@ angular.module('myApp.controllers', []).
                 });
             }
 
-
+            /**
+             * Response count is used to track which server we are retrieving data 
+             * from. Is being increased every loop.
+             * AllReservations is an array where the new reservations are being
+             * pushed to before saving them in the rootScope.
+             * FirstCycle is used to reset above variables if a new search needs
+             * to be done.
+             */
             var responseCount = 0;
             var allReservations = [];
             var firstCycle = true;
@@ -1546,52 +1593,36 @@ angular.module('myApp.controllers', []).
              * @param {type} data
              */
             function error(data) {
-                $scope.loadingCalendar = false;
-                $scope.error = true;
-                $scope.errormessage = data;
+                $scope.loadingMonth = false;
+                console.log(data);
             }
 
-            function setReservations(reservations, calendarBrows) {
+            /**
+             * Sets the new reservations in the rootScope and displays the new
+             * reservations on the calendar.
+             * @param {type} reservations
+             */
+            function setReservations(reservations) {
                 firstCycle = true;
-                calendarBrows = $scope.calendarBrows;
                 for (var i = 0; i < reservations.length; i++) {
                     $rootScope[$rootScope.searchString].push(reservations[i]);
                 }
-                if ($rootScope[$rootScope.searchString].length === 0) {
-                    callModal(calendarBrows);
-                } else {
+                console.log("setReservations");
+                if ($rootScope[$rootScope.searchString].length !== 0) {
                     var countEvent = dataFactory.loadCalendar();
                     localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     $('#doctorCalendar').fullCalendar('removeEvents');
                     $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
                     $scope.loadingMonth = false;
-                    $('#doctorCalendar').fullCalendar(calendarBrows);
+                    $('#doctorCalendar').fullCalendar($scope.calendarBrows);
                 }
-            }
-
-            function callModal(calendarBrows) {
-                var modalInstance = $modal.open({
-                    templateUrl: 'searchModal',
-                    controller: $rootScope.ModalInstance
-                });
-                modalInstance.result.then(function(answer) {
-                    if (answer === true) {
-                        var newStartDate = new Date($rootScope.startDate);
-                        newStartDate.setDate(newStartDate.getDate() + 14);
-                        var newEndDate = new Date($rootScope.endDate);
-                        newEndDate.setDate(newEndDate.getDate() + 14);
-                        $rootScope.startDate = formatDate(newStartDate);
-                        $rootScope.endDate = formatDate(newEndDate);
-                        setSearchDates($rootScope.startDate, $rootScope.endDate);
-                        searchReservations(calendarBrows);
-                    }
-                }, function() {
-                    console.log("error");
-                });
             }
         }).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
             $scope.reservation = $rootScope.reservationDetail;
+            /**
+             * Redirect the user back to the appointments screen.
+             */
             $scope.back = function() {
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
@@ -1600,12 +1631,26 @@ angular.module('myApp.controllers', []).
         controller('DoctorViewAppointmentsCalendarCtrl', function($scope, $location, $rootScope, dataFactory) {
 
             var current = new Date($rootScope.currentdate);
+            
+            /**
+             * Determines if the calendar must show weekends or not. 
+             * Default set to false, since most doctors wont have appointments
+             * in the weekend.
+             */
             var showWeekends = false;
+            
+            /**
+             * Redirects the user back to the appointments screen.
+             */
             $scope.back = function() {
                 $rootScope.eventClick = true;
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
+            
+            /**
+             * Initial configuration of the calendar. 
+             */
             $scope.uiConfig = {
                 calendar: {
                     height: 500,
@@ -1635,22 +1680,40 @@ angular.module('myApp.controllers', []).
                 }
             };
 
+            /**
+             * Month and year are displayed on top of the page.
+             */
             var months = getMonthNames($rootScope.languageID);
             $rootScope.displayMonthDate = months[current.getMonth()] + " " + current.getFullYear();
 
+            /**
+             * Load the events and set the events on the calendar
+             */
             var countEvent = dataFactory.loadCalendar();
             $scope.eventSources = [countEvent];
 
+            /**
+             * Today button on the calendar changes the view to the month of 
+             * todays date.
+             */
             $scope.today = function() {
                 $('#doctorCalendar').fullCalendar('today');
             };
 
+            /**
+             * Function to toggle the weekends on and off. 
+             */
             $scope.weekend = function() {
                 var month = $("#doctorCalendar").fullCalendar('getDate');
                 $scope.uiConfig.calendar.month = month.getMonth();
                 $scope.uiConfig.calendar.weekends = !$scope.uiConfig.calendar.weekends;
             };
 
+            /**
+             * This function is set in the rootscope and will be triggered by
+             * an $emit from the refresh function in services.js. Removes the
+             * events from the calendar and sets the updated events.
+             */
             var removeEvent = $rootScope.$on('setReservationsEvent', function(event, args) {
                 if ($rootScope[$rootScope.searchString].length !== 0) {
                     countEvent = dataFactory.loadCalendar();
@@ -1663,97 +1726,93 @@ angular.module('myApp.controllers', []).
             });
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope) {
+            /**
+             * Redirects the user to the main menu.
+             */
             $scope.backToMainMenu = function() {
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/mainmenu');
             };
         }).
         controller('SettingsCtrl', function($scope, $location, $rootScope, $routeParams, $timeout) {
-            loadSettings();
 
-            function loadSettings() {
-                $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
-                $scope.servers = $scope.selectedUser.servers;
+            $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
 
-                if ($scope.servers.length == 3) {
-                    $scope.abbreviation3 = $scope.selectedUser.servers[2].hosp_short_name;
-                    $scope.server3Img = "img/hospi-gray.png";
-                    $scope.showServer3 = true;
-                } else {
-                    $scope.abbreviation3 = $rootScope.getLocalizedString('settingsAddServer');
-                    $scope.showServer3 = false;
-                    if ($scope.servers.length >= 2) {
-                        $scope.abbreviation2 = $scope.selectedUser.servers[1].hosp_short_name;
-                        $scope.server2Img = "img/hospi-gray.png";
-                        $scope.showServer2 = true;
-                    } else {
-                        $scope.abbreviation2 = $rootScope.getLocalizedString('settingsAddServer');
-                        $scope.showServer2 = false;
-                    }
-                }
-
-
-                $scope.abbreviation1 = $scope.selectedUser.servers[0].hosp_short_name;
-                $scope.server1Img = "img/hospi.png";
-                $scope.serverRadio = $scope.servers[0];
-                $scope.serverLogin = $scope.servers[0].user_login;
-                $scope.serverPassword = $scope.servers[0].user_password;
-
-                $scope.server1Select = function() {
-                    $scope.server1Img = "img/hospi.png";
+            /**
+             * Initial setup of the server buttons. Depending on how many servers
+             * the user saved, either the servername and an image have to be
+             * displayed or a text to indicate a user van add a server.
+             */
+            $scope.abbreviation1 = $scope.selectedUser.servers[0].hosp_short_name;
+            $scope.server1Img = "img/hospi.png";
+            $scope.serverRadio = $scope.selectedUser.servers[0];
+            if ($scope.selectedUser.servers.length == 3) {
+                $scope.abbreviation3 = $scope.selectedUser.servers[2].hosp_short_name;
+                $scope.server3Img = "img/hospi-gray.png";
+                $scope.showServer3 = true;
+            } else {
+                $scope.abbreviation3 = $rootScope.getLocalizedString('settingsAddServer');
+                $scope.showServer3 = false;
+                if ($scope.selectedUser.servers.length >= 2) {
+                    $scope.abbreviation2 = $scope.selectedUser.servers[1].hosp_short_name;
                     $scope.server2Img = "img/hospi-gray.png";
+                    $scope.showServer2 = true;
+                } else {
+                    $scope.abbreviation2 = $rootScope.getLocalizedString('settingsAddServer');
+                    $scope.showServer2 = false;
+                }
+            }       
+
+            /**
+             * Setting the correct images for the buttons. Also sets the
+             * login and password in the input fields.
+             */
+            $scope.server1Select = function() {
+                $scope.server1Img = "img/hospi.png";
+                $scope.server2Img = "img/hospi-gray.png";
+                $scope.server3Img = "img/hospi-gray.png";
+                $scope.serverRadio = $scope.servers[0];
+            };
+            $scope.server2Select = function() {
+                if ($scope.showServer2 === false) {
+                    $scope.addOrEditServer('add');
+                } else {
+                    $scope.server1Img = "img/hospi-gray.png";
+                    $scope.server2Img = "img/hospi.png";
                     $scope.server3Img = "img/hospi-gray.png";
-                    $scope.serverRadio = $scope.servers[0];
-                    $scope.serverLogin = $scope.serverRadio.user_login;
-                    $scope.serverPassword = $scope.serverRadio.user_password;
-                };
-                $scope.server2Select = function() {
-                    if ($scope.showServer2 === false) {
-                        $scope.addOrEditServer('add');
-                    } else {
-                        $scope.server1Img = "img/hospi-gray.png";
-                        $scope.server2Img = "img/hospi.png";
-                        $scope.server3Img = "img/hospi-gray.png";
-                        $scope.serverRadio = $scope.servers[1];
-                        $scope.serverLogin = $scope.serverRadio.user_login;
-                        $scope.serverPassword = $scope.serverRadio.user_password;
-                    }
-                };
-                $scope.server3Select = function() {
-                    if ($scope.showServer3 === false) {
-                        $scope.addOrEditServer('add');
-                    } else {
-                        $scope.server1Img = "img/hospi-gray.png";
-                        $scope.server2Img = "img/hospi-gray.png";
-                        $scope.server3Img = "img/hospi.png";
-                        $scope.serverRadio = $scope.servers[2];
-                        $scope.serverLogin = $scope.serverRadio.user_login;
-                        $scope.serverPassword = $scope.serverRadio.user_password;
-                    }
-                };
+                    $scope.serverRadio = $scope.servers[1];
+                }
+            };
+            $scope.server3Select = function() {
+                if ($scope.showServer3 === false) {
+                    $scope.addOrEditServer('add');
+                } else {
+                    $scope.server1Img = "img/hospi-gray.png";
+                    $scope.server2Img = "img/hospi-gray.png";
+                    $scope.server3Img = "img/hospi.png";
+                    $scope.serverRadio = $scope.servers[2];
+                }
+            };
 
-                /*if ($scope.selectedUser.cellcontent.patient === true)
-                 $('#patientCheckbox').prop('checked', true);
-                 if ($scope.selectedUser.cellcontent.title === true)
-                 $('#titleCheckbox').prop('checked', true);
-                 if ($scope.selectedUser.cellcontent.department === true)
-                 $('#departmentCheckbox').prop('checked', true);*/
+            /**
+             * Initial setup of the checkboxes, since we use custom checkboxes.
+             */
+            if ($scope.selectedUser.cellcontent.patient === true)
+                $scope.checkboxImgPatient = 1;
+            else
+                $scope.checkboxImgPatient = 0;
+            if ($scope.selectedUser.cellcontent.title === true)
+                $scope.checkboxImgTitle = 1;
+            else
+                $scope.checkboxImgTitle = 0;
+            if ($scope.selectedUser.cellcontent.department === true)
+                $scope.checkboxImgDepartment = 1;
+            else
+                $scope.checkboxImgDepartment = 0;
 
-                if ($scope.selectedUser.cellcontent.patient === true)
-                    $scope.checkboxImgPatient = 1;
-                else
-                    $scope.checkboxImgPatient = 0;
-                if ($scope.selectedUser.cellcontent.title === true)
-                    $scope.checkboxImgTitle = 1;
-                else
-                    $scope.checkboxImgTitle = 0;
-                if ($scope.selectedUser.cellcontent.department === true)
-                    $scope.checkboxImgDepartment = 1;
-                else
-                    $scope.checkboxImgDepartment = 0;
-            }
-
-            $scope.checkboxImg = 0;
+            /**
+             * Change the checkbox image when clicked.
+             */
             $scope.changeCheckbox = function(setting) {
                 var checkboxString = "checkboxImg" + setting;
                 if ($scope[checkboxString] === 0) {
@@ -1763,15 +1822,29 @@ angular.module('myApp.controllers', []).
                 }
             };
 
+            /**
+             * Saves the language when the radio buttons change. Because the
+             * text on the server buttons are set in the rootScope, we need
+             * to change it manually.
+             * 
+             * @param {integer} id     language id
+             */
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
                 localStorage.setItem("language", id);
                 $scope.abbreviation2 = $rootScope.getLocalizedString('settingsAddServer');
                 $scope.abbreviation3 = $rootScope.getLocalizedString('settingsAddServer');
             };
+            
+            /**
+             * Set which language button needs to be pressed.
+             */
             $scope.languageRadio = $rootScope.languageID;
 
-
+            /**
+             * Function to save the settings to local storage. Also redirects
+             * the user back to the appointments screen.
+             */
             $scope.save = function() {
                 if ($scope.checkboxImgPatient === 1)
                     $scope.selectedUser.cellcontent.patient = true;
@@ -1786,15 +1859,19 @@ angular.module('myApp.controllers', []).
                 else
                     $scope.selectedUser.cellcontent.department = false;
 
-                /*
-                 $scope.selectedUser.cellcontent.patient = $('#patientCheckbox').prop('checked');
-                 $scope.selectedUser.cellcontent.title = $('#titleCheckbox').prop('checked');
-                 $scope.selectedUser.cellcontent.department = $('#departmentCheckbox').prop('checked');*/
-
                 localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
+            
+            /**
+             * First, there is a check to prevent the user from adding more than 3 servers.
+             * Then redirects the user to the selectserver screen. The action will
+             * be passed as a route parameter.
+             * 
+             * @param {type} action     the action needed to be taken (Edit or add)
+             * @param {type} server     the server that needs to be edited
+             */
             $scope.addOrEditServer = function(action, server) {
                 if (action === "add" && $scope.selectedUser.servers.length === 3)
                     alert("Er kunnen maximaal 3 ziekenhuizen worden opgeslaan.");
@@ -1805,6 +1882,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/selectserver/' + action);
             };
+            
             /**
              * Prompts the user with a confirmation dialog,
              * Deletes the user currently logged in  and redirect to the login page
@@ -1929,11 +2007,6 @@ angular.module('myApp.controllers', []).
                 }
             };
 
-            $timeout(function() {
-                if ($routeParams.action === "new")
-                    alert($rootScope.getLocalizedString("settingsNew"));
-            }, 1000);
-
             /**
              * Check if the select box CSS needs to be changed.
              */
@@ -1950,12 +2023,21 @@ angular.module('myApp.controllers', []).
             else
                 $("#selectServerButton").removeClass("invisible");
 
+            /**
+             * Redirects the user back to the settings screen.
+             */
             $scope.back = function() {
                 $rootScope.pageClass = "left-to-right";
                 history.back();
 //                $location.path('/settings/default');
             };
 
+            /**
+             * Set the initial selected language to false so no language is 
+             * selected. If a language is selected, the id is set in the rootScope
+             * and saves it in the localStorage. Fills the userFunctionList in the
+             * chosen language.
+             */
             $scope.languageSelected = false;
             $scope.changeLanguage = function(id) {
                 $rootScope.languageID = id;
@@ -2067,6 +2149,10 @@ angular.module('myApp.controllers', []).
                 }
             };
 
+            /**
+             * Change the checkbox image when the user clicks the save_password checkbox.
+             * Also throws a warning if the user decides to save his password.
+             */
             $scope.changeCheckbox = function() {
                 if ($scope.checkboxImgServer === 0) {
                     $scope.checkboxImgServer = 1;
@@ -2080,8 +2166,13 @@ angular.module('myApp.controllers', []).
             }
 
             /**
+             * Set loggingIn to true, so the loggin animation starts. If any login
+             * information is missing, a errormessage will be shown, but this
+             * shouldn't be the case since the login button is only pressable when
+             * all information is entered.
+             * If all information is present, getAuthentication service is called
+             * to execute the login.
              * 
-             * TODO: write documentation
              */
             $scope.login = function() {
                 $scope.loggingIn = true;
@@ -2243,6 +2334,9 @@ angular.module('myApp.controllers', []).
                 }
             }
 
+            /**
+             * Set needed language strings to the rootScope.
+             */
             function postLoginPatient() {
                 languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
                         .then(function() {
@@ -2254,6 +2348,10 @@ angular.module('myApp.controllers', []).
                         }, error);
             }
 
+            /**
+             * Does the needed requests to initiate and fill rootScope arrays with 
+             * search units, holidays and absentdays.
+             */
             function postLoginDoctor() {
                 var year = new Date().getFullYear().toString(),
                         holidayPromise = [],
@@ -2263,7 +2361,6 @@ angular.module('myApp.controllers', []).
                 //SearchUnits
                 $rootScope.searchUnits = [];
                 $rootScope.searchString = $rootScope.user + 'Reservations';
-                $rootScope.absentDays = [];
                 //Absent days
                 $rootScope.absentDays = [];
 
@@ -2303,7 +2400,7 @@ angular.module('myApp.controllers', []).
             }
 
             /**
-             * Sets the dates between which reservations will be searched
+             * Sets the dates between which reservations will be searched.
              * 
              */
             function setDates() {
@@ -2314,6 +2411,9 @@ angular.module('myApp.controllers', []).
                 setData();
             }
 
+            /**
+             * The set dates are used to get the reservations. 
+             */
             function setData() {
                 dataFactory.setSearchDates($rootScope.startDate, $rootScope.endDate);
                 if (angular.isUndefined($rootScope[$rootScope.searchString]) || $rootScope[$rootScope.searchString].length === 0) {
@@ -2336,6 +2436,12 @@ angular.module('myApp.controllers', []).
                 }
             }
 
+            /**
+             * First, we add the hospital short name to the reservations, this
+             * is used in the reservations screen. Then we add the reservations to 
+             * the rootScope. Then redirects the user back to the settings screen.
+             * @param {type} reservations   new reservations needed to be added to the rootScope
+             */
             function setReservations(reservations) {
                 for (var i = 0; i < reservations.length; i++) {
                     reservations[i].hosp_short_name = $scope.server.hosp_short_name;

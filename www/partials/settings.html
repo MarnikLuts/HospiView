@@ -109,11 +109,11 @@
                 </div>
                 <div class="input-group form-group widthPercent">
                     <span class="input-group-addon widthSettingsLabels settingsLabels">{{getLocalizedString('settingsUser')}}:</span>
-                    <input id="username" class="form-control input-lg" type="text" ng-model="serverLogin" ng-disabled="true"/>
+                    <input id="username" class="form-control input-lg" type="text" ng-model="serverRadio.user_login" ng-disabled="true"/>
                 </div>
                 <div class="input-group form-group widthPercent">
                     <span class="input-group-addon widthSettingsLabels settingsLabels">{{getLocalizedString('loginPassword')}}:</span>
-                    <input id="password" class="form-control input-lg" type="password" ng-model="serverPassword" ng-disabled="true"/>
+                    <input id="password" class="form-control input-lg" type="password" ng-model="serverRadio.user_password" ng-disabled="true"/>
                 </div>
 
                 <table class="table table-condensed list">
