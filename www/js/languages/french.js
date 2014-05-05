@@ -8,15 +8,15 @@ var frenchStrings = {
         loginPassword: "Mot de passe",
         login: "Enregistrer",
         loginError: "Le mot de passe et/ou l'email que vous avez saisi est invalide.",
-        loginPasswordCheckedMessage: "Opgelet! Door uw wachtwoord automatisch te laten invullen kan elke gebruiker van dit toestel inloggen met uw account.",
-        loginNoReservationsFound: "Er zijn de volgende 14 dagen geen afspraken gevonden. Wilt u verder zoeken?",
-        loginNoConnection: "Er is geen internetconnectie of er kan geen connectie worden gemaakt met de server. Offline kan u nog steeds de laatst opgehaalde afspraken bekijken. Wilt u offline doorgaan?",
-        loginServerListFailed: "Inloggen is mislukt op de volgende servers:",
+        loginPasswordCheckedMessage: "Attention! Par entrer votre mot de passe automatiquement tous les utilisatuers de l'appareil peuvent enregistrer avec votre codes d'accès.",
+        loginNoReservationsFound: "Il n'y a pas de des réservations les 14 jours prochaines. Vous voulez continer à cherchez?",
+        loginNoConnection: "Il n'y a pas un connection avec l'internet ou ce n'est pas possible de connecter avec le serveur. Sans connections vous pouvez encore regarder les réservations qui sont déjà obtenues. Vous voulez continuer sans connection?",
+        loginServerListFailed: "Enregistration est echouée à les serveurs suivantes:",
         
         //AppointmentsView
         appointmentsViewReservations: "Réservations",
         appointmentsViewNoReservations: "Pas de Réservation",
-        appointmentsViewEndOfDateRange: "Er zijn geen afspraken meer gevonden",
+        appointmentsViewEndOfDateRange: "Il n'ya plus des réservations",
         
         //AppointmentsCalendar
         appointmentsCalendarToday: "Aujourd'hui",
@@ -57,7 +57,7 @@ var frenchStrings = {
                 +"Om onze demoserver te gebruiken selecteer \"Agendaview Demo\" en gebruik de volgende login gegevens:_"
                 +"Gebruikersnaam:_apple-user_"
                 +"Wachtwoord:_apple-user",
-        newServerSelectDefault: "Klik hier om te selecteren",
+        newServerSelectDefault: "Choisissez un serveur",
         newServerHasAccount: "Avez-vous un compte chez l'institution?",
         newServerEnterAccount: "Entrez vos données de connexion:",
                 
@@ -104,7 +104,7 @@ var frenchStrings = {
         yes: "Oui",
         no: "Non",
         cancel: "annuler",
-        wait: "Please wait...",
+        wait: "Un instant s'il vous plaît...",
         
         //Connection messages
         internalError: "Erreur interne du serveur.",
@@ -113,7 +113,7 @@ var frenchStrings = {
         uuidExpiredMessage: "Votre temps de connexion est expirer ou vous avez connecté sur un autre appareil mobile. Vous êtes hors ligne",
         
         //Settings
-        settingsNew: "Dit zijn de instellingen, hier kan u nieuwe gebruikers en servers toevoegen.\n\nOm uit dit scherm te gaan klik op 'Opslaan'.",
+        settingsNew: "Ici sont les paramètres, vous pouvez ajouter ou supprimer des utilisateurs ou serverurs ici\n\nPour quitter les paramètres appuyer sur 'Retour'.",
         settingsSave: "Sauver",
         settingsAddServer: "Ajouter un serveur",
         settingsEditServer: "Changez le serveur",
@@ -134,10 +134,10 @@ var frenchStrings = {
         settingsRefreshMin: "Minimum 30",
         settingsRefreshMax: "Maximum 7200",
         settingsRefreshDecimal: "Doit être décimal",
-        settingsDeleteServer: "Delete server",
-        settingsDeleteCurrentUser: "Delete user",
-        settingsDeleteServerConfirm: "Are you sure you want to delete the selected server?",
-        settingsDeleteCurrentUserConfirm: "Are you sure you want to delete the current user?",
+        settingsDeleteServer: "Supprimer serveur",
+        settingsDeleteCurrentUser: "Supprimer utilisateur",
+        settingsDeleteServerConfirm: "Êtes-vous sûr vous voulez supprimer cette serveur?",
+        settingsDeleteCurrentUserConfirm: "Êtes-vous sûr vous voulez supprimer l'utilisateur courant?",
         
         //patient/step1
         createAppointmentStep1SelectDoctor: "Choisissez un médecin",
