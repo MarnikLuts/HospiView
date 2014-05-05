@@ -9,7 +9,6 @@ body {
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent selecting text */
     -ms-content-zooming: none;                  /* disable zooming (WP) */
-    
 }
 
 .menu {
@@ -96,6 +95,17 @@ body {
     font-size: 1.1em;
     font-weight: normal;
     min-width: 40px;
+}
+.icasaCheckbox{
+    width:25px;
+    height:25px;
+    background-size:25px 25px;
+}
+.icasaCheckboxChecked{
+    background-image: url('../img/checkbox1.png');
+}
+.icasaCheckboxUnChecked{
+    background-image: url('../img/checkbox0.png');
 }
 
 @media screen and (min-width: 768px) {
