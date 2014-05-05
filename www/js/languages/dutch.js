@@ -145,4 +145,8 @@ var dutchStrings = {
                 
         //patient/step2
         createAppointmentStep2SelectType: "Kies een type",
+        
+        //patient/step3
+        createAppointmentStep3Morning: "voormiddag",
+        createAppointmentStep3Afternoon: "namiddag"
 };
