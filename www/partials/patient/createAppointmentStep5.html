@@ -10,48 +10,51 @@
 <div class="col-md-12">
     <div class="well well-lg">
         <h4>{{getLocalizedString('createAppointmentStep5Info')}}</h4>
-        <table class="appointmentFormTable">
-            <tr>
-                <td>
-                    <p class="formLabel"><b>{{getLocalizedString('appointmentDetailPatientNational')}}</b></p>
-                </td>
-                <td>
-                    <input type="text" class="form-control" ng-model="currentServers[0].reg_no" disabled/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep5Name')}}</b></p>
-                </td>
-                <td>
-                    <input type="text" class="form-control" />
-                    <input type="text" class="form-control" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep5Phone')}}</b></p>
-                </td>
-                <td>
-                    <input type="text" class="form-control" ng-model="phone"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p class="formLabel"><b>{{getLocalizedString('newUserEmail')}}</b></p>
-                </td>
-                <td>
-                    <input type="email" class="form-control" ng-model="email"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p class="formLabel"><b>{{getLocalizedString('newUserDateOfBirth')}}</b></p>
-                </td>
-                <td>
-                    <input type="email" class="form-control" ng-model="dateOfBirth"/>
-                </td>
-            </tr>
-        </table>
+        <form name="step5Form">
+            <table class="appointmentFormTable">
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('appointmentDetailPatientNational')}}</b></p>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="currentServers[0].reg_no" disabled/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep5Name')}}</b></p>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" required/>
+                        <input type="text" class="form-control" required/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep5Phone')}}</b></p>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="phone" required/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('newUserEmail')}}</b></p>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="email"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('newUserDateOfBirth')}}</b></p>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="dateOfBirth" placeholder="dd-mm-yyyy"/>
+                    </td>
+                </tr>
+            </table>
+            <button type="submit" class="btn btn-xl" >{{getLocalizedString('createAppointmentNext')}}</button>
+        </form>
     </div>
 </div>
