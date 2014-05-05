@@ -2744,15 +2744,14 @@ angular.module('myApp.controllers', []).
                     setDayNumber = setDayNumber - currentDayNumber;
                 else
                     setDayNumber = setDayNumber + currentDayNumber - 1;
-                proposal.setDayNumber = setDayNumber;
+                proposals[proposal].setDayNumber = setDayNumber;
                 
-                if (parseInt(proposal.time_from.substring(0, 2)) < 12)
-                    proposal.morning = true;
+                if (parseInt(proposals[proposal].time_from.substring(0, 2)) < 12)
+                    proposals[proposal].morning = true;
                 else
-                    proposal.morning = false;
+                    proposals[proposal].morning = false;
 
-                $scope.
-                $scope.proposals[setDayNumber].push(proposals[proposal]);
+                $scope.proposals.push(proposals[proposal]);
                 $scope.filters[setDayNumber] = true;
             }
             

@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="btn-group-vertical list list_overflow_y_100 list-unstyled">
-            <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in proposals" ng-click="" >
+            <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in proposals | orderBy:setDayNumber" ng-click="" >
                 <div class=".container-fluid">
                     <div class="row">
                         <div class="col-xs-2">
@@ -52,6 +52,7 @@
                         </div>
 
                         <div class="col-xs-1">
+                            {{proposal.setDayNumber}}
                         </div>
                         <div class="col-xs-1">
                         </div>
