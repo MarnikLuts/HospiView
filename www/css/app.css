@@ -458,17 +458,17 @@ ul li{
     font-size: 15px;
 }
 
-.step2Table{
+.appointmentFormTable{
     border-spacing: 10px; 
     border-collapse:separate;
     width:100%;
 }
 
-.step2Table tr td{
+.appointmentFormTable tr td{
     width: 90%;
 }
 
-.step2Table tr td:first-child{
+.appointmentFormTable tr td:first-child{
     width: 10%;
 }
 

@@ -2621,7 +2621,9 @@ angular.module('myApp.controllers', []).
                     unit: $scope.unit,
                     group: $scope.group
                 };
-                $location.path('/patient/step2');
+                //REDIRECTS TO STEP 5 FOR TESTING
+//                $location.path('/patient/step2');
+                $location.path('/patient/step5');
             };
 
         }).
@@ -2692,10 +2694,11 @@ angular.module('myApp.controllers', []).
                         $rootScope.newAppointment.locations.push($scope.locations[i]);
                 }
                 $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
+                $rootScope.pageClass = 'right-to-left';
                 $location.path('/patient/step3');
             };
-        }).
-        controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $q, $location, hospiviewFactory) {
+            
+        }).controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $q, $location, hospiviewFactory) {
 
             $rootScope.requestCounter = 0;
             var promises = [];
@@ -2764,12 +2767,9 @@ angular.module('myApp.controllers', []).
                     $scope.$apply();
                 }
             }
-            
-            $scope.next = function() {
-                $location.path('/patient/step4');
-            };
-        }).
-        controller("BackButtonCtrl", function($rootScope, $scope) {
+        }).controller("CreateAppointmentStep5Ctrl", function($rootScope){
+            console.log($rootScope.currentServers[0]);
+        }).controller("BackButtonCtrl", function($rootScope, $scope) {
             /**
              * This controller is used for every page that uses a back button that can go back to any page
              * @returns {undefined}
