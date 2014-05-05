@@ -2694,6 +2694,44 @@ angular.module('myApp.controllers', []).
                 $location.path('/patient/step3')
             };
             
+        }).
+        controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $q, $location, hospiviewFactory) {
+
+            $rootScope.requestCounter = 0;
+            var promises = [];
+            var promises2 = [];
+
+            promises.push(hospiviewFactory.getAuthentication('sceunen', 'rgsflc', 'http://agendaviewtest.agendaview.be/cfcs/webservices/kiosk_service.cfc?'));
+            $q.all(promises).then(function(responses) {
+                var json = parseJson(responses[0].data);
+                $scope.user = json.Authentication;
+                console.log($scope.user);
+                promises2.push(hospiviewFactory.getProposals('http://agendaviewtest.agendaview.be/cfcs/webservices/kiosk_service.cfc?', $scope.user.Detail.uuid, 171, 729, 2926, "test maken reservatie", 0, "", "00:00", "1,2,3,4,5,6,7", 0, 1,0));
+                $q.all(promises2).then(function(proposals) {
+                    json = parseJson(proposals[0].data);
+                    $scope.proposals = json;
+                    console.log($scope.proposals);
+                });
+            });
+
+            $scope.filters = {monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true, morning: true, afternoon: true};
+
+            var width = window.innerWidth;
+
+            setDayNames();
+            window.onresize = setDayNames;
+
+            function setDayNames() {
+                width = window.innerWidth;
+                if (width <= 768) {
+                    $scope.days = getDayNamesShort($rootScope.languageID);
+                    $scope.$apply();
+                }
+                else {
+                    $scope.days = getDayNames($rootScope.languageID);
+                    $scope.$apply();
+                }
+            }
         }).controller("BackButtonCtrl", function($rootScope, $scope){
             /**
              * This controller is used for every page that uses a back button that can go back to any page
