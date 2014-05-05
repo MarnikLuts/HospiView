@@ -832,6 +832,16 @@ angular.module('myApp.controllers', []).
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
 
+            $scope.getNextDay = function(){
+                if(!$scope.loadingNext)
+                    $scope.nextDay();
+            };
+            
+            $scope.getPreviousDay = function(){
+                if(!$scope.loadingNext)
+                    $scope.previousDay();
+            };
+            
             /**
              * Function for the calendar button. Redirects to the calendar view
              * and loads the remainder of the month's reservations. 
