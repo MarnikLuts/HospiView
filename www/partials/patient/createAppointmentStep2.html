@@ -6,9 +6,52 @@
     <div class="title">{{ getLocalizedString('createAppointmentStep2')}}</div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
-<div class="well">
-    <p>{{getLocalizedString('createAppointmentStep2Info1')}} <b>{{unitOrGroupName}}</b> {{getLocalizedString('createAppointmentStep2Info2')}}</p>
-    <form name="step2Form" novalidate>
-        
-    </form>
+<div class="col-md-12">
+    <div class="well well-lg">
+        <h4>{{getLocalizedString('createAppointmentStep2Info1')}} <b>{{unitOrGroupName}}</b> {{getLocalizedString('createAppointmentStep2Info2')}}</h4>
+        <br>
+        <form name="step2Form" novalidate>
+            <table class="step2Table">
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentType')}}</b></p>
+                    </td>
+                    <td>
+                        <select class="form-control">
+                            <option value=""> - {{getLocalizedString('createAppointmentStep2SelectType')}} - </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentCampus')}}</b></p>
+                    </td>
+                    <td>
+                        <div class="list-group"  style="font-size: 15px;">
+                            <label ng-repeat="location in locations track by $index" class="widthPercent list-group-item" ng-class="{'list-group-item-success':location.checked}" ><input type="checkbox" ng-model="location.checked"/>{{location.location_name}}</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ReservationInfo')}}</b></p>
+                    </td>
+                    <td>
+                        <textarea class="form-control" rows="3" ng-model="reservationInfo" placeholder="{{getLocalizedString('createAppointmentStep2ReservationInfo')}}" ></textarea>
+                    </td>    
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ExtraInfo')}}</b></p>
+                    </td>
+                    <td>
+                        <textarea class="form-control" rows="3" ng-model="extraInfo" placeholder="{{getLocalizedString('createAppointmentStep2ExtraInfo')}}" ></textarea>
+                    </td>    
+                </tr>
+            </table>
+            <br>
+            <button class="btn btn-xl" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
+        </form>
+    </div>
 </div>
+    

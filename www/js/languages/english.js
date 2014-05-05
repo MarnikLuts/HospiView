@@ -142,4 +142,7 @@ var englishStrings = {
         //patient/step1
         createAppointmentStep1SelectDoctor: "Select a doctor",
         createAppointmentStep1SelectSection: "Select a section",
+                
+        //patient/step2
+        createAppointmentStep2SelectType: "Choose a type",
 };

@@ -172,8 +172,7 @@ angular.module('myApp.services', []).
                     return $http.get(server_url + "method=GetLogin&USER_NAME=" + USER_NAME + "&USER_REGNO=" + USER_REGNO + "&USER_EMAIL=" + USER_EMAIL + "&USER_MOB=" + USER_MOB + "&LANGUAGE_ID=" + LanguageId + "&Update_NameEmailTel=" + Update_NameEmailTel + "&count=" + $rootScope.requestCounter);
                 },
                 /**
-                 * Gets all the possible reservation types of the given department
-                 * 
+                 * Gets all the possible reservation types of the given unit and department
                  * 
                  * @param {type} UUID
                  * @param {type} Unit_Id
@@ -571,7 +570,7 @@ angular.module('myApp.services', []).
                             createAppointmentSection: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 55),
                             createAppointmentCampus: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 56),
                             createAppointmentDoctor: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 57).split('/')[0],
-                            createAppointmentReservationInfo: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 60),
+                            createAppointmentStep2ReservationInfo: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 60),
                             
                             createAppointmentType: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 94, 10),
                             
