@@ -186,8 +186,30 @@ angular.module('myApp.services', []).
                 getTypes: function(UUID, Unit_Id, Dep_Id, GlobalTypes, The_Online, Language_Id, server_url){
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetTypesOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&GlobalTypes=" + GlobalTypes + "&The_Online=" + The_Online + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter);
+                },
+                
+                /**
+                 * Get proposals for placing a reservation.
+                 * 
+                 * @param {type} server_url
+                 * @param {type} UUID
+                 * @param {type} Unit_Id
+                 * @param {type} Dep_Id
+                 * @param {type} UnitType_Id
+                 * @param {type} STitle
+                 * @param {type} Additional_Info
+                 * @param {type} GlobalTypes
+                 * @param {type} Start_Date
+                 * @param {type} Start_Time
+                 * @param {type} Active_Days
+                 * @param {type} Include_Today
+                 * @param {type} Language_id
+                 * @returns {unresolved}
+                 */
+                getProposals: function(server_url, UUID, Unit_Id, Dep_Id, UnitType_Id, STitle, Additional_Info, GlobalTypes, Start_Date, Start_Time, Active_Days, Include_Today, Language_id){
+                    $rootScope.requestCounter++;
+                    return $http.get(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days  + "&Include_Today=" + Include_Today  + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
                 }
-
             };
         }).
         factory('dataFactory', function($rootScope, $q, hospiviewFactory) {
