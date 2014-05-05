@@ -5,15 +5,6 @@ angular.module('myApp.controllers', []).
         controller('LoginCtrl', function($scope, $location, $route, $q, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
 
             /**
-             * Adds an event listener to the ICASA logo to redirect the user
-             * to the ICASA site.
-             */
-            $('.icasaLogo').live('tap', function() {
-                var url = $(this).attr("rel");
-                loadURL(url);
-            });
-
-            /**
              * Set the counter for the refresh back to 0. The interval depends on
              * the user.
              */

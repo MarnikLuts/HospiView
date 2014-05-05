@@ -1,4 +1,3 @@
-
 <div class="heightPercent widthPercent" >
     <nav class="navbar navbar-default" role="navigation">
         <button class="btn btn-sm-back" ng-click="logout()">
@@ -65,30 +64,30 @@
                                 <span ng-switch-when="false"></span>
                                 <span ng-switch-default>{{reservation.name}} 
                                     <span ng-switch on="cellcontentTitle">
-                                        <span ng-switch-when="false"></span>
-                                        <span ng-switch-default>/</span>  
-                                    </span>
-                                </span>   
+                                        <span ng-switch-when="false">
+                                            <span ng-switch on="cellcontentDepartment">
+                                                <span ng-switch-when="false"></span>
+                                                <span ng-switch-default>/</span>
+                                            </span>
+                                        </span>
+                                        <span ng-switch-default>/</span>                                        
+                                    </span>  
+                                </span>
                             </span>
 
                             <span ng-switch on="cellcontentTitle">
-                                <span ng-switch-when="false">
+                                <span ng-switch-when="false"></span>
+                                <span ng-switch-default>{{reservation.title}}
                                     <span ng-switch on="cellcontentDepartment">
                                         <span ng-switch-when="false"></span>
-                                        <span ng-switch-default>/</span> 
-                                    </span>
+                                        <span ng-switch-default>/</span>
+                                    </span>            
                                 </span>
-                                <span ng-switch-default>{{reservation.title}}</span>
                             </span>
 
                             <span ng-switch on="cellcontentDepartment">
                                 <span ng-switch-when="false"></span>
-                                <span ng-switch-default>
-                                    <span ng-switch on="cellcontentTitle">
-                                        <span ng-switch-when="false"></span>
-                                        <span ng-switch-default>/</span>   
-                                    </span>
-                                    {{reservation.dep_name}}</span> 
+                                <span ng-switch-default>{{reservation.dep_name}}</span> 
                             </span>
                         </div>
 
