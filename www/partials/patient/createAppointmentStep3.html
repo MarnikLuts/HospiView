@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="btn-group-vertical list list_overflow_y_100 list-unstyled">
-            <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in orderedProposals = (proposals| orderBy:testSort(proposals) | filter:{the_date:date, hosp_short_name:serverFilter.hosp_short_name} | filter: unitAndDepFilterFunction)" ng-click="" >
+            <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in proposals" ng-click="" >
                 <div class=".container-fluid">
                     <div class="row">
                         <div class="col-xs-2">
