@@ -2569,27 +2569,27 @@ angular.module('myApp.controllers', []).
         }).
         controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location) {
             hospiviewFactory.getUnitAndDepList($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
-                .then(function(response) {
-                    var json = parseJson(response.data);
-                    if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                        $scope.unitList = json.UnitsAndDeps.Detail.Unit;
-                        if ($scope.unitList.length == 1)
-                            $scope.unit = $scope.unitList[0];
-                    }
-                }, error);
+                    .then(function(response) {
+                        var json = parseJson(response.data);
+                        if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                            $scope.unitList = json.UnitsAndDeps.Detail.Unit;
+                            if ($scope.unitList.length == 1)
+                                $scope.unit = $scope.unitList[0];
+                        }
+                    }, error);
 
             hospiviewFactory.getUnitDepGroups($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
-                .then(function(response){
-                    var json = parseJson(response.data);
-                    if(json.UnitDepGroups.Header.StatusCode==1){
-                        $scope.groupList = json.UnitDepGroups.Detail.Group;
-                        if($scope.groupList.length==1&&$scope.unitList.length!=1)
-                            $scope.group = $scope.groupList[0];
-                    }
-                    
-                }, error);
-                    
-            function error(data){
+                    .then(function(response) {
+                        var json = parseJson(response.data);
+                        if (json.UnitDepGroups.Header.StatusCode == 1) {
+                            $scope.groupList = json.UnitDepGroups.Detail.Group;
+                            if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
+                                $scope.group = $scope.groupList[0];
+                        }
+
+                    }, error);
+
+            function error(data) {
                 $scope.error = true;
             }
 
@@ -2600,21 +2600,21 @@ angular.module('myApp.controllers', []).
                  * use this loop to transfer important data from the unit list to the chosen group
                  * @type Number
                  */
-                if($scope.group!==null)
-                for(var i=0;i<$scope.unitList.length;i++){
-                    for(var j=0;j<$scope.unitList[i].Detail.Dep.length;j++){
-                        for(var k=0;k<$scope.group.Detail.UnitAndDep.length;k++){
-                            if($scope.unitList[i].Detail.Dep[j].dep_id===$scope.group.Detail.UnitAndDep[k].dep_id){
-                                $scope.group.Detail.UnitAndDep[k].location_name = $scope.unitList[i].Detail.Dep[j].location_name;
-                                $scope.group.Detail.UnitAndDep[k].location_id = $scope.unitList[i].Detail.Dep[j].location_id;
-                                $scope.group.Detail.UnitAndDep[k].globaltypes = $scope.unitList[i].Header.globaltypes;
-                                $scope.group.Detail.UnitAndDep[k].the_online = $scope.unitList[i].Header.the_online;
-                                $scope.group.Detail.UnitAndDep[k].msg_extern_step2 = $scope.unitList[i].Detail.Dep[j].msg_extern_step2;
-                                break;
+                if ($scope.group !== null)
+                    for (var i = 0; i < $scope.unitList.length; i++) {
+                        for (var j = 0; j < $scope.unitList[i].Detail.Dep.length; j++) {
+                            for (var k = 0; k < $scope.group.Detail.UnitAndDep.length; k++) {
+                                if ($scope.unitList[i].Detail.Dep[j].dep_id === $scope.group.Detail.UnitAndDep[k].dep_id) {
+                                    $scope.group.Detail.UnitAndDep[k].location_name = $scope.unitList[i].Detail.Dep[j].location_name;
+                                    $scope.group.Detail.UnitAndDep[k].location_id = $scope.unitList[i].Detail.Dep[j].location_id;
+                                    $scope.group.Detail.UnitAndDep[k].globaltypes = $scope.unitList[i].Header.globaltypes;
+                                    $scope.group.Detail.UnitAndDep[k].the_online = $scope.unitList[i].Header.the_online;
+                                    $scope.group.Detail.UnitAndDep[k].msg_extern_step2 = $scope.unitList[i].Detail.Dep[j].msg_extern_step2;
+                                    break;
+                                }
                             }
                         }
                     }
-                }
                 $rootScope.pageClass = 'right-to-left';
                 $rootScope.newAppointment = null;
                 $rootScope.newAppointment = {
@@ -2623,77 +2623,77 @@ angular.module('myApp.controllers', []).
                 };
                 $location.path('/patient/step2');
             };
-                
-        }).controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location, $q, hospiviewFactory){
-            
+
+        }).
+        controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location, $q, hospiviewFactory) {
+
             var typePromises = [];
             $scope.locations = [];
-            if($rootScope.newAppointment.unit===null){
-               $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
-               for(var i=0;i<$rootScope.newAppointment.group.Detail.UnitAndDep.length;i++){
-                   var UnitAndDep = $rootScope.newAppointment.group.Detail.UnitAndDep[i];
-                   $scope.locations.push({
+            if ($rootScope.newAppointment.unit === null) {
+                $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
+                for (var i = 0; i < $rootScope.newAppointment.group.Detail.UnitAndDep.length; i++) {
+                    var UnitAndDep = $rootScope.newAppointment.group.Detail.UnitAndDep[i];
+                    $scope.locations.push({
                         checked: true,
                         location_id: UnitAndDep.location_id,
                         location_name: UnitAndDep.location_name
                     });
                     typePromises.push(hospiviewFactory.getTypes($rootScope.currentServers[0].uuid, UnitAndDep.unit_id, UnitAndDep.dep_id, UnitAndDep.globaltypes, UnitAndDep.the_online, $rootScope.languageID, $rootScope.currentServers[0].hosp_url));
-               }
-            }else{
+                }
+            } else {
                 $scope.unitOrGroupName = $rootScope.newAppointment.unit.Header.unit_name;
                 $scope.extraInfo = "";
-                for(var i=0;i<$rootScope.newAppointment.unit.Detail.Dep.length;i++){
+                for (var i = 0; i < $rootScope.newAppointment.unit.Detail.Dep.length; i++) {
                     var Dep = $rootScope.newAppointment.unit.Detail.Dep[i];
                     $scope.locations.push({
                         checked: true,
                         location_id: Dep.location_id,
                         location_name: Dep.location_name
                     });
-                    $scope.extraInfo += Dep.msg_extern_step2+"\n";
+                    $scope.extraInfo += Dep.msg_extern_step2 + "\n";
                     typePromises.push(hospiviewFactory.getTypes($rootScope.currentServers[0].uuid, $rootScope.newAppointment.unit.Header.unit_id, Dep.dep_id, $rootScope.newAppointment.unit.Header.globaltypes, $rootScope.newAppointment.unit.Header.the_online, $rootScope.languageID, $rootScope.currentServers[0].hosp_url));
                 }
             }
-            
+
             $scope.typeList = [];
             $scope.type = null;
             $q.all(typePromises)
-                .then(function(responses){
-                    var json;
-                    for(var i=0;i<responses.length;i++){
-                        json = parseJson(responses[i].data);
-                        if(json.TypesOnUnit.Header.StatusCode==1){
-                            for(var j=0;j<json.TypesOnUnit.Detail.Type.length;j++){
-                                $scope.typeList.push(json.TypesOnUnit.Detail.Type[j]);
+                    .then(function(responses) {
+                        var json;
+                        for (var i = 0; i < responses.length; i++) {
+                            json = parseJson(responses[i].data);
+                            if (json.TypesOnUnit.Header.StatusCode == 1) {
+                                for (var j = 0; j < json.TypesOnUnit.Detail.Type.length; j++) {
+                                    $scope.typeList.push(json.TypesOnUnit.Detail.Type[j]);
+                                }
+                                if ($scope.typeList.length == 1)
+                                    $scope.type = $scope.typeList[0];
                             }
-                            if($scope.typeList.length==1)
-                                $scope.type=$scope.typeList[0];
                         }
-                    }
-                }, error);
-            
-            $scope.locationIsChecked = function(){
-                for(var i=0;i<$scope.locations.length;i++){
-                    if($scope.locations[i].checked)
+                    }, error);
+
+            $scope.locationIsChecked = function() {
+                for (var i = 0; i < $scope.locations.length; i++) {
+                    if ($scope.locations[i].checked)
                         return true;
                 }
                 return false;
             };
-            
-            function error(data){
+
+            function error(data) {
                 $scope.error = true;
             }
-            
-            $scope.next = function(){
+
+            $scope.next = function() {
                 $rootScope.newAppointment.type = $scope.type;
                 $rootScope.newAppointment.locations = [];
-                for(var i=0;i<$scope.locations.length;i++){
-                    if($scope.locations[i].checked)
+                for (var i = 0; i < $scope.locations.length; i++) {
+                    if ($scope.locations[i].checked)
                         $rootScope.newAppointment.locations.push($scope.locations[i]);
                 }
                 $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
-                $location.path('/patient/step3')
+                $location.path('/patient/step3');
             };
-            
         }).
         controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $q, $location, hospiviewFactory) {
 
@@ -2701,18 +2701,20 @@ angular.module('myApp.controllers', []).
             var promises = [];
             var promises2 = [];
 
-            promises.push(hospiviewFactory.getAuthentication('sceunen', 'rgsflc', 'http://agendaviewtest.agendaview.be/cfcs/webservices/kiosk_service.cfc?'));
-            $q.all(promises).then(function(responses) {
-                var json = parseJson(responses[0].data);
-                $scope.user = json.Authentication;
-                console.log($scope.user);
-                promises2.push(hospiviewFactory.getProposals('http://agendaviewtest.agendaview.be/cfcs/webservices/kiosk_service.cfc?', $scope.user.Detail.uuid, 171, 729, 2926, "test maken reservatie", 0, "", "00:00", "1,2,3,4,5,6,7", 0, 1,0));
-                $q.all(promises2).then(function(proposals) {
-                    json = parseJson(proposals[0].data);
-                    $scope.proposals = json;
-                    console.log($scope.proposals);
-                });
-            });
+            /*promises.push(hospiviewFactory.getAuthentication('sceunen', 'rgsflc', 'http://agendaviewtest.agendaview.be/cfcs/webservices/kiosk_service.cfc?'));
+             $q.all(promises).then(function(responses) {
+             var json = parseJson(responses[0].data);
+             $scope.user = json.Authentication;
+             console.log($scope.user);
+             promises2.push(hospiviewFactory.getProposals('http://agendaviewtest.agendaview.be/cfcs/webservices/kiosk_service.cfc?', $scope.user.Detail.uuid, 171, 729, 2926, "test maken reservatie", 0, "", "00:00", "1,2,3,4,5,6,7", 0, 1,0));
+             $q.all(promises2).then(function(proposals) {
+             json = parseJson(proposals[0].data);
+             $scope.proposals = json;
+             console.log($scope.proposals);
+             });
+             });*/
+
+            $scope.proposals = [{proposal_id: '', the_date: '', time_from: '', time_till: '', unit_id: '', depid: ''}];
 
             $scope.filters = {monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true, morning: true, afternoon: true};
 
@@ -2732,7 +2734,8 @@ angular.module('myApp.controllers', []).
                     $scope.$apply();
                 }
             }
-        }).controller("BackButtonCtrl", function($rootScope, $scope){
+        }).
+        controller("BackButtonCtrl", function($rootScope, $scope) {
             /**
              * This controller is used for every page that uses a back button that can go back to any page
              * @returns {undefined}
