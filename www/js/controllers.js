@@ -2697,13 +2697,14 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('/patient/step3');
             };
-            
-        }).controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $q, $location, hospiviewFactory) {
+
+        }).
+        controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $q, $location, hospiviewFactory) {
 
             $rootScope.requestCounter = 0;
             var promises = [];
             var promises2 = [];
-            
+
             console.log($rootScope.newAppointment);
 
             /*promises.push(hospiviewFactory.getAuthentication('sceunen', 'rgsflc', 'http://agendaviewtest.agendaview.be/cfcs/webservices/kiosk_service.cfc?'));
@@ -2719,38 +2720,65 @@ angular.module('myApp.controllers', []).
              });
              });*/
 
-            $scope.proposals = [{proposal_id: '1', the_date: '2014-05-06', time_from: '07:00', time_till: '08:00', dep_id: '729', unit_id: '171'},
-                                {proposal_id: '2', the_date: '2014-05-06', time_from: '08:00', time_till: '09:00', dep_id: '729', unit_id: '171'},
-                                {proposal_id: '3', the_date: '2014-05-06', time_from: '12:00', time_till: '13:00', dep_id: '730', unit_id: '171'},
-                                {proposal_id: '4', the_date: '2014-05-06', time_from: '13:00', time_till: '13:30', dep_id: '730', unit_id: '171'},
-                                {proposal_id: '5', the_date: '2014-05-07', time_from: '14:30', time_till: '15:30', dep_id: '824', unit_id: '171'},
-                                {proposal_id: '6', the_date: '2014-05-08', time_from: '07:00', time_till: '08:00', dep_id: '824', unit_id: '171'},
-                                {proposal_id: '7', the_date: '2014-05-08', time_from: '15:00', time_till: '16:00', dep_id: '824', unit_id: '171'},
-                                {proposal_id: '8', the_date: '2014-05-10', time_from: '08:00', time_till: '9:00', dep_id: '729', unit_id: '171'},
-                                {proposal_id: '9', the_date: '2014-05-10', time_from: '09:00', time_till: '10:00', dep_id: '729', unit_id: '171'},
-                                {proposal_id: '10', the_date: '2014-05-10', time_from: '14:00', time_till: '15:00', dep_id: '729', unit_id: '171'}];
+            var proposals = [{proposal_id: '1', the_date: '2014-05-09', time_from: '07:00', time_till: '08:00', dep_id: '729', unit_id: '171'},
+                {proposal_id: '2', the_date: '2014-05-09', time_from: '08:00', time_till: '09:00', dep_id: '729', unit_id: '171'},
+                {proposal_id: '3', the_date: '2014-05-09', time_from: '12:00', time_till: '13:00', dep_id: '730', unit_id: '171'},
+                {proposal_id: '4', the_date: '2014-05-09', time_from: '13:00', time_till: '13:30', dep_id: '730', unit_id: '171'},
+                {proposal_id: '5', the_date: '2014-05-14', time_from: '14:30', time_till: '15:30', dep_id: '824', unit_id: '171'},
+                {proposal_id: '6', the_date: '2014-05-15', time_from: '07:00', time_till: '08:00', dep_id: '824', unit_id: '171'},
+                {proposal_id: '11', the_date: '2014-05-09', time_from: '16:00', time_till: '17:00', dep_id: '824', unit_id: '171'},
+                {proposal_id: '7', the_date: '2014-05-15', time_from: '15:00', time_till: '16:00', dep_id: '824', unit_id: '171'},
+                {proposal_id: '8', the_date: '2014-05-16', time_from: '08:00', time_till: '9:00', dep_id: '729', unit_id: '171'},
+                {proposal_id: '9', the_date: '2014-05-16', time_from: '09:00', time_till: '10:00', dep_id: '729', unit_id: '171'},
+                {proposal_id: '10', the_date: '2014-05-16', time_from: '14:00', time_till: '15:00', dep_id: '729', unit_id: '171'}];
 
-            $scope.filters = {monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true, morning: true, afternoon: true};
+            var setDayNumber;
+            var currentDayNumber = new Date().getDay();
+            console.log(currentDayNumber);
+            //$scope.proposals = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []};
+            $scope.proposals = [];
+            $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: false, afternoon: false};
+            for (var proposal in proposals) {
+                setDayNumber = new Date(proposals[proposal].the_date).getDay();
+                if (setDayNumber >= currentDayNumber)
+                    setDayNumber = setDayNumber - currentDayNumber;
+                else
+                    setDayNumber = setDayNumber + currentDayNumber - 1;
+                proposal.setDayNumber = setDayNumber;
+                
+                if (parseInt(proposal.time_from.substring(0, 2)) < 12)
+                    proposal.morning = true;
+                else
+                    proposal.morning = false;
 
-            $scope.getDay = function(proposal){
+                $scope.
+                $scope.proposals[setDayNumber].push(proposals[proposal]);
+                $scope.filters[setDayNumber] = true;
+            }
+            
+            
+
+            //$scope.filters = {monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true, morning: true, afternoon: true};
+
+            $scope.getDay = function(proposal) {
                 var date = new Date(proposal.the_date);
                 return $scope.days[date.getDay()];
             };
-            
-            $scope.getTime = function(proposal){
-                if(parseInt(proposal.time_from.substring(0,2)) < 12)
+
+            $scope.getTime = function(proposal) {
+                if (parseInt(proposal.time_from.substring(0, 2)) < 12)
                     return $rootScope.getLocalizedString('createAppointmentStep3Morning');
                 else
                     return $rootScope.getLocalizedString('createAppointmentStep3Afternoon');
             };
-            
-            $scope.testSort = function(proposal){
+
+            $scope.testSort = function(proposal) {
                 console.log(proposal);
                 var date = proposal[1].the_date;
                 console.log(date);
                 return date.getDay();
             };
-            
+
             var width = window.innerWidth;
 
             setDayNames();
@@ -2767,15 +2795,19 @@ angular.module('myApp.controllers', []).
                     $scope.$apply();
                 }
             }
-        }).controller("CreateAppointmentStep5Ctrl", function($rootScope){
-            console.log($rootScope.currentServers[0]);
-        }).controller("BackButtonCtrl", function($rootScope, $scope) {
-            /**
-             * This controller is used for every page that uses a back button that can go back to any page
-             * @returns {undefined}
-             */
-            $scope.back = function() {
-                $rootScope.pageClass = 'left-to-right';
-                history.back();
+
+            $scope.next = function() {
+                $location.path('/patient/step4');
             };
-        });
+        }).controller("CreateAppointmentStep5Ctrl", function($rootScope) {
+    console.log($rootScope.currentServers[0]);
+}).controller("BackButtonCtrl", function($rootScope, $scope) {
+    /**
+     * This controller is used for every page that uses a back button that can go back to any page
+     * @returns {undefined}
+     */
+    $scope.back = function() {
+        $rootScope.pageClass = 'left-to-right';
+        history.back();
+    };
+});
