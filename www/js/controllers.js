@@ -2675,6 +2675,9 @@ angular.module('myApp.controllers', []).
                 $scope.error = true;
             }
 
+            /**
+             * Selects the only server if the user only has 1 configured.
+             */
             if ($rootScope.currentServers.length === 1) {
                 $scope.showUnitsAndGroupsBoolean = true;
                 $scope.server = $rootScope.currentServers[0];
@@ -2684,7 +2687,10 @@ angular.module('myApp.controllers', []).
                 getUnitsAndGroups();
             }
 
-
+            /**
+             * If a server is selected, show the other selectboxes. Call the function
+             * to load the needed units and groups for those selectboxes.
+             */
             $scope.showUnitsAndGroups = function() {
                 if (angular.isDefined($scope.server)) {
                     $scope.showUnitsAndGroupsBoolean = true;
@@ -2772,7 +2778,10 @@ angular.module('myApp.controllers', []).
 
             /**
              * When all the requests to the server are resolved, the select box for types gets filled
-             * If there is onlu one option, that option is selected automatically
+             * If there is only one option, that option is selected automatically.
+             * 
+             * Also adds 3 arrays to the type model. These arrays contain the ids needed
+             * to do the proposal requests.
              */
             $scope.typeList = [];
             $scope.type = null;
@@ -2956,6 +2965,11 @@ angular.module('myApp.controllers', []).
                 else
                     return $rootScope.getLocalizedString('createAppointmentStep3Afternoon');
             };
+            
+            $scope.getDate = function(proposal) {
+                var date = proposal.the_date;
+                var showDate = date
+            };
 
             $scope.selectProposal = function(proposal) {
                 console.log(proposal);
@@ -2974,11 +2988,9 @@ angular.module('myApp.controllers', []).
                 width = window.innerWidth;
                 if (width <= 768) {
                     $scope.days = getDayNamesShort($rootScope.languageID);
-                    $scope.$apply();
                 }
                 else {
                     $scope.days = getDayNames($rootScope.languageID);
-                    $scope.$apply();
                 }
             }
 
