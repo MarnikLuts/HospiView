@@ -50,14 +50,16 @@
                         <p class="formLabel"><b>{{getLocalizedString('newUserDateOfBirth')}}</b></p>
                     </td>
                     <td>
-                        <input type="text" class="form-control" ng-model="dateOfBirth" placeholder="dd-mm-yyyy"/>
+                        <input type="text" class="form-control" ng-model="dateOfBirth" placeholder="dd/mm/yyyy"/>
                     </td>
                 </tr>
             </table>
             <div class="alert alert-danger" ng-show="step5Form.lastname.$error.required&&step5Form.lastname.$dirty||step5Form.firstname.$error.required&&step5Form.firstname.$dirty||step5Form.phone.$error.required&&step5Form.phone.$dirty">
                 {{getLocalizedString('createAppointmentStep5Error')}}
             </div>
-            <button type="submit" class="btn btn-xl" ng-click="next()" ng-disabled="step5Form.$invalid" >{{getLocalizedString('createAppointmentNext')}}</button>
+            <div class="text-center">
+                <button type="submit" class="btn btn-xl" ng-click="next()" ng-disabled="step5Form.$invalid" >{{getLocalizedString('createAppointmentNext')}}</button>
+            </div>
         </form>
     </div>
 </div>

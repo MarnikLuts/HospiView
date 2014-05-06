@@ -73,7 +73,6 @@ angular.module('myApp.controllers', []).
                 if (angular.isDefined($scope.user)) {
                     $scope.selectedUser = JSON.parse(localStorage.getItem($scope.user));
                     $scope.servers = $scope.selectedUser.servers;
-                    console.log($scope.servers);
                     $scope.serverRadio = $scope.servers[0];
                     for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                         var checkboxString = "checkboxImgServer" + i;

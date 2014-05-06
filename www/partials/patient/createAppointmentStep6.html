@@ -11,6 +11,8 @@
         <h2>{{ getLocalizedString('createAppointmentStep6EndCreate')}}</h2>
         <h4>{{getLocalizedString('createAppointmentStep6With')}} <b>{{newAppointment.proposal.unit_name}}</b> {{getLocalizedString('createAppointmentStep6On')}} <b>{{newAppointment.proposal.day_name + " " + newAppointment.proposal.the_date + " " + getLocalizedString('createAppointmentStep6At') + " " + newAppointment.proposal.time_from}}</b>
             {{getLocalizedString('createAppointmentStep6For')}} <b>{{newAppointment.firstname + " "  + newAppointment.lastname}}</b></h4><br>
-        <button class="btn btn-xl" ng-click="end()">{{getLocalizedString('createAppointmentStep6End')}}</button>
+        <div class="text-center">
+            <button class="btn btn-xl" ng-click="end()">{{getLocalizedString('createAppointmentStep6End')}}</button>
+        </div>
     </div>
 </div>
