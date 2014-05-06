@@ -1737,7 +1737,9 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller('SettingsCtrl', function($scope, $location, $rootScope, $routeParams, $timeout) {
-
+            $timeout(function(){
+                alert($rootScope.getLocalizedString('settingsNew'));
+            },1000);
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
 
             /**
