@@ -50,8 +50,10 @@
                 </tr>
             </table>
             <br>
-            <button class="btn btn-xl" ng-click="next()" ng-disabled="type==null||!locationIsChecked()" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
+            <div class="text-center">
+                <button class="btn btn-xl" ng-click="next()" ng-disabled="type == null || !locationIsChecked()" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
+            </div>
         </form>
     </div>
 </div>
-    
+

@@ -40,13 +40,13 @@
             </div>
         </div><br/>
         <div class="btn-group-vertical list list_overflow_y_100 list-unstyled">
-            <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in filteredProposals = (proposals| orderBy:['setRespectiveDayNumber','afternoon','the_date','time_from'] | orderProposals:filters)" ng-click="selectProposal(proposal)">
+            <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in filteredProposals = (proposals| orderBy:['setRespectiveDayNumber', 'afternoon', 'the_date', 'time_from'] | orderProposals:filters)" ng-click="selectProposal(proposal)">
                 <div class=".container-fluid">
                     <div class="row">
                         <div class="col-xs-2">
                             {{getDay(proposal)}}
                         </div>
-                        
+
                         <div class="col-xs-3">
                             {{getTime(proposal)}}
                         </div>
@@ -54,11 +54,11 @@
                         <div class="col-xs-3">
                             {{proposal.the_date}}
                         </div>
-                        
+
                         <div class="col-xs-2">
                             {{proposal.time_from}}
                         </div>
-                        
+
                         <div class="col-xs-2">
                             {{proposal.unit_name}}
                         </div>
@@ -70,5 +70,7 @@
         <p>{{getLocalizedString('createAppointmentStep3Selected')}}</p>
         <textarea style="resize: none;" class="form-control" disabled rows="2" ng-model="proposalInfo"></textarea>            
         <br/>
-        <button class="btn btn-xl" ng-click="next()" ng-disabled="!proposalInfo" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
+        <div class="text-center">
+            <button class="btn btn-xl" ng-click="next()" ng-disabled="!proposalInfo" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
+        </div>
     </div>
