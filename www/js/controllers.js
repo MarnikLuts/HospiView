@@ -364,7 +364,6 @@ angular.module('myApp.controllers', []).
              * @param {object} reservations
              */
             function setReservations(reservations) {
-                console.log(reservations);
                 firstCycle = true;
                 $rootScope[$rootScope.searchString] = reservations;
                 if ($scope.failedServers.length !== 0) {
@@ -1728,21 +1727,31 @@ angular.module('myApp.controllers', []).
                 }
             });
         }).
-        controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
+        controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory, $q) {
             var searchStart = new Date(),
-                    searchEnd = new Date();
+                searchEnd = new Date(),
+                reservationPromises = [];
             searchEnd.setDate(searchStart.getDate() + 14);
 
-            $scope.reservationList = [];
-//            hospiviewFactory.getReservationsOnPatient($rootScope.currentServers[0].uuid, 2, $rootScope.currentServers[0].reg_no, formatDate(searchStart), formatDate(searchEnd), $rootScope.currentServers[0].hosp_url )
-//                .then(function(response){
-//                    var json = parseJson(response.data);
-//                    if(json.Reservations.Header.StatusCode == 1){
-//                        for(var i=0;i<json.Reservations.Detail.Reservation.length;i++){
-//                            $scope.reservationList.push(json.Reservations.Detail.Reservation[i]);
+//            $scope.reservationList = [];
+//            for(var s=0;s<$rootScope.currentServers.length;s++){
+//                var server = $rootScope.currentServers[s];
+//                reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url ));
+//            }
+//            
+//            $q.all(reservationPromises)
+//                .then(function(responses){
+//                    for(var r=0;r<responses.length;r++){
+//                        var json = parseJson(responses[r].data);
+//                        if(json.Reservations.Header.StatusCode == 1){
+//                            for(var i=0;i<json.Reservations.Detail.Reservation.length;i++){
+//                                $scope.reservationList.push(json.Reservations.Detail.Reservation[i]);
+//                            }
 //                        }
 //                    }
 //                }, error);
+                
+            //TEST VALUES
             $scope.reservationList = [
                 {id: 1, the_date: '2014-05-06', time_from: '12:30', time_till: '13:00', title: 'Reservation1', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
                 {id: 2, the_date: '2014-05-06', time_from: '13:30', time_till: '14:00', title: 'Reservation2', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
