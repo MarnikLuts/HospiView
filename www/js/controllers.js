@@ -2641,6 +2641,8 @@ angular.module('myApp.controllers', []).
                 var index = $rootScope.currentServers.indexOf($scope.server);
                 $scope.unitList=null;
                 $scope.groupList=null;
+                $scope.unit=null;
+                $scope.group=null;
                 if($scope.server!=null){
                     hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
