@@ -2949,8 +2949,8 @@ angular.module('myApp.controllers', []).
             };
             
             $scope.getDate = function(proposal) {
-                var date = proposal.the_date;
-                var showDate = date
+                var date = new Date(proposal.the_date);
+                return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
             };
 
             $scope.selectProposal = function(proposal) {
