@@ -149,5 +149,8 @@ var frenchStrings = {
         //patient/step3
         createAppointmentStep3Morning: "matin",
         createAppointmentStep3Afternoon: "après-midi",
-        createAppointmentStep3Selected: "Vous avez choisi cette réservation:"
+        createAppointmentStep3Selected: "Vous avez choisir ce reservation:",
+        
+        //patient/step6
+        createAppointmentStep6End: "Fin"
 };

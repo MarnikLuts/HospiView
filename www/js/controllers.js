@@ -251,7 +251,7 @@ angular.module('myApp.controllers', []).
              */
             function postLoginDoctor() {
                 var year = new Date().getFullYear().toString(),
-                        holidayPromise = [];
+                    holidayPromise = [];
 
                 //SearchUnits
                 $rootScope.searchUnits = [];
@@ -278,7 +278,7 @@ angular.module('myApp.controllers', []).
              */
             function getReservations(index) {
                 var year = new Date().getFullYear().toString(),
-                        server = $rootScope.currentServers[index];
+                    server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
                 console.log(server.uuid + " " + server.hosp_url);
 
@@ -364,6 +364,7 @@ angular.module('myApp.controllers', []).
              * @param {object} reservations
              */
             function setReservations(reservations) {
+                console.log(reservations);
                 firstCycle = true;
                 $rootScope[$rootScope.searchString] = reservations;
                 if ($scope.failedServers.length !== 0) {
@@ -1727,19 +1728,39 @@ angular.module('myApp.controllers', []).
                 }
             });
         }).
-        controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope) {
-            /**
-             * Redirects the user to the main menu.
-             */
-            $scope.backToMainMenu = function() {
-                $rootScope.pageClass = "left-to-right";
-                $location.path('/mainmenu');
-            };
+        controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
+            var searchStart = new Date(),
+                searchEnd = new Date();
+            searchEnd.setDate(searchStart.getDate() + 14);
+            
+            $scope.reservationList = [];
+//            hospiviewFactory.getReservationsOnPatient($rootScope.currentServers[0].uuid, 2, $rootScope.currentServers[0].reg_no, formatDate(searchStart), formatDate(searchEnd), $rootScope.currentServers[0].hosp_url )
+//                .then(function(response){
+//                    var json = parseJson(response.data);
+//                    if(json.Reservations.Header.StatusCode == 1){
+//                        for(var i=0;i<json.Reservations.Detail.Reservation.length;i++){
+//                            $scope.reservationList.push(json.Reservations.Detail.Reservation[i]);
+//                        }
+//                    }
+//                }, error);
+            $scope.reservationList = [
+                {id: 1, the_date: '2014-05-06', time_from: '12:30', time_till: '13:00', title: 'Reservation1', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
+                {id: 2, the_date: '2014-05-06', time_from: '13:30', time_till: '14:00', title: 'Reservation2', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
+                {id: 3, the_date: '2014-05-07', time_from: '12:30', time_till: '13:00', title: 'Reservation3', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
+                {id: 4, the_date: '2014-05-07', time_from: '13:30', time_till: '14:00', title: 'Reservation4', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
+                {id: 5, the_date: '2014-05-08', time_from: '12:30', time_till: '13:00', title: 'Reservation5', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
+                {id: 6, the_date: '2014-05-08', time_from: '13:30', time_till: '14:00', title: 'Reservation6', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'}
+            ];
+            
+            function error(data){
+                
+            }
         }).
         controller('SettingsCtrl', function($scope, $location, $rootScope, $routeParams, $timeout) {
-            $timeout(function() {
-                alert($rootScope.getLocalizedString('settingsNew'));
-            }, 1000);
+            $timeout(function(){
+                if($routeParams.action==="new")
+                    alert($rootScope.getLocalizedString('settingsNew'));
+            },1000);
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
 
             /**
@@ -2558,83 +2579,101 @@ angular.module('myApp.controllers', []).
 
         }).
         controller("MainmenuCtrl", function($rootScope, $scope, $location) {
+            /**
+             * User gets logged out
+             */
             $scope.logout = function() {
                 $rootScope.pageClass = 'left-to-right';
                 $location.path('/login');
             };
 
+            /**
+             * User gets redirected to a patient's settings page
+             * 
+             */
             $scope.settings = function() {
                 $rootScope.pageClass = 'right-to-left';
-                $location.path('/settingsPatient');
+                $location.path('/settingsPatient/default');
             };
 
+            /**
+             * User gets redirected to step 1 of creating a new appointment
+             */
             $scope.createAppointment = function() {
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('patient/step1');
             };
+            
+            /**
+             * User gets redirected to their overview of appointments
+             */
+            $scope.viewAppointments = function() {
+                $rootScope.pageClass = 'right-to-left';
+                $location.path('patient/appointmentsView');
+            };
         }).
         controller("SettingsPatientCtrl", function($rootScope, $scope, $location) {
+            /**
+             * The user is redirected back to the main menu
+             */
             $scope.save = function() {
                 $rootScope.pageClass = 'left-to-right';
                 $location.path('/patient/mainmenu');
             };
         }).
         controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location) {
+            /**
+             * The unit and department list is requested from the server
+             * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
+             * If there is only one option, that option is automatically selected
+             */
+            hospiviewFactory.getUnitAndDepList($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
+                    .then(function(response) {
+                        var json = parseJson(response.data);
+                        if (json.UnitsAndDeps.Header.StatusCode == 1) {
+                            $scope.unitList = json.UnitsAndDeps.Detail.Unit;
+                            if ($scope.unitList.length == 1)
+                                $scope.unit = $scope.unitList[0];
+                        }
+                    }, error);
+            
+            /**
+             * The group list (blue groups) is requested from the server
+             * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
+             * If there is only one option, that option is automatically selected
+             */
+            hospiviewFactory.getUnitDepGroups($rootScope.currentServers[0].uuid, $rootScope.currentServers[0].hosp_url)
+                    .then(function(response) {
+                        var json = parseJson(response.data);
+                        if (json.UnitDepGroups.Header.StatusCode == 1) {
+                            $scope.groupList = json.UnitDepGroups.Detail.Group;
+                            if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
+                                $scope.group = $scope.groupList[0];
+                        }
 
-            function getUnitsAndGroups() {
-                hospiviewFactory.getUnitAndDepList($scope.server.uuid, $scope.server.hosp_url)
-                        .then(function(response) {
-                            var json = parseJson(response.data);
-                            if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                                $scope.unitList = json.UnitsAndDeps.Detail.Unit;
-                                if ($scope.unitList.length == 1)
-                                    $scope.unit = $scope.unitList[0];
-                            }
-                        }, error);
-
-                hospiviewFactory.getUnitDepGroups($scope.server.uuid, $scope.server.hosp_url)
-                        .then(function(response) {
-                            var json = parseJson(response.data);
-                            if (json.UnitDepGroups.Header.StatusCode == 1) {
-                                $scope.groupList = json.UnitDepGroups.Detail.Group;
-                                if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
-                                    $scope.group = $scope.groupList[0];
-                            }
-
-                        }, error);
-            }
-
+                    }, error);
+            
+            /**
+             * Function that is called when the request to the server fails for error handling
+             * 
+             * @param {type} data
+             * @returns {undefined}
+             */
             function error(data) {
                 $scope.error = true;
             }
-
-            if ($rootScope.currentServers.length === 1) {
-                $scope.showUnitsAndGroupsBoolean = true;
-                $scope.server = $rootScope.currentServers[0];
-                getUnitsAndGroups();
-            } else {
-                $scope.showUnitsAndGroupsBoolean = false;
-                getUnitsAndGroups();
-            }
-
-
-            $scope.showUnitsAndGroups = function() {
-                if (angular.isDefined($scope.server)) {
-                    $scope.showUnitsAndGroupsBoolean = true;
-                    getUnitsAndGroups();
-                } else {
-                    $scope.showUnitsAndGroupsBoolean = false;
-                    $scope.unit = undefined;
-                    $scope.group = undefined;
-                }
-            };
-
+            
+            /**
+             * The properties 'unit' and 'group' from the variable $rootScope.newAppointment are set 
+             * the user is redirected to the next step
+             * 
+             * @returns {undefined}
+             */
             $scope.next = function() {
-                /**
+                /*
                  * Thanks Masood
                  * 
-                 * use this loop to transfer important data from the unit list to the chosen group
-                 * @type Number
+                 * use this loop to transfer important data from the unit list to the chosen group if a group is selected
                  */
                 if ($scope.group !== null)
                     for (var i = 0; i < $scope.unitList.length; i++) {
@@ -2658,12 +2697,18 @@ angular.module('myApp.controllers', []).
                     unit: $scope.unit,
                     group: $scope.group
                 };
+                
                 $location.path('/patient/step2');
             };
 
         }).
         controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location, $q, hospiviewFactory) {
-
+            
+            /**
+             * The locations from the unit or group from step 1 are put into a list
+             * 
+             * The types associated with this unit or group are requested from the server
+             */
             var typePromises = [];
             $scope.locations = [];
             if ($rootScope.newAppointment.unit === null) {
@@ -2692,6 +2737,10 @@ angular.module('myApp.controllers', []).
                 }
             }
 
+            /**
+             * When all the requests to the server are resolved, the select box for types gets filled
+             * If there is onlu one option, that option is selected automatically
+             */
             $scope.typeList = [];
             $scope.type = null;
             $q.all(typePromises)
@@ -2735,7 +2784,12 @@ angular.module('myApp.controllers', []).
                             }
                         }
                     }, error);
-
+            
+            /**
+             * Function used to help with form validation
+             * Checks if there is at least one location selected
+             * @returns {Boolean}
+             */
             $scope.locationIsChecked = function() {
                 for (var i = 0; i < $scope.locations.length; i++) {
                     if ($scope.locations[i].checked)
@@ -2743,11 +2797,23 @@ angular.module('myApp.controllers', []).
                 }
                 return false;
             };
-
+            
+            /**
+             * Function that is called when the request to the server fails for error handling
+             * 
+             * @param {type} data
+             * @returns {undefined}
+             */
             function error(data) {
                 $scope.error = true;
             }
-
+            
+            /**
+             * The properties 'type', 'locations' and 'reservationInfo' of the variable $rootScope.newAppointment are set
+             * the user is redirected to the next step
+             * 
+             * @returns {undefined}
+             */
             $scope.next = function() {
                 $rootScope.newAppointment.type = $scope.type;
                 $rootScope.newAppointment.locations = [];
@@ -2873,15 +2939,46 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('/patient/step5');
             };
-        }).controller("CreateAppointmentStep5Ctrl", function($rootScope) {
-    console.log($rootScope.currentServers[0]);
-}).controller("BackButtonCtrl", function($rootScope, $scope) {
-    /**
-     * This controller is used for every page that uses a back button that can go back to any page
-     * @returns {undefined}
-     */
-    $scope.back = function() {
-        $rootScope.pageClass = 'left-to-right';
-        history.back();
-    };
-});
+        }).controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location) {
+            /**
+             * The fields firstname and lastname are automatically filled with known data
+             */
+            $scope.firstname = $rootScope.user.split(" ")[0];
+            $scope.lastname = $rootScope.user.split(" ")[1];
+            
+            /**
+             * The properties 'firstname', 'lastname', 'phone', 'email' and 'dateOfBirth' are set
+             * the user is redirected to the next step
+             * @returns {undefined}
+             */
+            $scope.next = function(){
+                $rootScope.newAppointment.firstname = $scope.firstname;
+                $rootScope.newAppointment.lastname = $scope.lastname;
+                $rootScope.newAppointment.phone = $scope.phone;
+                $rootScope.newAppointment.email = $scope.email;
+                $rootScope.newAppointment.dateOfBirth = $scope.dateOfBirth;
+                
+                $rootScope.pageClass = 'right-to-left';
+                $location.path('patient/step6');
+            };
+            
+        }).controller("CreateAppointmentStep6Ctrl", function($rootScope, $scope, $location){
+            
+            /**
+             * The reservation is sent to the server
+             * @returns {undefined}
+             */
+            $scope.end = function(){
+                $rootScope.pageClass = 'left-to-right';
+                $location.path('/patient/mainmenu');
+            };
+        }).controller("BackButtonCtrl", function($rootScope, $scope) {
+            /**
+             * This controller is used for every page that uses a back button that can go back to any page
+             * @returns {undefined}
+             */
+            $scope.back = function() {
+                $rootScope.pageClass = 'left-to-right';
+                history.back();
+            };
+        });

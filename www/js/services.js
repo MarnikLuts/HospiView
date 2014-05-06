@@ -573,7 +573,7 @@ angular.module('myApp.services', []).
          * @returns {unresolved}
          */
         initRemoteLanguageStrings: function(hosp_url) {
-            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;208,1,2,6,15;214,1,2,3,5,6,7",
+            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;208,1,2,6,15,16;209,1,3,4,6;211,1;214,1,2,3,5,6,7",
                     promises = [],
                     defer = $q.defer();
 
@@ -612,6 +612,14 @@ angular.module('myApp.services', []).
                             createAppointmentStep5Info: getStringByPidAndSid(languageString, 208, 2),
                             createAppointmentStep5Name: getStringByPidAndSid(languageString, 208, 6),
                             createAppointmentStep5Phone: getStringByPidAndSid(languageString, 208, 15),
+                            createAppointmentStep5Error: getStringByPidAndSid(languageString, 208, 16),
+                            
+                            createAppointmentStep6: getStringByPidAndSid(languageString, 209, 1),
+                            createAppointmentStep6With: getStringByPidAndSid(languageString, 209, 3),
+                            createAppointmentStep6On: getStringByPidAndSid(languageString, 209, 4),
+                            createAppointmentStep6For: getStringByPidAndSid(languageString, 209, 6),
+                            
+                            createAppointmentStep6EndCreate: getStringByPidAndSid(languageString, 211, 1),
                             
                             createAppointmentStep2: getStringByPidAndSid(languageString, 214, 1),
                             createAppointmentStep2Info1: getStringByPidAndSid(languageString, 214, 2),
