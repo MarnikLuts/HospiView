@@ -11,17 +11,17 @@
         <form name="step1Form" novalidate>
             <h4>{{getLocalizedString('createAppointmentStep1Info')}}</h4>
             <div class="form-group">
-                <select class="form-control input-xl" name="serverSelect" ng-model="server" ng-options="server as server.hosp_full_name for server in currentServers" ng-change="showUnitsAndGroups()" required>
+                <select class="form-control input-xl" name="serverSelect" ng-change="getUnitsAndGroups()" ng-model="server" ng-options="server as server.hosp_full_name for server in currentServers" required>
                     <option value="">- {{ getLocalizedString('loginServerSelectDefault')}} -</option>
                 </select>
             </div>
             <div class="form-group">
-                <select class="form-control input-xl" name="unitSelect" ng-required="group==null" ng-change="group = null" ng-model="unit" ng-options="unit as unit.Header.unit_name for unit in unitList" ng-show="showUnitsAndGroupsBoolean" required>
+                <select class="form-control input-xl" name="unitSelect" ng-required="group==null" ng-change="group = null" ng-model="unit" ng-options="unit as unit.Header.unit_name for unit in unitList" ng-show="server!=null" required>
                     <option value="">- {{ getLocalizedString('createAppointmentStep1SelectDoctor')}} -</option>
                 </select>
             </div>
             <div class="form-group">
-                <select class="form-control input-xl"  name="groupSelect" ng-required="unit==null" ng-change="unit = null" ng-model="group" ng-options="group as group.Header.group_name for group in groupList" ng-show="showUnitsAndGroupsBoolean" required>
+                <select class="form-control input-xl"  name="groupSelect" ng-required="unit==null" ng-change="unit = null" ng-model="group" ng-options="group as group.Header.group_name for group in groupList" ng-show="server!=null" required>
                     <option value="">- {{ getLocalizedString('createAppointmentStep1SelectSection')}} -</option>
                 </select>
             </div>

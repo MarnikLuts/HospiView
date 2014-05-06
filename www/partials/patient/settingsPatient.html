@@ -47,17 +47,44 @@
 
         <div class="col-md-12 widthPercent">
             <div class="well widthPercent">
-               
-                <div class="input-group form-group">
-                    <span class="input-group-addon widthSettingsLabels">{{getLocalizedString('settingsUser')}}:</span>
-                    <input id="username" class="form-control input-lg" type="text" ng-model="serverLogin" ng-disabled="true"/>
+                <h4>{{ getLocalizedString('settingsServerSettings')}}: </h4>
+                <div class="col-md-12">
+                    <div class="shortcutButtons">
+                        <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server1Select()" 
+                                btn-radio="selectedUser.servers[0]">{{abbreviation1}}<br/><img src="{{server1Img}}" id="serverImg" alt="hospi"></button>
+                        <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server2Select()" 
+                                btn-radio="selectedUser.servers[1]">{{abbreviation2}}<br/><img src="{{server2Img}}" id="serverImg" alt="hospi" ng-show="showServer2"><span class="glyphicon glyphicon-plus" ng-hide="showServer2"></span></button>
+                        <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server3Select()" 
+                                btn-radio="selectedUser.servers[2]">{{abbreviation3}}<br/><img src="{{server3Img}}" id="serverImg" alt="hospi" ng-show="showServer3"><span class="glyphicon glyphicon-plus" ng-hide="showServer3"></span></button>
+                    </div>
                 </div>
-                <div class="input-group form-group">
-                    <span class="input-group-addon widthSettingsLabels">{{getLocalizedString('loginPassword')}}:</span>
-                    <input id="password" class="form-control input-lg" type="password" ng-model="serverPassword" ng-disabled="true"/>
+                <div class="input-group form-group widthPercent">
+                    <span class="input-group-addon widthSettingsLabels settingsLabels">{{getLocalizedString('settingsUser')}}:</span>
+                    <input id="username" class="form-control input-lg" type="text" ng-model="serverRadio.user_login" ng-disabled="true"/>
+                </div>
+                <div class="input-group form-group widthPercent">
+                    <span class="input-group-addon widthSettingsLabels settingsLabels">{{getLocalizedString('loginPassword')}}:</span>
+                    <input id="password" class="form-control input-lg" type="password" ng-model="serverRadio.user_password" ng-disabled="true"/>
                 </div>
 
-                
+                <table class="table table-condensed list">
+                    <tr>
+                        <td class="widthSettingsLabels settingsLabels">{{getLocalizedString('settingsEditDelete')}}</td>
+                        <td class="width25Percent">
+                            <button type="button" class="btn btn-default btn btn-sm-add" ng-click="addOrEditServer('edit', serverRadio)">
+                                <span class="glyphicon glyphicon-transfer"></span>
+                            </button>
+                        </td>
+                        <td class="width25Percent">
+                            <button type="button" class="btn btn-danger btn btn-sm-add" ng-click="deleteServer()">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </td>
+                        <td class="width25Percent">
+                            &nbsp;
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </form>

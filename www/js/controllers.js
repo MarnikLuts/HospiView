@@ -209,6 +209,13 @@ angular.module('myApp.controllers', []).
                     }
                     console.log("auth failed: " + authFailed);
                     if (!authFailed) {
+                        if ($scope.failedServers.length !== 0) {
+                            var servers = "";
+                            for (var i = 0; i < $scope.failedServers.length; i++) {
+                                servers += "\n" + $scope.failedServers[i];
+                            }
+                            alert($rootScope.getLocalizedString('loginServerListFailed') + servers);
+                        }
                         setDates();
                         switch ($rootScope.type) {
                             case 0:
@@ -366,13 +373,7 @@ angular.module('myApp.controllers', []).
             function setReservations(reservations) {
                 firstCycle = true;
                 $rootScope[$rootScope.searchString] = reservations;
-                if ($scope.failedServers.length !== 0) {
-                    var servers = "";
-                    for (var i = 0; i < $scope.failedServers.length; i++) {
-                        servers += "\n" + $scope.failedServers[i];
-                    }
-                    alert($rootScope.getLocalizedString('loginServerListFailed') + servers);
-                }
+                
 
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
@@ -2099,7 +2100,7 @@ angular.module('myApp.controllers', []).
 
             /**
              * Uses hospiviewFactory to do a request. On success the XML will be
-             * parsed too JSON. The servers will be put in the $scope servers.
+             * parsed to JSON. The servers will be put in the $scope servers.
              * @param {type} data   returned data from the webservice
              */
             $scope.refreshServerList = function() {
@@ -2636,34 +2637,38 @@ angular.module('myApp.controllers', []).
              * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
              * If there is only one option, that option is automatically selected
              */
-            function getUnitsAndGroups() {
+            $scope.getUnitsAndGroups = function() {
                 var index = $rootScope.currentServers.indexOf($scope.server);
-                hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
-                        .then(function(response) {
-                            var json = parseJson(response.data);
-                            if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                                $scope.unitList = json.UnitsAndDeps.Detail.Unit;
-                                if ($scope.unitList.length == 1)
-                                    $scope.unit = $scope.unitList[0];
-                            }
-                        }, error);
+                $scope.unitList=null;
+                $scope.groupList=null;
+                if($scope.server!=null){
+                    hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
+                            .then(function(response) {
+                                var json = parseJson(response.data);
+                                if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail!=null) {
+                                    $scope.unitList = json.UnitsAndDeps.Detail.Unit;
+                                    if ($scope.unitList.length == 1)
+                                        $scope.unit = $scope.unitList[0];
+                                }
+                            }, error);
 
-                /**
-                 * The group list (blue groups) is requested from the server
-                 * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
-                 * If there is only one option, that option is automatically selected
-                 */
-                hospiviewFactory.getUnitDepGroups($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
-                        .then(function(response) {
-                            var json = parseJson(response.data);
-                            if (json.UnitDepGroups.Header.StatusCode == 1) {
-                                $scope.groupList = json.UnitDepGroups.Detail.Group;
-                                if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
-                                    $scope.group = $scope.groupList[0];
-                            }
+                    /**
+                     * The group list (blue groups) is requested from the server
+                     * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
+                     * If there is only one option, that option is automatically selected
+                     */
+                    hospiviewFactory.getUnitDepGroups($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
+                            .then(function(response) {
+                                var json = parseJson(response.data);
+                                if (json.UnitDepGroups.Header.StatusCode == 1 && json.UnitDepGroups.Detail!=null) {
+                                    $scope.groupList = json.UnitDepGroups.Detail.Group;
+                                    if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
+                                        $scope.group = $scope.groupList[0];
+                                }
 
-                        }, error);
-            }
+                            }, error);
+                }
+            };
 
             /**
              * Function that is called when the request to the server fails for error handling
@@ -2675,26 +2680,9 @@ angular.module('myApp.controllers', []).
                 $scope.error = true;
             }
 
-            if ($rootScope.currentServers.length === 1) {
-                $scope.showUnitsAndGroupsBoolean = true;
-                $scope.server = $rootScope.currentServers[0];
+            if ($rootScope.currentServers.length === 1) 
                 getUnitsAndGroups();
-            } else {
-                $scope.showUnitsAndGroupsBoolean = false;
-                getUnitsAndGroups();
-            }
 
-
-            $scope.showUnitsAndGroups = function() {
-                if (angular.isDefined($scope.server)) {
-                    $scope.showUnitsAndGroupsBoolean = true;
-                    getUnitsAndGroups();
-                } else {
-                    $scope.showUnitsAndGroupsBoolean = false;
-                    $scope.unit = undefined;
-                    $scope.group = undefined;
-                }
-            };
 
             /**
              * The properties 'unit' and 'group' from the variable $rootScope.newAppointment are set 

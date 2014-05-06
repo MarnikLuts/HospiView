@@ -55,7 +55,7 @@
         </div>
         <br>
         
-        <div ng-show="accountFalse">{{getLocalizedString('newUserNoAccountCreation')}}</div>
+        <!--<div ng-show="accountFalse">{{getLocalizedString('newUserNoAccountCreation')}}</div>-->
         
         <div class="form-group" ng-show="accountTrue&&!checkingForKiosk">
         <div ng-show="checkingForKiosk">{{getLocalizedString('wait')}}</div>
@@ -93,9 +93,8 @@
                 </div>
             </form>
         </div>
-        <!--ACCOUNT CREATION DISABLED-->
-        <div ng-show="!hasKiosk&&accountFalse&&!checkingForKiosk&&false">{{getLocalizedString('newUserNoKiosk')}}</div>
-        <div class="form-group" ng-show="accountFalse&&hasKiosk&&false">
+        <div ng-show="!hasKiosk&&accountFalse&&!checkingForKiosk">{{getLocalizedString('newUserNoKiosk')}}</div>
+        <div class="form-group" ng-show="accountFalse&&hasKiosk">
             <select name="userFunctionSelect" class="form-control input-xl" ng-model="userFunctionSelect" ng-options="userFunction for userFunction in userFunctionList" ng-change="userFunctionSelected = true;
                 accountRadio = null">
                 <option value="">- {{ getLocalizedString('newFunctionSelectDefault') }} -</option>
