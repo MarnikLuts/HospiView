@@ -2831,15 +2831,33 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('/patient/step4');
             };
-        }).controller("CreateAppointmentStep5Ctrl", function($rootScope) {
-    console.log($rootScope.currentServers[0]);
-}).controller("BackButtonCtrl", function($rootScope, $scope) {
-    /**
-     * This controller is used for every page that uses a back button that can go back to any page
-     * @returns {undefined}
-     */
-    $scope.back = function() {
-        $rootScope.pageClass = 'left-to-right';
-        history.back();
-    };
-});
+        }).controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location) {
+            $scope.firstname = $rootScope.user.split(" ")[0];
+            $scope.lastname = $rootScope.user.split(" ")[1];
+            
+            $scope.next = function(){
+                $rootScope.newAppointment.firstname = $scope.firstname;
+                $rootScope.newAppointment.lastname = $scope.lastname;
+                $rootScope.newAppointment.phone = $scope.phone;
+                $rootScope.newAppointment.email = $scope.email;
+                $rootScope.newAppointment.dateOfBirth = $scope.dateOfBirth;
+                
+                $rootScope.pageClass = 'right-to-left';
+                $location.path('patient/step6');
+            };
+            
+        }).controller("CreateAppointmentStep6Ctrl", function($rootScope, $scope, $location){
+            $scope.end = function(){
+                $rootScope.pageClass = 'left-to-right';
+                $location.path('/patient/mainmenu');
+            };
+        }).controller("BackButtonCtrl", function($rootScope, $scope) {
+            /**
+             * This controller is used for every page that uses a back button that can go back to any page
+             * @returns {undefined}
+             */
+            $scope.back = function() {
+                $rootScope.pageClass = 'left-to-right';
+                history.back();
+            };
+        });

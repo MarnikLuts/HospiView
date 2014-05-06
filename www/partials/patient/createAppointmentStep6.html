@@ -1,0 +1,15 @@
+<nav class="navbar navbar-default" role="navigation" ng-controller="BackButtonCtrl">
+    <button type="submit" class="btn btn-sm-back" ng-click="back()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        {{ getLocalizedString('back')}}
+    </button>
+    <div class="title">{{ getLocalizedString('createAppointmentStep6')}} / {{ getLocalizedString('createAppointmentStep6EndCreate')}}</div>
+    <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
+</nav>
+<div class="col-md-12">
+    <div class="well well-lg">
+        <p>{{getLocalizedString('createAppointmentStep6With')}} <b>{{"newAppointment.doctorName"}}</b> {{getLocalizedString('createAppointmentStep6On')}} <b>{{"getLocalizedString('dateTime')"}}</b>
+            {{getLocalizedString('createAppointmentStep6For')}} <b>{{newAppointment.firstname + " "  + newAppointment.lastname}}</b></p>
+        <button class="btn btn-xl" ng-click="end()">{{getLocalizedString('createAppointmentStep6End')}}</button>
+    </div>
+</div>
