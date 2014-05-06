@@ -2682,8 +2682,10 @@ angular.module('myApp.controllers', []).
                 $scope.error = true;
             }
 
-            if ($rootScope.currentServers.length === 1) 
-                getUnitsAndGroups();
+            if ($rootScope.currentServers.length === 1){
+                $scope.server = $rootScope.currentServers[0];
+                $scope.getUnitsAndGroups();
+            }
 
 
             /**
