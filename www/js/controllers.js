@@ -832,16 +832,16 @@ angular.module('myApp.controllers', []).
                 $scope.showDate = formatShowDate($scope.date, $rootScope.languageID);
             };
 
-            $scope.getNextDay = function(){
-                if(!$scope.loadingNext)
+            $scope.getNextDay = function() {
+                if (!$scope.loadingNext)
                     $scope.nextDay();
             };
-            
-            $scope.getPreviousDay = function(){
-                if(!$scope.loadingNext)
+
+            $scope.getPreviousDay = function() {
+                if (!$scope.loadingNext)
                     $scope.previousDay();
             };
-            
+
             /**
              * Function for the calendar button. Redirects to the calendar view
              * and loads the remainder of the month's reservations. 
@@ -2739,35 +2739,46 @@ angular.module('myApp.controllers', []).
                 {proposal_id: '11', the_date: '2014-05-09', time_from: '16:00', time_till: '17:00', dep_id: '824', unit_id: '171'},
                 {proposal_id: '7', the_date: '2014-05-15', time_from: '15:00', time_till: '16:00', dep_id: '824', unit_id: '171'},
                 {proposal_id: '8', the_date: '2014-05-16', time_from: '08:00', time_till: '9:00', dep_id: '729', unit_id: '171'},
-                {proposal_id: '9', the_date: '2014-05-16', time_from: '09:00', time_till: '10:00', dep_id: '729', unit_id: '171'},
-                {proposal_id: '10', the_date: '2014-05-16', time_from: '14:00', time_till: '15:00', dep_id: '729', unit_id: '171'}];
+                {proposal_id: '9', the_date: '2014-05-16', time_from: '09:00', time_till: '10:00', dep_id: '729', unit_id: '172'},
+                {proposal_id: '10', the_date: '2014-05-16', time_from: '14:00', time_till: '15:00', dep_id: '729', unit_id: '172'}];
+
 
             var setDayNumber;
-            var currentDayNumber = new Date().getDay();
-            console.log(currentDayNumber);
-            //$scope.proposals = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []};
+            var setRespectiveDayNumber;
             $scope.proposals = [];
-            $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: false, afternoon: false};
+            $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true};
+
+            proposals.sort(function(a, b) {
+                return new Date(a.the_date) - new Date(b.the_date);
+            });
+
+            var baseDayNumber = new Date(proposals[0].the_date).getDay();
             for (var proposal in proposals) {
                 setDayNumber = new Date(proposals[proposal].the_date).getDay();
-                if (setDayNumber >= currentDayNumber)
-                    setDayNumber = setDayNumber - currentDayNumber;
-                else
-                    setDayNumber = setDayNumber + currentDayNumber - 1;
                 proposals[proposal].setDayNumber = setDayNumber;
-                
-                if (parseInt(proposals[proposal].time_from.substring(0, 2)) < 12)
-                    proposals[proposal].morning = true;
+
+                if (setDayNumber >= baseDayNumber)
+                    setRespectiveDayNumber = setDayNumber - baseDayNumber;
                 else
-                    proposals[proposal].morning = false;
+                    setRespectiveDayNumber = setDayNumber + baseDayNumber - 1;
+                proposals[proposal].setRespectiveDayNumber = setRespectiveDayNumber;
 
+                if (parseInt(proposals[proposal].time_from.substring(0, 2)) < 12)
+                    proposals[proposal].afternoon = false;
+                else
+                    proposals[proposal].afternoon = true;
+                proposals[proposal].morning = !proposals[proposal].afternoon;
+
+                if ($rootScope.newAppointment.unit)
+                    proposals[proposal].unit_name = $rootScope.newAppointment.unit.Header.unit_name;
+                else 
+                    for(var i in $rootScope.newAppointment.group.Detail.UnitAndDep)
+                        if(proposals[proposal].unit_id === $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id)
+                            proposals[proposal].unit_name = $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_name;
+                
                 $scope.proposals.push(proposals[proposal]);
-                $scope.filters[setDayNumber] = true;
+                $scope.filters[new Date(proposals[proposal].the_date).getDay()] = true;
             }
-            
-            
-
-            //$scope.filters = {monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true, morning: true, afternoon: true};
 
             $scope.getDay = function(proposal) {
                 var date = new Date(proposal.the_date);
@@ -2781,12 +2792,19 @@ angular.module('myApp.controllers', []).
                     return $rootScope.getLocalizedString('createAppointmentStep3Afternoon');
             };
 
-            $scope.testSort = function(proposal) {
-                console.log(proposal);
-                var date = proposal[1].the_date;
-                console.log(date);
-                return date.getDay();
+            $scope.getDoctorName = function(proposal) {
+                
             };
+
+            $scope.selectProposal = function(proposal) {
+                console.log(proposal);
+                $scope.selectedProposal = proposal;
+                var date = new Date(proposal.the_date);
+                var months = getMonthNames($rootScope.languageID);
+                $scope.proposalInfo = $scope.days[date.getDay()] + ", " + date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear() + ", " + proposal.time_from + "\n" + proposal.unit_name;
+            };
+
+
 
             var width = window.innerWidth;
 
@@ -2805,7 +2823,10 @@ angular.module('myApp.controllers', []).
                 }
             }
 
-            $scope.next = function() {
+            $scope.next = function(proposal) {
+                console.log(proposal)
+                $rootScope.newAppointment.proposal = $scope.selectedProposal;
+                $rootScope.pageClass = 'right-to-left';
                 $location.path('/patient/step4');
             };
         }).controller("CreateAppointmentStep5Ctrl", function($rootScope) {
