@@ -160,9 +160,9 @@ angular.module('myApp.controllers', []).
                 $scope.loggingIn = true;
                 $scope.error = false;
                 var promises = [],
-                        invalidFields = [],
-                        authFailed = false,
-                        validServers = [];
+                    invalidFields = [],
+                    authFailed = false,
+                    validServers = [];
 
                 $rootScope.currentServers = [];
                 $scope.failedServers = [];
@@ -178,36 +178,29 @@ angular.module('myApp.controllers', []).
                 }
 
                 $q.all(promises).then(function(responses) {
-                    console.log($scope.selectedUser);
-                    console.log("servers with valid fields: " + promises.length);
                     if (responses.length == 0)
                         authFailed = true;
                     for (var r = 0; r < responses.length; r++) {
                         var json = parseJson(responses[r].data);
+                        console.log(json);
                         if (json.Authentication.Header.StatusCode != 1) {
-                            console.log(validServers[r].hosp_full_name + " auth failed " + r);
                             $scope.failedServers.push(validServers[r].hosp_short_name);
                             if ($scope.failedServers.length === $scope.selectedUser.servers.length)
                                 authFailed = true;
                         } else {
-                            console.log(validServers[r].hosp_full_name + " auth success " + r);
                             $scope.error = false;
-                            $rootScope.user = $scope.user;
+                            $rootScope.user = json.Authentication.Detail.user_name;
                             $rootScope.type = parseInt(json.Authentication.Detail.isexternal);
 
                             validServers[r].uuid = json.Authentication.Detail.uuid;
-                            console.log(json.Authentication.Detail.uuid + " ");
                             validServers[r].save_password = $scope.selectedUser.servers[r].save_password;
-                            console.log($scope.selectedUser.servers[r].save_password);
+                            validServers[r].reg_no = json.Authentication.Detail.reg_no;
                             $rootScope.currentServers.push(validServers[r]);
-                            console.log($scope.selectedUser);
                             var saveUserSettings = JSON.parse(localStorage.getItem($scope.user));
-                            console.log(saveUserSettings);
                             saveUserSettings.servers[r] = validServers[r];
                             localStorage.setItem($scope.user, JSON.stringify(saveUserSettings));
                         }
                     }
-                    console.log("auth failed: " + authFailed);
                     if (!authFailed) {
                         if ($scope.failedServers.length !== 0) {
                             var servers = "";
@@ -245,9 +238,6 @@ angular.module('myApp.controllers', []).
             function postLoginPatient() {
                 languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
                         .then(function() {
-                            console.log($rootScope.nlRemoteDict);
-                            console.log($rootScope.enRemoteDict);
-                            console.log($rootScope.frRemoteDict);
                             $rootScope.pageClass = 'right-to-left';
                             $location.path("/patient/mainmenu");
                         }, error);
