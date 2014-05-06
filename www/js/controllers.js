@@ -166,11 +166,9 @@ angular.module('myApp.controllers', []).
 
                 $rootScope.currentServers = [];
                 $scope.failedServers = [];
-                console.log("all servers: " + $scope.selectedUser.servers.length);
                 for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                     invalidFields[i] = angular.isUndefined($scope.selectedUser.servers[i].user_password) || $scope.selectedUser.servers[i].user_password === "";
                     if (!invalidFields[i]) {
-                        console.log($scope.selectedUser.servers[i].user_login + ", " + $scope.selectedUser.servers[i].user_password + ", " + $scope.selectedUser.servers[i].hosp_url);
                         promises.push(hospiviewFactory.getAuthentication($scope.selectedUser.servers[i].user_login, $scope.selectedUser.servers[i].user_password, $scope.selectedUser.servers[i].hosp_url));
                         validServers.push($scope.selectedUser.servers[i]);
                     } else
@@ -182,7 +180,6 @@ angular.module('myApp.controllers', []).
                         authFailed = true;
                     for (var r = 0; r < responses.length; r++) {
                         var json = parseJson(responses[r].data);
-                        console.log(json);
                         if (json.Authentication.Header.StatusCode != 1) {
                             $scope.failedServers.push(validServers[r].hosp_short_name);
                             if ($scope.failedServers.length === $scope.selectedUser.servers.length)
@@ -2965,7 +2962,8 @@ angular.module('myApp.controllers', []).
             }
 
             $scope.next = function(proposal) {
-                console.log(proposal)
+                console.log(proposal);
+                $scope.selectedProposal.day_name = $scope.getDay($scope.selectedProposal);
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('/patient/step5');

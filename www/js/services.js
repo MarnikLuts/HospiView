@@ -14,7 +14,7 @@ angular.module('myApp.services', []).
          * @param {type} base_url
          * @returns {_L13.Anonym$1}.
          */
-        factory('hospiviewFactory', function($http, $rootScope, base_url, kiosk_url) {
+        factory('hospiviewFactory', function($http, $rootScope, kiosk_url) {
             return{
                 /**
                  * Gets All the HospiView servers
@@ -573,7 +573,7 @@ angular.module('myApp.services', []).
          * @returns {unresolved}
          */
         initRemoteLanguageStrings: function(hosp_url) {
-            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;208,1,2,6,15,16;209,1,3,4,6;211,1;214,1,2,3,5,6,7",
+            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;208,1,2,6,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
                     promises = [],
                     defer = $q.defer();
 
@@ -617,6 +617,7 @@ angular.module('myApp.services', []).
                             createAppointmentStep6: getStringByPidAndSid(languageString, 209, 1),
                             createAppointmentStep6With: getStringByPidAndSid(languageString, 209, 3),
                             createAppointmentStep6On: getStringByPidAndSid(languageString, 209, 4),
+                            createAppointmentStep6At: getStringByPidAndSid(languageString, 209, 5),
                             createAppointmentStep6For: getStringByPidAndSid(languageString, 209, 6),
                             
                             createAppointmentStep6EndCreate: getStringByPidAndSid(languageString, 211, 1),
