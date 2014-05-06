@@ -3,13 +3,16 @@
         <span class="glyphicon glyphicon-chevron-left"></span>
         {{ getLocalizedString('back')}}
     </button>
-    <div class="title">{{ getLocalizedString('createAppointmentStep6')}} / {{ getLocalizedString('createAppointmentStep6EndCreate')}}</div>
+    <div class="title">{{ getLocalizedString('createAppointmentStep6')}}</div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
 <div class="col-md-12">
     <div class="well well-lg">
-        <p>{{getLocalizedString('createAppointmentStep6With')}} <b>{{"newAppointment.doctorName"}}</b> {{getLocalizedString('createAppointmentStep6On')}} <b>{{"getLocalizedString('dateTime')"}}</b>
-            {{getLocalizedString('createAppointmentStep6For')}} <b>{{newAppointment.firstname + " "  + newAppointment.lastname}}</b></p>
-        <button class="btn btn-xl" ng-click="end()">{{getLocalizedString('createAppointmentStep6End')}}</button>
+        <h2>{{ getLocalizedString('createAppointmentStep6EndCreate')}}</h2>
+        <h4>{{getLocalizedString('createAppointmentStep6With')}} <b>{{newAppointment.proposal.unit_name}}</b> {{getLocalizedString('createAppointmentStep6On')}} <b>{{newAppointment.proposal.day_name + " " + newAppointment.proposal.the_date + " " + getLocalizedString('createAppointmentStep6At') + " " + newAppointment.proposal.time_from}}</b>
+            {{getLocalizedString('createAppointmentStep6For')}} <b>{{newAppointment.firstname + " "  + newAppointment.lastname}}</b></h4><br>
+        <div class="text-center">
+            <button class="btn btn-xl" ng-click="end()">{{getLocalizedString('createAppointmentStep6End')}}</button>
+        </div>
     </div>
 </div>

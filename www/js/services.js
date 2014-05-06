@@ -14,7 +14,7 @@ angular.module('myApp.services', []).
          * @param {type} base_url
          * @returns {_L13.Anonym$1}.
          */
-        factory('hospiviewFactory', function($http, $rootScope, base_url, kiosk_url) {
+        factory('hospiviewFactory', function($http, $rootScope, kiosk_url) {
             return{
                 /**
                  * Gets All the HospiView servers
@@ -576,9 +576,15 @@ angular.module('myApp.services', []).
             var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,15,16;209,1,3,4,6;211,1;214,1,2,3,5,6,7",
                     promises = [],
                     defer = $q.defer();
-
-            for (var i = 1; i < 4; i++) {
-                promises.push(hospiviewFactory.getLanguageStrings(i, listOfPidsSids, hosp_url));
+            if(localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('frRemoteDict')===null||localStorage.getItem('enRemoteDict')===null)
+                for (var i = 1; i < 4; i++) {
+                    promises.push(hospiviewFactory.getLanguageStrings(i, listOfPidsSids, hosp_url));
+                }
+            else{
+                $rootScope.nlRemoteDict = JSON.parse(localStorage.getItem('nlRemoteDict'));
+                $rootScope.frRemoteDict = JSON.parse(localStorage.getItem('frRemoteDict'));
+                $rootScope.enRemoteDict = JSON.parse(localStorage.getItem('enRemoteDict'));
+                defer.resolve();
             }
 
             $q.all(promises).then(function(responses) {
@@ -617,6 +623,7 @@ angular.module('myApp.services', []).
                             createAppointmentStep6: getStringByPidAndSid(languageString, 209, 1),
                             createAppointmentStep6With: getStringByPidAndSid(languageString, 209, 3),
                             createAppointmentStep6On: getStringByPidAndSid(languageString, 209, 4),
+                            createAppointmentStep6At: getStringByPidAndSid(languageString, 209, 5),
                             createAppointmentStep6For: getStringByPidAndSid(languageString, 209, 6),
                             
                             createAppointmentStep6EndCreate: getStringByPidAndSid(languageString, 211, 1),
@@ -633,12 +640,15 @@ angular.module('myApp.services', []).
                         switch (j) {
                             case 0:
                                 $rootScope.nlRemoteDict = remoteDict;
+                                localStorage.setItem('nlRemoteDict', JSON.stringify(remoteDict));
                                 break;
                             case 1:
                                 $rootScope.frRemoteDict = remoteDict;
+                                localStorage.setItem('frRemoteDict', JSON.stringify(remoteDict));
                                 break;
                             case 2:
                                 $rootScope.enRemoteDict = remoteDict;
+                                localStorage.setItem('enRemoteDict', JSON.stringify(remoteDict));
                                 break;
                         }
                         defer.resolve();
