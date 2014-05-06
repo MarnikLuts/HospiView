@@ -43,24 +43,16 @@
             <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in filteredProposals = (proposals| orderBy:['setRespectiveDayNumber', 'afternoon', 'the_date', 'time_from'] | orderProposals:filters)" ng-click="selectProposal(proposal)">
                 <div class=".container-fluid">
                     <div class="row">
-                        <div class="col-xs-2">
-                            {{getDay(proposal)}}
-                        </div>
-
-                        <div class="col-xs-3">
-                            {{getTime(proposal)}}
-                        </div>
-
-                        <div class="col-xs-3">
-                            {{getDate(proposal)}}
+                        <div class="col-xs-4">
+                            {{getDay(proposal)}} {{getDate(proposal)}}
                         </div>
 
                         <div class="col-xs-2">
                             {{proposal.time_from}}
                         </div>
 
-                        <div class="col-xs-2">
-                            {{proposal.unit_name}}
+                        <div class="col-xs-6">
+                            {{proposal.unit_name}} {{proposal.location}}
                         </div>
                     </div>
                 </div>
@@ -73,4 +65,5 @@
         <div class="text-center">
             <button class="btn btn-xl" ng-click="next()" ng-disabled="!proposalInfo" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
         </div>
+        <datepicker ng-model="dt" min-date="new Date()" show-weeks="true" class="well well-sm"></datepicker>
     </div>

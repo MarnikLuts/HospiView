@@ -2929,12 +2929,16 @@ angular.module('myApp.controllers', []).
                     proposals[proposal].afternoon = true;
                 proposals[proposal].morning = !proposals[proposal].afternoon;
 
-                if ($rootScope.newAppointment.unit)
+                console.log(proposal);
+                if ($rootScope.newAppointment.unit){
                     proposals[proposal].unit_name = $rootScope.newAppointment.unit.Header.unit_name;
-                else
+                    proposals[proposal].location = $rootScope.newAppointment.unit.Detail.Dep[proposal].location_name;
+                } else
                     for (var i in $rootScope.newAppointment.group.Detail.UnitAndDep)
-                        if (proposals[proposal].unit_id === $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id)
+                        if (proposals[proposal].unit_id === $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id) {
                             proposals[proposal].unit_name = $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_name;
+                            proposals[proposal].location = $rootScope.newAppointment.group.Detail.UnitAndDep[i].location_name;
+                        }
 
                 $scope.proposals.push(proposals[proposal]);
                 $scope.filters[new Date(proposals[proposal].the_date).getDay()] = true;
