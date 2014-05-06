@@ -251,7 +251,7 @@ angular.module('myApp.controllers', []).
              */
             function postLoginDoctor() {
                 var year = new Date().getFullYear().toString(),
-                        holidayPromise = [];
+                    holidayPromise = [];
 
                 //SearchUnits
                 $rootScope.searchUnits = [];
@@ -278,7 +278,7 @@ angular.module('myApp.controllers', []).
              */
             function getReservations(index) {
                 var year = new Date().getFullYear().toString(),
-                        server = $rootScope.currentServers[index];
+                    server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
                 console.log(server.uuid + " " + server.hosp_url);
 
@@ -364,6 +364,7 @@ angular.module('myApp.controllers', []).
              * @param {object} reservations
              */
             function setReservations(reservations) {
+                console.log(reservations);
                 firstCycle = true;
                 $rootScope[$rootScope.searchString] = reservations;
                 if ($scope.failedServers.length !== 0) {
@@ -1727,18 +1728,38 @@ angular.module('myApp.controllers', []).
                 }
             });
         }).
-        controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope) {
-            /**
-             * Redirects the user to the main menu.
-             */
-            $scope.backToMainMenu = function() {
-                $rootScope.pageClass = "left-to-right";
-                $location.path('/mainmenu');
-            };
+        controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory) {
+            var searchStart = new Date(),
+                searchEnd = new Date();
+            searchEnd.setDate(searchStart.getDate() + 14);
+            
+            $scope.reservationList = [];
+//            hospiviewFactory.getReservationsOnPatient($rootScope.currentServers[0].uuid, 2, $rootScope.currentServers[0].reg_no, formatDate(searchStart), formatDate(searchEnd), $rootScope.currentServers[0].hosp_url )
+//                .then(function(response){
+//                    var json = parseJson(response.data);
+//                    if(json.Reservations.Header.StatusCode == 1){
+//                        for(var i=0;i<json.Reservations.Detail.Reservation.length;i++){
+//                            $scope.reservationList.push(json.Reservations.Detail.Reservation[i]);
+//                        }
+//                    }
+//                }, error);
+            $scope.reservationList = [
+                {id: 1, the_date: '2014-05-06', time_from: '12:30', time_till: '13:00', title: 'Reservation1', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
+                {id: 2, the_date: '2014-05-06', time_from: '13:30', time_till: '14:00', title: 'Reservation2', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
+                {id: 3, the_date: '2014-05-07', time_from: '12:30', time_till: '13:00', title: 'Reservation3', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
+                {id: 4, the_date: '2014-05-07', time_from: '13:30', time_till: '14:00', title: 'Reservation4', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
+                {id: 5, the_date: '2014-05-08', time_from: '12:30', time_till: '13:00', title: 'Reservation5', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
+                {id: 6, the_date: '2014-05-08', time_from: '13:30', time_till: '14:00', title: 'Reservation6', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'}
+            ];
+            
+            function error(data){
+                
+            }
         }).
         controller('SettingsCtrl', function($scope, $location, $rootScope, $routeParams, $timeout) {
             $timeout(function(){
-                alert($rootScope.getLocalizedString('settingsNew'));
+                if($routeParams.action==="new")
+                    alert($rootScope.getLocalizedString('settingsNew'));
             },1000);
             $scope.selectedUser = JSON.parse(localStorage.getItem($rootScope.user));
 
@@ -2572,7 +2593,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.settings = function() {
                 $rootScope.pageClass = 'right-to-left';
-                $location.path('/settingsPatient');
+                $location.path('/settingsPatient/default');
             };
 
             /**
@@ -2581,6 +2602,14 @@ angular.module('myApp.controllers', []).
             $scope.createAppointment = function() {
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('patient/step1');
+            };
+            
+            /**
+             * User gets redirected to their overview of appointments
+             */
+            $scope.viewAppointments = function() {
+                $rootScope.pageClass = 'right-to-left';
+                $location.path('patient/appointmentsView');
             };
         }).
         controller("SettingsPatientCtrl", function($rootScope, $scope, $location) {

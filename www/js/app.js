@@ -23,14 +23,14 @@ angular.module('myApp', [
                 $routeProvider.when('/doctor/appointmentsSearch', {templateUrl: 'partials/doctor/appointmentsSearch.html', controller: 'DoctorSearchAppointmentsCtrl'});
                 $routeProvider.when('/doctor/appointmentsView', {templateUrl: 'partials/doctor/appointmentsView.html', controller: 'DoctorViewAppointmentsCtrl'});
                 $routeProvider.when('/doctor/appointmentDetail', {templateUrl: 'partials/doctor/appointmentDetail.html', controller: 'DoctorViewappointmentDetailCtrl'});
-                $routeProvider.when('/patient/appointmentsPatient', {templateUrl: 'partials/patient/appointmentsPatient.html', controller: 'PatientViewAppointmentsCtrl'});
                 $routeProvider.when('/settings/:action', {templateUrl: 'partials/settings.html', controller: 'SettingsCtrl'});
                 $routeProvider.when('/selectserver/:action', {templateUrl: 'partials/selectserver.html', controller: 'SelectserverCtrl'});
                 $routeProvider.when('/appointmentsCalendar', {templateUrl: 'partials/doctor/appointmentsCalendar.html', controller: 'DoctorViewAppointmentsCalendarCtrl'});
                 $routeProvider.when('/appointmentsFilter', {templateUrl: 'partials/doctor/appointmentsFilter.html', controller: 'FilterCtrl'});
 
                 $routeProvider.when('/patient/mainmenu', {templateUrl: 'partials/patient/mainmenu.html', controller: 'MainmenuCtrl'});
-                $routeProvider.when('/settingsPatient', {templateUrl: 'partials/patient/settingsPatient.html', controller: 'SettingsCtrl'});
+                $routeProvider.when('/settingsPatient/:action', {templateUrl: 'partials/patient/settingsPatient.html', controller: 'SettingsCtrl'});
+                $routeProvider.when('/patient/appointmentsView', {templateUrl: 'partials/patient/patientAppointmentsView.html', controller: 'PatientViewAppointmentsCtrl'});
                 $routeProvider.when('/patient/step1', {templateUrl: 'partials/patient/createAppointmentStep1.html', controller: 'CreateAppointmentStep1Ctrl'});
                 $routeProvider.when('/patient/step2', {templateUrl: 'partials/patient/createAppointmentStep2.html', controller: 'CreateAppointmentStep2Ctrl'});
                 $routeProvider.when('/patient/step3', {templateUrl: 'partials/patient/createAppointmentStep3.html', controller: 'CreateAppointmentStep3Ctrl'});
