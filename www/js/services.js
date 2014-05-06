@@ -573,7 +573,7 @@ angular.module('myApp.services', []).
          * @returns {unresolved}
          */
         initRemoteLanguageStrings: function(hosp_url) {
-            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,15,16;209,1,3,4,6;211,1;214,1,2,3,5,6,7",
+            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
                     promises = [],
                     defer = $q.defer();
             if(localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('frRemoteDict')===null||localStorage.getItem('enRemoteDict')===null)
