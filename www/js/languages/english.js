@@ -149,5 +149,5 @@ var englishStrings = {
         //patient/step3
         createAppointmentStep3Morning: "morning",
         createAppointmentStep3Afternoon: "afternoon",
-        createAppointmentStep3Selected: "U selected this appointment:"
+        createAppointmentStep3Selected: "You selected this appointment:"
 };
