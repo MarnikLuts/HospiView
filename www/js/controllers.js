@@ -545,6 +545,7 @@ angular.module('myApp.controllers', []).
             /**
              * localStorage data will be loaded and used to set the user preferences.
              */
+            console.log($rootScope.user);
             var user = JSON.parse(localStorage.getItem($rootScope.user));
 
             $scope.cellcontentPatient = user.cellcontent.patient;
