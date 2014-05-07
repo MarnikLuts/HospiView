@@ -21,7 +21,8 @@
                             <span id="settingsPatient" class="settingsLabels">{{getLocalizedString('settingsPatient')}}</span>
                         </td>
                         <td class="text-right">
-                            <img ng-src="img/checkbox{{checkboxImgPatient}}.png" ng-click="changeCheckbox('Patient')"/>
+                            <label><div class="icasaCheckbox icasaCheckbox-large" ng-class="{'icasaCheckboxChecked':selectedUser.cellcontent.patient, 'icasaCheckboxUnChecked':!selectedUser.cellcontent.patient}"></div><input type="checkbox" ng-model="selectedUser.cellcontent.patient" class="invisible"/></label>
+                            <!--<img ng-src="img/checkbox{{checkboxImgPatient}}.png" ng-click="changeCheckbox('Patient')"/>-->
                         </td>
                     </tr>
                     <tr>
@@ -29,7 +30,8 @@
                             <span id="settingsTitle" class="settingsLabels">{{getLocalizedString('settingsTitle')}}</span>
                         </td>
                         <td class="text-right">
-                            <img ng-src="img/checkbox{{checkboxImgTitle}}.png" ng-click="changeCheckbox('Title')"/>  
+                            <label><div class="icasaCheckbox icasaCheckbox-large" ng-class="{'icasaCheckboxChecked':selectedUser.cellcontent.title, 'icasaCheckboxUnChecked':!selectedUser.cellcontent.title}"></div><input type="checkbox" ng-model="selectedUser.cellcontent.title" class="invisible"/></label>
+                            <!--<img ng-src="img/checkbox1.png" ng-click="changeCheckbox('Title')"/>-->  
                         </td>
                     </tr>
                     <tr>
@@ -37,7 +39,8 @@
                             <span id="settingsDepartment" class="settingsLabels">{{getLocalizedString('settingsDepartment')}}</span>
                         </td>
                         <td class="text-right">
-                            <img ng-src="img/checkbox{{checkboxImgDepartment}}.png" ng-click="changeCheckbox('Department')"/>
+                            <label><div class="icasaCheckbox icasaCheckbox-large" ng-class="{'icasaCheckboxChecked':selectedUser.cellcontent.department, 'icasaCheckboxUnChecked':!selectedUser.cellcontent.department}"></div><input type="checkbox" ng-model="selectedUser.cellcontent.department" class="invisible"/></label>
+                            <!--<img ng-src="img/checkbox{{checkboxImgDepartment}}.png" ng-click="changeCheckbox('Department')"/>-->
                         </td>
                     </tr>
                 </table>

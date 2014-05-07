@@ -1809,34 +1809,6 @@ angular.module('myApp.controllers', []).
             };
 
             /**
-             * Initial setup of the checkboxes, since we use custom checkboxes.
-             */
-            if ($scope.selectedUser.cellcontent.patient === true)
-                $scope.checkboxImgPatient = 1;
-            else
-                $scope.checkboxImgPatient = 0;
-            if ($scope.selectedUser.cellcontent.title === true)
-                $scope.checkboxImgTitle = 1;
-            else
-                $scope.checkboxImgTitle = 0;
-            if ($scope.selectedUser.cellcontent.department === true)
-                $scope.checkboxImgDepartment = 1;
-            else
-                $scope.checkboxImgDepartment = 0;
-
-            /**
-             * Change the checkbox image when clicked.
-             */
-            $scope.changeCheckbox = function(setting) {
-                var checkboxString = "checkboxImg" + setting;
-                if ($scope[checkboxString] === 0) {
-                    $scope[checkboxString] = 1;
-                } else {
-                    $scope[checkboxString] = 0;
-                }
-            };
-
-            /**
              * Saves the language when the radio buttons change. Because the
              * text on the server buttons are set in the rootScope, we need
              * to change it manually.
@@ -1860,19 +1832,6 @@ angular.module('myApp.controllers', []).
              * the user back to the appointments screen.
              */
             $scope.save = function() {
-                if ($scope.checkboxImgPatient === 1)
-                    $scope.selectedUser.cellcontent.patient = true;
-                else
-                    $scope.selectedUser.cellcontent.patient = false;
-                if ($scope.checkboxImgTitle === 1)
-                    $scope.selectedUser.cellcontent.title = true;
-                else
-                    $scope.selectedUser.cellcontent.title = false;
-                if ($scope.checkboxImgDepartment === 1)
-                    $scope.selectedUser.cellcontent.department = true;
-                else
-                    $scope.selectedUser.cellcontent.department = false;
-
                 localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
                 $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
