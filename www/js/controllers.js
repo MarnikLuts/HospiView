@@ -159,9 +159,9 @@ angular.module('myApp.controllers', []).
                 $scope.loggingIn = true;
                 $scope.error = false;
                 var promises = [],
-                    invalidFields = [],
-                    authFailed = false,
-                    validServers = [];
+                        invalidFields = [],
+                        authFailed = false,
+                        validServers = [];
 
                 $rootScope.currentServers = [];
                 $scope.failedServers = [];
@@ -359,7 +359,7 @@ angular.module('myApp.controllers', []).
             function setReservations(reservations) {
                 firstCycle = true;
                 $rootScope[$rootScope.searchString] = reservations;
-                
+
 
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
@@ -1717,8 +1717,8 @@ angular.module('myApp.controllers', []).
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory, $q) {
             var searchStart = new Date(),
-                searchEnd = new Date(),
-                reservationPromises = [];
+                    searchEnd = new Date(),
+                    reservationPromises = [];
             searchEnd.setDate(searchStart.getDate() + 14);
 
 //            $scope.reservationList = [];
@@ -1738,7 +1738,7 @@ angular.module('myApp.controllers', []).
 //                        }
 //                    }
 //                }, error);
-                
+
             //TEST VALUES
             $scope.reservationList = [
                 {id: 1, the_date: '2014-05-06', time_from: '12:30', time_till: '13:00', title: 'Reservation1', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons'},
@@ -2626,15 +2626,15 @@ angular.module('myApp.controllers', []).
              */
             $scope.getUnitsAndGroups = function() {
                 var index = $rootScope.currentServers.indexOf($scope.server);
-                $scope.unitList=null;
-                $scope.groupList=null;
-                $scope.unit=null;
-                $scope.group=null;
-                if($scope.server!=null){
+                $scope.unitList = null;
+                $scope.groupList = null;
+                $scope.unit = null;
+                $scope.group = null;
+                if ($scope.server != null) {
                     hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
-                                if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail!=null) {
+                                if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail != null) {
                                     $scope.unitList = json.UnitsAndDeps.Detail.Unit;
                                     if ($scope.unitList.length == 1)
                                         $scope.unit = $scope.unitList[0];
@@ -2649,7 +2649,7 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getUnitDepGroups($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
-                                if (json.UnitDepGroups.Header.StatusCode == 1 && json.UnitDepGroups.Detail!=null) {
+                                if (json.UnitDepGroups.Header.StatusCode == 1 && json.UnitDepGroups.Detail != null) {
                                     $scope.groupList = json.UnitDepGroups.Detail.Group;
                                     if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
                                         $scope.group = $scope.groupList[0];
@@ -2669,7 +2669,7 @@ angular.module('myApp.controllers', []).
                 $scope.error = true;
             }
 
-            if ($rootScope.currentServers.length === 1){
+            if ($rootScope.currentServers.length === 1) {
                 $scope.server = $rootScope.currentServers[0];
                 $scope.getUnitsAndGroups();
             }
@@ -2848,6 +2848,9 @@ angular.module('myApp.controllers', []).
 
             var proposals = [];
             var globalTypes;
+            $scope.startProposalDate = new Date();
+            $scope.minDate = new Date();
+            
             /*
              for (var i = 0; i < $rootScope.newAppointment.type.type_id_array.length; i++) {
              if(!$rootScope.newAppointment.group){
@@ -2916,10 +2919,10 @@ angular.module('myApp.controllers', []).
                     proposals[proposal].afternoon = true;
                 proposals[proposal].morning = !proposals[proposal].afternoon;
 
-                console.log(proposal);
-                if ($rootScope.newAppointment.unit){
+                if ($rootScope.newAppointment.unit) {
                     proposals[proposal].unit_name = $rootScope.newAppointment.unit.Header.unit_name;
-                    proposals[proposal].location = $rootScope.newAppointment.unit.Detail.Dep[proposal].location_name;
+                    for (var i in $rootScope.newAppointment.unit.Detail.Dep)
+                        proposals[proposal].location = $rootScope.newAppointment.unit.Detail.Dep[i].location_name;
                 } else
                     for (var i in $rootScope.newAppointment.group.Detail.UnitAndDep)
                         if (proposals[proposal].unit_id === $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id) {
@@ -2942,7 +2945,7 @@ angular.module('myApp.controllers', []).
                 else
                     return $rootScope.getLocalizedString('createAppointmentStep3Afternoon');
             };
-            
+
             $scope.getDate = function(proposal) {
                 var date = new Date(proposal.the_date);
                 return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
@@ -2955,6 +2958,12 @@ angular.module('myApp.controllers', []).
                 var months = getMonthNames($rootScope.languageID);
                 $scope.proposalInfo = $scope.days[date.getDay()] + ", " + date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear() + ", " + proposal.time_from + "\n" + proposal.unit_name;
             };
+            
+            $scope.pickDate = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                $scope.opened = true;
+            }
 
             var width = window.innerWidth;
 
