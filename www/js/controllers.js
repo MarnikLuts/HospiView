@@ -2656,6 +2656,8 @@ angular.module('myApp.controllers', []).
 
                 $location.path('/patient/step2');
             };
+            
+            changeSelect();
 
         }).
         controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location, $q, hospiviewFactory) {
@@ -2784,7 +2786,8 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('/patient/step3');
             };
-
+            
+            changeSelect()
         }).
         controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $q, $location, hospiviewFactory) {
 
