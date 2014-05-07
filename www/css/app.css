@@ -61,6 +61,11 @@ body {
     overflow-y:scroll;
 }
 
+.list_proposals{
+    height:300px;
+    overflow-y: scroll;
+}
+
 .float-right{
     float:right;
 }
@@ -597,4 +602,8 @@ ul li{
         font-size: 15px;
         width: 100%;
     }
+}
+
+.datePickCalendar td{
+    width: 1%;
 }
