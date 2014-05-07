@@ -185,7 +185,7 @@ angular.module('myApp.controllers', []).
                                 authFailed = true;
                         } else {
                             $scope.error = false;
-                            $rootScope.user = json.Authentication.Detail.user_name;
+                            $rootScope.user = $scope.user;
                             $rootScope.type = parseInt(json.Authentication.Detail.isexternal);
 
                             validServers[r].uuid = json.Authentication.Detail.uuid;
