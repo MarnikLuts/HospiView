@@ -150,7 +150,7 @@ var englishStrings = {
         createAppointmentStep3Morning: "morning",
         createAppointmentStep3Afternoon: "afternoon",
         createAppointmentStep3Selected: "You selected this appointment:",
-        createAppointmentStep3SelectDate: "Select start date",
+        createAppointmentStep3SelectDate: "start date",
                 
         //patient/step6
         createAppointmentStep6End: "End"

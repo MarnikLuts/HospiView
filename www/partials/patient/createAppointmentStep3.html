@@ -1,75 +1,79 @@
-<nav class="navbar navbar-default" role="navigation" ng-controller="BackButtonCtrl">
-    <button type="submit" class="btn btn-sm-back" ng-click="back()">
-        <span class="glyphicon glyphicon-chevron-left"></span>
-        {{ getLocalizedString('createAppointmentPrevious')}}
-    </button>
-    <div class="title">{{ getLocalizedString('createAppointmentStep3')}}</div>
-    <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
-</nav>
-<div class="col-md-12">
-    <div class="well well-lg">
-        <p class="input-group">
-            <input type="text" ng-disabled="true" class="form-control" datepicker-popup="'dd/mm/yyyy'" ng-model="startProposalDate" is-open="opened" min-date="minDate" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="pickDate($event)">{{ getLocalizedString('createAppointmentStep3SelectDate')}}</button>
-            </span>
-        </p>
-        <div class="btn-group btn-group-justified">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-lg" ng-model="filters[1]" btn-checkbox>{{days[1]}}</button>
+<div class="heightPercent widthPercent" >
+    <nav class="navbar navbar-default" role="navigation" ng-controller="BackButtonCtrl">
+        <button type="submit" class="btn btn-sm-back" ng-click="back()">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+            {{ getLocalizedString('createAppointmentPrevious')}}
+        </button>
+        <div class="title">{{ getLocalizedString('createAppointmentStep3')}}</div>
+        <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
+    </nav>
+    <div class="col-md-12">
+        <div class="well well-lg">
+            <p class="input-group">
+                <input type="text" ng-disabled="true" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="startProposalDate" ng-required="true"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="showCalendar = true">{{ getLocalizedString('createAppointmentStep3SelectDate')}}</button>
+                </span>
+            </p>
+            <div ng-show="showCalendar" style="display:inline-block; min-height:290px;">
+                <datepicker ng-model="startProposalDate" datepicker-options="datePickerOptions" starting-day="1" min-date="today" date-disabled="disabled(date, mode)" format-day-title='MM/yyyy' show-weeks="false" class="well well-sm"></datepicker>
             </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-lg" ng-model="filters[2]" btn-checkbox>{{days[2]}}</button>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-lg" ng-model="filters[3]" btn-checkbox>{{days[3]}}</button>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-lg" ng-model="filters[4]" btn-checkbox>{{days[4]}}</button>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-lg" ng-model="filters[5]" btn-checkbox>{{days[5]}}</button>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-lg" ng-model="filters[6]" btn-checkbox>{{days[6]}}</button>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-lg" ng-model="filters[0]" btn-checkbox>{{days[0]}}</button>
-            </div>
-        </div><br/>
-        <div class="btn-group btn-group-justified">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-lg" ng-model="filters.morning" btn-checkbox>voormiddag</button>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-lg" ng-model="filters.afternoon" btn-checkbox>namiddag</button>
-            </div>
-        </div><br/>
-        <div class="btn-group-vertical list list_overflow_y_100 list-unstyled">
-            <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in filteredProposals = (proposals| orderBy:['setRespectiveDayNumber', 'afternoon', 'the_date', 'time_from'] | orderProposals:filters)" ng-click="selectProposal(proposal)">
-                <div class=".container-fluid">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            {{getDay(proposal)}} {{getDate(proposal)}}
-                        </div>
+            <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-lg" ng-model="filters[1]" btn-checkbox>{{days[1]}}</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-lg" ng-model="filters[2]" btn-checkbox>{{days[2]}}</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-lg" ng-model="filters[3]" btn-checkbox>{{days[3]}}</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-lg" ng-model="filters[4]" btn-checkbox>{{days[4]}}</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-lg" ng-model="filters[5]" btn-checkbox>{{days[5]}}</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-lg" ng-model="filters[6]" btn-checkbox>{{days[6]}}</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-lg" ng-model="filters[0]" btn-checkbox>{{days[0]}}</button>
+                </div>
+            </div><br/>
+            <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-lg" ng-model="filters.morning" btn-checkbox>voormiddag</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-lg" ng-model="filters.afternoon" btn-checkbox>namiddag</button>
+                </div>
+            </div><br/>
+            <div class="btn-group-vertical list list_overflow_y_100 list-unstyled">
+                <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in filteredProposals = (proposals| orderBy:['setRespectiveDayNumber', 'afternoon', 'the_date', 'time_from'] | orderProposals:filters)" ng-click="selectProposal(proposal)">
+                    <div class=".container-fluid">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                {{getDay(proposal)}} {{getDate(proposal)}}
+                            </div>
 
-                        <div class="col-xs-2">
-                            {{proposal.time_from}}
-                        </div>
+                            <div class="col-xs-2">
+                                {{proposal.time_from}}
+                            </div>
 
-                        <div class="col-xs-6">
-                            {{proposal.unit_name}} {{proposal.location}}
+                            <div class="col-xs-6">
+                                {{proposal.unit_name}} {{proposal.location}}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <br/>
+            <h4>{{getLocalizedString('createAppointmentStep3Selected')}}</h4>
+            <textarea style="resize: none;" class="form-control" disabled rows="2" ng-model="proposalInfo"></textarea>            
+            <br/>
+            <div class="text-center">
+                <button class="btn btn-xl" ng-click="next()" ng-disabled="!proposalInfo" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
+            </div>
         </div>
-        <br/>
-        <h4>{{getLocalizedString('createAppointmentStep3Selected')}}</h4>
-        <textarea style="resize: none;" class="form-control" disabled rows="2" ng-model="proposalInfo"></textarea>            
-        <br/>
-        <div class="text-center">
-            <button class="btn btn-xl" ng-click="next()" ng-disabled="!proposalInfo" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
-        </div>
-        <datepicker ng-model="dt" min-date="new Date()" show-weeks="true" class="well well-sm"></datepicker>
     </div>

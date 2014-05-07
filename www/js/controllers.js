@@ -2834,36 +2834,48 @@ angular.module('myApp.controllers', []).
             var proposals = [];
             var globalTypes;
             $scope.startProposalDate = new Date();
-            $scope.minDate = new Date();
-            
-            /*
-             for (var i = 0; i < $rootScope.newAppointment.type.type_id_array.length; i++) {
-             if(!$rootScope.newAppointment.group){
-             globalTypes = $rootScope.newAppointment.unit.Header.globaltypes;
-             } else {
-             globalTypes = $rootScope.newAppointment.group.Detail.UnitAndDep[i].globaltypes;
-             }
-             proposals.push(hospiviewFactory.getProposals(
-             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url, 
-             $rootScope.currentServers[$rootScope.newAppointment.server].uuid, 
-             $rootScope.newAppointment.type.unit_id_array[i], 
-             $rootScope.newAppointment.type.dep_id_array[i], 
-             $rootScope.newAppointment.type.type_id_adday[i], 
-             //"test maken reservatie", STITLE
-             $rootScope.newAppointment.reservationInfo, 
-             globalTypes,
-             //"", start_date
-             "00:00", 
-             "1,2,3,4,5,6,7", 
-             1, 
-             $rootScope.languageID));
-             }
-             
-             $q.all(proposals).then(function(proposals) {
-             json = parseJson(proposals[0].data);
-             $scope.proposals = json;
-             console.log($scope.proposals);
-             });*/
+            $scope.today = $scope.today ? null : new Date();
+            $scope.$watch('startProposalDate', 
+            function(){
+                $scope.showCalendar = false;
+                $scope.getProposals();
+            }, true);
+
+            $scope.getProposals = function(startDate) {
+                var searchDate;
+                if (startDate) {
+                    searchDate = formatDate(startDate);
+                } else {
+                    searchDate = formatDate($scope.startProposalDate);
+                }
+                for (var i = 0; i < $rootScope.newAppointment.type.type_id_array.length; i++) {
+                    if (!$rootScope.newAppointment.group) {
+                        globalTypes = $rootScope.newAppointment.unit.Header.globaltypes;
+                    } else {
+                        globalTypes = $rootScope.newAppointment.group.Detail.UnitAndDep[i].globaltypes;
+                    }
+                    proposals.push(hospiviewFactory.getProposals(
+                            $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
+                            $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
+                            $rootScope.newAppointment.type.unit_id_array[i],
+                            $rootScope.newAppointment.type.dep_id_array[i],
+                            $rootScope.newAppointment.type.type_id_array[i],
+                            //"test maken reservatie", STITLE
+                            $rootScope.newAppointment.reservationInfo,
+                            globalTypes,
+                            searchDate,
+                            "00:00",
+                            "1,2,3,4,5,6,7",
+                            1,
+                            $rootScope.languageID));
+                }
+
+                $q.all(proposals).then(function(proposals) {
+                    json = parseJson(proposals[0].data);
+                    $scope.proposals = json;
+                    console.log($scope.proposals);
+                });
+            }
 
             var proposals = [{proposal_id: '1', the_date: '2014-05-09', time_from: '07:00', time_till: '08:00', dep_id: '729', unit_id: '171'},
                 {proposal_id: '2', the_date: '2014-05-09', time_from: '08:00', time_till: '09:00', dep_id: '729', unit_id: '171'},
@@ -2877,6 +2889,8 @@ angular.module('myApp.controllers', []).
                 {proposal_id: '9', the_date: '2014-05-16', time_from: '09:00', time_till: '10:00', dep_id: '729', unit_id: '172'},
                 {proposal_id: '10', the_date: '2014-05-16', time_from: '14:00', time_till: '15:00', dep_id: '729', unit_id: '172'}];
 
+
+            //$scope.getProposals(new Date());
 
             var setDayNumber;
             var setRespectiveDayNumber;
@@ -2943,13 +2957,16 @@ angular.module('myApp.controllers', []).
                 var months = getMonthNames($rootScope.languageID);
                 $scope.proposalInfo = $scope.days[date.getDay()] + ", " + date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear() + ", " + proposal.time_from + "\n" + proposal.unit_name;
             };
-            
+
             $scope.pickDate = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
                 $scope.opened = true;
             }
 
+            $scope.datePickerOptions = {
+                minDate: $scope.minDate
+            };
             var width = window.innerWidth;
 
             setDayNames();
