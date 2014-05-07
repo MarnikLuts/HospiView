@@ -139,6 +139,9 @@ var dutchStrings = {
         settingsDeleteServerConfirm: "Weet u zeker dat u de geselecteerde server wil verwijderen?",
         settingsDeleteCurrentUserConfirm: "Weet u zeker dat u de huidige gebruiker wil verwijderen?",
         
+        //patient/mainmenu
+        notAvailableInOffline: "Deze functie is niet beschikbaar in offline mode.",
+        
         //patient/step1
         createAppointmentStep1SelectDoctor: "Selecteer een dokter",
         createAppointmentStep1SelectSection: "Selecteer een afdeling",

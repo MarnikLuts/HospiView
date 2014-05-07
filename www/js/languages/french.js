@@ -139,6 +139,9 @@ var frenchStrings = {
         settingsDeleteServerConfirm: "Êtes-vous sûr vous voulez supprimer cette serveur?",
         settingsDeleteCurrentUserConfirm: "Êtes-vous sûr vous voulez supprimer l'utilisateur courant?",
         
+        //patient/mainmenu
+        notAvailableInOffline: "Cette fonction n'est pas disponible sans connection.",
+        
         //patient/step1
         createAppointmentStep1SelectDoctor: "Choisissez un médecin",
         createAppointmentStep1SelectSection: "Choisissez un service",

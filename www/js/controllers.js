@@ -110,8 +110,7 @@ angular.module('myApp.controllers', []).
                 }
 
             /**
-             * Custom checkboxes are used to change the save_password checkbox 
-             * of the server. This function will throw a warning if the user decides to save their password.
+             * This function will throw a warning if the user decides to save their password.
              * 
              * @param {integer} serverNr   determines which server
              */
@@ -190,6 +189,7 @@ angular.module('myApp.controllers', []).
                         }
                     }
                     if (!authFailed) {
+                        $rootScope.isOffline = false;
                         if ($scope.failedServers.length !== 0) {
                             var servers = "";
                             for (var i = 0; i < $scope.failedServers.length; i++) {
@@ -224,11 +224,17 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function postLoginPatient() {
-                languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
-                        .then(function() {
-                            $rootScope.pageClass = 'right-to-left';
-                            $location.path("/patient/mainmenu");
-                        }, error);
+                $rootScope.pageClass = 'right-to-left';
+                if(localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null)
+                    languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
+                            .then(function() {
+                                $location.path("/patient/mainmenu");
+                            }, error);
+                else{
+                    languageFactory.initLocalLanguageStrings();
+                    $location.path("/patient/mainmenu");
+                }
+                    
             }
 
             /**
@@ -436,49 +442,66 @@ angular.module('myApp.controllers', []).
                 modalInstance.result.then(function(answer) {
                     if (answer) {
                         var servers = JSON.parse(localStorage.getItem($scope.user)).servers,
-                                hasAuthenticated = false,
-                                absentDays = JSON.parse(localStorage.getItem($scope.user + "AbsentDays")),
-                                reservations = JSON.parse(localStorage.getItem($scope.user + "Reservations")),
-                                resLength = reservations.length,
-                                absLength = absentDays.length;
+                            hasAuthenticated = false;
+                            
+                        $rootScope.type = servers[0].isexternal;
+                        
+                        if($rootScope.type==0||$rootScope.type==1){
+                            var absentDays = JSON.parse(localStorage.getItem($scope.user + "AbsentDays")),
+                            reservations = JSON.parse(localStorage.getItem($scope.user + "Reservations")),
+                            resLength = reservations.length,
+                            absLength = absentDays.length;
+                        }
+                        
                         $rootScope.currentServers = servers;
                         for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                             console.log(servers[i].user_password === $scope.selectedUser.servers[i].user_password);
                             if (servers[i].user_login === $scope.selectedUser.servers[i].user_login && servers[i].user_password === $scope.selectedUser.servers[i].user_password) {
                                 hasAuthenticated = true;
                             } else {
-                                var index = $rootScope.currentServers.indexOf(servers[i]);
-                                $rootScope.currentServers.splice(index, 1);
-                                while (resLength--) {
-                                    if (reservations[resLength].hosp_short_name === servers[i].hosp_short_name) {
-                                        console.log('splice res' + servers[i].hosp_short_name);
-                                        reservations.splice(resLength, 1);
+                                if($rootScope.type==0||$rootScope.type==1){
+                                    var index = $rootScope.currentServers.indexOf(servers[i]);
+                                    $rootScope.currentServers.splice(index, 1);
+                                    while (resLength--) {
+                                        if (reservations[resLength].hosp_short_name === servers[i].hosp_short_name) {
+                                            reservations.splice(resLength, 1);
+                                        }
                                     }
-                                }
-                                while (absLength--) {
-                                    if (absentDays[absLength].hosp_short_name === servers[i].hosp_short_name) {
-                                        console.log('splice abs' + servers[i].hosp_short_name);
-                                        absentDays.splice(absLength, 1);
+                                    while (absLength--) {
+                                        if (absentDays[absLength].hosp_short_name === servers[i].hosp_short_name) {
+                                            absentDays.splice(absLength, 1);
+                                        }
                                     }
                                 }
                             }
                         }
-                        if (hasAuthenticated && reservations.length != 0) {
+                        
+                        if($rootScope.type==0||$rootScope.type==1 && hasAuthenticated){
+                            hasAuthenticated =  reservations.length != 0;
+                        }
+                        
+                        if (hasAuthenticated) {
                             $rootScope.user = $scope.user;
-                            $rootScope.searchString = $rootScope.user + 'Reservations';
-                            $rootScope[$rootScope.searchString] = reservations;
-                            $rootScope.searchRangeStart = localStorage.getItem($scope.user + "SearchRangeStart");
-                            $rootScope.searchRangeEnd = localStorage.getItem($scope.user + "SearchRangeEnd");
-                            $rootScope.absentDays = absentDays;
-                            $rootScope.publicHolidays = JSON.parse(localStorage.getItem($scope.user + "PublicHolidays"));
-                            $rootScope.currentdate = new Date();
                             $rootScope.isOffline = true;
-                            $rootScope.type = servers[0].isexternal;
                             $rootScope.pageClass = "right-to-left";
-                            if ($rootScope.type == 0 || $rootScope.type == 1)
-                                $location.path('/doctor/appointmentsView');
-                            else if ($rootScope.type == 2)
-                                $location.path('/patient/appointmentsView');
+                            
+                            switch($rootScope.type){
+                                case '0':
+                                case '1':
+                                    $rootScope.searchString = $rootScope.user + 'Reservations';
+                                    $rootScope[$rootScope.searchString] = reservations;
+                                    $rootScope.searchRangeStart = localStorage.getItem($scope.user + "SearchRangeStart");
+                                    $rootScope.searchRangeEnd = localStorage.getItem($scope.user + "SearchRangeEnd");
+                                    $rootScope.absentDays = absentDays;
+                                    $rootScope.publicHolidays = JSON.parse(localStorage.getItem($scope.user + "PublicHolidays"));
+                                    $rootScope.currentdate = new Date();
+                                    $location.path('/doctor/appointmentsView');
+                                    break;
+                                case '2':
+                                    languageFactory.initLocalLanguageStrings();
+                                    $location.path('/patient/mainmenu');
+                                    break;
+                            }
                         }
                         else {
                             $scope.loggingIn = false;
@@ -2541,8 +2564,12 @@ angular.module('myApp.controllers', []).
              * User gets redirected to step 1 of creating a new appointment
              */
             $scope.createAppointment = function() {
-                $rootScope.pageClass = 'right-to-left';
-                $location.path('patient/step1');
+                if($rootScope.isOffline){
+                    alert($rootScope.getLocalizedString('notAvailableInOffline'));
+                }else{
+                    $rootScope.pageClass = 'right-to-left';
+                    $location.path('patient/step1');
+                }
             };
 
             /**
@@ -2569,11 +2596,16 @@ angular.module('myApp.controllers', []).
              * If there is only one option, that option is automatically selected
              */
             $scope.getUnitsAndGroups = function() {
-                var index = $rootScope.currentServers.indexOf($scope.server);
+                var index = $rootScope.currentServers.indexOf($scope.server),
+                    unitsLoaded = false,
+                    groupsLoaded = false;
                 $scope.unitList = null;
                 $scope.groupList = null;
                 $scope.unit = null;
                 $scope.group = null;
+                
+                $scope.dataLoading = true;
+                
                 if ($scope.server != null) {
                     hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
@@ -2583,6 +2615,9 @@ angular.module('myApp.controllers', []).
                                     if ($scope.unitList.length == 1)
                                         $scope.unit = $scope.unitList[0];
                                 }
+                                unitsLoaded = true;
+                                if(groupsLoaded)
+                                    $scope.dataLoading = false;
                             }, error);
 
                     /**
@@ -2598,7 +2633,9 @@ angular.module('myApp.controllers', []).
                                     if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
                                         $scope.group = $scope.groupList[0];
                                 }
-
+                                groupsLoaded = true;
+                                if(unitsLoaded)
+                                    $scope.dataLoading = false;
                             }, error);
                 }
             };
@@ -2627,9 +2664,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.next = function() {
                 /*
-                 * Thanks Masood
-                 * 
-                 * use this loop to transfer important data from the unit list to the chosen group if a group is selected
+                 * this loop is used to transfer important data from the unit list to the chosen group if a group is selected
                  */
                 if ($scope.group !== null)
                     for (var i = 0; i < $scope.unitList.length; i++) {
@@ -2705,46 +2740,47 @@ angular.module('myApp.controllers', []).
             $scope.typeList = [];
             $scope.type = null;
             $q.all(typePromises)
-                    .then(function(responses) {
-                        var json;
-                        for (var i = 0; i < responses.length; i++) {
-                            json = parseJson(responses[i].data);
-                            if (json.TypesOnUnit.Header.StatusCode == 1) {
-                                for (var j = 0; j < json.TypesOnUnit.Detail.Type.length; j++) {
-                                    var checkPresent = false;
-                                    for (var k = 0; k < $scope.typeList.length; k++) {
-                                        if ($scope.typeList[k].type_title === json.TypesOnUnit.Detail.Type[j].type_title) {
-                                            $scope.typeList[k].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
-                                            if (!$rootScope.newAppointment.unit) {
-                                                $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
-                                                $scope.typeList[k].dep_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].dep_id);
-                                            } else {
-                                                $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.unit.Header.unit_id);
-                                                $scope.typeList[k].dep_id_array.push($rootScope.newAppointment.unit.Detail.Dep[i].dep_id);
-                                            }
-                                            checkPresent = true;
-                                        }
-                                    }
-                                    if (!checkPresent) {
-                                        json.TypesOnUnit.Detail.Type[j].type_id_array = [];
-                                        json.TypesOnUnit.Detail.Type[j].unit_id_array = [];
-                                        json.TypesOnUnit.Detail.Type[j].dep_id_array = [];
-                                        json.TypesOnUnit.Detail.Type[j].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
+                .then(function(responses) {
+                    var json;
+                    for (var i = 0; i < responses.length; i++) {
+                        json = parseJson(responses[i].data);
+                        console.log(json);
+                        if (json.TypesOnUnit.Header.StatusCode == 1) {
+                            for (var j = 0; j < json.TypesOnUnit.Detail.Type.length; j++) {
+                                var checkPresent = false;
+                                for (var k = 0; k < $scope.typeList.length; k++) {
+                                    if ($scope.typeList[k].type_title === json.TypesOnUnit.Detail.Type[j].type_title) {
+                                        $scope.typeList[k].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
                                         if (!$rootScope.newAppointment.unit) {
-                                            json.TypesOnUnit.Detail.Type[j].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
-                                            json.TypesOnUnit.Detail.Type[j].dep_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].dep_id);
+                                            $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
+                                            $scope.typeList[k].dep_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].dep_id);
                                         } else {
-                                            json.TypesOnUnit.Detail.Type[j].unit_id_array.push($rootScope.newAppointment.unit.Header.unit_id);
-                                            json.TypesOnUnit.Detail.Type[j].dep_id_array.push($rootScope.newAppointment.unit.Detail.Dep[i].dep_id);
+                                            $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.unit.Header.unit_id);
+                                            $scope.typeList[k].dep_id_array.push($rootScope.newAppointment.unit.Detail.Dep[i].dep_id);
                                         }
-                                        $scope.typeList.push(json.TypesOnUnit.Detail.Type[j]);
+                                        checkPresent = true;
                                     }
                                 }
-                                if ($scope.typeList.length == 1)
-                                    $scope.type = $scope.typeList[0];
+                                if (!checkPresent) {
+                                    json.TypesOnUnit.Detail.Type[j].type_id_array = [];
+                                    json.TypesOnUnit.Detail.Type[j].unit_id_array = [];
+                                    json.TypesOnUnit.Detail.Type[j].dep_id_array = [];
+                                    json.TypesOnUnit.Detail.Type[j].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
+                                    if (!$rootScope.newAppointment.unit) {
+                                        json.TypesOnUnit.Detail.Type[j].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
+                                        json.TypesOnUnit.Detail.Type[j].dep_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].dep_id);
+                                    } else {
+                                        json.TypesOnUnit.Detail.Type[j].unit_id_array.push($rootScope.newAppointment.unit.Header.unit_id);
+                                        json.TypesOnUnit.Detail.Type[j].dep_id_array.push($rootScope.newAppointment.unit.Detail.Dep[i].dep_id);
+                                    }
+                                    $scope.typeList.push(json.TypesOnUnit.Detail.Type[j]);
+                                }
                             }
+                            if ($scope.typeList.length == 1)
+                                $scope.type = $scope.typeList[0];
                         }
-                    }, error);
+                    }
+                }, error);
 
             /**
              * Function used to help with form validation
