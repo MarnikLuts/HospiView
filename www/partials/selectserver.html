@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <div class="savePasswordText">
-                        <img ng-src="img/checkbox{{checkboxImgServer}}.png" ng-click="changeCheckbox()" height="25" width="25"/> {{ getLocalizedString('loginAutomaticallyEnterPassword')}}
+                        <label><div class="icasaCheckbox" ng-class="{'icasaCheckboxChecked':savePassword, 'icasaCheckboxUnChecked':!savePassword,}"></div><input type="checkbox" ng-model="savePassword" ng-click="changeCheckbox()"  class="invisible"/> {{ getLocalizedString('loginAutomaticallyEnterPassword')}}</label>
                     </div>
                     <div class="alert alert-danger" ng-show="error">{{errormessage}}</div>
                     <div class="form-group text-center">

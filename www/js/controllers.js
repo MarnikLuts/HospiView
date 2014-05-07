@@ -111,20 +111,12 @@ angular.module('myApp.controllers', []).
 
             /**
              * Custom checkboxes are used to change the save_password checkbox 
-             * of the server. This function will change the checkbox image and
-             * throw a warning if the user decides to save their password.
+             * of the server. This function will throw a warning if the user decides to save their password.
              * 
              * @param {integer} serverNr   determines which server
              */
             $scope.changeCheckbox = function(serverNr) {
-                var checkboxString = "checkboxImgServer" + serverNr;
-                $scope.selectedUser.servers[serverNr].save_password = !$scope.selectedUser.servers[serverNr].save_password;
-                if ($scope[checkboxString] === 0) {
-                    $scope[checkboxString] = 1;
-                } else {
-                    $scope[checkboxString] = 0;
-                }
-                if ($scope[checkboxString] === 1)
+                if (!$scope.selectedUser.servers[serverNr].save_password)
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             };
 
@@ -2190,14 +2182,7 @@ angular.module('myApp.controllers', []).
              * Also throws a warning if the user decides to save his password.
              */
             $scope.changeCheckbox = function() {
-                if ($scope.checkboxImgServer === 0) {
-                    $scope.checkboxImgServer = 1;
-                    $scope.savePassword = true;
-                } else {
-                    $scope.checkboxImgServer = 0;
-                    $scope.savePassword = false;
-                }
-                if ($scope.checkboxImgServer === 1)
+                if (!$scope.savePassword)
                     alert($rootScope.getLocalizedString('loginPasswordCheckedMessage'));
             }
 
