@@ -97,10 +97,12 @@ body {
     min-width: 40px;
 }
 .icasaCheckbox{
+    position: relative;
     width:25px;
     height:25px;
     background-size:25px 25px;
     display: inline-block;
+    top:5px;
 }
 .icasaCheckboxChecked{
     background-image: url('../img/checkbox1.png');
