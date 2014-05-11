@@ -21,7 +21,7 @@
                             <span id="settingsPatient" class="settingsLabels">{{getLocalizedString('settingsPatient')}}</span>
                         </td>
                         <td class="text-right">
-                            <img ng-src="img/checkbox{{checkboxImgPatient}}.png" ng-click="changeCheckbox('Patient')"/>
+                            <label><div class="icasaCheckbox icasaCheckbox-large" ng-class="{'icasaCheckboxChecked':selectedUser.cellcontent.patient, 'icasaCheckboxUnChecked':!selectedUser.cellcontent.patient}"></div><input type="checkbox" ng-model="selectedUser.cellcontent.patient" class="invisible"/></label>
                         </td>
                     </tr>
                     <tr>
@@ -29,7 +29,7 @@
                             <span id="settingsTitle" class="settingsLabels">{{getLocalizedString('settingsTitle')}}</span>
                         </td>
                         <td class="text-right">
-                            <img ng-src="img/checkbox{{checkboxImgTitle}}.png" ng-click="changeCheckbox('Title')"/>  
+                            <label><div class="icasaCheckbox icasaCheckbox-large" ng-class="{'icasaCheckboxChecked':selectedUser.cellcontent.title, 'icasaCheckboxUnChecked':!selectedUser.cellcontent.title}"></div><input type="checkbox" ng-model="selectedUser.cellcontent.title" class="invisible"/></label>
                         </td>
                     </tr>
                     <tr>
@@ -37,7 +37,7 @@
                             <span id="settingsDepartment" class="settingsLabels">{{getLocalizedString('settingsDepartment')}}</span>
                         </td>
                         <td class="text-right">
-                            <img ng-src="img/checkbox{{checkboxImgDepartment}}.png" ng-click="changeCheckbox('Department')"/>
+                            <label><div class="icasaCheckbox icasaCheckbox-large" ng-class="{'icasaCheckboxChecked':selectedUser.cellcontent.department, 'icasaCheckboxUnChecked':!selectedUser.cellcontent.department}"></div><input type="checkbox" ng-model="selectedUser.cellcontent.department" class="invisible"/></label>
                         </td>
                     </tr>
                 </table>
@@ -100,20 +100,20 @@
                 <div class="col-md-12">
                     <div class="shortcutButtons">
                         <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server1Select()" 
-                                btn-radio="servers[0]">{{abbreviation1}}<br/><img src="{{server1Img}}" id="serverImg" alt="hospi"></button>
+                                btn-radio="selectedUser.servers[0]">{{abbreviation1}}<br/><img src="{{server1Img}}" id="serverImg" alt="hospi"></button>
                         <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server2Select()" 
-                                btn-radio="servers[1]">{{abbreviation2}}<br/><img src="{{server2Img}}" id="serverImg" alt="hospi" ng-show="showServer2"><span class="glyphicon glyphicon-plus" ng-hide="showServer2"></span></button>
+                                btn-radio="selectedUser.servers[1]">{{abbreviation2}}<br/><img src="{{server2Img}}" id="serverImg" alt="hospi" ng-show="showServer2"><span class="glyphicon glyphicon-plus" ng-hide="showServer2"></span></button>
                         <button type="button" class="btn btn-default btn-lg-shortcut shortcutButton" ng-model="serverRadio" ng-click="server3Select()" 
-                                btn-radio="servers[2]">{{abbreviation3}}<br/><img src="{{server3Img}}" id="serverImg" alt="hospi" ng-show="showServer3"><span class="glyphicon glyphicon-plus" ng-hide="showServer3"></span></button>
+                                btn-radio="selectedUser.servers[2]">{{abbreviation3}}<br/><img src="{{server3Img}}" id="serverImg" alt="hospi" ng-show="showServer3"><span class="glyphicon glyphicon-plus" ng-hide="showServer3"></span></button>
                     </div>
                 </div>
                 <div class="input-group form-group widthPercent">
                     <span class="input-group-addon widthSettingsLabels settingsLabels">{{getLocalizedString('settingsUser')}}:</span>
-                    <input id="username" class="form-control input-lg" type="text" ng-model="serverLogin" ng-disabled="true"/>
+                    <input id="username" class="form-control input-lg" type="text" ng-model="serverRadio.user_login" ng-disabled="true"/>
                 </div>
                 <div class="input-group form-group widthPercent">
                     <span class="input-group-addon widthSettingsLabels settingsLabels">{{getLocalizedString('loginPassword')}}:</span>
-                    <input id="password" class="form-control input-lg" type="password" ng-model="serverPassword" ng-disabled="true"/>
+                    <input id="password" class="form-control input-lg" type="password" ng-model="serverRadio.user_password" ng-disabled="true"/>
                 </div>
 
                 <table class="table table-condensed list">

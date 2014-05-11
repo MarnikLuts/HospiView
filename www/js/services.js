@@ -14,7 +14,7 @@ angular.module('myApp.services', []).
          * @param {type} base_url
          * @returns {_L13.Anonym$1}.
          */
-        factory('hospiviewFactory', function($http, $rootScope, base_url, kiosk_url) {
+        factory('hospiviewFactory', function($http, $rootScope, kiosk_url) {
             return{
                 /**
                  * Gets All the HospiView servers
@@ -186,8 +186,30 @@ angular.module('myApp.services', []).
                 getTypes: function(UUID, Unit_Id, Dep_Id, GlobalTypes, The_Online, Language_Id, server_url){
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetTypesOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&GlobalTypes=" + GlobalTypes + "&The_Online=" + The_Online + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter);
+                },
+                
+                /**
+                 * Get proposals for placing a reservation.
+                 * 
+                 * @param {type} server_url
+                 * @param {type} UUID
+                 * @param {type} Unit_Id
+                 * @param {type} Dep_Id
+                 * @param {type} UnitType_Id
+                 * @param {type} STitle
+                 * @param {type} Additional_Info
+                 * @param {type} GlobalTypes
+                 * @param {type} Start_Date
+                 * @param {type} Start_Time
+                 * @param {type} Active_Days
+                 * @param {type} Include_Today
+                 * @param {type} Language_id
+                 * @returns {unresolved}
+                 */
+                getProposals: function(server_url, UUID, Unit_Id, Dep_Id, UnitType_Id, STitle, Additional_Info, GlobalTypes, Start_Date, Start_Time, Active_Days, Include_Today, Language_id){
+                    $rootScope.requestCounter++;
+                    return $http.get(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days  + "&Include_Today=" + Include_Today  + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
                 }
-
             };
         }).
         factory('dataFactory', function($rootScope, $q, hospiviewFactory) {
@@ -551,56 +573,76 @@ angular.module('myApp.services', []).
          * @returns {unresolved}
          */
         initRemoteLanguageStrings: function(hosp_url) {
-            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;214,1,2,3,5,6,7",
+            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
                     promises = [],
                     defer = $q.defer();
-
+            
             for (var i = 1; i < 4; i++) {
                 promises.push(hospiviewFactory.getLanguageStrings(i, listOfPidsSids, hosp_url));
             }
 
             $q.all(promises).then(function(responses) {
                 for (var j = 0; j < responses.length; j++) {
-                    var json = parseJson(responses[j].data);
+                    var json = parseJson(responses[j].data),
+                        languageString = json.LanguageStrings.Detail.LanguageString;
 
                     if (json.LanguageStrings.Header.StatusCode === "1") {
                         var remoteDict = {
-                            createAppointmentStep2Error: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 92, 75),
+                            createAppointmentStep2Error: getStringByPidAndSid(languageString, 92, 75),
                             
-                            createAppointmentSection: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 55),
-                            createAppointmentCampus: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 56),
-                            createAppointmentDoctor: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 57).split('/')[0],
-                            createAppointmentStep2ReservationInfo: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 93, 60),
+                            createAppointmentSection: getStringByPidAndSid(languageString, 93, 55),
+                            createAppointmentCampus: getStringByPidAndSid(languageString, 93, 56),
+                            createAppointmentDoctor: getStringByPidAndSid(languageString, 93, 57).split('/')[0],
+                            createAppointmentStep2ReservationInfo: getStringByPidAndSid(languageString, 93, 60),
                             
-                            createAppointmentType: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 94, 10),
+                            createAppointmentType: getStringByPidAndSid(languageString, 94, 10),
                             
-                            createAppointmentGreeting: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 1),
-                            createAppointmentInfo: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 2),
-                            createAppointmentMakeChoice: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 3),
-                            createAppointmentRequest: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 4),
-                            createAppointmentView: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 204, 5),
+                            createAppointmentGreeting: getStringByPidAndSid(languageString, 204, 1),
+                            createAppointmentInfo: getStringByPidAndSid(languageString, 204, 2),
+                            createAppointmentMakeChoice: getStringByPidAndSid(languageString, 204, 3),
+                            createAppointmentRequest: getStringByPidAndSid(languageString, 204, 4),
+                            createAppointmentView: getStringByPidAndSid(languageString, 204, 5),
                             
-                            createAppointmentStep1: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 1),
-                            createAppointmentStep1Info: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 2),
-                            createAppointmentNext: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 4),
-                            createAppointmentStep1Error: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 205, 5),
+                            createAppointmentStep1: getStringByPidAndSid(languageString, 205, 1),
+                            createAppointmentStep1Info: getStringByPidAndSid(languageString, 205, 2),
+                            createAppointmentNext: getStringByPidAndSid(languageString, 205, 4),
+                            createAppointmentStep1Error: getStringByPidAndSid(languageString, 205, 5),
                             
-                            createAppointmentStep2: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 214, 1),
-                            createAppointmentStep2Info1: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 214, 2),
-                            createAppointmentStep2Info2: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 214, 3),
-                            createAppointmentStep2ExtraInfo: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 214, 5),
-                            createAppointmentPrevious: getStringByPidAndSid(json.LanguageStrings.Detail.LanguageString, 214, 6),
+                            createAppointmentStep5: getStringByPidAndSid(languageString, 208, 1),
+                            createAppointmentStep5Info: getStringByPidAndSid(languageString, 208, 2),
+                            createAppointmentStep5Name: getStringByPidAndSid(languageString, 208, 6),
+                            createAppointmentStep5Phone: getStringByPidAndSid(languageString, 208, 15),
+                            createAppointmentStep5Error: getStringByPidAndSid(languageString, 208, 16),
+                            
+                            createAppointmentStep6: getStringByPidAndSid(languageString, 209, 1),
+                            createAppointmentStep6With: getStringByPidAndSid(languageString, 209, 3),
+                            createAppointmentStep6On: getStringByPidAndSid(languageString, 209, 4),
+                            createAppointmentStep6At: getStringByPidAndSid(languageString, 209, 5),
+                            createAppointmentStep6For: getStringByPidAndSid(languageString, 209, 6),
+                            
+                            createAppointmentStep6EndCreate: getStringByPidAndSid(languageString, 211, 1),
+                            
+                            createAppointmentStep2: getStringByPidAndSid(languageString, 214, 1),
+                            createAppointmentStep2Info1: getStringByPidAndSid(languageString, 214, 2),
+                            createAppointmentStep2Info2: getStringByPidAndSid(languageString, 214, 3),
+                            createAppointmentStep2ExtraInfo: getStringByPidAndSid(languageString, 214, 5),
+                            createAppointmentPrevious: getStringByPidAndSid(languageString, 214, 6),
+                            
+                            createAppointmentStep3: getStringByPidAndSid(languageString, 206, 1)
                         };
 
                         switch (j) {
                             case 0:
                                 $rootScope.nlRemoteDict = remoteDict;
+                                localStorage.setItem('nlRemoteDict', JSON.stringify(remoteDict));
                                 break;
                             case 1:
                                 $rootScope.frRemoteDict = remoteDict;
+                                localStorage.setItem('frRemoteDict', JSON.stringify(remoteDict));
                                 break;
                             case 2:
                                 $rootScope.enRemoteDict = remoteDict;
+                                localStorage.setItem('enRemoteDict', JSON.stringify(remoteDict));
                                 break;
                         }
                         defer.resolve();
@@ -611,6 +653,11 @@ angular.module('myApp.services', []).
                 }
             });
             return defer.promise;
+        },
+        initLocalLanguageStrings: function(){
+            $rootScope.nlRemoteDict = JSON.parse(localStorage.getItem('nlRemoteDict'));
+            $rootScope.frRemoteDict = JSON.parse(localStorage.getItem('frRemoteDict'));
+            $rootScope.enRemoteDict = JSON.parse(localStorage.getItem('enRemoteDict'));
         }
 
     };

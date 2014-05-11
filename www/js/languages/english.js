@@ -37,19 +37,19 @@ var englishStrings = {
         //AppointmentDetail
         appointmentDetail: "Reservation info",
         appointmentDetailPatient: "Patient info",
-        appointmentDetailDoctor: "Doctor: ",
-        appointmentDetailDepartment: "Department: ",
-        appointmentDetailId: "Reservation id: ",
-        appointmentDetailTitle: "Title: ",
-        appointmentDetailBooking: "Booked by: ",
-        appointmentDetailMarking: "Marking: ",
-        appointmentDetailType: "Type: ",
+        appointmentDetailDoctor: "Doctor ",
+        appointmentDetailDepartment: "Department ",
+        appointmentDetailId: "Reservation id ",
+        appointmentDetailTitle: "Title ",
+        appointmentDetailBooking: "Booked by ",
+        appointmentDetailMarking: "Marking ",
+        appointmentDetailType: "Type ",
         appointmentDetailFinal: "final",
         appointmentDetailProposal: "proposal",
-        appointmentDetailComment: "Comment: ",
-        appointmentDetailPatientId: "Patient id: ",
-        appointmentDetailPatientName: "Name: ",
-        appointmentDetailPatientNational: "National number: ",
+        appointmentDetailComment: "Comment ",
+        appointmentDetailPatientId: "Patient id ",
+        appointmentDetailPatientName: "Name ",
+        appointmentDetailPatientNational: "National number ",
         
         //Selectserver/new
         newGreeting: "Welcome to HospiView",
@@ -139,10 +139,22 @@ var englishStrings = {
         settingsDeleteServerConfirm: "Are you sure you want to delete the selected server?",
         settingsDeleteCurrentUserConfirm: "Are you sure you want to delete the current user?",
         
+        //patient/mainmenu
+        notAvailableInOffline: "This feature is not available in offline mode.",
+        
         //patient/step1
         createAppointmentStep1SelectDoctor: "Select a doctor",
         createAppointmentStep1SelectSection: "Select a section",
                 
         //patient/step2
         createAppointmentStep2SelectType: "Choose a type",
+                
+        //patient/step3
+        createAppointmentStep3Morning: "morning",
+        createAppointmentStep3Afternoon: "afternoon",
+        createAppointmentStep3Selected: "You selected this appointment:",
+        createAppointmentStep3SelectDate: "start date",
+                
+        //patient/step6
+        createAppointmentStep6End: "End"
 };

@@ -37,19 +37,19 @@ var dutchStrings = {
         //AppointmentDetail
         appointmentDetail: "Reservatie info",
         appointmentDetailPatient: "Patiënt info",
-        appointmentDetailDoctor: "Arts: ",
-        appointmentDetailDepartment: "Departement: ",
-        appointmentDetailId: "Reservatie id: ",
-        appointmentDetailTitle: "Titel: ",
-        appointmentDetailBooking: "Geboekt door: ",
-        appointmentDetailMarking: "Markering(en): ",
-        appointmentDetailType: "Type: ",
+        appointmentDetailDoctor: "Arts ",
+        appointmentDetailDepartment: "Departement ",
+        appointmentDetailId: "Reservatie id ",
+        appointmentDetailTitle: "Titel ",
+        appointmentDetailBooking: "Geboekt door ",
+        appointmentDetailMarking: "Markering(en) ",
+        appointmentDetailType: "Type ",
         appointmentDetailFinal: "definitief",
         appointmentDetailProposal: "voorstel",
-        appointmentDetailComment: "Commentaar: ",
-        appointmentDetailPatientId: "Patiënt id: ",
-        appointmentDetailPatientName: "Naam en voornaam: ",
-        appointmentDetailPatientNational: "Rijksregisternummer: ",
+        appointmentDetailComment: "Commentaar ",
+        appointmentDetailPatientId: "Patiënt id ",
+        appointmentDetailPatientName: "Naam en voornaam ",
+        appointmentDetailPatientNational: "Rijksregisternummer ",
         
         //Selectserver/new
         newGreeting: "Welkom bij HospiView",
@@ -139,10 +139,22 @@ var dutchStrings = {
         settingsDeleteServerConfirm: "Weet u zeker dat u de geselecteerde server wil verwijderen?",
         settingsDeleteCurrentUserConfirm: "Weet u zeker dat u de huidige gebruiker wil verwijderen?",
         
+        //patient/mainmenu
+        notAvailableInOffline: "Deze functie is niet beschikbaar in offline mode.",
+        
         //patient/step1
         createAppointmentStep1SelectDoctor: "Selecteer een dokter",
         createAppointmentStep1SelectSection: "Selecteer een afdeling",
                 
         //patient/step2
         createAppointmentStep2SelectType: "Kies een type",
+        
+        //patient/step3
+        createAppointmentStep3Morning: "voormiddag",
+        createAppointmentStep3Afternoon: "namiddag",
+        createAppointmentStep3Selected: "U selecteerde volgende afspraak:",
+        createAppointmentStep3SelectDate: "startdatum",
+                        
+        //patient/step6
+        createAppointmentStep6End: "Einde"
 };

@@ -9,7 +9,6 @@ body {
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent selecting text */
     -ms-content-zooming: none;                  /* disable zooming (WP) */
-    
 }
 
 .menu {
@@ -62,6 +61,11 @@ body {
     overflow-y:scroll;
 }
 
+.list_proposals{
+    height:300px;
+    overflow-y: scroll;
+}
+
 .float-right{
     float:right;
 }
@@ -96,6 +100,31 @@ body {
     font-size: 1.1em;
     font-weight: normal;
     min-width: 40px;
+}
+.icasaCheckbox{
+    position: relative;
+    display: inline-block;
+}
+
+.icasaCheckbox-normal{
+    width:25px;
+    height:25px;
+    background-size:25px 25px;
+    top:5px;
+}
+
+.icasaCheckbox-large{
+    width:45px;
+    height:45px;
+    background-size:45px 45px;
+    bottom: 10px;
+}
+
+.icasaCheckboxChecked{
+    background-image: url('../img/checkbox1.png');
+}
+.icasaCheckboxUnChecked{
+    background-image: url('../img/checkbox0.png');
 }
 
 @media screen and (min-width: 768px) {
@@ -237,6 +266,9 @@ body {
         font-size: 1.8em;
         display: table-cell;
     }
+}
+.dayButtonWidth{
+    width:14%;
 }
 
 .detailTableRow{
@@ -445,17 +477,17 @@ ul li{
     font-size: 15px;
 }
 
-.step2Table{
+.appointmentFormTable{
     border-spacing: 10px; 
     border-collapse:separate;
     width:100%;
 }
 
-.step2Table tr td{
+.appointmentFormTable tr td{
     width: 90%;
 }
 
-.step2Table tr td:first-child{
+.appointmentFormTable tr td:first-child{
     width: 10%;
 }
 
@@ -570,4 +602,8 @@ ul li{
         font-size: 15px;
         width: 100%;
     }
+}
+
+.datePickCalendar td{
+    width: 1%;
 }

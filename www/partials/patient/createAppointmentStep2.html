@@ -7,17 +7,17 @@
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
 <div class="col-md-12">
-    <div class="well well-lg">
+    <div class="well well-sm">
         <h4>{{getLocalizedString('createAppointmentStep2Info1')}} <b>{{unitOrGroupName}}</b> {{getLocalizedString('createAppointmentStep2Info2')}}</h4>
         <br>
         <form name="step2Form" novalidate>
-            <table class="step2Table">
+            <table class="appointmentFormTable">
                 <tr>
                     <td>
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentType')}}</b></p>
                     </td>
                     <td>
-                        <select class="form-control">
+                        <select class="form-control" ng-model="type" ng-options="type as type.type_title for type in typeList">
                             <option value=""> - {{getLocalizedString('createAppointmentStep2SelectType')}} - </option>
                         </select>
                     </td>
@@ -28,7 +28,7 @@
                     </td>
                     <td>
                         <div class="list-group"  style="font-size: 15px;">
-                            <label ng-repeat="location in locations track by $index" class="widthPercent list-group-item" ng-class="{'list-group-item-success':location.checked}" ><input type="checkbox" ng-model="location.checked"/>{{location.location_name}}</label>
+                            <label ng-repeat="location in locations track by $index" class="widthPercent list-group-item" ng-class="{'list-group-item-success':location.checked}" ><div class="icasaCheckbox icasaCheckbox-normal" ng-class="{'icasaCheckboxChecked':location.checked, 'icasaCheckboxUnChecked':!location.checked,}"></div><input type="checkbox" ng-model="location.checked" class="invisible" />{{location.location_name}}</label>
                         </div>
                     </td>
                 </tr>
@@ -37,7 +37,7 @@
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ReservationInfo')}}</b></p>
                     </td>
                     <td>
-                        <textarea class="form-control" rows="3" ng-model="reservationInfo" placeholder="{{getLocalizedString('createAppointmentStep2ReservationInfo')}}" ></textarea>
+                        <textarea style="resize: none;" class="form-control" rows="3" ng-model="reservationInfo" placeholder="{{getLocalizedString('createAppointmentStep2ReservationInfo')}}" ></textarea>
                     </td>    
                 </tr>
                 <tr>
@@ -45,13 +45,15 @@
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ExtraInfo')}}</b></p>
                     </td>
                     <td>
-                        <textarea class="form-control" rows="3" ng-model="extraInfo" placeholder="{{getLocalizedString('createAppointmentStep2ExtraInfo')}}" ></textarea>
+                        <textarea style="resize: none;" class="form-control" disabled rows="3" ng-model="extraInfo" placeholder="{{getLocalizedString('createAppointmentStep2ExtraInfo')}}" ></textarea>
                     </td>    
                 </tr>
             </table>
             <br>
-            <button class="btn btn-xl" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
+            <div class="text-center">
+                <button class="btn btn-xl" ng-click="next()" ng-disabled="type == null || !locationIsChecked()" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
+            </div>
         </form>
     </div>
 </div>
-    
+

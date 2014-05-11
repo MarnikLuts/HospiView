@@ -1,16 +1,65 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<nav class="navbar navbar-default" role="navigation" ng-controller="BackButtonCtrl">
+    <button type="submit" class="btn btn-sm-back" ng-click="back()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        {{ getLocalizedString('back')}}
+    </button>
+    <div class="title">{{ getLocalizedString('createAppointmentStep5')}}</div>
+    <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
+</nav>
+
+<div class="col-md-12">
+    <div class="well well-lg">
+        <h4>{{getLocalizedString('createAppointmentStep5Info')}}</h4>
+        <form name="step5Form" novalidate>
+            <table class="appointmentFormTable">
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('appointmentDetailPatientNational')}}</b></p>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="currentServers[0].reg_no" disabled/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep5Name')}}*</b></p>
+                    </td>
+                    <td>
+                        <input type="text" name="firstname" class="form-control" ng-model="firstname" required/>
+                        <input type="text" name="lastname" class="form-control" ng-model="lastname" required/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep5Phone')}}*</b></p>
+                    </td>
+                    <td>
+                        <input type="text" name="phone" class="form-control" ng-model="phone" placeholder="{{getLocalizedString('createAppointmentStep5Phone')}}" required/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('newUserEmail')}}</b></p>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="email" placeholder="{{getLocalizedString('newUserEmail')}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('newUserDateOfBirth')}}</b></p>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="dateOfBirth" placeholder="dd/mm/yyyy"/>
+                    </td>
+                </tr>
+            </table>
+            <div class="alert alert-danger" ng-show="step5Form.lastname.$error.required&&step5Form.lastname.$dirty||step5Form.firstname.$error.required&&step5Form.firstname.$dirty||step5Form.phone.$error.required&&step5Form.phone.$dirty">
+                {{getLocalizedString('createAppointmentStep5Error')}}
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-xl" ng-click="next()" ng-disabled="step5Form.$invalid" >{{getLocalizedString('createAppointmentNext')}}</button>
+            </div>
+        </form>
+    </div>
+</div>

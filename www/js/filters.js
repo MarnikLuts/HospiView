@@ -24,4 +24,17 @@ angular.module('myApp.filters', []).
                 });
                 return filtered;
             };
+        }).
+        filter('orderProposals', function() {
+            return function(proposals, filters) {
+                var filtered = [];
+                for (var proposal in proposals) {
+                    for (var i = 0; i <= 6; i++) {
+                        if (proposals[proposal].setDayNumber === i && filters[i] === true && 
+                                (proposals[proposal].afternoon === filters.afternoon || proposals[proposal].morning === filters.morning))
+                            filtered.push(proposals[proposal]);
+                    }
+                }
+                return filtered;
+            };
         });
