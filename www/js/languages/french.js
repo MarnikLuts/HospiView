@@ -52,7 +52,7 @@ var frenchStrings = {
         appointmentDetailPatientNational: "Numéro de registre national: ",
         
         //Selectserver/new
-        newGreeting: "Bienvenue chez Hospiview",
+        newGreeting: "Bienvenue chez HospiView",
         newInfo: "Selectionez l'institution vous voulez vous connecter:_"
                 +"Om onze demoserver te gebruiken selecteer \"Agendaview Demo\" en gebruik de volgende login gegevens:_"
                 +"Gebruikersnaam:_apple-user_"
