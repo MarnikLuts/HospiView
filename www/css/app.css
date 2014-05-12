@@ -547,11 +547,11 @@ ul li{
 }
 
 .page.ng-enter { 
-    z-index: 1053; 
+    z-index: 8888; 
 }
 
 .page.ng-leave { 
-    z-index: 1054; 
+    z-index: 9999; 
 }
 
 .left-to-right.ng-enter{
@@ -606,4 +606,8 @@ ul li{
 
 .datePickCalendar td{
     width: 1%;
+}
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
 }

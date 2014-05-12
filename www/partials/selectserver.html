@@ -6,7 +6,7 @@
     <div class="title">{{ getLocalizedString('settings')}}</div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
-<div class="col-md-12">
+<div class="col-md-12" ng-cloak>
     <div class="well">
         <div class="input-group widthPercent btn-group">
             <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(1)"
