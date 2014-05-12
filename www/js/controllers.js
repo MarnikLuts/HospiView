@@ -2828,17 +2828,33 @@ angular.module('myApp.controllers', []).
         controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $q, $location, hospiviewFactory) {
 
             console.log($rootScope.newAppointment);
-
+            
+            /**
+             * Initiation of variables.
+             */
             var proposals = [];
             var globalTypes;
             $scope.startProposalDate = new Date();
-            $scope.today = $scope.today ? null : new Date();
+            $scope.today = new Date();
+            
+            /**
+             * listens for changes in the startProposalDate model. Is is changed
+             * if the user selects another start date on the calendar.
+             */
             $scope.$watch('startProposalDate', 
             function(){
                 $scope.showCalendar = false;
                 $scope.getProposals();
             }, true);
 
+            /**
+             * Function to request proposals. First checks if a startDate is passed.
+             * If not, today's date is used. For each type, meaning each unit doing 
+             * this excepting this kind of reservation, we retrieve the proposals.
+             * If all proposals are retrieved, the scope is set.
+             * 
+             * @param {date} startDate      start date from which proposal need to be searched
+             */
             $scope.getProposals = function(startDate) {
                 var searchDate;
                 if (startDate) {
@@ -2875,6 +2891,7 @@ angular.module('myApp.controllers', []).
                 });
             }
 
+            /* test data */
             var proposals = [{proposal_id: '1', the_date: '2014-05-09', time_from: '07:00', time_till: '08:00', dep_id: '729', unit_id: '171'},
                 {proposal_id: '2', the_date: '2014-05-09', time_from: '08:00', time_till: '09:00', dep_id: '729', unit_id: '171'},
                 {proposal_id: '3', the_date: '2014-05-09', time_from: '12:00', time_till: '13:00', dep_id: '730', unit_id: '171'},
@@ -2890,16 +2907,40 @@ angular.module('myApp.controllers', []).
 
             //$scope.getProposals(new Date());
 
+            /**
+             * Initiation of variables needed.
+             */
             var setDayNumber;
             var setRespectiveDayNumber;
             $scope.proposals = [];
             $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true};
 
+            /**
+             * Sorts the retrieved proposals by date.
+             */
             proposals.sort(function(a, b) {
                 return new Date(a.the_date) - new Date(b.the_date);
             });
 
+            /**
+             * Sets a reference to the day of the first proposal. This is used
+             * to group the proposals by day. (e.g. all fridays are put together etc.)
+             */
             var baseDayNumber = new Date(proposals[0].the_date).getDay();
+            
+            /**
+             * For each proposal we retrieved, we add following information:
+             * 
+             * We add the day of the proposal (as integer). We use this to set an
+             * integer that represents the order of the days. This we do by comparing
+             * it to the baseDayNumber.
+             * We add if boolean afternoon so the user can use the afternoon/morning filter.
+             * We add the unit name of the proposal.
+             * We add the location name of the proposal.
+             * 
+             * We push the edited proposal into the scope. We also check the day of the proposal,
+             * so we can activate the filter on that day.
+             */
             for (var proposal in proposals) {
                 setDayNumber = new Date(proposals[proposal].the_date).getDay();
                 proposals[proposal].setDayNumber = setDayNumber;
@@ -2931,23 +2972,48 @@ angular.module('myApp.controllers', []).
                 $scope.filters[new Date(proposals[proposal].the_date).getDay()] = true;
             }
 
+            /**
+             * Triggered for every proposal in the list. Gets the day of the proposal.
+             * 
+             * @param {object} proposal proposal
+             * @returns {string}        day of the proposal
+             */
             $scope.getDay = function(proposal) {
                 var date = new Date(proposal.the_date);
                 return $scope.days[date.getDay()];
             };
 
+            /**
+             * 
+             * @param {type} proposal   proposal
+             * @returns {string}        
+             *
             $scope.getTime = function(proposal) {
                 if (parseInt(proposal.time_from.substring(0, 2)) < 12)
                     return $rootScope.getLocalizedString('createAppointmentStep3Morning');
                 else
                     return $rootScope.getLocalizedString('createAppointmentStep3Afternoon');
-            };
+            };*/
 
+            /**
+             * Triggered for every proposal in the list. Creates a string to display
+             * the date.
+             * 
+             * @param {object} proposal     proposal
+             * @returns {string}            the date as string
+             */
             $scope.getDate = function(proposal) {
                 var date = new Date(proposal.the_date);
                 return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
             };
 
+            /**
+             * Triggered when the user selects a proposal. Uses the information
+             * of the proposal to create a string to show the user the proposal
+             * he/she choose.
+             * 
+             * @param {object} proposal   the proposal the user selected
+             */
             $scope.selectProposal = function(proposal) {
                 console.log(proposal);
                 $scope.selectedProposal = proposal;
@@ -2955,31 +3021,27 @@ angular.module('myApp.controllers', []).
                 var months = getMonthNames($rootScope.languageID);
                 $scope.proposalInfo = $scope.days[date.getDay()] + ", " + date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear() + ", " + proposal.time_from + "\n" + proposal.unit_name;
             };
-
-            $scope.pickDate = function($event) {
-                $event.preventDefault();
-                $event.stopPropagation();
-                $scope.opened = true;
-            }
-
-            $scope.datePickerOptions = {
-                minDate: $scope.minDate
-            };
+            
+            /**
+             * Detects the screen size and adjust the day names. If the screen
+             * is smaller than 768 px, the short names will be used.
+             */
             var width = window.innerWidth;
-
-            setDayNames();
-            window.onresize = setDayNames;
-
-            function setDayNames() {
-                width = window.innerWidth;
-                if (width <= 768) {
-                    $scope.days = getDayNamesShort($rootScope.languageID);
-                }
-                else {
-                    $scope.days = getDayNames($rootScope.languageID);
-                }
+            
+            width = window.innerWidth;
+            if (width <= 768) {
+                $scope.days = getDayNamesShort($rootScope.languageID);
             }
-
+            else {
+                $scope.days = getDayNames($rootScope.languageID);
+            }
+            
+            /**
+             * Saves the proposal the user selected in this step to the rootScope.
+             * Redirects the user to the next step.
+             * 
+             * @param {type} proposal   selected proposal
+             */
             $scope.next = function(proposal) {
                 console.log(proposal);
                 $scope.selectedProposal.day_name = $scope.getDay($scope.selectedProposal);
