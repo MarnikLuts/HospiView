@@ -2,8 +2,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-        controller('LoginCtrl', function($scope, $location, $route, $q, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory) {
-
+        controller('LoginCtrl', function($scope, $location, $route, $q, $rootScope, $modal, hospiviewFactory, dataFactory, languageFactory, $timeout) {
             /**
              * Set the counter for the refresh back to 0. The interval depends on
              * the user.
@@ -64,7 +63,7 @@ angular.module('myApp.controllers', []).
                 $scope.users = JSON.parse(localStorage.getItem("users"));
                 $("#loginDiv").removeClass("invisible");
             }
-
+            
             /**
              * Will be called on change in the select. Checks if the user model
              * (this is the local user of the application, not the username for
@@ -1802,6 +1801,9 @@ angular.module('myApp.controllers', []).
             }
         }).
         controller('SettingsCtrl', function($scope, $location, $rootScope, $routeParams, $timeout) {
+            /*
+             * Waits for one second, until the page loads, and displays an informative message
+             */
             $timeout(function() {
                 if ($routeParams.action === "new")
                     alert($rootScope.getLocalizedString('settingsNew'));
@@ -2055,8 +2057,7 @@ angular.module('myApp.controllers', []).
              */
             changeSelect();
         }).
-        controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory, dataFactory, languageFactory, $q, $modal, kiosk_url, base_url) {
-
+        controller('SelectserverCtrl', function($scope, $location, $rootScope, $routeParams, hospiviewFactory, dataFactory, languageFactory, $q, $modal, kiosk_url, base_url, $timeout) {
             /**
              * If it's the first time a user uses the application, the back button
              * has to be hidden so the user is foreced to select a server.
@@ -2789,6 +2790,7 @@ angular.module('myApp.controllers', []).
                         var json;
                         for (var i = 0; i < responses.length; i++) {
                             json = parseJson(responses[i].data);
+                            console.log(json);
                             if (json.TypesOnUnit.Header.StatusCode == 1) {
                                 for (var j = 0; j < json.TypesOnUnit.Detail.Type.length; j++) {
                                     var checkPresent = false;
