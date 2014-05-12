@@ -2603,6 +2603,8 @@ angular.module('myApp.controllers', []).
                 $scope.groupList = null;
                 $scope.unit = null;
                 $scope.group = null;
+                console.log($scope.server);
+                alert($scope.server.hosp_full_name + " ");
                 
                 if (angular.isDefined($scope.server)) {                
                     $scope.dataLoading = true;
@@ -2610,6 +2612,7 @@ angular.module('myApp.controllers', []).
                             .then(function(response) {
                                 var json = parseJson(response.data);
                                 console.log(json);
+                                alert('test');
                                 if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail != null) {
                                     $scope.unitList = json.UnitsAndDeps.Detail.Unit;
                                     if ($scope.unitList.length == 1)
