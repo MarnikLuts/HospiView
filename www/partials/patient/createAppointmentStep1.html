@@ -18,12 +18,12 @@
             <div ng-show="dataLoading" class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></div>
             <div ng-hide="dataLoading">
                 <div class="form-group">
-                    <select class="form-control input-xl" name="unitSelect" ng-required="group==null" ng-change="group = null" ng-model="unit" ng-options="unit as unit.Header.unit_name for unit in unitList" ng-show="server" required>
+                    <select class="form-control input-xl" name="unitSelect" ng-required="group==null" ng-change="group = null" ng-model="unit" ng-options="unit as unit.Header.unit_name for unit in unitList" ng-show="serverSelected" required>
                         <option value="">- {{ getLocalizedString('createAppointmentStep1SelectDoctor')}} -</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <select class="form-control input-xl"  name="groupSelect" ng-required="unit==null" ng-change="unit = null" ng-model="group" ng-options="group as group.Header.group_name for group in groupList" ng-show="server" required>
+                    <select class="form-control input-xl"  name="groupSelect" ng-required="unit==null" ng-change="unit = null" ng-model="group" ng-options="group as group.Header.group_name for group in groupList" ng-show="serverSelected" required>
                         <option value="">- {{ getLocalizedString('createAppointmentStep1SelectSection')}} -</option>
                     </select>
                 </div>

@@ -2590,6 +2590,8 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location) {
+            
+            $scope.serverSelected = false;
             /**
              * The unit and department list is requested from the server
              * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
@@ -2603,16 +2605,14 @@ angular.module('myApp.controllers', []).
                 $scope.groupList = null;
                 $scope.unit = null;
                 $scope.group = null;
-                console.log($scope.server);
-                alert($scope.server.hosp_full_name + " ");
-                
-                if (angular.isDefined($scope.server)) {                
+                $scope.serverSelected = false;
+                if (angular.isDefined($scope.server)) {
+                    $scope.serverSelected = true;
                     $scope.dataLoading = true;
                     hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
                                 console.log(json);
-                                alert('test');
                                 if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail != null) {
                                     $scope.unitList = json.UnitsAndDeps.Detail.Unit;
                                     if ($scope.unitList.length == 1)
