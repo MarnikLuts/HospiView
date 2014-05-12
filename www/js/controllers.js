@@ -254,7 +254,13 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchString = $rootScope.user + 'Reservations';
                 //Absent days
                 $rootScope.absentDays = [];
-
+                
+                //Load language strings from servers
+                if(localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null)
+                    languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url);
+                else
+                    languageFactory.initLocalLanguageStrings();
+                
                 //Reset holidays
                 $rootScope.publicHolidays = [];
                 for (var i = 1; i < 4; i++) {
@@ -2394,6 +2400,11 @@ angular.module('myApp.controllers', []).
                 //Absent days
                 $rootScope.absentDays = [];
 
+                //Load language strings from servers
+                if(localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null)
+                    languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url);
+                else
+                    languageFactory.initLocalLanguageStrings();
 
                 for (var i = 1; i < 4; i++) {
                     holidayPromise.push(hospiviewFactory.getPublicHolidays(i, year, '00', $scope.server.hosp_url));
@@ -2411,9 +2422,6 @@ angular.module('myApp.controllers', []).
                         .then(function() {
                             return dataFactory.setAbsentDays(year, $scope.server);
                         }, error)
-                        .then(function() {
-                            return languageFactory.initRemoteLanguageStrings($scope.server.hosp_url);
-                        })
                         .then(setDates, error);
             }
 

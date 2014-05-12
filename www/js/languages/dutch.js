@@ -37,7 +37,6 @@ var dutchStrings = {
         //AppointmentDetail
         appointmentDetail: "Reservatie info",
         appointmentDetailPatient: "Patiënt info",
-        appointmentDetailDoctor: "Arts ",
         appointmentDetailDepartment: "Departement ",
         appointmentDetailId: "Reservatie id ",
         appointmentDetailTitle: "Titel ",
@@ -49,7 +48,6 @@ var dutchStrings = {
         appointmentDetailComment: "Commentaar ",
         appointmentDetailPatientId: "Patiënt id ",
         appointmentDetailPatientName: "Naam en voornaam ",
-        appointmentDetailPatientNational: "Rijksregisternummer ",
         
         //Selectserver/new
         newGreeting: "Welkom bij HospiView",
@@ -68,7 +66,7 @@ var dutchStrings = {
         newFunctionPatient: "Patiënt",
         newFunctionRepresentative: "Vertegenwoordiger",
         newFunctionHouseDoctor: "Huisarts",
-        newFunctionDoctor: "Arts",
+        newFunctionDoctor: "Dokter",
                 
         newUserFirstName: "Voornaam",
         newUserLastName: "Achternaam",
@@ -106,6 +104,7 @@ var dutchStrings = {
         cancel: "annuleer",
         wait: "Even geduld a.u.b.",
         tooManyReservations: "Uw account is gebonden aan heel veel afspraken. Deze kunnen niet lokaal opgeslagen worden dus de offlinemodus van deze applicatie werkt niet voor uw account. Ook zal de applicatie iets trager werken.",
+        or: "OF",
         
         //Connection messages
         internalError: "Interne fout in de server.",
@@ -144,6 +143,7 @@ var dutchStrings = {
         notAvailableInOffline: "Deze functie is niet beschikbaar in offline mode.",
         
         //patient/step1
+        createAppointmentStep1Server: "Ziekenhuis",
         createAppointmentStep1SelectDoctor: "Selecteer een dokter",
         createAppointmentStep1SelectSection: "Selecteer een afdeling",
                 

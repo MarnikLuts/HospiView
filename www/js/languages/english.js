@@ -37,7 +37,6 @@ var englishStrings = {
         //AppointmentDetail
         appointmentDetail: "Reservation info",
         appointmentDetailPatient: "Patient info",
-        appointmentDetailDoctor: "Doctor ",
         appointmentDetailDepartment: "Department ",
         appointmentDetailId: "Reservation id ",
         appointmentDetailTitle: "Title ",
@@ -49,7 +48,6 @@ var englishStrings = {
         appointmentDetailComment: "Comment ",
         appointmentDetailPatientId: "Patient id ",
         appointmentDetailPatientName: "Name ",
-        appointmentDetailPatientNational: "National number ",
         
         //Selectserver/new
         newGreeting: "Welcome to HospiView",
@@ -106,7 +104,8 @@ var englishStrings = {
         cancel: "cancel",
         wait: "Please wait...",
         tooManyReservations: "Your account bound to a lot of appointments. This amount of appointments can't be saved local so the offline mode of this application won't work for your account. The application will also be a little bit slower.",
-    
+        or: "OR",
+        
         //Connection messages
         internalError: "Internal server error.",
         connectionError: "Cannot connect to the server.",
@@ -144,6 +143,7 @@ var englishStrings = {
         notAvailableInOffline: "This feature is not available in offline mode.",
         
         //patient/step1
+        createAppointmentStep1Server: "Hospital",
         createAppointmentStep1SelectDoctor: "Select a doctor",
         createAppointmentStep1SelectSection: "Select a section",
                 
