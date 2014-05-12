@@ -368,7 +368,7 @@ angular.module('myApp.controllers', []).
                     callModal();
                 } else {
                     console.log(JSON.stringify($rootScope[$rootScope.searchString]).length);
-                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2500000){
+                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000){
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     } else {
                         $scope.localStorageFull = true;
@@ -1626,7 +1626,7 @@ angular.module('myApp.controllers', []).
                 console.log("setReservations");
                 if ($rootScope[$rootScope.searchString].length !== 0) {
                     var countEvent = dataFactory.loadCalendar();
-                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2500000){
+                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000){
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     } else {
                         if(!$scope.localStorage()){
@@ -1743,7 +1743,7 @@ angular.module('myApp.controllers', []).
                     countEvent = dataFactory.loadCalendar();
                     $scope.eventSources = [countEvent];
                     var countEvent = dataFactory.loadCalendar();
-                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2500000){
+                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000){
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     } else {
                         if(!$scope.localStorage()){
@@ -2480,7 +2480,7 @@ angular.module('myApp.controllers', []).
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
-                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2500000){
+                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000){
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     } else {
                         $scope.localStorageFull = true;
