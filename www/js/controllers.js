@@ -254,13 +254,13 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchString = $rootScope.user + 'Reservations';
                 //Absent days
                 $rootScope.absentDays = [];
-                
+
                 //Load language strings from servers
-                if(localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null)
+                if (localStorage.getItem('nlRemoteDict') === null || localStorage.getItem('nlRemoteDict') === null || localStorage.getItem('nlRemoteDict') === null)
                     languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url);
                 else
                     languageFactory.initLocalLanguageStrings();
-                
+
                 //Reset holidays
                 $rootScope.publicHolidays = [];
                 for (var i = 1; i < 4; i++) {
@@ -374,7 +374,7 @@ angular.module('myApp.controllers', []).
                     callModal();
                 } else {
                     console.log(JSON.stringify($rootScope[$rootScope.searchString]).length);
-                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000){
+                    if (JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000) {
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     } else {
                         $scope.localStorageFull = true;
@@ -1632,15 +1632,15 @@ angular.module('myApp.controllers', []).
                 console.log("setReservations");
                 if ($rootScope[$rootScope.searchString].length !== 0) {
                     var countEvent = dataFactory.loadCalendar();
-                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000){
+                    if (JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000) {
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     } else {
-                        if(!$scope.localStorage()){
+                        if (!$scope.localStorage()) {
                             alert($rootScope.getLocalizedString('tooManyReservations'));
                             $scope.localStorageFull = true;
                         }
                     }
-                   
+
                     $('#doctorCalendar').fullCalendar('removeEvents');
                     $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
                     $scope.loadingMonth = false;
@@ -1749,15 +1749,15 @@ angular.module('myApp.controllers', []).
                     countEvent = dataFactory.loadCalendar();
                     $scope.eventSources = [countEvent];
                     var countEvent = dataFactory.loadCalendar();
-                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000){
+                    if (JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000) {
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     } else {
-                        if(!$scope.localStorage()){
+                        if (!$scope.localStorage()) {
                             alert($rootScope.getLocalizedString('tooManyReservations'));
                             $scope.localStorageFull = true;
                         }
                     }
-                    
+
                     $('#doctorCalendar').fullCalendar('removeEvents');
                     $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
                 }
@@ -2401,7 +2401,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.absentDays = [];
 
                 //Load language strings from servers
-                if(localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null)
+                if (localStorage.getItem('nlRemoteDict') === null || localStorage.getItem('nlRemoteDict') === null || localStorage.getItem('nlRemoteDict') === null)
                     languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url);
                 else
                     languageFactory.initLocalLanguageStrings();
@@ -2488,7 +2488,7 @@ angular.module('myApp.controllers', []).
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
-                    if(JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000){
+                    if (JSON.stringify($rootScope[$rootScope.searchString]).length < 2000000) {
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     } else {
                         $scope.localStorageFull = true;
@@ -2867,16 +2867,16 @@ angular.module('myApp.controllers', []).
                 $location.path('/patient/step3');
             };
 
-            changeSelect()
+            changeSelect();
         }).
         controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $q, $location, hospiviewFactory) {
 
+            console.log($rootScope.currentServers[$rootScope.newAppointment.server]);
             console.log($rootScope.newAppointment);
 
             /**
              * Initiation of variables.
              */
-            var proposals = [];
             var globalTypes;
             $scope.startProposalDate = new Date();
             $scope.today = new Date();
@@ -2901,6 +2901,8 @@ angular.module('myApp.controllers', []).
              */
             $scope.getProposals = function(startDate) {
                 var searchDate;
+                var retrievedRequests = [];
+                var retrievedProposals = [];
                 if (startDate) {
                     searchDate = formatDate(startDate);
                 } else {
@@ -2912,13 +2914,13 @@ angular.module('myApp.controllers', []).
                     } else {
                         globalTypes = $rootScope.newAppointment.group.Detail.UnitAndDep[i].globaltypes;
                     }
-                    proposals.push(hospiviewFactory.getProposals(
+                    retrievedRequests.push(hospiviewFactory.getProposals(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
                             $rootScope.newAppointment.type.unit_id_array[i],
                             $rootScope.newAppointment.type.dep_id_array[i],
                             $rootScope.newAppointment.type.type_id_array[i],
-                            //"test maken reservatie", STITLE
+                            "test maken reservatie",
                             $rootScope.newAppointment.reservationInfo,
                             globalTypes,
                             searchDate,
@@ -2928,28 +2930,42 @@ angular.module('myApp.controllers', []).
                             $rootScope.languageID));
                 }
 
-                $q.all(proposals).then(function(proposals) {
-                    json = parseJson(proposals[0].data);
-                    $scope.proposals = json;
-                    console.log($scope.proposals);
+                console.log($rootScope.newAppointment.type.type_id_array.length);
+                $q.all(retrievedRequests).then(function(requests) {
+                    for(var requestCount in requests){
+                        var json = parseJson(requests[requestCount].data);
+                        for(var proposalCount in json.Proposals.Detail.Proposal){
+                            retrievedProposals.push(json.Proposals.Detail.Proposal[proposalCount]);
+                        }
+                    }
+                    console.log(retrievedProposals);
+                    editProposalInfo(retrievedProposals);
                 });
             }
 
+
+            $scope.removeProposals = function() {
+                for (var i = 0; i < $rootScope.newAppointment.type.type_id_array.length; i++) {
+                    hospiviewFactory.getProposalsRemoved(
+                            $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
+                            $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
+                            $rootScope.newAppointment.type.unit_id_array[i],
+                            $rootScope.newAppointment.type.dep_id_array[i]);
+                }
+            }
             /* test data */
-            var proposals = [{proposal_id: '1', the_date: '2014-05-09', time_from: '07:00', time_till: '08:00', dep_id: '729', unit_id: '171'},
-                {proposal_id: '2', the_date: '2014-05-09', time_from: '08:00', time_till: '09:00', dep_id: '729', unit_id: '171'},
-                {proposal_id: '3', the_date: '2014-05-09', time_from: '12:00', time_till: '13:00', dep_id: '730', unit_id: '171'},
-                {proposal_id: '4', the_date: '2014-05-09', time_from: '13:00', time_till: '13:30', dep_id: '730', unit_id: '171'},
-                {proposal_id: '5', the_date: '2014-05-14', time_from: '14:30', time_till: '15:30', dep_id: '824', unit_id: '171'},
-                {proposal_id: '6', the_date: '2014-05-15', time_from: '07:00', time_till: '08:00', dep_id: '824', unit_id: '171'},
-                {proposal_id: '11', the_date: '2014-05-09', time_from: '16:00', time_till: '17:00', dep_id: '824', unit_id: '171'},
-                {proposal_id: '7', the_date: '2014-05-15', time_from: '15:00', time_till: '16:00', dep_id: '824', unit_id: '171'},
-                {proposal_id: '8', the_date: '2014-05-16', time_from: '08:00', time_till: '9:00', dep_id: '729', unit_id: '171'},
-                {proposal_id: '9', the_date: '2014-05-16', time_from: '09:00', time_till: '10:00', dep_id: '729', unit_id: '172'},
-                {proposal_id: '10', the_date: '2014-05-16', time_from: '14:00', time_till: '15:00', dep_id: '729', unit_id: '172'}];
-
-
-            //$scope.getProposals(new Date());
+            /*var proposals = [{proposal_id: '1', the_date: '2014-05-09', time_from: '07:00', time_till: '08:00', dep_id: '729', unit_id: '171'},
+             {proposal_id: '2', the_date: '2014-05-09', time_from: '08:00', time_till: '09:00', dep_id: '729', unit_id: '171'},
+             {proposal_id: '3', the_date: '2014-05-09', time_from: '12:00', time_till: '13:00', dep_id: '730', unit_id: '171'},
+             {proposal_id: '4', the_date: '2014-05-09', time_from: '13:00', time_till: '13:30', dep_id: '730', unit_id: '171'},
+             {proposal_id: '5', the_date: '2014-05-14', time_from: '14:30', time_till: '15:30', dep_id: '824', unit_id: '171'},
+             {proposal_id: '6', the_date: '2014-05-15', time_from: '07:00', time_till: '08:00', dep_id: '824', unit_id: '171'},
+             {proposal_id: '11', the_date: '2014-05-09', time_from: '16:00', time_till: '17:00', dep_id: '824', unit_id: '171'},
+             {proposal_id: '7', the_date: '2014-05-15', time_from: '15:00', time_till: '16:00', dep_id: '824', unit_id: '171'},
+             {proposal_id: '8', the_date: '2014-05-16', time_from: '08:00', time_till: '9:00', dep_id: '729', unit_id: '171'},
+             {proposal_id: '9', the_date: '2014-05-16', time_from: '09:00', time_till: '10:00', dep_id: '729', unit_id: '172'},
+             {proposal_id: '10', the_date: '2014-05-16', time_from: '14:00', time_till: '15:00', dep_id: '729', unit_id: '172'}];
+             */
 
             /**
              * Initiation of variables needed.
@@ -2957,20 +2973,6 @@ angular.module('myApp.controllers', []).
             var setDayNumber;
             var setRespectiveDayNumber;
             $scope.proposals = [];
-            $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true};
-
-            /**
-             * Sorts the retrieved proposals by date.
-             */
-            proposals.sort(function(a, b) {
-                return new Date(a.the_date) - new Date(b.the_date);
-            });
-
-            /**
-             * Sets a reference to the day of the first proposal. This is used
-             * to group the proposals by day. (e.g. all fridays are put together etc.)
-             */
-            var baseDayNumber = new Date(proposals[0].the_date).getDay();
 
             /**
              * For each proposal we retrieved, we add following information:
@@ -2985,37 +2987,53 @@ angular.module('myApp.controllers', []).
              * We push the edited proposal into the scope. We also check the day of the proposal,
              * so we can activate the filter on that day.
              */
-            for (var proposal in proposals) {
-                setDayNumber = new Date(proposals[proposal].the_date).getDay();
-                proposals[proposal].setDayNumber = setDayNumber;
+            function editProposalInfo(proposals) {
+                $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true};
 
-                if (setDayNumber >= baseDayNumber)
-                    setRespectiveDayNumber = setDayNumber - baseDayNumber;
-                else
-                    setRespectiveDayNumber = setDayNumber + baseDayNumber - 1;
-                proposals[proposal].setRespectiveDayNumber = setRespectiveDayNumber;
+                /**
+                 * Sorts the retrieved proposals by date.
+                 */
+                proposals.sort(function(a, b) {
+                    return new Date(a.the_date) - new Date(b.the_date);
+                });
 
-                if (parseInt(proposals[proposal].time_from.substring(0, 2)) < 12)
-                    proposals[proposal].afternoon = false;
-                else
-                    proposals[proposal].afternoon = true;
-                proposals[proposal].morning = !proposals[proposal].afternoon;
+                /**
+                 * Sets a reference to the day of the first proposal. This is used
+                 * to group the proposals by day. (e.g. all fridays are put together etc.)
+                 */
+                var baseDayNumber = new Date(proposals[0].the_date).getDay();
 
-                if ($rootScope.newAppointment.unit) {
-                    proposals[proposal].unit_name = $rootScope.newAppointment.unit.Header.unit_name;
-                    for (var i in $rootScope.newAppointment.unit.Detail.Dep)
-                        proposals[proposal].location = $rootScope.newAppointment.unit.Detail.Dep[i].location_name;
-                } else
-                    for (var i in $rootScope.newAppointment.group.Detail.UnitAndDep)
-                        if (proposals[proposal].unit_id === $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id) {
-                            proposals[proposal].unit_name = $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_name;
-                            proposals[proposal].location = $rootScope.newAppointment.group.Detail.UnitAndDep[i].location_name;
-                        }
+                for (var proposal in proposals) {
+                    setDayNumber = new Date(proposals[proposal].the_date).getDay();
+                    proposals[proposal].setDayNumber = setDayNumber;
 
-                $scope.proposals.push(proposals[proposal]);
-                $scope.filters[new Date(proposals[proposal].the_date).getDay()] = true;
+                    if (setDayNumber >= baseDayNumber)
+                        setRespectiveDayNumber = setDayNumber - baseDayNumber;
+                    else
+                        setRespectiveDayNumber = setDayNumber + baseDayNumber - 1;
+                    proposals[proposal].setRespectiveDayNumber = setRespectiveDayNumber;
+
+                    if (parseInt(proposals[proposal].time_from.substring(0, 2)) < 12)
+                        proposals[proposal].afternoon = false;
+                    else
+                        proposals[proposal].afternoon = true;
+                    proposals[proposal].morning = !proposals[proposal].afternoon;
+
+                    if ($rootScope.newAppointment.unit) {
+                        proposals[proposal].unit_name = $rootScope.newAppointment.unit.Header.unit_name;
+                        for (var i in $rootScope.newAppointment.unit.Detail.Dep)
+                            proposals[proposal].location = $rootScope.newAppointment.unit.Detail.Dep[i].location_name;
+                    } else
+                        for (var i in $rootScope.newAppointment.group.Detail.UnitAndDep)
+                            if (proposals[proposal].unit_id === $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id) {
+                                proposals[proposal].unit_name = $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_name;
+                                proposals[proposal].location = $rootScope.newAppointment.group.Detail.UnitAndDep[i].location_name;
+                            }
+
+                    $scope.proposals.push(proposals[proposal]);
+                    $scope.filters[new Date(proposals[proposal].the_date).getDay()] = true;
+                }
             }
-
             /**
              * Triggered for every proposal in the list. Gets the day of the proposal.
              * 

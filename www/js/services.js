@@ -209,8 +209,23 @@ angular.module('myApp.services', []).
                  */
                 getProposals: function(server_url, UUID, Unit_Id, Dep_Id, UnitType_Id, STitle, Additional_Info, GlobalTypes, Start_Date, Start_Time, Active_Days, Include_Today, Language_id){
                     $rootScope.requestCounter++;
+                    console.log(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days  + "&Include_Today=" + Include_Today  + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
                     return $http.get(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days  + "&Include_Today=" + Include_Today  + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
-                }
+                },
+                
+                /**
+                 * Deleted preserved proposals so the slots are free again.
+                 * 
+                 * @param {type} server_url
+                 * @param {type} UUID
+                 * @param {type} Unit_Id
+                 * @param {type} Dep_Id
+                 * @returns {unresolved}
+                 */
+                getProposalsRemoved: function(server_url, UUID, Unit_Id, Dep_Id){
+                    $rootScope.requestCounter++;
+                    return $http.get(server_url + "method=GetProposalsRemoved=" + UUID + "&Unit_Id=" + Unit_Id + "" + Dep_Id + "&count=" + $rootScope.requestCounter);
+                }    
             };
         }).
         factory('dataFactory', function($rootScope, $q, hospiviewFactory) {

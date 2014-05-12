@@ -547,11 +547,11 @@ ul li{
 }
 
 .page.ng-enter { 
-    z-index: 8888; 
+    z-index: 1053; 
 }
 
 .page.ng-leave { 
-    z-index: 9999; 
+    z-index: 1054; 
 }
 
 .left-to-right.ng-enter{
