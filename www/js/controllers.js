@@ -367,12 +367,12 @@ angular.module('myApp.controllers', []).
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
-                    try {
+                    console.log(JSON.stringify($rootScope[$rootScope.searchString]).length);
+                    if(JSON.stringify($rootScope[$rootScope.searchString]).length <= 2500000){
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
-                    } catch (error) {
+                    } else {
                         $scope.localStorageFull = true;
                         alert($rootScope.getLocalizedString('tooManyReservations'));
-                        console.log(error);
                     }
                     $rootScope.isOffline = false;
                     $rootScope.pageClass = "right-to-left";
@@ -1626,9 +1626,15 @@ angular.module('myApp.controllers', []).
                 console.log("setReservations");
                 if ($rootScope[$rootScope.searchString].length !== 0) {
                     var countEvent = dataFactory.loadCalendar();
-                    if (!$scope.localStorageFull)
+                    if(JSON.stringify($rootScope[$rootScope.searchString]).length <= 2500000){
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
-
+                    } else {
+                        if(!$scope.localStorage()){
+                            alert($rootScope.getLocalizedString('tooManyReservations'));
+                            $scope.localStorageFull = true;
+                        }
+                    }
+                   
                     $('#doctorCalendar').fullCalendar('removeEvents');
                     $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
                     $scope.loadingMonth = false;
@@ -1737,8 +1743,15 @@ angular.module('myApp.controllers', []).
                     countEvent = dataFactory.loadCalendar();
                     $scope.eventSources = [countEvent];
                     var countEvent = dataFactory.loadCalendar();
-                    if (!$scope.localStorageFull)
+                    if(JSON.stringify($rootScope[$rootScope.searchString]).length <= 2500000){
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
+                    } else {
+                        if(!$scope.localStorage()){
+                            alert($rootScope.getLocalizedString('tooManyReservations'));
+                            $scope.localStorageFull = true;
+                        }
+                    }
+                    
                     $('#doctorCalendar').fullCalendar('removeEvents');
                     $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
                 }
@@ -2467,12 +2480,11 @@ angular.module('myApp.controllers', []).
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
-                    try {
+                    if(JSON.stringify($rootScope[$rootScope.searchString]).length >= 2500000){
                         localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
-                    } catch (error) {
+                    } else {
                         $scope.localStorageFull = true;
                         alert($rootScope.getLocalizedString('tooManyReservations'));
-                        console.log(error);
                     }
 
                     $rootScope.isOffline = false;
