@@ -37,7 +37,6 @@ var frenchStrings = {
         //AppointmentDetail
         appointmentDetail: "Info du réservation",
         appointmentDetailPatient: "Info du patient",
-        appointmentDetailDoctor: "Médecin ",
         appointmentDetailDepartment: "Département ",
         appointmentDetailId: "Réservation id ",
         appointmentDetailTitle: "Titre ",
@@ -49,7 +48,6 @@ var frenchStrings = {
         appointmentDetailComment: "Commentaire ",
         appointmentDetailPatientId: "Id patient ",
         appointmentDetailPatientName: "Nom ",
-        appointmentDetailPatientNational: "Numéro de registre national ",
         
         //Selectserver/new
         newGreeting: "Bienvenue chez HospiView",
@@ -106,6 +104,7 @@ var frenchStrings = {
         cancel: "annuler",
         wait: "Un instant s'il vous plaît...",
         tooManyReservations: "Votre compte a lié a beaucoup de reservations. Cettes reservations ne peuvent pas être conservé donc la mode hors-ligne de l'application ne marche pas pour votre compte. L'application va aussi marcher un petit peut plus lente.",
+        or: "OU",
         
         //Connection messages
         internalError: "Erreur interne du serveur.",
@@ -144,6 +143,7 @@ var frenchStrings = {
         notAvailableInOffline: "Cette fonction n'est pas disponible sans connection.",
         
         //patient/step1
+        createAppointmentStep1Server: "Hôpital",
         createAppointmentStep1SelectDoctor: "Choisissez un médecin",
         createAppointmentStep1SelectSection: "Choisissez un service",
         

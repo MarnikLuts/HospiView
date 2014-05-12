@@ -150,6 +150,7 @@ angular.module('myApp.services', []).
                  */
                 getLanguageStrings: function(language_Id, listOfPidsSids, server_url) {
                     $rootScope.requestCounter++;
+                    console.log(server_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids + "&count=" + $rootScope.requestCounter);
                     return $http.get(server_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids + "&count=" + $rootScope.requestCounter);
                 },
                 /**
@@ -567,7 +568,7 @@ angular.module('myApp.services', []).
          * @returns {unresolved}
          */
         initRemoteLanguageStrings: function(hosp_url) {
-            var listOfPidsSids = "92,75;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
+            var listOfPidsSids = "-99,44,48;92,75,90;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
                     promises = [],
                     defer = $q.defer();
             
@@ -582,7 +583,11 @@ angular.module('myApp.services', []).
 
                     if (json.LanguageStrings.Header.StatusCode === "1") {
                         var remoteDict = {
+                            reg_no: getStringByPidAndSid(languageString, -99, 44),
+                            doctor: getStringByPidAndSid(languageString, -99, 48),
+                            
                             createAppointmentStep2Error: getStringByPidAndSid(languageString, 92, 75),
+                            department: getStringByPidAndSid(languageString, 92, 90),
                             
                             createAppointmentSection: getStringByPidAndSid(languageString, 93, 55),
                             createAppointmentCampus: getStringByPidAndSid(languageString, 93, 56),
@@ -649,9 +654,12 @@ angular.module('myApp.services', []).
             return defer.promise;
         },
         initLocalLanguageStrings: function(){
+            var deferred = $q.defer();
+            deferred.resolve();
             $rootScope.nlRemoteDict = JSON.parse(localStorage.getItem('nlRemoteDict'));
             $rootScope.frRemoteDict = JSON.parse(localStorage.getItem('frRemoteDict'));
             $rootScope.enRemoteDict = JSON.parse(localStorage.getItem('enRemoteDict'));
+            return deferred.promise;
         }
 
     };

@@ -10,26 +10,51 @@
     <div class="well well-sm">
         <form name="step1Form" novalidate>
             <h4>{{getLocalizedString('createAppointmentStep1Info')}}</h4>
-            <div class="form-group">
-                <select class="form-control input-xl" name="serverSelect" ng-change="getUnitsAndGroups()" ng-model="server" ng-options="server as server.hosp_full_name for server in currentServers" required>
-                    <option value="">- {{ getLocalizedString('loginServerSelectDefault')}} -</option>
-                </select>
-            </div>
-            <div ng-show="dataLoading" class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></div>
-            <div ng-show="serverSelected">
-                <div class="form-group">
-                    <select class="form-control input-xl" name="unitSelect" ng-required="group==null" ng-change="group = null" ng-model="unit" ng-options="unit as unit.Header.unit_name for unit in unitList" required>
-                        <option value="">- {{ getLocalizedString('createAppointmentStep1SelectDoctor')}} -</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <select class="form-control input-xl"  name="groupSelect" ng-required="unit==null" ng-change="unit = null" ng-model="group" ng-options="group as group.Header.group_name for group in groupList" required>
-                        <option value="">- {{ getLocalizedString('createAppointmentStep1SelectSection')}} -</option>
-                    </select>
-                </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-xl" ng-click="next()" ng-disabled="step1Form.$invalid">{{getLocalizedString('createAppointmentNext')}}</button>
-                </div>
+            <table class="appointmentFormTable">
+                <tr ng-show="currentServers.length>1" >
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep1Server')}}</b></p>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <select class="form-control input-xl" name="serverSelect" ng-change="getUnitsAndGroups()" ng-model="server" ng-options="server as server.hosp_full_name for server in currentServers" required>
+                                <option value="">- {{ getLocalizedString('loginServerSelectDefault')}} -</option>
+                            </select>
+                        </div>
+                        <div ng-show="dataLoading" class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></div> 
+                    </td>
+                </tr>
+                <tr ng-show="serverSelected">
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('doctor')}}</b></p>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <select class="form-control input-xl" name="unitSelect" ng-required="group==null" ng-change="group = null" ng-model="unit" ng-options="unit as unit.Header.unit_name for unit in unitList" required>
+                                <option value="">- {{ getLocalizedString('createAppointmentStep1SelectDoctor')}} -</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr  ng-show="serverSelected">
+                    <td>- {{getLocalizedString('or')}} -</td>
+                    <td></td>
+                </tr>
+                <tr  ng-show="serverSelected" >
+                    <td>
+                        <p class="formLabel"><b>{{getLocalizedString('department')}}</b></p>
+                    </td>
+                    <td>
+                       <div class="form-group">
+                            <select class="form-control input-xl"  name="groupSelect" ng-required="unit==null" ng-change="unit = null" ng-model="group" ng-options="group as group.Header.group_name for group in groupList" required>
+                                <option value="">- {{ getLocalizedString('createAppointmentStep1SelectSection')}} -</option>
+                            </select>
+                        </div> 
+                    </td>
+                </tr>
+            </table>
+            <div class="text-center">
+                <button type="submit" class="btn btn-xl" ng-click="next()" ng-disabled="step1Form.$invalid">{{getLocalizedString('createAppointmentNext')}}</button>
             </div>
         </form>
     </div>
