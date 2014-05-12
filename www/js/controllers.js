@@ -2518,7 +2518,7 @@ angular.module('myApp.controllers', []).
              */
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             var refreshrate = user.refreshrate * 1000;
-
+            
             /**
              * The refresh will happen if the user is not offline or another
              * search being done.
