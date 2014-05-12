@@ -11,6 +11,11 @@ angular.module('myApp.controllers', []).
             $rootScope.refreshCounter = 0;
 
             /**
+             * Boolean to check if the localstorage for reservations is full.
+             * LocalStorage can only up to 5mb.
+             */
+            $rootScope.localStorageFull = false;
+            /**
              * If the app is never used, the language will be set to English.
              * Otherwise, the saved language will be used.
              */
@@ -225,16 +230,16 @@ angular.module('myApp.controllers', []).
              */
             function postLoginPatient() {
                 $rootScope.pageClass = 'right-to-left';
-                if(localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null||localStorage.getItem('nlRemoteDict')===null)
+                if (localStorage.getItem('nlRemoteDict') === null || localStorage.getItem('nlRemoteDict') === null || localStorage.getItem('nlRemoteDict') === null)
                     languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
                             .then(function() {
                                 $location.path("/patient/mainmenu");
                             }, error);
-                else{
+                else {
                     languageFactory.initLocalLanguageStrings();
                     $location.path("/patient/mainmenu");
                 }
-                    
+
             }
 
             /**
@@ -362,7 +367,13 @@ angular.module('myApp.controllers', []).
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
-                    localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
+                    try {
+                        localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
+                    } catch (error) {
+                        $scope.localStorageFull = true;
+                        alert($rootScope.getLocalizedString('tooManyReservations'));
+                        console.log(error);
+                    }
                     $rootScope.isOffline = false;
                     $rootScope.pageClass = "right-to-left";
                     $location.path('/doctor/appointmentsView');
@@ -442,24 +453,24 @@ angular.module('myApp.controllers', []).
                 modalInstance.result.then(function(answer) {
                     if (answer) {
                         var servers = JSON.parse(localStorage.getItem($scope.user)).servers,
-                            hasAuthenticated = false;
-                            
+                                hasAuthenticated = false;
+
                         $rootScope.type = servers[0].isexternal;
-                        
-                        if($rootScope.type==0||$rootScope.type==1){
+
+                        if ($rootScope.type == 0 || $rootScope.type == 1) {
                             var absentDays = JSON.parse(localStorage.getItem($scope.user + "AbsentDays")),
-                            reservations = JSON.parse(localStorage.getItem($scope.user + "Reservations")),
-                            resLength = reservations.length,
-                            absLength = absentDays.length;
+                                    reservations = JSON.parse(localStorage.getItem($scope.user + "Reservations")),
+                                    resLength = reservations.length,
+                                    absLength = absentDays.length;
                         }
-                        
+
                         $rootScope.currentServers = servers;
                         for (var i = 0; i < $scope.selectedUser.servers.length; i++) {
                             console.log(servers[i].user_password === $scope.selectedUser.servers[i].user_password);
                             if (servers[i].user_login === $scope.selectedUser.servers[i].user_login && servers[i].user_password === $scope.selectedUser.servers[i].user_password) {
                                 hasAuthenticated = true;
                             } else {
-                                if($rootScope.type==0||$rootScope.type==1){
+                                if ($rootScope.type == 0 || $rootScope.type == 1) {
                                     var index = $rootScope.currentServers.indexOf(servers[i]);
                                     $rootScope.currentServers.splice(index, 1);
                                     while (resLength--) {
@@ -475,17 +486,17 @@ angular.module('myApp.controllers', []).
                                 }
                             }
                         }
-                        
-                        if($rootScope.type==0||$rootScope.type==1 && hasAuthenticated){
-                            hasAuthenticated =  reservations.length != 0;
+
+                        if ($rootScope.type == 0 || $rootScope.type == 1 && hasAuthenticated) {
+                            hasAuthenticated = reservations.length != 0;
                         }
-                        
+
                         if (hasAuthenticated) {
                             $rootScope.user = $scope.user;
                             $rootScope.isOffline = true;
                             $rootScope.pageClass = "right-to-left";
-                            
-                            switch($rootScope.type){
+
+                            switch ($rootScope.type) {
                                 case '0':
                                 case '1':
                                     $rootScope.searchString = $rootScope.user + 'Reservations';
@@ -1615,7 +1626,9 @@ angular.module('myApp.controllers', []).
                 console.log("setReservations");
                 if ($rootScope[$rootScope.searchString].length !== 0) {
                     var countEvent = dataFactory.loadCalendar();
-                    localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
+                    if (!$scope.localStorageFull)
+                        localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
+
                     $('#doctorCalendar').fullCalendar('removeEvents');
                     $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
                     $scope.loadingMonth = false;
@@ -1724,7 +1737,8 @@ angular.module('myApp.controllers', []).
                     countEvent = dataFactory.loadCalendar();
                     $scope.eventSources = [countEvent];
                     var countEvent = dataFactory.loadCalendar();
-                    localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
+                    if (!$scope.localStorageFull)
+                        localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
                     $('#doctorCalendar').fullCalendar('removeEvents');
                     $('#doctorCalendar').fullCalendar('addEventSource', countEvent);
                 }
@@ -2453,7 +2467,14 @@ angular.module('myApp.controllers', []).
                 if ($rootScope[$rootScope.searchString].length === 0) {
                     callModal();
                 } else {
-                    localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
+                    try {
+                        localStorage.setItem($rootScope.searchString, JSON.stringify($rootScope[$rootScope.searchString]));
+                    } catch (error) {
+                        $scope.localStorageFull = true;
+                        alert($rootScope.getLocalizedString('tooManyReservations'));
+                        console.log(error);
+                    }
+
                     $rootScope.isOffline = false;
                     $rootScope.pageClass = "right-to-left";
                     $location.path('/settings/new');
@@ -2518,7 +2539,7 @@ angular.module('myApp.controllers', []).
              */
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             var refreshrate = user.refreshrate * 1000;
-            
+
             /**
              * The refresh will happen if the user is not offline or another
              * search being done.
@@ -2564,9 +2585,9 @@ angular.module('myApp.controllers', []).
              * User gets redirected to step 1 of creating a new appointment
              */
             $scope.createAppointment = function() {
-                if($rootScope.isOffline){
+                if ($rootScope.isOffline) {
                     alert($rootScope.getLocalizedString('notAvailableInOffline'));
-                }else{
+                } else {
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('patient/step1');
                 }
@@ -2590,7 +2611,7 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location) {
-            
+
             $scope.serverSelected = false;
             /**
              * The unit and department list is requested from the server
@@ -2599,8 +2620,8 @@ angular.module('myApp.controllers', []).
              */
             $scope.getUnitsAndGroups = function() {
                 var index = $rootScope.currentServers.indexOf($scope.server),
-                    unitsLoaded = false,
-                    groupsLoaded = false;
+                        unitsLoaded = false,
+                        groupsLoaded = false;
                 $scope.unitList = null;
                 $scope.groupList = null;
                 $scope.unit = null;
@@ -2619,7 +2640,7 @@ angular.module('myApp.controllers', []).
                                         $scope.unit = $scope.unitList[0];
                                 }
                                 unitsLoaded = true;
-                                if(groupsLoaded)
+                                if (groupsLoaded)
                                     $scope.dataLoading = false;
                             }, error);
 
@@ -2638,7 +2659,7 @@ angular.module('myApp.controllers', []).
                                         $scope.group = $scope.groupList[0];
                                 }
                                 groupsLoaded = true;
-                                if(unitsLoaded)
+                                if (unitsLoaded)
                                     $scope.dataLoading = false;
                             }, error);
                 }
@@ -2696,7 +2717,7 @@ angular.module('myApp.controllers', []).
 
                 $location.path('/patient/step2');
             };
-            
+
             changeSelect();
 
         }).
@@ -2744,46 +2765,46 @@ angular.module('myApp.controllers', []).
             $scope.typeList = [];
             $scope.type = null;
             $q.all(typePromises)
-                .then(function(responses) {
-                    var json;
-                    for (var i = 0; i < responses.length; i++) {
-                        json = parseJson(responses[i].data);
-                        if (json.TypesOnUnit.Header.StatusCode == 1) {
-                            for (var j = 0; j < json.TypesOnUnit.Detail.Type.length; j++) {
-                                var checkPresent = false;
-                                for (var k = 0; k < $scope.typeList.length; k++) {
-                                    if ($scope.typeList[k].type_title === json.TypesOnUnit.Detail.Type[j].type_title) {
-                                        $scope.typeList[k].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
-                                        if (!$rootScope.newAppointment.unit) {
-                                            $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
-                                            $scope.typeList[k].dep_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].dep_id);
-                                        } else {
-                                            $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.unit.Header.unit_id);
-                                            $scope.typeList[k].dep_id_array.push($rootScope.newAppointment.unit.Detail.Dep[i].dep_id);
+                    .then(function(responses) {
+                        var json;
+                        for (var i = 0; i < responses.length; i++) {
+                            json = parseJson(responses[i].data);
+                            if (json.TypesOnUnit.Header.StatusCode == 1) {
+                                for (var j = 0; j < json.TypesOnUnit.Detail.Type.length; j++) {
+                                    var checkPresent = false;
+                                    for (var k = 0; k < $scope.typeList.length; k++) {
+                                        if ($scope.typeList[k].type_title === json.TypesOnUnit.Detail.Type[j].type_title) {
+                                            $scope.typeList[k].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
+                                            if (!$rootScope.newAppointment.unit) {
+                                                $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
+                                                $scope.typeList[k].dep_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].dep_id);
+                                            } else {
+                                                $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.unit.Header.unit_id);
+                                                $scope.typeList[k].dep_id_array.push($rootScope.newAppointment.unit.Detail.Dep[i].dep_id);
+                                            }
+                                            checkPresent = true;
                                         }
-                                        checkPresent = true;
+                                    }
+                                    if (!checkPresent) {
+                                        json.TypesOnUnit.Detail.Type[j].type_id_array = [];
+                                        json.TypesOnUnit.Detail.Type[j].unit_id_array = [];
+                                        json.TypesOnUnit.Detail.Type[j].dep_id_array = [];
+                                        json.TypesOnUnit.Detail.Type[j].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
+                                        if (!$rootScope.newAppointment.unit) {
+                                            json.TypesOnUnit.Detail.Type[j].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
+                                            json.TypesOnUnit.Detail.Type[j].dep_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].dep_id);
+                                        } else {
+                                            json.TypesOnUnit.Detail.Type[j].unit_id_array.push($rootScope.newAppointment.unit.Header.unit_id);
+                                            json.TypesOnUnit.Detail.Type[j].dep_id_array.push($rootScope.newAppointment.unit.Detail.Dep[i].dep_id);
+                                        }
+                                        $scope.typeList.push(json.TypesOnUnit.Detail.Type[j]);
                                     }
                                 }
-                                if (!checkPresent) {
-                                    json.TypesOnUnit.Detail.Type[j].type_id_array = [];
-                                    json.TypesOnUnit.Detail.Type[j].unit_id_array = [];
-                                    json.TypesOnUnit.Detail.Type[j].dep_id_array = [];
-                                    json.TypesOnUnit.Detail.Type[j].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
-                                    if (!$rootScope.newAppointment.unit) {
-                                        json.TypesOnUnit.Detail.Type[j].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
-                                        json.TypesOnUnit.Detail.Type[j].dep_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].dep_id);
-                                    } else {
-                                        json.TypesOnUnit.Detail.Type[j].unit_id_array.push($rootScope.newAppointment.unit.Header.unit_id);
-                                        json.TypesOnUnit.Detail.Type[j].dep_id_array.push($rootScope.newAppointment.unit.Detail.Dep[i].dep_id);
-                                    }
-                                    $scope.typeList.push(json.TypesOnUnit.Detail.Type[j]);
-                                }
+                                if ($scope.typeList.length == 1)
+                                    $scope.type = $scope.typeList[0];
                             }
-                            if ($scope.typeList.length == 1)
-                                $scope.type = $scope.typeList[0];
                         }
-                    }
-                }, error);
+                    }, error);
 
             /**
              * Function used to help with form validation
@@ -2825,13 +2846,13 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('/patient/step3');
             };
-            
+
             changeSelect()
         }).
         controller("CreateAppointmentStep3Ctrl", function($rootScope, $scope, $q, $location, hospiviewFactory) {
 
             console.log($rootScope.newAppointment);
-            
+
             /**
              * Initiation of variables.
              */
@@ -2839,16 +2860,16 @@ angular.module('myApp.controllers', []).
             var globalTypes;
             $scope.startProposalDate = new Date();
             $scope.today = new Date();
-            
+
             /**
              * listens for changes in the startProposalDate model. Is is changed
              * if the user selects another start date on the calendar.
              */
-            $scope.$watch('startProposalDate', 
-            function(){
-                $scope.showCalendar = false;
-                $scope.getProposals();
-            }, true);
+            $scope.$watch('startProposalDate',
+                    function() {
+                        $scope.showCalendar = false;
+                        $scope.getProposals();
+                    }, true);
 
             /**
              * Function to request proposals. First checks if a startDate is passed.
@@ -2930,7 +2951,7 @@ angular.module('myApp.controllers', []).
              * to group the proposals by day. (e.g. all fridays are put together etc.)
              */
             var baseDayNumber = new Date(proposals[0].the_date).getDay();
-            
+
             /**
              * For each proposal we retrieved, we add following information:
              * 
@@ -2991,12 +3012,12 @@ angular.module('myApp.controllers', []).
              * @param {type} proposal   proposal
              * @returns {string}        
              *
-            $scope.getTime = function(proposal) {
-                if (parseInt(proposal.time_from.substring(0, 2)) < 12)
-                    return $rootScope.getLocalizedString('createAppointmentStep3Morning');
-                else
-                    return $rootScope.getLocalizedString('createAppointmentStep3Afternoon');
-            };*/
+             $scope.getTime = function(proposal) {
+             if (parseInt(proposal.time_from.substring(0, 2)) < 12)
+             return $rootScope.getLocalizedString('createAppointmentStep3Morning');
+             else
+             return $rootScope.getLocalizedString('createAppointmentStep3Afternoon');
+             };*/
 
             /**
              * Triggered for every proposal in the list. Creates a string to display
@@ -3024,13 +3045,13 @@ angular.module('myApp.controllers', []).
                 var months = getMonthNames($rootScope.languageID);
                 $scope.proposalInfo = $scope.days[date.getDay()] + ", " + date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear() + ", " + proposal.time_from + "\n" + proposal.unit_name;
             };
-            
+
             /**
              * Detects the screen size and adjust the day names. If the screen
              * is smaller than 768 px, the short names will be used.
              */
             var width = window.innerWidth;
-            
+
             width = window.innerWidth;
             if (width <= 768) {
                 $scope.days = getDayNamesShort($rootScope.languageID);
@@ -3038,7 +3059,7 @@ angular.module('myApp.controllers', []).
             else {
                 $scope.days = getDayNames($rootScope.languageID);
             }
-            
+
             /**
              * Saves the proposal the user selected in this step to the rootScope.
              * Redirects the user to the next step.

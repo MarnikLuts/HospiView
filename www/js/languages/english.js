@@ -105,7 +105,8 @@ var englishStrings = {
         no: "No",
         cancel: "cancel",
         wait: "Please wait...",
-        
+        tooManyReservations: "Your account bound to a lot of appointments. This amount of appointments can't be saved local so the offline mode of this application won't work for your account. The application will also be a little bit slower.",
+    
         //Connection messages
         internalError: "Internal server error.",
         connectionError: "Cannot connect to the server.",

@@ -105,6 +105,7 @@ var frenchStrings = {
         no: "Non",
         cancel: "annuler",
         wait: "Un instant s'il vous plaît...",
+        tooManyReservations: "Votre compte a lié a beaucoup de reservations. Cettes reservations ne peuvent pas être conservé donc la mode hors-ligne de l'application ne marche pas pour votre compte. L'application va aussi marcher un petit peut plus lente.",
         
         //Connection messages
         internalError: "Erreur interne du serveur.",

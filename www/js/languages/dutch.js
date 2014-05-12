@@ -105,6 +105,7 @@ var dutchStrings = {
         no: "Nee",
         cancel: "annuleer",
         wait: "Even geduld a.u.b.",
+        tooManyReservations: "Uw account is gebonden aan heel veel afspraken. Deze kunnen niet lokaal opgeslagen worden dus de offlinemodus van deze applicatie werkt niet voor uw account. Ook zal de applicatie iets trager werken.",
         
         //Connection messages
         internalError: "Interne fout in de server.",
