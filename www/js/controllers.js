@@ -2518,7 +2518,7 @@ angular.module('myApp.controllers', []).
              */
             var user = JSON.parse(localStorage.getItem($rootScope.user));
             var refreshrate = user.refreshrate * 1000;
-
+            
             /**
              * The refresh will happen if the user is not offline or another
              * search being done.
@@ -2609,6 +2609,7 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
+                                console.log(json);
                                 if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail != null) {
                                     $scope.unitList = json.UnitsAndDeps.Detail.Unit;
                                     if ($scope.unitList.length == 1)
@@ -2627,6 +2628,7 @@ angular.module('myApp.controllers', []).
                     hospiviewFactory.getUnitDepGroups($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
+                                console.log(json);
                                 if (json.UnitDepGroups.Header.StatusCode == 1 && json.UnitDepGroups.Detail != null) {
                                     $scope.groupList = json.UnitDepGroups.Detail.Group;
                                     if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
@@ -2674,6 +2676,7 @@ angular.module('myApp.controllers', []).
                                     $scope.group.Detail.UnitAndDep[k].location_id = $scope.unitList[i].Detail.Dep[j].location_id;
                                     $scope.group.Detail.UnitAndDep[k].globaltypes = $scope.unitList[i].Header.globaltypes;
                                     $scope.group.Detail.UnitAndDep[k].the_online = $scope.unitList[i].Header.the_online;
+                                    $scope.group.Detail.UnitAndDep[k].extern_step2 = $scope.unitList[i].Header.extern_step2;
                                     $scope.group.Detail.UnitAndDep[k].msg_extern_step2 = $scope.unitList[i].Detail.Dep[j].msg_extern_step2;
                                     break;
                                 }
@@ -2695,7 +2698,6 @@ angular.module('myApp.controllers', []).
 
         }).
         controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location, $q, hospiviewFactory) {
-
             /**
              * The locations from the unit or group from step 1 are put into a list
              * 
@@ -2743,7 +2745,6 @@ angular.module('myApp.controllers', []).
                     var json;
                     for (var i = 0; i < responses.length; i++) {
                         json = parseJson(responses[i].data);
-                        console.log(json);
                         if (json.TypesOnUnit.Header.StatusCode == 1) {
                             for (var j = 0; j < json.TypesOnUnit.Detail.Type.length; j++) {
                                 var checkPresent = false;

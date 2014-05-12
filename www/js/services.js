@@ -259,7 +259,6 @@ angular.module('myApp.services', []).
                 setSearchUnits: function(response, server) {
                     var defer = $q.defer();
                     var json = parseJson(response.data);
-                    console.log(json);
                     if (json.UnitsAndDeps.Header.StatusCode == 1) {
                         var units = json.UnitsAndDeps.Detail.Unit;
                         for (var i = 0; i < units.length; i++) {
@@ -319,8 +318,6 @@ angular.module('myApp.services', []).
                     var defer = $q.defer(),
                             reservations = [],
                             promises = [];
-                    console.log($rootScope.startDate);
-                    console.log($rootScope.endDate);
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                         var depIds = [];
                         var unitId = $rootScope.searchUnits[i].Header.unit_id;
@@ -339,23 +336,23 @@ angular.module('myApp.services', []).
                     $q.all(promises).then(function(responses) {
                         for (var l = 0; l < responses.length; l++) {
                             var json = parseJson(responses[l].data);
-                            console.log(json);
+                            var reservation;
                             if (angular.isDefined(json.ReservationsOnUnit.Detail)) {
                                 if (json.ReservationsOnUnit.Header.StatusCode === "1") {
                                     /**
                                      * We needed to add a check for the length of the amount of reservations.
-                                     * This because, if only one reservation is returned by the webservice, the
+                                     * This is because, if only one reservation is returned by the webservice, the
                                      * parser won't put it in an array, but just pass it as object. This results
                                      * in not being able to use the .length method of an array, since it's not an array,
                                      * which would return undefined and cause the application to not show the reservation.
                                      */
                                     if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
-                                        var reservation = json.ReservationsOnUnit.Detail.Reservation;
+                                        reservation = json.ReservationsOnUnit.Detail.Reservation;
                                         reservation.step_buttons = getSteps(reservation.unit_id);
                                         reservations.push(reservation);
                                     } else {
                                         for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
-                                            var reservation = json.ReservationsOnUnit.Detail.Reservation[s];
+                                            reservation = json.ReservationsOnUnit.Detail.Reservation[s];
                                             reservation.step_buttons = getSteps(reservation.unit_id);
                                             reservations.push(reservation);
                                         }
@@ -495,7 +492,6 @@ angular.module('myApp.services', []).
                     getReservations(index);
 
                     function getReservations(index) {
-                        console.log($rootScope.currentServers);
                         var server = $rootScope.currentServers[index];
                         $rootScope.searchUnits = [];
                         hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
@@ -504,12 +500,12 @@ angular.module('myApp.services', []).
                                 }, error).then(function(server) {
                             return self.searchReservations(server);
                         }, error).then(function(reservations) {
-                            console.log(reservations);
                             addReservations(reservations);
                         });
                     }
 
                     function addReservations(reservations) {
+                        console.log("adding");
                         if (reservations !== undefined) {
                             for (var r = 0; r < reservations.length; r++) {
                                 reservations[r].hosp_short_name = $rootScope.currentServers[index].hosp_short_name;
@@ -539,8 +535,6 @@ angular.module('myApp.services', []).
                             $rootScope.isOffline = true;
                             alert($rootScope.getLocalizedString('uuidExpiredMessage'));
                         }
-                        
-                        console.log($rootScope[$rootScope.searchString]);
                     }
 
                     function error(data) {

@@ -52,7 +52,7 @@ var dutchStrings = {
         appointmentDetailPatientNational: "Rijksregisternummer ",
         
         //Selectserver/new
-        newGreeting: "Welkom bij Hospiview",
+        newGreeting: "Welkom bij HospiView",
         newInfo: "Selecteer de zorginstelling waarmee u verbinding wil maken:_"
                 +"Om onze demoserver te gebruiken selecteer \"Agendaview Demo\" en gebruik de volgende login gegevens:_"
                 +"Gebruikersnaam:_apple-user_"

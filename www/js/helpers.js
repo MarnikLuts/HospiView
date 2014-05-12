@@ -12,7 +12,7 @@ function onDeviceReady(){
             navigator.notification.alert(
                 message,    // message
                 null,       // callback
-                "Hospiview", // title
+                "HospiView", // title
                 'OK'        // buttonName
             );
         };
