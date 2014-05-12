@@ -2604,9 +2604,8 @@ angular.module('myApp.controllers', []).
                 $scope.unit = null;
                 $scope.group = null;
                 
-                $scope.dataLoading = true;
-                
-                if (angular.isDefined($scope.server)) {
+                if (angular.isDefined($scope.server)) {                
+                    $scope.dataLoading = true;
                     hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
