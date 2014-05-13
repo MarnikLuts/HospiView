@@ -2818,6 +2818,8 @@ angular.module('myApp.controllers', []).
              */
             $q.all(typePromises)
                     .then(function(responses) {
+                        alert(typePromises + " ");
+                        alert("then");
                         var json;
                         for (var i = 0; i < responses.length; i++) {
                             json = parseJson(responses[i].data);
@@ -2857,6 +2859,7 @@ angular.module('myApp.controllers', []).
                                     $scope.type = $scope.typeList[0];
                             }
                         }
+                        alert("voor wijziging");
                         $scope.typesLoaded = true;
                     }, error);
 
