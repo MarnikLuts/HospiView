@@ -517,6 +517,7 @@ ul li{
 .left-to-right.ng-enter{
     -webkit-animation: slideInLeft 0.5s both ease-in; 
     animation: slideInLeft 0.5s both ease-in;
+    display:none;
 }
 
 .left-to-right.ng-leave{
@@ -528,6 +529,7 @@ ul li{
 .right-to-left.ng-enter{
     -webkit-animation: slideInRight 0.5s both ease-in; 
     animation: slideInRight 0.5s both ease-in; 
+    display:none;
 }
 
 .right-to-left.ng-leave{
