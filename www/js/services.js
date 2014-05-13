@@ -8,7 +8,16 @@ angular.module('myApp.services', []).
          */
         constant('base_url', 'cfcs/webservices/reservations_service.cfc?').
         constant('kiosk_url', 'cfcs/webservices/kiosk_service.cfc?').
-        /** Factory containing methods for the different requests.
+        /** 
+         * Factory containing methods for the different requests. For every request,
+         * we increase the requestCounter and add this as a paramter to each request.
+         * We do this because there is a bug in iOS6 which caches all requests it does.
+         * So by changing the request each time, it will see it as a different request
+         * resulting in it executing. 
+         * The other way, the right way, to fix this problem is to send an extra header
+         * with the request.
+         *      Cache-Control: no-cache
+         * If possible, try to change the webservice to pass this header.
          * 
          * @param {type} $http
          * @param {type} base_url

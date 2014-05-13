@@ -2549,6 +2549,7 @@ angular.module('myApp.controllers', []).
              * Check if the select box CSS needs to be changed.
              */
             changeSelect();
+            document.getElementById("hideNotLoaded").className = "col-md-12";
         }).
         controller('refreshCtrl', function($scope, $rootScope, $interval, dataFactory) {
 

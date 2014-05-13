@@ -6,7 +6,7 @@
     <div class="title">{{ getLocalizedString('settings')}}</div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
-<div class="col-md-12">
+<div id="hideNotLoaded" class="col-md-12 invisible">
     <div class="well">
         <div class="input-group widthPercent btn-group">
             <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(1)"
@@ -57,7 +57,7 @@
         
         <!--<div ng-show="accountFalse">{{getLocalizedString('newUserNoAccountCreation')}}</div>-->
         
-        <div class="form-group" ng-show="accountTrue&&!checkingForKiosk" ng-cloak>
+        <div class="form-group" ng-show="accountTrue&&!checkingForKiosk">
         <div ng-show="checkingForKiosk">{{getLocalizedString('wait')}}</div>
             <p>{{requestMessage}}{{ getLocalizedString('newServerEnterAccount') }}</p>
             <form name="loginForm" novalidate ng-submit="login()">
@@ -68,7 +68,7 @@
                             <input type="text" id="username" class="form-control input-lg" placeholder="{{ getLocalizedString('loginUsername') }}" ng-model="username">
                         </div>
                     </div>
-                    <div class="form-group" ng-hide="showPasswordBoolean" ng-cloak>
+                    <div class="form-group" ng-hide="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-hide="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
                             <input type="password" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword') }}" ng-model="password" required>
@@ -93,7 +93,7 @@
                 </div>
             </form>
         </div>
-        <div ng-show="!hasKiosk&&accountFalse&&!checkingForKiosk" ng-cloak>{{getLocalizedString('newUserNoKiosk')}}</div>
+        <div ng-show="!hasKiosk&&accountFalse&&!checkingForKiosk">{{getLocalizedString('newUserNoKiosk')}}</div>
         <div class="form-group" ng-show="accountFalse&&hasKiosk">
             <select name="userFunctionSelect" class="form-control input-xl" ng-model="userFunctionSelect" ng-options="userFunction for userFunction in userFunctionList" ng-change="userFunctionSelected = true;
                 accountRadio = null">
@@ -101,7 +101,7 @@
             </select>
         </div>
         
-        <div class="form-group" ng-show="userFunctionSelected&&accountFalse" ng-cloak>
+        <div class="form-group" ng-show="userFunctionSelected&&accountFalse">
             <p>{{ getLocalizedString('newUserEnterDetails') }}</p>
             <form name="createAccountForm" novalidate ng-submit="requestAccount()">
                 <div class="form-group">
