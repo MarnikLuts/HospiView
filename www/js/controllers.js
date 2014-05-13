@@ -2748,6 +2748,28 @@ angular.module('myApp.controllers', []).
 
         }).
         controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location, $q, hospiviewFactory) {
+            
+            $scope.typeList = [];
+            $scope.type = null;
+            $scope.step2Blocked = false;
+            /*
+             * check if extern_step2 is false
+             * 
+             * if it's false, prevent requesting types from the server and set the standard type
+             */
+            if($rootScope.newAppointment.group){
+                //Handle group
+            }else{
+                if($rootScope.newAppointment.unit.Header.extern_step2==="0"){
+                    $scope.step2Blocked = true;
+                    $scope.type={
+                        type_id:0,
+                        type_title:$rootScope.newAppointment.unit.Header.stitle
+                    };
+                    $scope.typeList.push($scope.type);
+                }
+            }
+            
             /**
              * The locations from the unit or group from step 1 are put into a list
              * 
@@ -2764,7 +2786,8 @@ angular.module('myApp.controllers', []).
                         location_id: UnitAndDep.location_id,
                         location_name: UnitAndDep.location_name
                     });
-                    typePromises.push(hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, UnitAndDep.unit_id, UnitAndDep.dep_id, UnitAndDep.globaltypes, UnitAndDep.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
+                    if(!$scope.step2Blocked)
+                        typePromises.push(hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, UnitAndDep.unit_id, UnitAndDep.dep_id, UnitAndDep.globaltypes, UnitAndDep.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
                 }
             } else {
                 $scope.unitOrGroupName = $rootScope.newAppointment.unit.Header.unit_name;
@@ -2777,7 +2800,8 @@ angular.module('myApp.controllers', []).
                         location_name: Dep.location_name
                     });
                     $scope.extraInfo += Dep.msg_extern_step2 + "\n";
-                    typePromises.push(hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.unit.Header.unit_id, Dep.dep_id, $rootScope.newAppointment.unit.Header.globaltypes, $rootScope.newAppointment.unit.Header.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
+                    if(!$scope.step2Blocked)
+                        typePromises.push(hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.unit.Header.unit_id, Dep.dep_id, $rootScope.newAppointment.unit.Header.globaltypes, $rootScope.newAppointment.unit.Header.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
                 }
             }
 
@@ -2788,8 +2812,6 @@ angular.module('myApp.controllers', []).
              * Also adds 3 arrays to the type model. These arrays contain the ids needed
              * to do the proposal requests.
              */
-            $scope.typeList = [];
-            $scope.type = null;
             $q.all(typePromises)
                     .then(function(responses) {
                         var json;
@@ -2800,7 +2822,7 @@ angular.module('myApp.controllers', []).
                                 for (var j = 0; j < json.TypesOnUnit.Detail.Type.length; j++) {
                                     var checkPresent = false;
                                     for (var k = 0; k < $scope.typeList.length; k++) {
-                                        if ($scope.typeList[k].type_title === json.TypesOnUnit.Detail.Type[j].type_title) {
+                                        if ($scope.typeList[k].type_id === json.TypesOnUnit.Detail.Type[j].type_id) {
                                             $scope.typeList[k].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
                                             if (!$rootScope.newAppointment.unit) {
                                                 $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
@@ -2862,16 +2884,21 @@ angular.module('myApp.controllers', []).
              * 
              * @returns {undefined}
              */
-            $scope.next = function() {
-                $rootScope.newAppointment.type = $scope.type;
-                $rootScope.newAppointment.locations = [];
-                for (var i = 0; i < $scope.locations.length; i++) {
-                    if ($scope.locations[i].checked)
-                        $rootScope.newAppointment.locations.push($scope.locations[i]);
+            $scope.next = function(formValid) {
+                if(formValid&&$scope.locationIsChecked()){
+                    $rootScope.newAppointment.type = $scope.type;
+                    $rootScope.newAppointment.locations = [];
+                    for (var i = 0; i < $scope.locations.length; i++) {
+                        if ($scope.locations[i].checked)
+                            $rootScope.newAppointment.locations.push($scope.locations[i]);
+                    }
+                    $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
+                    $rootScope.pageClass = 'right-to-left';
+                    console.log($rootScope.newAppointment);
+                    $location.path('/patient/step3');
+                }else{
+                    $scope.displayError=true;
                 }
-                $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
-                $rootScope.pageClass = 'right-to-left';
-                $location.path('/patient/step3');
             };
 
             changeSelect();
@@ -3131,15 +3158,19 @@ angular.module('myApp.controllers', []).
              * the user is redirected to the next step
              * @returns {undefined}
              */
-            $scope.next = function() {
-                $rootScope.newAppointment.firstname = $scope.firstname;
-                $rootScope.newAppointment.lastname = $scope.lastname;
-                $rootScope.newAppointment.phone = $scope.phone;
-                $rootScope.newAppointment.email = $scope.email;
-                $rootScope.newAppointment.dateOfBirth = $scope.dateOfBirth;
+            $scope.next = function(formValid) {
+                if(formValid){
+                    $rootScope.newAppointment.firstname = $scope.firstname;
+                    $rootScope.newAppointment.lastname = $scope.lastname;
+                    $rootScope.newAppointment.phone = $scope.phone;
+                    $rootScope.newAppointment.email = $scope.email;
+                    $rootScope.newAppointment.dateOfBirth = $scope.dateOfBirth;
 
-                $rootScope.pageClass = 'right-to-left';
-                $location.path('patient/step6');
+                    $rootScope.pageClass = 'right-to-left';
+                    $location.path('patient/step6');
+                }else{
+                    $scope.displayError = true;
+                }
             };
 
         }).
