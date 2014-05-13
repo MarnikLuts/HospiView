@@ -2551,10 +2551,9 @@ angular.module('myApp.controllers', []).
              */
             changeSelect();
             
-            /*
             $timeout(function() {
-                document.getElementById("hideNotLoaded").className = "col-md-12";
-            },2000);*/
+                $("#hideNotLoaded").removeClass('hideDiv');
+            },2000);
             
         }).
         controller('refreshCtrl', function($scope, $rootScope, $interval, dataFactory) {
