@@ -17,13 +17,13 @@
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentType')}}*</b></p>
                     </td>
                     <td>
-                        
-                            <span ng-hide="typesLoaded"><span class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></span></span>
-                            <span ng-show="true"><select class="form-control" ng-disabled="step2Blocked" name="typeSelect" ng-model="type.switch" ng-options="type as type.type_title for type in typeList" ng-change="selectTest()" required>
+                        <span ng-hide="typesLoaded"><span class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></span></span>
+                        <span ng-show="typesLoaded">
+                            <select class="form-control" ng-disabled="step2Blocked" name="typeSelect" ng-model="type.switch" ng-options="type as type.type_title for type in typeList" required>
                                 <option value=""> - {{getLocalizedString('createAppointmentStep2SelectType')}} - </option>
-                                </select> 
-                            </span>
-                        
+                            </select> 
+                        </span>
+
                     </td>
                 </tr>
                 <tr>
