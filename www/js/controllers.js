@@ -2552,7 +2552,7 @@ angular.module('myApp.controllers', []).
             changeSelect();
             
             $timeout(function() {
-                $("#hideNotLoaded").removeClass('hideDiv');
+                $(".hideDiv").removeClass('hideDiv');
             },2000);
             
         }).

@@ -6,7 +6,7 @@
     <div class="title">{{ getLocalizedString('settings')}}</div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
-<div id="hideNotLoaded" class="col-md-12 hideDiv">
+<div id="hideNotLoaded" class="col-md-12">
     <div class="well">
         <div class="input-group widthPercent btn-group">
             <button type="button" class="btn btn-default btn-lg-shortcut languageButton" ng-model="languageRadio" ng-click="changeLanguage(1)"
@@ -17,7 +17,7 @@
                     btn-radio="3">English<br/><img src="img/flag_uk.png" alt="flag_uk" width="60" height="38"></button>
         </div>
         <h2 ng-show="languageSelected">{{ getLocalizedString('newGreeting') }}</h2>
-        <div class="form-group" ng-show="languageSelected" ng-cloak>
+        <div class="form-group hideDiv" ng-show="languageSelected">
             <p>
                 {{ getLocalizedString('newInfo').split("_")[0] }}<br/><br/>
                 {{ getLocalizedString('newInfo').split("_")[1] }}
@@ -38,11 +38,10 @@
                     <option value="">- {{ getLocalizedString('newServerSelectDefault') }} -</option>
                 </select>
                 <span ng-click="refreshServerList()" class="input-group-addon btn btn-default"><span class="glyphicon glyphicon-refresh"></span></span>
-            </div>
-                
+            </div>        
         </div>
         <br>
-        <div class="form-group" ng-show="serverSelected" ng-cloak>
+        <div class="form-group hideDiv" ng-show="serverSelected">
             <p>{{ getLocalizedString('newServerHasAccount') }}</p>
             <div class="input-lg">
                 <div class="btn-group btn-group-lg btn-block">
@@ -57,8 +56,8 @@
         
         <!--<div ng-show="accountFalse">{{getLocalizedString('newUserNoAccountCreation')}}</div>-->
         
-        <div class="form-group" ng-show="accountTrue&&!checkingForKiosk">
-        <div ng-show="checkingForKiosk">{{getLocalizedString('wait')}}</div>
+        <div class="form-group hideDiv" ng-show="accountTrue&&!checkingForKiosk">
+        <div ng-show="checkingForKiosk" class="hideDiv">{{getLocalizedString('wait')}}</div>
             <p>{{requestMessage}}{{ getLocalizedString('newServerEnterAccount') }}</p>
             <form name="loginForm" novalidate ng-submit="login()">
                 <div>
@@ -68,13 +67,13 @@
                             <input type="text" id="username" class="form-control input-lg" placeholder="{{ getLocalizedString('loginUsername') }}" ng-model="username">
                         </div>
                     </div>
-                    <div class="form-group" ng-hide="showPasswordBoolean">
+                    <div class="form-group hideDiv" ng-hide="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-hide="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
                             <input type="password" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword') }}" ng-model="password" required>
                         </div>
                     </div>
-                    <div class="form-group" ng-show="showPasswordBoolean">
+                    <div class="form-group hideDiv" ng-show="showPasswordBoolean">
                         <div class="input-group">
                             <span class="input-group-addon btn" ng-click="showpassword()" ng-show="showPasswordBoolean"><span class="glyphicon glyphicon-eye-close"></span></span>
                             <input type="text" id="password" class="form-control input-lg" placeholder="{{ getLocalizedString('loginPassword') }}" ng-model="password" required>
@@ -83,7 +82,7 @@
                     <div class="savePasswordText">
                         <label><div class="icasaCheckbox icasaCheckbox-normal" ng-class="{'icasaCheckboxChecked':savePassword, 'icasaCheckboxUnChecked':!savePassword,}"></div><input type="checkbox" ng-model="savePassword" ng-click="changeCheckbox()"  class="invisible"/> {{ getLocalizedString('loginAutomaticallyEnterPassword')}}</label>
                     </div>
-                    <div class="alert alert-danger" ng-show="error">{{errormessage}}</div>
+                    <div class="alert alert-danger hideDiv" ng-show="error">{{errormessage}}</div>
                     <div class="form-group text-center">
                         <button type="submit" class="btn btn-xl has-spinner" ng-disabled="loginForm.$invalid||loggingIn">
                             <span ng-show="loggingIn"><i class="glyphicon glyphicon-refresh"></i></span>
@@ -93,7 +92,7 @@
                 </div>
             </form>
         </div>
-        <div ng-show="!hasKiosk&&accountFalse&&!checkingForKiosk">{{getLocalizedString('newUserNoKiosk')}}</div>
+        <div ng-show="!hasKiosk&&accountFalse&&!checkingForKiosk" class="hideDiv">{{getLocalizedString('newUserNoKiosk')}}</div>
         <div class="form-group" ng-show="accountFalse&&hasKiosk">
             <select name="userFunctionSelect" class="form-control input-xl" ng-model="userFunctionSelect" ng-options="userFunction for userFunction in userFunctionList" ng-change="userFunctionSelected = true;
                 accountRadio = null">
@@ -101,7 +100,7 @@
             </select>
         </div>
         
-        <div class="form-group" ng-show="userFunctionSelected&&accountFalse">
+        <div class="form-group hideDiv" ng-show="userFunctionSelected&&accountFalse">
             <p>{{ getLocalizedString('newUserEnterDetails') }}</p>
             <form name="createAccountForm" novalidate ng-submit="requestAccount()">
                 <div class="form-group">
