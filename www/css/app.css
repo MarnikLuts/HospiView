@@ -542,39 +542,39 @@ ul li{
 
 .right-to-left.ng-enter {
 	z-index: 101;
-	-webkit-transform: translateX(100%);
-	transform: translateX(100%);
+	-webkit-animation: slideInRight 0.5s both ease-in; 
+        animation: slideInRight 0.5s both ease-in; 
 }
 .right-to-left.ng-enter.ng-enter-active {
-	-webkit-transform: translateX(0);
-	transform: translateX(0);
+	-webkit-animation: slideInRight 0.5s both ease-in; 
+        animation: slideInRight 0.5s both ease-in; 
 }
 .right-to-left.ng-leave {
 	z-index: 100;
-	-webkit-transform: translateX(0);
-	transform: translateX(0);
+	-webkit-animation: slideOutLeft 0.5s both ease-in;
+        animation: slideOutLeft 0.5s both ease-in;
 }
 .right-to-left.ng-leave.ng-leave-active {
-	-webkit-transform: translateX(-100%);
-	transform: translateX(-100%);
+	-webkit-animation: slideOutLeft 0.5s both ease-in;
+        animation: slideOutLeft 0.5s both ease-in;
 }
 .left-to-right.ng-enter {
 	z-index: 100;
-	-webkit-transform: translateX(-100%);
-	transform: translateX(-100%);
+	-webkit-animation: slideInLeft 0.5s both ease-in; 
+        animation: slideInLeft 0.5s both ease-in;
 }
 .left-to-right.ng-enter.ng-enter-active {
-	-webkit-transform: translateX(0);
-	transform: translateX(0);
+	-webkit-animation: slideInLeft 0.5s both ease-in; 
+        animation: slideInLeft 0.5s both ease-in;
 }
 .left-to-right.ng-leave {
 	z-index: 101;
-	-webkit-transform: translateX(0);
-	transform: translateX(0);
+	-webkit-animation: slideOutRight 0.5s both ease-in; 
+        animation: slideOutRight 0.5s both ease-in; 
 }
 .left-to-right.ng-leave.ng-leave-active {
-	-webkit-transform: translateX(100%);
-	transform: translateX(100%);
+	-webkit-animation: slideOutRight 0.5s both ease-in; 
+        animation: slideOutRight 0.5s both ease-in; 
 }
 
 @media screen and (max-width: 768px) {
