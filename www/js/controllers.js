@@ -2777,9 +2777,10 @@ angular.module('myApp.controllers', []).
              * 
              * The types associated with this unit or group are requested from the server
              */
-            var typePromises = [];
+            
             $scope.locations = [];
             if ($rootScope.newAppointment.unit === null) {
+                var typePromises = [];
                 $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
                 for (var i = 0; i < $rootScope.newAppointment.group.Detail.UnitAndDep.length; i++) {
                     var UnitAndDep = $rootScope.newAppointment.group.Detail.UnitAndDep[i];
@@ -2792,6 +2793,7 @@ angular.module('myApp.controllers', []).
                         typePromises.push(hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, UnitAndDep.unit_id, UnitAndDep.dep_id, UnitAndDep.globaltypes, UnitAndDep.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
                 }
             } else {
+                var typePromises = [];
                 $scope.unitOrGroupName = $rootScope.newAppointment.unit.Header.unit_name;
                 $scope.extraInfo = "";
                 for (var i = 0; i < $rootScope.newAppointment.unit.Detail.Dep.length; i++) {
