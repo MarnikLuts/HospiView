@@ -2861,6 +2861,7 @@ angular.module('myApp.controllers', []).
                         }
                         alert("voor wijziging");
                         $scope.typesLoaded = true;
+                        alert($scope.typesLoaded + "");
                     }, error);
 
             /**
