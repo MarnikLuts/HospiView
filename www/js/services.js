@@ -234,7 +234,11 @@ angular.module('myApp.services', []).
                 getProposalsRemoved: function(server_url, UUID, Unit_Id, Dep_Id){
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetProposalsRemoved=" + UUID + "&Unit_Id=" + Unit_Id + "" + Dep_Id + "&count=" + $rootScope.requestCounter);
-                }    
+                },
+                getQuestionsOnUnit: function(UUID, Unit_Id, UnitType_Id, Language_Id, server_url){
+                    $rootScope.requestCounter++;
+                    return ($http.get(server_url + "method=GetQuestionsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&UnitType_Id=" + UnitType_Id + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter));
+                }
             };
         }).
         factory('dataFactory', function($rootScope, $q, hospiviewFactory) {
