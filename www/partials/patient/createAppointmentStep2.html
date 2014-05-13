@@ -17,11 +17,12 @@
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentType')}}*</b></p>
                     </td>
                     <td>
-                        <span ng-hide="typesLoaded" class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></span>
-                        <span ng-show="typesLoaded">
-                        <select class="form-control" ng-disabled="step2Blocked" name="typeSelect" ng-model="type" ng-options="type as type.type_title for type in typeList" required>
-                            <option value=""> - {{getLocalizedString('createAppointmentStep2SelectType')}} - </option>
-                        </select>
+                        <span ng-switch="typesLoaded">
+                            <span ng-switch-when="false"><span class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></span></span>
+                            <span ng-switch-when="true">
+                                <select class="form-control" ng-disabled="step2Blocked" name="typeSelect" ng-model="type" ng-options="type as type.type_title for type in typeList" required>
+                                    <option value=""> - {{getLocalizedString('createAppointmentStep2SelectType')}} - </option>
+                                </select></span>
                         </span>
                     </td>
                 </tr>
@@ -52,7 +53,7 @@
                     </td>    
                 </tr>
             </table>
-            <div class="alert alert-danger" ng-show="displayError||type == null&&step2Form.typeSelect.$dirty|| !locationIsChecked()">
+            <div class="alert alert-danger" ng-show="displayError || type == null && step2Form.typeSelect.$dirty || !locationIsChecked()">
                 {{getLocalizedString('createAppointmentStep2Error')}}
             </div>
             <br>
