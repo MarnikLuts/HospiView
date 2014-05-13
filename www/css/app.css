@@ -564,6 +564,10 @@ ul li{
     }
 }
 
-.datePickCalendar td{
+.datePickCalendar td {
     width: 1%;
+}
+
+.hideDiv {
+    display: none !important;
 }
