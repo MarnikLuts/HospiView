@@ -2553,7 +2553,7 @@ angular.module('myApp.controllers', []).
             
             $timeout(function() {
                 document.getElementById("hideNotLoaded").className = "col-md-12";
-            },500);
+            },2000);
             
         }).
         controller('refreshCtrl', function($scope, $rootScope, $interval, dataFactory) {
