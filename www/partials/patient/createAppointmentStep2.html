@@ -18,7 +18,7 @@
                     </td>
                     <td>
                         <span ng-hide="typesLoaded" class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></span>
-                        <select ng-show="typesLoaded" class="form-control" name="typeSelect" ng-model="type" ng-options="type as type.type_title for type in typeList" required>
+                        <select ng-show="typesLoaded" class="form-control" ng-disabled="step2Blocked" name="typeSelect" ng-model="type" ng-options="type as type.type_title for type in typeList" required>
                             <option value=""> - {{getLocalizedString('createAppointmentStep2SelectType')}} - </option>
                         </select>
                     </td>

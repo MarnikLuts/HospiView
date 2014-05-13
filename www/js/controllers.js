@@ -2778,7 +2778,7 @@ angular.module('myApp.controllers', []).
              */
             var typePromises = [];
             $scope.locations = [];
-            $scope.typesLoaded = false;
+            $scope.typesLoaded = true;
             if ($rootScope.newAppointment.unit === null) {
                 $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
                 for (var i = 0; i < $rootScope.newAppointment.group.Detail.UnitAndDep.length; i++) {
