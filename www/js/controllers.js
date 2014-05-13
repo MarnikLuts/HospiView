@@ -2553,7 +2553,7 @@ angular.module('myApp.controllers', []).
             
             $timeout(function() {
                 $(".hideDiv").removeClass('hideDiv');
-            },2000);
+            },3000);
             
         }).
         controller('refreshCtrl', function($scope, $rootScope, $interval, dataFactory) {
