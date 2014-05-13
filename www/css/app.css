@@ -522,7 +522,7 @@ ul li{
 .left-to-right.ng-leave{
     -webkit-animation: slideOutRight 0.5s both ease-in; 
     animation: slideOutRight 0.5s both ease-in; 
-    /*-webkit-animation: slideOutLeft 0.5s both ease-in;*/ 
+    /*-webkit-animation: slideOutLeft 0.5s both ease-in;
 }
 
 .right-to-left.ng-enter{
@@ -533,7 +533,7 @@ ul li{
 .right-to-left.ng-leave{
     -webkit-animation: slideOutLeft 0.5s both ease-in;
     animation: slideOutLeft 0.5s both ease-in;
-    /*-webkit-animation: slideOutRight 0.5s both ease-in;*/ 
+    /*-webkit-animation: slideOutRight 0.5s both ease-in;
 }*/
 
 @media screen and (max-width: 768px) {
@@ -587,37 +587,37 @@ ul li{
 }
 .slide-left.ng-enter {
 	z-index: 101;
-	-webkit-transform: translateX(100%);
-	transform: translateX(100%);
+	-webkit-transform: translate3d(100%,0,0);
+	transform: translate3d(100%,0,0);
 }
 .slide-left.ng-enter.ng-enter-active {
-	-webkit-transform: translateX(0);
-	transform: translateX(0);
+	-webkit-transform: translate3d(0,0,0);
+	transform: translate3d(0,0,0);
 }
 .slide-left.ng-leave {
 	z-index: 100;
-	-webkit-transform: translateX(0);
-	transform: translateX(0);
+	-webkit-transform: translate3d(0,0,0);
+	transform: translate3d(0,0,0);
 }
 .slide-left.ng-leave.ng-leave-active {
-	-webkit-transform: translateX(-100%);
-	transform: translateX(-100%);
+	-webkit-transform: translate3d(-100%,0,0);
+	transform: translate3d(-100%,0,0);
 }
 .slide-right.ng-enter {
 	z-index: 100;
-	-webkit-transform: translateX(-100%);
-	transform: translateX(-100%);
+	-webkit-transform: translate3d(-100%,0,0);
+	transform: translate3d(-100%,0,0);
 }
 .slide-right.ng-enter.ng-enter-active {
-	-webkit-transform: translateX(0);
-	transform: translateX(0);
+	-webkit-transform: translate3d(0,0,0);
+	transform: translate3d(0,0,0);
 }
 .slide-right.ng-leave {
 	z-index: 101;
-	-webkit-transform: translateX(0);
-	transform: translateX(0);
+	-webkit-transform: translate3d(0,0,0);
+	transform: translate3d(0,0,0);
 }
 .slide-right.ng-leave.ng-leave-active {
-	-webkit-transform: translateX(100%);
-	transform: translateX(100%);
+	-webkit-transform: translate3d(100%,0,0);
+	transform: translate3d(100%,0,0);
 }
