@@ -1,4 +1,5 @@
-<nav class="navbar navbar-default" role="navigation">
+<div ng-include=" 'templateId.html' "></div>
+<!--<nav class="navbar navbar-default" role="navigation">
     <button id="selectServerButton" class="btn btn-sm-back invisible" ng-click="back()">
         <span class="glyphicon glyphicon-chevron-left"></span>
         {{ getLocalizedString('back')}}
@@ -56,7 +57,7 @@
         <br>
         
         <!--<div ng-show="accountFalse">{{getLocalizedString('newUserNoAccountCreation')}}</div>-->
-        
+        <!--
         <div class="form-group" ng-show="accountTrue&&!checkingForKiosk">
         <div ng-show="checkingForKiosk">{{getLocalizedString('wait')}}</div>
             <p>{{requestMessage}}{{ getLocalizedString('newServerEnterAccount') }}</p>
@@ -193,4 +194,4 @@
             </form>
         </div>
     </div>
-</div>
+</div>-->
