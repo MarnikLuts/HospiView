@@ -228,7 +228,7 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function postLoginPatient() {
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = 'right-to-left';
                 if (localStorage.getItem('nlRemoteDict') === null || localStorage.getItem('nlRemoteDict') === null || localStorage.getItem('nlRemoteDict') === null)
                     languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
                             .then(function() {
@@ -380,7 +380,7 @@ angular.module('myApp.controllers', []).
                         alert($rootScope.getLocalizedString('tooManyReservations'));
                     }
                     $rootScope.isOffline = false;
-                    $rootScope.slide = 'slide-left';
+                    $rootScope.pageClass = "right-to-left";
                     $location.path('/doctor/appointmentsView');
                 }
             }
@@ -499,7 +499,7 @@ angular.module('myApp.controllers', []).
                         if (hasAuthenticated) {
                             $rootScope.user = $scope.user;
                             $rootScope.isOffline = true;
-                            $rootScope.slide = 'slide-left';
+                            $rootScope.pageClass = "right-to-left";
 
                             switch ($rootScope.type) {
                                 case '0':
@@ -653,7 +653,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.eventClick = true;
                 $rootScope.reservationDetail = reservation;
                 $rootScope.currentdate = reservation.the_date;
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/doctor/appointmentDetail');
             };
 
@@ -667,7 +667,7 @@ angular.module('myApp.controllers', []).
                 removeEvent();
                 $rootScope.eventClick = true;
                 $rootScope.currentdate = new Date($scope.date);
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/settings/default');
             };
 
@@ -681,7 +681,7 @@ angular.module('myApp.controllers', []).
                 removeEvent();
                 $rootScope.eventClick = true;
                 $rootScope.currentdate = $scope.date;
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/appointmentsFilter');
             };
 
@@ -879,7 +879,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchInProgress = true;
                 $rootScope.currentdate = $scope.date;
                 if ($rootScope.isOffline) {
-                    $rootScope.slide = 'slide-left';
+                    $rootScope.pageClass = "right-to-left";
                     $location.path('/appointmentsCalendar');
                 } else {
                     $scope.loadingCalendar = true;
@@ -914,7 +914,7 @@ angular.module('myApp.controllers', []).
                         search();
                     } else {
                         $rootScope.searchInProgress = false;
-                        $rootScope.slide = 'slide-left';
+                        $rootScope.pageClass = "right-to-left";
                         $location.path('/appointmentsCalendar');
                     }
                 }
@@ -970,7 +970,7 @@ angular.module('myApp.controllers', []).
                 removeEvent();
                 $rootScope.user = null;
                 $rootScope.type = null;
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/login');
             };
 
@@ -1078,7 +1078,7 @@ angular.module('myApp.controllers', []).
                 } else {
                     $rootScope.searchInProgress = false;
                     if ($scope.loadingCalendar) {
-                        $rootScope.slide = 'slide-left';
+                        $rootScope.pageClass = "right-to-left";
                         $scope.loadingCalendar = false;
                         $location.path('/appointmentsCalendar');
                     }
@@ -1140,7 +1140,7 @@ angular.module('myApp.controllers', []).
              * Redirects back to the appointments screen.
              */
             $scope.back = function() {
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
 
@@ -1400,7 +1400,7 @@ angular.module('myApp.controllers', []).
                 }
                 console.log($rootScope.unitFilter);
 
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/doctor/appointmentsView');
             };
 
@@ -1415,7 +1415,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.depFilter = '';
 
                 $rootScope.filterActive = false;
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
 
@@ -1653,7 +1653,7 @@ angular.module('myApp.controllers', []).
              * Redirect the user back to the appointments screen.
              */
             $scope.back = function() {
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
         }).
@@ -1673,7 +1673,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.back = function() {
                 $rootScope.eventClick = true;
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
 
@@ -1702,7 +1702,7 @@ angular.module('myApp.controllers', []).
                         var getClickedDay = calEvent.start;
                         $rootScope.currentdate = formatDate(new Date(getClickedDay.getFullYear(), getClickedDay.getMonth(), getClickedDay.getDate()));
                         $rootScope.eventClick = true;
-                        $rootScope.slide = 'slide-right';
+                        $rootScope.pageClass = "left-to-right";
                         $rootScope.$apply();
                         $location.path('/doctor/appointmentsView');
                     }
@@ -1891,7 +1891,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.save = function() {
                 localStorage.setItem($rootScope.user, JSON.stringify($scope.selectedUser));
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = "left-to-right";
                 $location.path('/doctor/appointmentsView');
             };
 
@@ -1910,7 +1910,7 @@ angular.module('myApp.controllers', []).
                     if (action === "edit")
                         $rootScope.editServer = server;
                 }
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/selectserver/' + action);
             };
 
@@ -1951,7 +1951,7 @@ angular.module('myApp.controllers', []).
                                     localStorage.removeItem($rootScope.user + 'Reservations');
                                     localStorage.removeItem($rootScope.user + 'SearchRangeStart');
                                     localStorage.removeItem($rootScope.user + 'SearchRangeEnd');
-                                    $rootScope.slide = 'slide-right';
+                                    $rootScope.pageClass = "left-to-right";
                                     $location.path('/login');
                                     $scope.$apply();
                                 }
@@ -1985,7 +1985,7 @@ angular.module('myApp.controllers', []).
                         localStorage.removeItem($rootScope.user + 'Reservations');
                         localStorage.removeItem($rootScope.user + 'SearchRangeStart');
                         localStorage.removeItem($rootScope.user + 'SearchRangeEnd');
-                        $rootScope.slide = 'slide-right';
+                        $rootScope.pageClass = "left-to-right";
                         $location.path('/login');
                     }
                 }
@@ -2016,7 +2016,7 @@ angular.module('myApp.controllers', []).
                                                 servers.splice(i, 1);
                                                 lsObject.servers = servers;
                                                 localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
-                                                $rootScope.slide = 'slide-right';
+                                                $rootScope.pageClass = "left-to-right";
                                                 $location.path("/login");
                                                 $scope.$apply();
                                                 break;
@@ -2041,7 +2041,7 @@ angular.module('myApp.controllers', []).
                                     servers.splice(i, 1);
                                     lsObject.servers = servers;
                                     localStorage.setItem($rootScope.user, JSON.stringify(lsObject));
-                                    $rootScope.slide = 'slide-right';
+                                    $rootScope.pageClass = "left-to-right";
                                     $location.path("/login");
                                     $scope.$apply();
                                     break;
@@ -2071,7 +2071,7 @@ angular.module('myApp.controllers', []).
              * Redirects the user back to the settings screen.
              */
             $scope.back = function() {
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = "left-to-right";
                 history.back();
 //                $location.path('/settings/default');
             };
@@ -2365,7 +2365,7 @@ angular.module('myApp.controllers', []).
                     if (!invalidUser) {
                         $rootScope.user = null;
                         $rootScope.type = null;
-                        $rootScope.slide = 'slide-left';
+                        $rootScope.pageClass = "right-to-left";
                         $location.path('/login');
                     }
                 }
@@ -2380,7 +2380,7 @@ angular.module('myApp.controllers', []).
                             console.log($rootScope.nlRemoteDict);
                             console.log($rootScope.enRemoteDict);
                             console.log($rootScope.frRemoteDict);
-                            $rootScope.slide = 'slide-left';
+                            $rootScope.pageClass = 'right-to-left';
                             $location.path("/patient/mainmenu");
                         }, error);
             }
@@ -2470,7 +2470,7 @@ angular.module('myApp.controllers', []).
                                 }, error);
                     }
                     $rootScope.isOffline = true;
-                    $rootScope.slide = 'slide-left';
+                    $rootScope.pageClass = "right-to-left";
                     $location.path('/settings/new');
                 }
             }
@@ -2497,7 +2497,7 @@ angular.module('myApp.controllers', []).
                     }
 
                     $rootScope.isOffline = false;
-                    $rootScope.slide = 'slide-left';
+                    $rootScope.pageClass = "right-to-left";
                     $location.path('/settings/new');
                 }
             }
@@ -2534,7 +2534,7 @@ angular.module('myApp.controllers', []).
              * Redirects to the settings page.
              */
             $scope.cancel = function() {
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = "right-to-left";
                 $location.path('/settings/new');
             };
 
@@ -2594,7 +2594,7 @@ angular.module('myApp.controllers', []).
              * User gets logged out
              */
             $scope.logout = function() {
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = 'left-to-right';
                 $location.path('/login');
             };
 
@@ -2603,7 +2603,7 @@ angular.module('myApp.controllers', []).
              * 
              */
             $scope.settings = function() {
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = 'right-to-left';
                 $location.path('/settingsPatient/default');
             };
 
@@ -2614,7 +2614,7 @@ angular.module('myApp.controllers', []).
                 if ($rootScope.isOffline) {
                     alert($rootScope.getLocalizedString('notAvailableInOffline'));
                 } else {
-                    $rootScope.slide = 'slide-left';
+                    $rootScope.pageClass = 'right-to-left';
                     $location.path('patient/step1');
                 }
             };
@@ -2623,7 +2623,7 @@ angular.module('myApp.controllers', []).
              * User gets redirected to their overview of appointments
              */
             $scope.viewAppointments = function() {
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = 'right-to-left';
                 $location.path('patient/appointmentsView');
             };
         }).
@@ -2632,7 +2632,7 @@ angular.module('myApp.controllers', []).
              * The user is redirected back to the main menu
              */
             $scope.save = function() {
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = 'left-to-right';
                 $location.path('/patient/mainmenu');
             };
         }).
@@ -2733,7 +2733,7 @@ angular.module('myApp.controllers', []).
                             }
                         }
                     }
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = 'right-to-left';
                 $rootScope.newAppointment = null;
                 $rootScope.newAppointment = {
                     server: $rootScope.currentServers.indexOf($scope.server),
@@ -2903,7 +2903,7 @@ angular.module('myApp.controllers', []).
                         var json = parseJson(response.data);
                         console.log(json);
                     });
-                    $rootScope.slide = 'slide-left';
+                    $rootScope.pageClass = 'right-to-left';
                     console.log($rootScope.newAppointment);
                     $location.path('/patient/step3');
                 }else{
@@ -3152,7 +3152,7 @@ angular.module('myApp.controllers', []).
                 console.log(proposal);
                 $scope.selectedProposal.day_name = $scope.getDay($scope.selectedProposal);
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
-                $rootScope.slide = 'slide-left';
+                $rootScope.pageClass = 'right-to-left';
                 $location.path('/patient/step5');
             };
         }).
@@ -3176,7 +3176,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.newAppointment.email = $scope.email;
                     $rootScope.newAppointment.dateOfBirth = $scope.dateOfBirth;
 
-                    $rootScope.slide = 'slide-left';
+                    $rootScope.pageClass = 'right-to-left';
                     $location.path('patient/step6');
                 }else{
                     $scope.displayError = true;
@@ -3191,7 +3191,7 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.end = function() {
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = 'left-to-right';
                 $location.path('/patient/mainmenu');
             };
         }).
@@ -3201,7 +3201,7 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.back = function() {
-                $rootScope.slide = 'slide-right';
+                $rootScope.pageClass = 'left-to-right';
                 history.back();
             };
         });
