@@ -2752,6 +2752,7 @@ angular.module('myApp.controllers', []).
             $scope.typeList = [];
             $scope.type = null;
             $scope.step2Blocked = false;
+            $scope.typesLoaded = false;
             
             /*
              * check if extern_step2 is false
@@ -2778,7 +2779,6 @@ angular.module('myApp.controllers', []).
              */
             var typePromises = [];
             $scope.locations = [];
-            $scope.typesLoaded = true;
             if ($rootScope.newAppointment.unit === null) {
                 $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
                 for (var i = 0; i < $rootScope.newAppointment.group.Detail.UnitAndDep.length; i++) {
