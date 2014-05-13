@@ -2752,6 +2752,7 @@ angular.module('myApp.controllers', []).
             $scope.typeList = [];
             $scope.type = null;
             $scope.step2Blocked = false;
+            
             /*
              * check if extern_step2 is false
              * 
@@ -2777,6 +2778,7 @@ angular.module('myApp.controllers', []).
              */
             var typePromises = [];
             $scope.locations = [];
+            $scope.typesLoaded = false;
             if ($rootScope.newAppointment.unit === null) {
                 $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
                 for (var i = 0; i < $rootScope.newAppointment.group.Detail.UnitAndDep.length; i++) {
@@ -2814,7 +2816,6 @@ angular.module('myApp.controllers', []).
              */
             $q.all(typePromises)
                     .then(function(responses) {
-                        $scope.typesLoaded = true;
                         var json;
                         for (var i = 0; i < responses.length; i++) {
                             json = parseJson(responses[i].data);
@@ -2854,6 +2855,7 @@ angular.module('myApp.controllers', []).
                                     $scope.type = $scope.typeList[0];
                             }
                         }
+                        $scope.typesLoaded = true;
                     }, error);
 
             /**
