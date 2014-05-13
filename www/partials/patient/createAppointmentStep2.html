@@ -17,6 +17,7 @@
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentType')}}*</b></p>
                     </td>
                     <td>
+                        {{typesLoaded}}
                         <span ng-show="typesLoaded">
                             <select class="form-control" ng-disabled="step2Blocked" name="typeSelect" ng-model="type.switch" ng-options="type as type.type_title for type in typeList" required>
                                 <option value=""> - {{getLocalizedString('createAppointmentStep2SelectType')}} - </option>
