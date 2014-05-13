@@ -5,7 +5,6 @@
 }
 
 body {
-    -webkit-backface-visibility: hidden;
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent selecting text */
@@ -518,28 +517,26 @@ ul li{
 .left-to-right.ng-enter{
     -webkit-animation: slideInLeft 0.5s both ease-in; 
     animation: slideInLeft 0.5s both ease-in;
-    z-index: 1053;
 }
 
 .left-to-right.ng-leave{
     -webkit-animation: slideOutRight 0.5s both ease-in; 
     animation: slideOutRight 0.5s both ease-in; 
-    z-index: 1054;
     /*-webkit-animation: slideOutLeft 0.5s both ease-in;*/ 
 }
 
 .right-to-left.ng-enter{
     -webkit-animation: slideInRight 0.5s both ease-in; 
     animation: slideInRight 0.5s both ease-in; 
-    z-index: 1053;
 }
 
 .right-to-left.ng-leave{
     -webkit-animation: slideOutLeft 0.5s both ease-in;
     animation: slideOutLeft 0.5s both ease-in;
-    z-index: 1054;
     /*-webkit-animation: slideOutRight 0.5s both ease-in;*/ 
 }
+.left-to-right.ng-enter.ng-enter-active { display:block; }
+.right-to-left.ng-enter.ng-enter-active { display:block; }
 
 @media screen and (max-width: 768px) {
     .title{
@@ -575,8 +572,4 @@ ul li{
 
 .hideDiv {
     display: none !important;
-}
-
-.ui-page {
-    -webkit-backface-visibility: hidden;
 }
