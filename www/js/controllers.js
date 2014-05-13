@@ -2814,6 +2814,7 @@ angular.module('myApp.controllers', []).
              */
             $q.all(typePromises)
                     .then(function(responses) {
+                        $scope.typesLoaded = true;
                         var json;
                         for (var i = 0; i < responses.length; i++) {
                             json = parseJson(responses[i].data);
@@ -2882,6 +2883,8 @@ angular.module('myApp.controllers', []).
              * The properties 'type', 'locations' and 'reservationInfo' of the variable $rootScope.newAppointment are set
              * the user is redirected to the next step
              * 
+             * a request to get the questions from is also set in 'questionPromise' and will be handled in step 5
+             * 
              * @returns {undefined}
              */
             $scope.next = function(formValid) {
@@ -2893,6 +2896,11 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.locations.push($scope.locations[i]);
                     }
                     $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
+                    $rootScope.questionPromise = hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.unit.Header.unit_id, $rootScope.newAppointment.type.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
+                    $rootScope.questionPromise.then(function(response){
+                        var json = parseJson(response.data);
+                        console.log(json);
+                    });
                     $rootScope.pageClass = 'right-to-left';
                     console.log($rootScope.newAppointment);
                     $location.path('/patient/step3');
