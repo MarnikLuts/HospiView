@@ -18,6 +18,10 @@ body {
     padding: 0 0 0.5em;
 }
 
+.hiddenBlock{
+    display: none;
+}
+
 .menu:before {
     content: "[";
 }

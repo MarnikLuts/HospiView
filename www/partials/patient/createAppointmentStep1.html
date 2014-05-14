@@ -10,8 +10,9 @@
     <div class="well well-sm">
         <form name="step1Form" novalidate>
             <h4>{{getLocalizedString('createAppointmentStep1Info')}}</h4>
+            <div ng-show="dataLoading" class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></div> 
             <table class="appointmentFormTable">
-                <tr ng-show="currentServers.length>1" >
+                <tr  ng-show="currentServers.length>1" >
                     <td>
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep1Server')}}</b></p>
                     </td>
@@ -21,10 +22,10 @@
                                 <option value="">- {{ getLocalizedString('loginServerSelectDefault')}} -</option>
                             </select>
                         </div>
-                        <div ng-show="dataLoading" class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></div> 
+                        
                     </td>
                 </tr>
-                <tr ng-show="serverSelected">
+                <tr id="unitSelectRow" class="hiddenBlock">
                     <td>
                         <p class="formLabel"><b>{{getLocalizedString('doctor')}}</b></p>
                     </td>
@@ -36,11 +37,11 @@
                         </div>
                     </td>
                 </tr>
-                <tr  ng-show="serverSelected">
+                <tr id="orRow" class="hiddenBlock">
                     <td>- {{getLocalizedString('or')}} -</td>
                     <td></td>
                 </tr>
-                <tr  ng-show="serverSelected" >
+                <tr id="groupSelectRow" class="hiddenBlock">
                     <td>
                         <p class="formLabel"><b>{{getLocalizedString('department')}}</b></p>
                     </td>
