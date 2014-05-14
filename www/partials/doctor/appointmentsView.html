@@ -48,7 +48,7 @@
     <div ng-swipe-left="getNextDay()" ng-swipe-right="getPreviousDay()" class="well well-sm widthPercent AppointmentsListFill">
         <div class="AcceleratedList btn-group-vertical list list_overflow_y_100 list-unstyled">
             <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-style="style(reservation)" ng-repeat="reservation in filteredReservations = (reservations| orderBy:'time_from' | filter:{the_date:date, hosp_short_name:serverFilter.hosp_short_name} | filter: unitAndDepFilterFunction)" ng-click="details(reservation)" >
-                <div class=".container-fluid">
+                <div class="container-fluid">
                     <div class="row">
                         &nbsp;
                         <div class="col-xs-2 reservationHour">

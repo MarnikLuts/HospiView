@@ -141,6 +141,9 @@ var frenchStrings = {
         
         //patient/mainmenu
         notAvailableInOffline: "Cette fonction n'est pas disponible sans connection.",
+
+        //patient/patientAppointmentsView
+        patientAppointmentsViewNoReservations: "Vous n'avez pas de réservations les 14 jours suivant.",
         
         //patient/step1
         createAppointmentStep1Server: "Hôpital",

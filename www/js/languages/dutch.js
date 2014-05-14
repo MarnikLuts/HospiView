@@ -142,6 +142,9 @@ var dutchStrings = {
         //patient/mainmenu
         notAvailableInOffline: "Deze functie is niet beschikbaar in offline mode.",
         
+        //patient/patientAppointmentsView
+        patientAppointmentsViewNoReservations: "U heeft de volgende 14 dagen geen afspraken.",
+        
         //patient/step1
         createAppointmentStep1Server: "Ziekenhuis",
         createAppointmentStep1SelectDoctor: "Selecteer een dokter",

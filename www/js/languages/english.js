@@ -142,6 +142,9 @@ var englishStrings = {
         //patient/mainmenu
         notAvailableInOffline: "This feature is not available in offline mode.",
         
+        //patient/patientAppointmentsView
+        patientAppointmentsViewNoReservations: "You don't have any appointments the next 14 days.",
+    
         //patient/step1
         createAppointmentStep1Server: "Hospital",
         createAppointmentStep1SelectDoctor: "Select a doctor",

@@ -1,22 +1,57 @@
 <nav class="navbar navbar-default" role="navigation" ng-controller="BackButtonCtrl">
     <button type="submit" class="btn btn-sm-back" ng-click="back()">
         <span class="glyphicon glyphicon-chevron-left"></span>
-        {{ getLocalizedString('back')}}
+        {{getLocalizedString('back')}}
     </button>
-    <div class="title">{{ getLocalizedString('appointmentsViewReservations')}}
+    <div class="title">{{getLocalizedString('appointmentsViewReservations')}}
         <div class="connection-status">
             <span class="glyphicon glyphicon-signal" ></span>  <span ng-show="isOffline" ng-class="{positionRelative: isOffline}" class="glyphicon glyphicon-remove"></span>
         </div>
     </div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
-<div class="col-md-6">
-    <ul class="list list_overflow_y_500 list-unstyled">
+<div class="col-md-12">
+    <div class="well well-sm">
+        <h4>{{getLocalizedString('createAppointmentGreeting')}}, {{user}}.</h4>
+    </div>
+</div>
+<div class="well well-sm widthPercent AppointmentsListFillPatient">
+    <div class="AcceleratedList list list_overflow_y_100 list-unstyled">
+        <div ng-repeat="date in dates">
+            <h3>{{date}}</h3>
+            <div class="text-left" ng-repeat="reservation in reservationList | filter:{the_date:date}">
+                <h4>{{reservation.time_from}} - {{reservation.title}}</h4>
+                <div class="patientAppointment" ng-click="details()">
+                    <div><b>{{getLocalizedString('newFunctionDoctor')}}:</b> {{reservation.unit_name}}</div>
+                    <div><b>{{getLocalizedString('settingsDepartment')}}: </b> {{reservation.dep_name}}</div>
+                    <div><b>{{getLocalizedString('createAppointmentStep1Server')}}: </b> {{reservation.hosp_full_name}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="well well-sm widthPercent">
+    <ul class="AcceleratedList list list_overflow_y_100 list-unstyled">
         <li class="text-left" ng-repeat="reservation in reservationList| orderBy:'the_date'">
             <h3>{{reservation.the_date}}</h3>
-            <div class="btn-group btn-group-justified form-group">
-                <div class="text-left btn-default btn-lg" ng-click="details()">
-                    <div class="float-right"><button class="btn btn-danger btn-lg" ng-click="delete(appointment.id)"><span class="glyphicon glyphicon-remove"></span></button></div>         
+                <div ng-click="details()">
+                    <div class="text-left"><b>Tijdstip:</b> {{reservation.time_from}}</div>
+                    <div class="text-left"><b>Dokter:</b> {{reservation.unit_name}}</div>
+                    <div class="text-left"><b>Locatie:</b> {{reservation.location}}</div>
+                    <div class="text-left"><b>Type afspraak:</b> {{reservation.type}}</div>
+                    <div class="text-left"><b>Extra informatie:</b> {{reservation.the_comment}}</div>
+                    <div class="text-left"><b>Geboekt door:</b> {{reservation.name}}</div>
+                </div>
+        </li>
+    </ul>
+</div>-->
+<!--
+    <div class="well well-sm widthPercent">
+        <div class="AcceleratedList list list_overflow_y_100 list-unstyled">
+            <div ng-repeat="reservation in reservationList|orderBy:'the_date'">
+                <h3>{{reservation.the_date}}</h3>
+                <div class ="text-left" ng-click="details()">
                     <div class="text-left"><b>Tijdstip:</b> {{reservation.time_from}}</div>
                     <div class="text-left"><b>Dokter:</b> {{reservation.unit_name}}</div>
                     <div class="text-left"><b>Locatie:</b> {{reservation.location}}</div>
@@ -25,6 +60,18 @@
                     <div class="text-left"><b>Geboekt door:</b> {{reservation.name}}</div>
                 </div>
             </div>
-        </li>
-    </ul>
+        </div>
+        <div class="alert alert-info" ng-hide="reservationList.length"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('patientAppointmentsViewNoReservations')}}</div>
+    </div>-->
+
+<div class="nav navbar-fixed-bottom">
+    <div class="text-center">
+        <button type="submit" class="btn btn-sm-settings" ng-click="createAppointment()">
+            <span class="glyphicon glyphicon-pencil"></span>
+            <!--{{getLocalizedString('createAppointmentRequest')}}-->
+        </button>
+        <button class="btn btn-sm-settings" ng-click="settings()">
+            <span class="glyphicon glyphicon-cog"></span>
+        </button>
+    </div>
 </div>

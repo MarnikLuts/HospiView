@@ -407,6 +407,17 @@ ul li{
     bottom: 50px;
 }
 
+.AppointmentsListFillPatient {
+    position: absolute;
+    top: 160px;
+    bottom: 50px;
+}
+
+.patientAppointment {
+    padding-left: 15px;
+    font-size: 1.4em;
+}
+
 .btn-appointments-filter{
     height: 50px;
     position: absolute;
