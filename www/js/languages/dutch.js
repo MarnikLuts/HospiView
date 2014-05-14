@@ -144,6 +144,8 @@ var dutchStrings = {
         
         //patient/patientAppointmentsView
         patientAppointmentsViewNoReservations: "U heeft de volgende 14 dagen geen afspraken.",
+        patientAppointmentsViewType: "Type afspraak",
+        patientAppointmentsViewUnit: "Bij",
         
         //patient/step1
         createAppointmentStep1Server: "Ziekenhuis",

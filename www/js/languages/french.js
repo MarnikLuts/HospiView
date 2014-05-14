@@ -144,6 +144,8 @@ var frenchStrings = {
 
         //patient/patientAppointmentsView
         patientAppointmentsViewNoReservations: "Vous n'avez pas de réservations les 14 jours suivant.",
+        patientAppointmentsViewType: "Type de réservation",
+        patientAppointmentsViewUnit: "Bij",
         
         //patient/step1
         createAppointmentStep1Server: "Hôpital",

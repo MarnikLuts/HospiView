@@ -15,10 +15,10 @@
     <div class="AcceleratedList patientAppointment">
         <table class="table reservationTable">
             <tr>
-                <th>Datum</th>
-                <th>Tijdstip</th>
-                <th>Type afspraak</th>
-                <th>Dokter</th>
+                <th>{{getLocalizedString('patientAppointmentsViewDate')</th>
+                <th>{{getLocalizedString('patientAppointmentsViewTijdstip')</th>
+                <th>{{getLocalizedString('patientAppointmentsViewType')Type afspraak</th>
+                <th>{{getLocalizedString('patientAppointmentsViewUnit')Dokter</th>
             </tr>
             <tr ng-repeat="reservation in reservationList| orderBy:'the_date'" >
                 <td>

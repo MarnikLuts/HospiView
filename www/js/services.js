@@ -596,7 +596,7 @@ angular.module('myApp.services', []).
          * @returns {unresolved}
          */
         initRemoteLanguageStrings: function(hosp_url) {
-            var listOfPidsSids = "-99,44,48;92,75,90;93,55,56,57,60;94,10;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
+            var listOfPidsSids = "-99,44,48;92,7,75,90;93,55,56,57,60;94,10;112,13;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
                     promises = [],
                     defer = $q.defer();
             
@@ -655,7 +655,10 @@ angular.module('myApp.services', []).
                             createAppointmentStep2ExtraInfo: getStringByPidAndSid(languageString, 214, 5),
                             createAppointmentPrevious: getStringByPidAndSid(languageString, 214, 6),
                             
-                            createAppointmentStep3: getStringByPidAndSid(languageString, 206, 1)
+                            createAppointmentStep3: getStringByPidAndSid(languageString, 206, 1),
+                            
+                            patientAppointmentsViewDate: getStringByPidAndSid(languageString, 92, 7),
+                            patientAppointmentsViewTijdstip: getStringByPidAndSid(languageString, 112, 13)
                         };
 
                         switch (j) {
