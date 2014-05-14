@@ -2755,6 +2755,9 @@ angular.module('myApp.controllers', []).
             $scope.typesLoaded = false;
             $scope.displayError = false;
             
+            $scope.selectTest = function(){
+                console.log($scope.test);
+            }
             /*
              * check if extern_step2 is false
              * 
