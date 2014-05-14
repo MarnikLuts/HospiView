@@ -232,11 +232,11 @@ angular.module('myApp.controllers', []).
                 if (localStorage.getItem('nlRemoteDict') === null || localStorage.getItem('nlRemoteDict') === null || localStorage.getItem('nlRemoteDict') === null)
                     languageFactory.initRemoteLanguageStrings($rootScope.currentServers[0].hosp_url)
                             .then(function() {
-                                $location.path("/patient/appointmentsView");
+                                $location.path("/patient/mainmenu");
                             }, error);
                 else {
                     languageFactory.initLocalLanguageStrings();
-                    $location.path("/patient/appointmentsView");
+                    $location.path("/patient/mainmenu");
                 }
 
             }
@@ -515,7 +515,7 @@ angular.module('myApp.controllers', []).
                                     break;
                                 case '2':
                                     languageFactory.initLocalLanguageStrings();
-                                    $location.path('/patient/appointmentsView');
+                                    $location.path('/patient/mainmenu');
                                     break;
                             }
                         }
@@ -2343,7 +2343,7 @@ angular.module('myApp.controllers', []).
                             console.log($rootScope.enRemoteDict);
                             console.log($rootScope.frRemoteDict);
                             $rootScope.pageClass = 'right-to-left';
-                            $location.path("/patient/appointmentsView");
+                            $location.path("/patient/mainmenu");
                         }, error);
             }
 
@@ -2595,17 +2595,9 @@ angular.module('myApp.controllers', []).
                     reservationPromises = [];
             searchEnd.setDate(searchStart.getDate() + 14);
 
-            var getDates = function(array, key) {
-                var dates = [];
-                for (var i = 0; i < array.length; i++) {
-                    var date = array[i][key];
-                    if (dates.indexOf(date) == -1) {
-                        dates.push(date);
-                    }
-                }
-                return dates;
+            $scope.formatDate = function(date){
+                return formatShowDate(date, $rootScope.languageID);
             };
-            
 //            $scope.reservationList = [];
 //            for(var s=0;s<$rootScope.currentServers.length;s++){
 //                var server = $rootScope.currentServers[s];
@@ -2624,6 +2616,10 @@ angular.module('myApp.controllers', []).
 //                        }
 //                    }
 //                }, error);
+//
+//            function error(data) {
+//                console.log(data);
+//            }
             
             //TEST VALUES
             $scope.reservationList = [
@@ -2635,41 +2631,13 @@ angular.module('myApp.controllers', []).
                 {id: 6, the_date: '2014-05-08', time_from: '13:30', time_till: '14:00', title: 'Reservation6', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'}
             ];
 
-            $scope.dates = getDates($scope.reservationList, 'the_date');
-            
-            function error(data) {
-                console.log(data);
-            }
-
-            
 
             /**
              * User gets logged out
              */
-            $scope.logout = function() {
+            $scope.back = function() {
                 $rootScope.pageClass = 'left-to-right';
-                $location.path('/login');
-            };
-
-            /**
-             * User gets redirected to a patient's settings page
-             * 
-             */
-            $scope.settings = function() {
-                $rootScope.pageClass = 'right-to-left';
-                $location.path('/settingsPatient/default');
-            };
-
-            /**
-             * User gets redirected to step 1 of creating a new appointment
-             */
-            $scope.createAppointment = function() {
-                if ($rootScope.isOffline) {
-                    alert($rootScope.getLocalizedString('notAvailableInOffline'));
-                } else {
-                    $rootScope.pageClass = 'right-to-left';
-                    $location.path('patient/step1');
-                }
+                $location.path('/mainmenu');
             };
         }).
         controller("SettingsPatientCtrl", function($rootScope, $scope, $location) {
@@ -2678,7 +2646,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.save = function() {
                 $rootScope.pageClass = 'left-to-right';
-                $location.path('/patient/appointmentsView');
+                $location.path('/patient/mainmenu');
             };
         }).
         controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location) {
@@ -3187,9 +3155,11 @@ angular.module('myApp.controllers', []).
             width = window.innerWidth;
             if (width <= 768) {
                 $scope.days = getDayNamesShort($rootScope.languageID);
+                $scope.$apply();
             }
             else {
                 $scope.days = getDayNames($rootScope.languageID);
+                $scope.$apply();
             }
 
             /**
@@ -3242,7 +3212,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.end = function() {
                 $rootScope.pageClass = 'left-to-right';
-                $location.path('/patient/appointmentsView');
+                $location.path('/patient/mainmenu');
             };
         }).
         controller("BackButtonCtrl", function($rootScope, $scope) {

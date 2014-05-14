@@ -168,6 +168,9 @@ body {
 .height60Percent{
     height: 60%;
 }
+.height50Percent{
+    height: 50%;
+}
 .height20Percent{
     height: 20%;
 }
@@ -229,6 +232,7 @@ body {
 }
 
 .reservationHour{
+    text-align: left;
     font-size: 0.7em;
 }
 
@@ -409,13 +413,16 @@ ul li{
 
 .AppointmentsListFillPatient {
     position: absolute;
-    top: 160px;
-    bottom: 50px;
+    top: 80px;
+    bottom: 5px;
 }
 
 .patientAppointment {
-    padding-left: 15px;
     font-size: 1.4em;
+}
+
+.patientAppointment table tr td{
+    padding: 0px 10px;
 }
 
 .btn-appointments-filter{
@@ -581,4 +588,13 @@ ul li{
 
 .hideDiv {
     display: none !important;
+}
+
+.mainMenuButtonArea{
+    position: absolute;
+    padding-right: 15px;
+    padding-left: 15px;
+    width: 100%;
+    top: 170px;
+    bottom: 70px;
 }
