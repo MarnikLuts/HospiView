@@ -8,7 +8,7 @@
 </nav>
 <div class="col-md-12">
     <div class="well well-sm">
-        <h4>{{getLocalizedString('createAppointmentStep2Info1')}} <b>{{unitOrGroupName}}</b> {{getLocalizedString('createAppointmentStep2Info2')}}</h4>
+        <h4>{{getLocalizedString('createAppointmentStep2Info1')}} <b>{{newAppointment.unitOrGroupName}}</b> {{getLocalizedString('createAppointmentStep2Info2')}}</h4>
         <br>
         <form name="step2Form" novalidate>
             <table class="appointmentFormTable">
@@ -18,7 +18,7 @@
                     </td>
                     <td>
                         <span class="has-spinner" ng-hide="typesLoaded"><span class="glyphicon glyphicon-refresh"></span></span>
-                        <select class="form-control" ng-disabled="step2Blocked || !typesLoaded" name="typeSelect" ng-model="type" ng-options="type as type.type_title for type in typeList" required>
+                        <select class="form-control" ng-disabled="step2Blocked || !typesLoaded" name="typeSelect" ng-model="type" ng-options="type.type_title for type in typeList" required>
                             <option value=""> - {{getLocalizedString('createAppointmentStep2SelectType')}} - </option>
                         </select>
 

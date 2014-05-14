@@ -2649,7 +2649,7 @@ angular.module('myApp.controllers', []).
                 $location.path('/patient/mainmenu');
             };
         }).
-        controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location) {
+        controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location, $q) {
 
             $scope.serverSelected = false;
             /**
@@ -2671,36 +2671,79 @@ angular.module('myApp.controllers', []).
                     $scope.dataLoading = true;
                     hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, 1, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
-                                var json = parseJson(response.data);
+                                var json = parseJson(response.data),
+                                    defer = $q.defer();
                                 console.log(json);
                                 if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail != null) {
                                     $scope.unitList = json.UnitsAndDeps.Detail.Unit;
+                                    /*
+                                     * Filter out departments for which there aren't enough permissions
+                                     * if the unit has no more departments delete the unit
+                                     */
+                                    var unitAmount = $scope.unitList.length;
+                                    while(unitAmount--){
+                                        filterDepartments($scope.unitList[unitAmount]);
+                                        if($scope.unitList[unitAmount].Detail.Dep.length==0){
+                                            $scope.unitList.splice(unitAmount, 1);
+//                                            console.log("unit deleted, no departments");
+                                        }
+                                    }
+                                    
                                     if ($scope.unitList.length == 1)
                                         $scope.unit = $scope.unitList[0];
                                 }
-                                unitsLoaded = true;
-                                if (groupsLoaded)
-                                    $scope.dataLoading = false;
-                            }, error);
+                                defer.resolve();
+                                return defer.promise;
+                            }, error).then(function(){
+                                /**
+                                * The group list (blue groups) is requested from the server
+                                * if there are any units left after permission filtering
+                                * 
+                                * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
+                                * If there is only one option, that option is automatically selected
+                                */
+                               if($scope.unitList.length!=0){
+                               hospiviewFactory.getUnitDepGroups($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
+                                       .then(function(response) {
+                                           var json = parseJson(response.data);
+                                           console.log(json);
+                                           if (json.UnitDepGroups.Header.StatusCode == 1 && json.UnitDepGroups.Detail != null) {
+                                               $scope.groupList = json.UnitDepGroups.Detail.Group;
 
-                    /**
-                     * The group list (blue groups) is requested from the server
-                     * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
-                     * If there is only one option, that option is automatically selected
-                     */
-                    hospiviewFactory.getUnitDepGroups($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
-                            .then(function(response) {
-                                var json = parseJson(response.data);
-                                console.log(json);
-                                if (json.UnitDepGroups.Header.StatusCode == 1 && json.UnitDepGroups.Detail != null) {
-                                    $scope.groupList = json.UnitDepGroups.Detail.Group;
-                                    if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
-                                        $scope.group = $scope.groupList[0];
-                                }
-                                groupsLoaded = true;
-                                if (unitsLoaded)
-                                    $scope.dataLoading = false;
+                                               var groupAmount = $scope.groupList.length;
+                                               while(groupAmount--){
+                                                   var unitAndDepAmount = $scope.groupList[groupAmount].Detail.UnitAndDep.length;
+                                                   while(unitAndDepAmount--){
+                                                       var unit = getUnitByDepId($scope.groupList[groupAmount].Detail.UnitAndDep[unitAndDepAmount].unit_id, $scope.groupList[groupAmount].Detail.UnitAndDep[unitAndDepAmount].dep_id);
+                                                       //It's possible the unit has already been deleted
+                                                       if(unit){
+                                                           filterDepartments(unit);
+                                                           if(unit.Detail.Dep.length==0){
+                                                               $scope.groupList[groupAmount].Detail.UnitAndDep.splice(unitAndDepAmount, 1);
+//                                                               console.log("unit deleted, no departments");
+                                                           }
+                                                       }else{
+                                                           $scope.groupList[groupAmount].Detail.UnitAndDep.splice(unitAndDepAmount, 1);
+//                                                           console.log("unit deleted, does not exist in filtered unit list");
+                                                       }
+                                                   }
+                                                   if($scope.groupList[groupAmount].Detail.UnitAndDep.length==0){
+                                                       $scope.groupList.splice(groupAmount, 1);
+//                                                       console.log("group deleted, no units");
+                                                   }
+                                               }
+
+                                               if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
+                                                   $scope.group = $scope.groupList[0];
+                                            }
+                                            $scope.dataLoading = false;
+                                        }, error);
+                            }else{
+                                $scope.dataLoading = false;
+                            }
                             }, error);
+                        
+
                 }
             };
 
@@ -2718,42 +2761,87 @@ angular.module('myApp.controllers', []).
                 $scope.server = $rootScope.currentServers[0];
                 $scope.getUnitsAndGroups();
             }
+            
+            /**
+             * Used to convert a group format to unit format
+             * 
+             * '$scope.unitList' get looped through until the unit is found that has a derpartment with the given id
+             * a unit with only the derpartment with the given id is returned
+             * 
+             * @param {type} unit_id
+             * @param {type} dep_id
+             * @returns {unit}
+             */
+            function getUnitByDepId(unit_id, dep_id){
+                for(var i=0;i<$scope.unitList.length;i++){
+                    if($scope.unitList[i].Header.unit_id == unit_id){
+                        for(var j=0;j<$scope.unitList[i].Detail.Dep.length;j++){
+                            var dep = $scope.unitList[i].Detail.Dep[j];
+                            if(dep.dep_id == dep_id){
+                                var unit = JSON.parse(JSON.stringify($scope.unitList[i])); //this need to be done to prevent editing the original unit
+                                unit.Detail.Dep = [dep];
+                                return unit;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            /**
+             * Loops through every department from the given unit
+             * 
+             * if the perm value of the unit is 2 (no full control)
+             * and the perm value of the department is 4 (read only)
+             * it is not possible to make an appointment in that department so it is removed from the list
+             * 
+             * @param {type} unit
+             * @returns {undefined}
+             */
+            function filterDepartments(unit){
+                if(unit.Header.perm==="2"){
+                    var depAmount = unit.Detail.Dep.length;
+                    while(depAmount--){
+                        var dep = unit.Detail.Dep[depAmount];
+//                        console.log(unit.Header.perm + "-> " + dep.perm + " (" + dep.dep_id  + ")");
+                        if(dep.perm==="4"){
+                            unit.Detail.Dep.splice(depAmount, 1);
+//                            console.log("Deleted, permission denied");
+                        }
+//                        console.log("-----------");
+                    }
+                }
+            }
 
 
             /**
-             * The properties 'unit' and 'group' from the variable $rootScope.newAppointment are set 
+             * The properties 'server' and 'units' of the variable $rootScope.newAppointment are set 
              * the user is redirected to the next step
              * 
              * @returns {undefined}
              */
             $scope.next = function() {
-                /*
-                 * this loop is used to transfer important data from the unit list to the chosen group if a group is selected
-                 */
-                if ($scope.group !== null)
-                    for (var i = 0; i < $scope.unitList.length; i++) {
-                        for (var j = 0; j < $scope.unitList[i].Detail.Dep.length; j++) {
-                            for (var k = 0; k < $scope.group.Detail.UnitAndDep.length; k++) {
-                                if ($scope.unitList[i].Detail.Dep[j].dep_id === $scope.group.Detail.UnitAndDep[k].dep_id) {
-                                    $scope.group.Detail.UnitAndDep[k].location_name = $scope.unitList[i].Detail.Dep[j].location_name;
-                                    $scope.group.Detail.UnitAndDep[k].location_id = $scope.unitList[i].Detail.Dep[j].location_id;
-                                    $scope.group.Detail.UnitAndDep[k].globaltypes = $scope.unitList[i].Header.globaltypes;
-                                    $scope.group.Detail.UnitAndDep[k].the_online = $scope.unitList[i].Header.the_online;
-                                    $scope.group.Detail.UnitAndDep[k].extern_step2 = $scope.unitList[i].Header.extern_step2;
-                                    $scope.group.Detail.UnitAndDep[k].msg_extern_step2 = $scope.unitList[i].Detail.Dep[j].msg_extern_step2;
-                                    break;
-                                }
-                            }
-                        }
+                var units = [],
+                    unitOrGroupName;
+                //standardize data for next steps
+                if ($scope.group !== null){
+                    unitOrGroupName = $scope.group.Header.group_name;
+                    //every group gets converted to a unit and is put into the unit array
+                    for(var g=0;g<$scope.group.Detail.UnitAndDep.length;g++){
+                        units.push(getUnitByDepId($scope.group.Detail.UnitAndDep[g].unit_id, $scope.group.Detail.UnitAndDep[g].dep_id));
                     }
+                }else{
+                    unitOrGroupName = $scope.unit.Header.unit_name;
+                    //the one unit that is selected gets put into the array
+                    units = [$scope.unit];
+                }
                 $rootScope.pageClass = 'right-to-left';
                 $rootScope.newAppointment = null;
                 $rootScope.newAppointment = {
                     server: $rootScope.currentServers.indexOf($scope.server),
-                    unit: $scope.unit,
-                    group: $scope.group
+                    units: units,
+                    unitOrGroupName: unitOrGroupName
                 };
-
+                console.log(units);
                 $location.path('/patient/step2');
             };
 
@@ -2767,113 +2855,100 @@ angular.module('myApp.controllers', []).
             $scope.step2Blocked = false;
             $scope.typesLoaded = false;
             $scope.displayError = false;
-
-            $scope.selectTest = function() {
-                console.log($scope.test);
-            }
-            /*
-             * check if extern_step2 is false
-             * 
-             * if it's false, prevent requesting types from the server and set the standard type
-             */
-            if ($rootScope.newAppointment.group) {
-                //Handle group
-            } else {
-                if ($rootScope.newAppointment.unit.Header.extern_step2 === "0") {
-                    $scope.step2Blocked = true;
-                    $scope.type = {
-                        type_id: 0,
-                        type_title: $rootScope.newAppointment.unit.Header.stitle
-                    };
-                    $scope.typeList.push($scope.type);
-                }
-            }
-
+            
             /**
              * The locations from the unit or group from step 1 are put into a list
              * 
              * The types associated with this unit or group are requested from the server
              */
-            var typePromises = [];
+            
             $scope.locations = [];
-            if ($rootScope.newAppointment.unit === null) {
-                $scope.unitOrGroupName = $rootScope.newAppointment.group.Header.group_name;
-                for (var i = 0; i < $rootScope.newAppointment.group.Detail.UnitAndDep.length; i++) {
-                    var UnitAndDep = $rootScope.newAppointment.group.Detail.UnitAndDep[i];
+            for (var i = 0; i < $rootScope.newAppointment.units.length; i++) {
+                var unit = $rootScope.newAppointment.units[i];
+                for(var j = 0; j < unit.Detail.Dep.length;j++){
+                    var dep = unit.Detail.Dep[j];
                     $scope.locations.push({
                         checked: true,
-                        location_id: UnitAndDep.location_id,
-                        location_name: UnitAndDep.location_name
-                    });
-                    if (!$scope.step2Blocked)
-                        typePromises.push(hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, UnitAndDep.unit_id, UnitAndDep.dep_id, UnitAndDep.globaltypes, UnitAndDep.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
-                }
-            } else {
-                $scope.unitOrGroupName = $rootScope.newAppointment.unit.Header.unit_name;
-                $scope.extraInfo = "";
-                for (var i = 0; i < $rootScope.newAppointment.unit.Detail.Dep.length; i++) {
-                    var Dep = $rootScope.newAppointment.unit.Detail.Dep[i];
-                    $scope.locations.push({
-                        checked: true,
-                        location_id: Dep.location_id,
-                        location_name: Dep.location_name
-                    });
-                    $scope.extraInfo += Dep.msg_extern_step2 + "\n";
-                    if (!$scope.step2Blocked)
-                        typePromises.push(hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.unit.Header.unit_id, Dep.dep_id, $rootScope.newAppointment.unit.Header.globaltypes, $rootScope.newAppointment.unit.Header.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
+                        location_id: dep.location_id,
+                        location_name: dep.location_name
+                    }); 
                 }
             }
-
-            /**
-             * When all the requests to the server are resolved, the select box for types gets filled
-             * If there is only one option, that option is selected automatically.
+            
+            var unitTypesRequested = 0,
+                depTypeRequested = 0;
+            getTypes();
+            /*
+             * gets called by itself until every department of every unit in '$rootScope.newAppointment.units' has done a request
+             * this is done in this manner to be able to add the unit_id and dep_id to the type variable to simplify further steps
+             * if the amount of requests is lower than the number of departments another request is made until all types for every department are returned
              * 
-             * Also adds 3 arrays to the type model. These arrays contain the ids needed
-             * to do the proposal requests.
+             * @param {number} unit_id
+             * @param {number} dep_id
+             * @returns {undefined}
              */
-            $q.all(typePromises)
-                    .then(function(responses) {
-                        var json;
-                        for (var i = 0; i < responses.length; i++) {
-                            json = parseJson(responses[i].data);
-                            console.log(json);
-                            if (json.TypesOnUnit.Header.StatusCode == 1) {
-                                for (var j = 0; j < json.TypesOnUnit.Detail.Type.length; j++) {
-                                    var checkPresent = false;
-                                    for (var k = 0; k < $scope.typeList.length; k++) {
-                                        if ($scope.typeList[k].type_id === json.TypesOnUnit.Detail.Type[j].type_id) {
-                                            $scope.typeList[k].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
-                                            if (!$rootScope.newAppointment.unit) {
-                                                $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
-                                                $scope.typeList[k].dep_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].dep_id);
-                                            } else {
-                                                $scope.typeList[k].unit_id_array.push($rootScope.newAppointment.unit.Header.unit_id);
-                                                $scope.typeList[k].dep_id_array.push($rootScope.newAppointment.unit.Detail.Dep[i].dep_id);
-                                            }
-                                            checkPresent = true;
+            function getTypes(){
+                var unit_id = $rootScope.newAppointment.units[unitTypesRequested].Header.unit_id,
+                    dep_id = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].dep_id,
+                    duplicate = false;
+                hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, unit_id, dep_id, $rootScope.newAppointment.units[unitTypesRequested].Header.globaltypes, $rootScope.newAppointment.units[unitTypesRequested].Header.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url)
+                    .then(function(response){
+                        var json = parseJson(response.data);
+                        if(json.TypesOnUnit.Header.StatusCode==="1"){
+                            console.log(unit_id + " " + dep_id);
+                            
+                            //Status is OK
+                            if(json.TypesOnUnit.Detail){
+                                //Response contains a Detail variable
+                                
+                                //if there's only one type convert it to an array with a single element
+                                if(json.TypesOnUnit.Header.TotalRecords==="1")
+                                    json.TypesOnUnit.Detail.Type = [json.TypesOnUnit.Detail.Type];
+                                
+                                /*
+                                 * populate $scope.typeList while omitting duplicate values
+                                 * 
+                                 * if there is a duplicate, it will not be added to the list, 
+                                 * but the unit_id, type_id and dep_id are put into the 'Type' variable that's already been added
+                                 * 
+                                 * the unit_id, type_id and dep_id fields are arrays that hold more than one value if there was a duplicate
+                                 * these fields must always have the same length for each type to successfully retrieve data in the next step
+                                 * 
+                                 */
+                                for(var t=0;t<json.TypesOnUnit.Detail.Type.length;t++){
+                                    duplicate=false;
+                                    json.TypesOnUnit.Detail.Type[t].dep_id = [dep_id];
+                                    json.TypesOnUnit.Detail.Type[t].unit_id = [unit_id];
+                                    json.TypesOnUnit.Detail.Type[t].type_id = [json.TypesOnUnit.Detail.Type[t].type_id];
+                                    for(var u=0;u<$scope.typeList.length;u++){
+                                        if(json.TypesOnUnit.Detail.Type[t].type_title===$scope.typeList[u].type_title){
+                                            duplicate=true;
+                                            console.log('duplicate');
+                                            $scope.typeList[u].dep_id.push(json.TypesOnUnit.Detail.Type[t].dep_id[0]);
+                                            $scope.typeList[u].unit_id.push(json.TypesOnUnit.Detail.Type[t].unit_id[0]);
+                                            $scope.typeList[u].type_id.push(json.TypesOnUnit.Detail.Type[t].type_id[0]);
+                                            break;
                                         }
                                     }
-                                    if (!checkPresent) {
-                                        json.TypesOnUnit.Detail.Type[j].type_id_array = [];
-                                        json.TypesOnUnit.Detail.Type[j].unit_id_array = [];
-                                        json.TypesOnUnit.Detail.Type[j].dep_id_array = [];
-                                        json.TypesOnUnit.Detail.Type[j].type_id_array.push(json.TypesOnUnit.Detail.Type[j].type_id);
-                                        if (!$rootScope.newAppointment.unit) {
-                                            json.TypesOnUnit.Detail.Type[j].unit_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id);
-                                            json.TypesOnUnit.Detail.Type[j].dep_id_array.push($rootScope.newAppointment.group.Detail.UnitAndDep[i].dep_id);
-                                        } else {
-                                            json.TypesOnUnit.Detail.Type[j].unit_id_array.push($rootScope.newAppointment.unit.Header.unit_id);
-                                            json.TypesOnUnit.Detail.Type[j].dep_id_array.push($rootScope.newAppointment.unit.Detail.Dep[i].dep_id);
-                                        }
-                                        $scope.typeList.push(json.TypesOnUnit.Detail.Type[j]);
-                                    }
+                                    if(!duplicate)
+                                        $scope.typeList.push(json.TypesOnUnit.Detail.Type[t]);
                                 }
-                                if ($scope.typeList.length == 1)
-                                    $scope.type = $scope.typeList[0];
                             }
                         }
-                        $scope.typesLoaded = true;
+
+                        depTypeRequested++;
+                        if(depTypeRequested==$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length){
+                            depTypeRequested=0;
+                            unitTypesRequested++;
+                        }
+                        if(unitTypesRequested!=$rootScope.newAppointment.units.length){
+                            getTypes();
+                        }else{
+                            $scope.typesLoaded = true;
+                            console.log($scope.typeList);
+                        }
                     }, error);
+            }
 
             /**
              * Function used to help with form validation
