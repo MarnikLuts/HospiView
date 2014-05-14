@@ -63,7 +63,7 @@ angular.module('myApp.services', []).
                  * @param {type} server_url
                  * @returns {unresolved}
                  */
-                getUnitAndDepList: function(uuid, server_url, The_Online) {
+                getUnitAndDepList: function(uuid, The_Online, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetUnitAndDepList&UUID=" + uuid + "&The_Online=" + The_Online + "&count=" + $rootScope.requestCounter);
                 },
