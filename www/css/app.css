@@ -515,24 +515,24 @@ ul li{
 }
 
 .left-to-right.ng-enter{
-    -webkit-animation: slideInLeft 0.8s both ease-in; 
-    animation: slideInLeft 0.8s both ease-in;
+    -webkit-animation: slideInLeft 0.5s both ease-in; 
+    animation: slideInLeft 0.5s both ease-in;
 }
 
 .left-to-right.ng-leave{
-    -webkit-animation: slideOutRight 0.8s both ease-in; 
-    animation: slideOutRight 0.8s both ease-in; 
+    -webkit-animation: slideOutRight 0.5s both ease-in; 
+    animation: slideOutRight 0.5s both ease-in; 
     /*-webkit-animation: slideOutLeft 0.5s both ease-in;*/ 
 }
 
 .right-to-left.ng-enter{
-    -webkit-animation: slideInRight 0.8s both ease-in; 
-    animation: slideInRight 0.8s both ease-in; 
+    -webkit-animation: slideInRight 0.5s both ease-in; 
+    animation: slideInRight 0.5s both ease-in; 
 }
 
 .right-to-left.ng-leave{
-    -webkit-animation: slideOutLeft 0.8s both ease-in;
-    animation: slideOutLeft 0.8s both ease-in;
+    -webkit-animation: slideOutLeft 0.5s both ease-in;
+    animation: slideOutLeft 0.5 both ease-in;
     /*-webkit-animation: slideOutRight 0.5s both ease-in;*/ 
 }
 
