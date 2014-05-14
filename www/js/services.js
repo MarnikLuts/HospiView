@@ -63,9 +63,9 @@ angular.module('myApp.services', []).
                  * @param {type} server_url
                  * @returns {unresolved}
                  */
-                getUnitAndDepList: function(uuid, server_url) {
+                getUnitAndDepList: function(uuid, server_url, The_Online) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetUnitAndDepList&UUID=" + uuid + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetUnitAndDepList&UUID=" + uuid + "&The_Online=" + The_Online + "&count=" + $rootScope.requestCounter);
                 },
                 /**
                  * Gets all unit groups for which the requesting user has permissions

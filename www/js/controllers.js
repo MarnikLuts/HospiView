@@ -2753,6 +2753,7 @@ angular.module('myApp.controllers', []).
             $scope.type = null;
             $scope.step2Blocked = false;
             $scope.typesLoaded = false;
+            $scope.displayError = false;
             
             /*
              * check if extern_step2 is false
@@ -2890,6 +2891,7 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.next = function(formValid) {
+                alert($scope.type);
                 if(formValid&&$scope.locationIsChecked()){
                     $rootScope.newAppointment.type = $scope.type;
                     $rootScope.newAppointment.locations = [];
