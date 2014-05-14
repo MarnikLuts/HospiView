@@ -283,7 +283,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.searchUnits = [];
                 console.log(server.uuid + " " + server.hosp_url);
 
-                hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
+                hospiviewFactory.getUnitAndDepList(server.uuid, 1, server.hosp_url)
                         .then(function(response) {
                             return dataFactory.setSearchUnits(response, server);
                         }, error).then(function(server) {
@@ -993,7 +993,7 @@ angular.module('myApp.controllers', []).
                 console.log("start " + index);
                 var server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
-                hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
+                hospiviewFactory.getUnitAndDepList(server.uuid, 1, server.hosp_url)
                         .then(function(response) {
                             return dataFactory.setSearchUnits(response, server);
                         }, error).then(function(server) {
@@ -1192,7 +1192,7 @@ angular.module('myApp.controllers', []).
             function getUnits(index) {
                 var selectedServer = $rootScope.currentServers[index];
 
-                hospiviewFactory.getUnitAndDepList(selectedServer.uuid, selectedServer.hosp_url).
+                hospiviewFactory.getUnitAndDepList(selectedServer.uuid, 1, selectedServer.hosp_url).
                         success(function(data) {
                             console.log("getunitanddep");
                             var json = parseJson(data);
@@ -1559,7 +1559,7 @@ angular.module('myApp.controllers', []).
                 console.log("start " + index);
                 var server = $rootScope.currentServers[index];
                 $rootScope.searchUnits = [];
-                hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
+                hospiviewFactory.getUnitAndDepList(server.uuid, 1, server.hosp_url)
                         .then(function(response) {
                             return dataFactory.setSearchUnits(response, server);
                         }, error).then(function(server) {
@@ -2410,7 +2410,7 @@ angular.module('myApp.controllers', []).
                 for (var i = 1; i < 4; i++) {
                     holidayPromise.push(hospiviewFactory.getPublicHolidays(i, year, '00', $scope.server.hosp_url));
                 }
-                UnitPromise = hospiviewFactory.getUnitAndDepList($scope.server.uuid, $scope.server.hosp_url);
+                UnitPromise = hospiviewFactory.getUnitAndDepList($scope.server.uuid, 1, $scope.server.hosp_url);
 
                 $q.all(holidayPromise).then(function(responses) {
                     dataFactory.setHolidays(responses);
@@ -2656,7 +2656,7 @@ angular.module('myApp.controllers', []).
                 if (angular.isDefined($scope.server)) {
                     $scope.serverSelected = true;
                     $scope.dataLoading = true;
-                    hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
+                    hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, 1, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
                                 console.log(json);
@@ -2753,6 +2753,7 @@ angular.module('myApp.controllers', []).
             $scope.type = null;
             $scope.step2Blocked = false;
             $scope.typesLoaded = false;
+            $scope.displayError = false;
             
             $scope.selectTest = function(){
                 console.log($scope.test);
@@ -2893,6 +2894,7 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.next = function(formValid) {
+                alert($scope.type);
                 if(formValid&&$scope.locationIsChecked()){
                     $rootScope.newAppointment.type = $scope.type;
                     $rootScope.newAppointment.locations = [];

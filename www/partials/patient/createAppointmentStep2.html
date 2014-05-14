@@ -51,7 +51,7 @@
                     </td>    
                 </tr>
             </table>
-            <div class="alert alert-danger" ng-show="displayError || type == null && step2Form.typeSelect.$dirty || !locationIsChecked()">
+            <div class="alert alert-danger" ng-show="displayError || type === null && step2Form.typeSelect.$dirty || !locationIsChecked()">
                 {{getLocalizedString('createAppointmentStep2Error')}}
             </div>
             <br>
