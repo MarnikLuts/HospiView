@@ -2651,23 +2651,18 @@ angular.module('myApp.controllers', []).
         }).
         controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location, $q) {
 
-            $scope.serverSelected = false;
             /**
              * The unit and department list is requested from the server
              * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
              * If there is only one option, that option is automatically selected
              */
             $scope.getUnitsAndGroups = function() {
-                var index = $rootScope.currentServers.indexOf($scope.server),
-                        unitsLoaded = false,
-                        groupsLoaded = false;
+                var index = $rootScope.currentServers.indexOf($scope.server);
                 $scope.unitList = null;
                 $scope.groupList = null;
                 $scope.unit = null;
                 $scope.group = null;
-                $scope.serverSelected = false;
                 if (angular.isDefined($scope.server)) {
-                    $scope.serverSelected = true;
                     $scope.dataLoading = true;
                     hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, 1, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
@@ -2737,9 +2732,16 @@ angular.module('myApp.controllers', []).
                                                    $scope.group = $scope.groupList[0];
                                             }
                                             $scope.dataLoading = false;
+                                            //Not using ng-show/ng-hide because iOS does not cooperate
+                                            $("#unitSelectRow").removeClass("hiddenBlock");
+                                            $("#groupSelectRow").removeClass("hiddenBlock");
+                                            $("#orRow").removeClass("hiddenBlock");
                                         }, error);
                             }else{
                                 $scope.dataLoading = false;
+                                $("#unitSelectRow").removeClass("hiddenBlock");
+                                $("#groupSelectRow").removeClass("hiddenBlock");
+                                $("#orRow").removeClass("hiddenBlock");
                             }
                             }, error);
                         
