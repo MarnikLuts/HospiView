@@ -11,27 +11,30 @@
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
 
-<div class="well well-sm widthPercent AppointmentsListFillPatient">
-    <div class="AcceleratedList btn-group-vertical list list_overflow_y_100 list-unstyled patientAppointment">
-        <div class="btn btn-default btn-reservation btn-group-justified" ng-repeat="reservation in reservationList| orderBy:'the_date'" >
-            <div class="container-fluid">
-                <div class="text-left">{{formatDate(reservation.the_date)}} - {{reservation.title}}</div>
-                <div class="row">
-                    <div class="col-xs-2 reservationHour">
-                        {{reservation.time_from}}
-                    </div>
-                    <div class="col-xs-3 reservationTitle">
-                        {{reservation.unit_name}}
-                    </div>   
-                    <div class="col-xs-3 reservationTitle">
-                        {{reservation.dep_name}}
-                    </div>
-                    <div class="col-xs-4 reservationTitle">
-                        {{reservation.hosp_full_name}}
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="AppointmentsListFillPatient">
+    <div class="AcceleratedList list_overflow_y_100 patientAppointment">
+        <table class="table reservationTable">
+            <tr>
+                <th>Datum</th>
+                <th>Tijdstip</th>
+                <th>Type afspraak</th>
+                <th>Dokter</th>
+            </tr>
+            <tr ng-repeat="reservation in reservationList| orderBy:'the_date'" >
+                <td>
+                    {{formatDate(reservation.the_date)}}
+                </td>
+                <td>
+                    {{reservation.time_from}}
+                </td>
+                <td>
+                    {{reservation.title}}
+                </td>
+                <td>
+                    {{reservation.unit_name}}
+                </td>
+            </tr>
+        </table>
         <div class="alert alert-info" ng-hide="reservationList.length"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('patientAppointmentsViewNoReservations')}}</div>
     </div>
 </div>
