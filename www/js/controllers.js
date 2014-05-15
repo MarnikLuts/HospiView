@@ -3037,12 +3037,12 @@ angular.module('myApp.controllers', []).
                 $scope.extraInfo = "";
                 for (var i = 0; i < $scope.locations.length; i++) {
                     if ($scope.type && $scope.type.location_id.indexOf($scope.locations[i].location_id) == -1) {
-                        console.log($scope.type.dep_id + " does not contain " + $scope.locations[i].dep_id);
+                        console.log($scope.type.location_id + " does not contain " + $scope.locations[i].location_id);
                         console.log($scope.locations[i].location_name + " is disabled");
                         $scope.locations[i].disabled = true;
                         $scope.locations[i].checked = false;
                     } else {
-                        console.log($scope.type.dep_id + " contains " + $scope.locations[i].dep_id);
+                        console.log($scope.type.location_id + " contains " + $scope.locations[i].location_id);
                         console.log($scope.locations[i].location_name + " is selected");
                         $scope.locations[i].disabled = false;
                         $scope.locations[i].checked = true;
@@ -3369,7 +3369,7 @@ angular.module('myApp.controllers', []).
                 $location.path('/patient/step2');
             };
         }).
-        controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location, hospiviewFactory) {
+        controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location, hospiviewFactory, $q) {
             /**
              * The fields firstname and lastname are automatically filled with known data
              */
