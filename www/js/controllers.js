@@ -3302,7 +3302,13 @@ angular.module('myApp.controllers', []).
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
                 console.log($rootScope.newAppointment.proposal);
                 $rootScope.pageClass = 'right-to-left';
-                var questions = hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.newAppointment.proposal.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
+                
+                /** 
+             * 15.05.2014 11:07  
+             * $rootScope.newAppointment.proposal.type_id is not set yet at this point in time.
+             * Should be set in step 2.
+             * */
+                $rootScope.questions = hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.newAppointment.proposal.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
                 
                 $q.all(questions).then(function(){
                     $location.path('/patient/step5');
@@ -3326,12 +3332,51 @@ angular.module('myApp.controllers', []).
              */
             $scope.firstname = $rootScope.user.split(" ")[0];
             $scope.lastname = $rootScope.user.split(" ")[1];
-
-            /** 
-             * 15.05.2014 11:07  
-             * $rootScope.newAppointment.proposal.type_id is not set yet at this point in time.
-             * Should be set in step 2.
-             * */
+            
+            var questionsJson = parseJson($rootScope.questions.data);
+            var appendString = '';
+            var inputType;
+            var extraQuestionsModelArray = [];
+            var extraQuestionType;
+            
+            for(var question in questionsJson.QuestionsOnUnit.Detail){
+                if(questionsJson.QuestionsOnUnit.Detail[question].question_type == 1){
+                    extraQuestionType = 'select' + question;
+                    inputType = '<select class="form-control" ng-model="' + extraQuestionType + '" type.type_title for type in typeList" required>'; 
+                    for(var choice in questionsJson.QuestionsOnUnit.Detail[question].PossibleValues)
+                        /*TODO: value="" has to be filled. Webservice is not ready yet at this point in time*/
+                        inputType = inputType + '<option value="">' + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '</option>';
+                    inputType = inputType + '</select>';
+                        
+                }
+                if(questionsJson.QuestionsOnUnit.Detail[question].question_type == 2){
+                    extraQuestionType = 'radio' + question;
+                    inputType = '<div class="btn-group">'; 
+                    for(var choice in questionsJson.QuestionsOnUnit.Detail[question].PossibleValues)
+                        inputType = inputType + '<label class="btn btn-default" ng-model="' + extraQuestionType 
+                            + '" btn-radio="' + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '">' 
+                            + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '</label>';
+                    inputType = inputType + '</div>';
+                }
+                if(questionsJson.QuestionsOnUnit.Detail[question].question_type == 3){
+                    extraQuestionType = 'input' + question;
+                    inputType = '<input type="text" class="form-control" ng-model="' + extraQuestionType + '" required/>';
+                }
+                    
+                if(questionsJson.QuestionsOnUnit.Detail[question].question_type == 4){
+                    extraQuestionType = 'textarea' + question;
+                    inputType = '<textarea style="resize: none;" class="form-control" rows="3" ng-model="' + extraQuestionType + '" required></textarea>';
+                }
+                
+                extraQuestionsModelArray.push(extraQuestionType);
+                
+                appendString = appendString + '<tr><td><p class="formLabel"><b>' 
+                        + questionsJson.QuestionsOnUnit.Detail[question].question_title 
+                        + '</b></p></td><td>' + inputType + '</td></tr>';
+            }
+            
+            var table = document.getElementById("questionTable");
+            table.append(appendString);
             
             /**
              * The properties 'firstname', 'lastname', 'phone', 'email' and 'dateOfBirth' are set
