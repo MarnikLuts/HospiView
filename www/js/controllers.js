@@ -2598,6 +2598,13 @@ angular.module('myApp.controllers', []).
             $scope.formatDate = function(date){
                 return formatShowDate(date, $rootScope.languageID);
             };
+            
+            console.log($rootScope.getLocalizedString('patientAppointmentsViewDate'));
+            console.log($rootScope.getLocalizedString('patientAppointmentsViewTijdstip'));
+            console.log($rootScope.getLocalizedString('patientAppointmentsViewType'));
+            console.log($rootScope.getLocalizedString('patientAppointmentsViewUnit'));
+            console.log($rootScope.getLocalizedString('doctor'));
+            
 //            $scope.reservationList = [];
 //            for(var s=0;s<$rootScope.currentServers.length;s++){
 //                var server = $rootScope.currentServers[s];
@@ -3082,16 +3089,6 @@ angular.module('myApp.controllers', []).
                 });
             }
 
-
-            $scope.removeProposals = function() {
-                for (var i = 0; i < $rootScope.newAppointment.type.type_id_array.length; i++) {
-                    hospiviewFactory.getProposalsRemoved(
-                            $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
-                            $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
-                            $rootScope.newAppointment.type.unit_id_array[i],
-                            $rootScope.newAppointment.type.dep_id_array[i]);
-                }
-            }
             /* test data */
             /*var proposals = [{proposal_id: '1', the_date: '2014-05-09', time_from: '07:00', time_till: '08:00', dep_id: '729', unit_id: '171'},
              {proposal_id: '2', the_date: '2014-05-09', time_from: '08:00', time_till: '09:00', dep_id: '729', unit_id: '171'},
@@ -3252,8 +3249,19 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('/patient/step5');
             };
+            
+            $scope.back = function() {
+                for (var i = 0; i < $rootScope.newAppointment.type.type_id_array.length; i++) {
+                    hospiviewFactory.getProposalsRemoved(
+                            $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
+                            $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
+                            $rootScope.newAppointment.type.unit_id_array[i],
+                            $rootScope.newAppointment.type.dep_id_array[i]);
+                }
+                $location.path('/patient/step2');
+            };
         }).
-        controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location) {
+        controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location, hospiviewFactory) {
             /**
              * The fields firstname and lastname are automatically filled with known data
              */
@@ -3273,6 +3281,16 @@ angular.module('myApp.controllers', []).
                     $rootScope.newAppointment.email = $scope.email;
                     $rootScope.newAppointment.dateOfBirth = $scope.dateOfBirth;
 
+                    hospiviewFactory.getAppointmentConfirmed($rootScope.currentServers[$rootScope.newAppointment.server].uuid, Proposal_Id, pName, pFirstName, pBDate, pGender, pTel1, pTel2, pAddress, Reg_No, pEmail, pMemo, pUnique_PID, pDoctor, pUnique_GPID, pReferring_doctor, pReferring_GPID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
+                    
+                    for (var i = 0; i < $rootScope.newAppointment.type.type_id_array.length; i++) {
+                    hospiviewFactory.getProposalsRemoved(
+                            $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
+                            $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
+                            $rootScope.newAppointment.type.unit_id_array[i],
+                            $rootScope.newAppointment.type.dep_id_array[i]);
+                    }
+                
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('patient/step6');
                 } else {

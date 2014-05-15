@@ -233,11 +233,15 @@ angular.module('myApp.services', []).
                  */
                 getProposalsRemoved: function(server_url, UUID, Unit_Id, Dep_Id){
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetProposalsRemoved=" + UUID + "&Unit_Id=" + Unit_Id + "" + Dep_Id + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetProposalsRemoved&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "" + Dep_Id + "&count=" + $rootScope.requestCounter);
                 },
                 getQuestionsOnUnit: function(UUID, Unit_Id, UnitType_Id, Language_Id, server_url){
                     $rootScope.requestCounter++;
                     return ($http.get(server_url + "method=GetQuestionsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&UnitType_Id=" + UnitType_Id + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter));
+                },
+                getAppointmentConfirmed: function(UUID, Proposal_Id, pName, pFirstName, pBDate, pGender, pTel1, pTel2, pAddress, Reg_No, pEmail, pMemo, pUnique_PID, pDoctor, pUnique_GPID, pReferring_doctor, pReferring_GPID, server_url){
+                    $rootScope.requestCounter++;                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                    return $http.get(server_url + "method=GetAppointmentConfirmed&UUID=" + UUID + "&Proposal_Id=" + Proposal_Id + "&pName=" + pName + "&pFirstName=" + pFirstName + "&pBDate=" + pBDate + "&pGender=" + pGender + "&pTel1=" + pTel1 + "&pTel2=" + pTel2 + "&pAddress=" + pAddress + "&Reg_No=" + Reg_No + "&pEmail=" + pEmail + "&pMemo=" + pMemo + "&pUnique_PID=" + pUnique_PID + "&pDoctor=" + pDoctor + "&pUnique_GPID=" + pUnique_GPID + "&pReferring_doctor=" + pReferring_doctor + "&pReferring_GPID=" + pReferring_GPID + "&count=" + $rootScope.requestCounter);
                 }
             };
         }).
@@ -523,7 +527,7 @@ angular.module('myApp.services', []).
                     function getReservations(index) {
                         var server = $rootScope.currentServers[index];
                         $rootScope.searchUnits = [];
-                        hospiviewFactory.getUnitAndDepList(server.uuid, server.hosp_url)
+                        hospiviewFactory.getUnitAndDepList(server.uuid, 1, server.hosp_url)
                                 .then(function(response) {
                                     return self.setSearchUnits(response, server);
                                 }, error).then(function(server) {
@@ -550,6 +554,8 @@ angular.module('myApp.services', []).
                     }
 
                     function setReservations() {
+                        console.log(allReservations);
+                        
                         if(allReservations.length !== 0){
                             $rootScope[$rootScope.searchString] = [];
                             for (var i = 0; i < allReservations.length; i++)
@@ -614,6 +620,7 @@ angular.module('myApp.services', []).
                             reg_no: getStringByPidAndSid(languageString, -99, 44),
                             doctor: getStringByPidAndSid(languageString, -99, 48),
                             
+                            patientAppointmentsViewDate: getStringByPidAndSid(languageString, 92, 7),
                             createAppointmentStep2Error: getStringByPidAndSid(languageString, 92, 75),
                             department: getStringByPidAndSid(languageString, 92, 90),
                             
@@ -623,6 +630,8 @@ angular.module('myApp.services', []).
                             createAppointmentStep2ReservationInfo: getStringByPidAndSid(languageString, 93, 60),
                             
                             createAppointmentType: getStringByPidAndSid(languageString, 94, 10),
+                            
+                            patientAppointmentsViewTijdstip: getStringByPidAndSid(languageString, 112, 13),
                             
                             createAppointmentGreeting: getStringByPidAndSid(languageString, 204, 1),
                             createAppointmentInfo: getStringByPidAndSid(languageString, 204, 2),
@@ -655,10 +664,7 @@ angular.module('myApp.services', []).
                             createAppointmentStep2ExtraInfo: getStringByPidAndSid(languageString, 214, 5),
                             createAppointmentPrevious: getStringByPidAndSid(languageString, 214, 6),
                             
-                            createAppointmentStep3: getStringByPidAndSid(languageString, 206, 1),
-                            
-                            patientAppointmentsViewDate: getStringByPidAndSid(languageString, 92, 7),
-                            patientAppointmentsViewTijdstip: getStringByPidAndSid(languageString, 112, 13)
+                            createAppointmentStep3: getStringByPidAndSid(languageString, 206, 1)
                         };
 
                         switch (j) {
