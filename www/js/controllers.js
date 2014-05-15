@@ -3066,7 +3066,7 @@ angular.module('myApp.controllers', []).
             var globalTypes;
             $scope.startProposalDate = new Date();
             $scope.today = new Date();
-            
+
             /**
              * listens for changes in the startProposalDate model. It is changed
              * if the user selects another start date on the calendar.
@@ -3094,13 +3094,13 @@ angular.module('myApp.controllers', []).
                 } else {
                     searchDate = formatDate($scope.startProposalDate);
                 }
-                for(var i=0;i<$rootScope.newAppointment.type.unit_id.length;i++){
-                    for(var j=0;j<$rootScope.newAppointment.units.length;j++){
-                        if($rootScope.newAppointment.type.unit_id[i]==$rootScope.newAppointment.units[j].Header.unit_id){
+                for (var i = 0; i < $rootScope.newAppointment.type.unit_id.length; i++) {
+                    for (var j = 0; j < $rootScope.newAppointment.units.length; j++) {
+                        if ($rootScope.newAppointment.type.unit_id[i] == $rootScope.newAppointment.units[j].Header.unit_id) {
                             globalTypes = $rootScope.newAppointment.units[j].Header.globaltypes;
                         }
                     }
-                    
+
                     retrievedRequests.push(hospiviewFactory.getProposals(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
@@ -3113,15 +3113,17 @@ angular.module('myApp.controllers', []).
                             searchDate,
                             "00:00",
                             "1,2,3,4,5,6,7",
-                            1,
+                            0,
                             $rootScope.languageID));
                 }
-                    
+
 
                 $q.all(retrievedRequests).then(function(requests) {
                     for (var requestCount in requests) {
                         var json = parseJson(requests[requestCount].data);
+                        console.log(json);
                         for (var proposalCount in json.Proposals.Detail.Proposal) {
+                            json.Proposals.Detail.Proposal[proposalCount].type_id = $rootScope.newAppointment.type.type_id[requestCount];
                             retrievedProposals.push(json.Proposals.Detail.Proposal[proposalCount]);
                         }
                     }
@@ -3195,12 +3197,12 @@ angular.module('myApp.controllers', []).
                     else
                         proposals[proposal].afternoon = true;
                     proposals[proposal].morning = !proposals[proposal].afternoon;
-                    
-                    for(var p=0;p<$rootScope.newAppointment.units.length;p++){
-                        if($rootScope.newAppointment.units[p].Header.unit_id===proposals[proposal].unit_id){
+
+                    for (var p = 0; p < $rootScope.newAppointment.units.length; p++) {
+                        if ($rootScope.newAppointment.units[p].Header.unit_id === proposals[proposal].unit_id) {
                             proposals[proposal].unit_name = $rootScope.newAppointment.units[p].Header.unit_name;
-                            for(var d=0;d<$rootScope.newAppointment.units[p].Detail.Dep.length;d++){
-                                if(proposals[proposal].depid===$rootScope.newAppointment.units[p].Detail.Dep[d].dep_id){
+                            for (var d = 0; d < $rootScope.newAppointment.units[p].Detail.Dep.length; d++) {
+                                if (proposals[proposal].depid === $rootScope.newAppointment.units[p].Detail.Dep[d].dep_id) {
                                     proposals[proposal].location = $rootScope.newAppointment.units[p].Header.unit_name;
                                     break;
                                 }
@@ -3208,7 +3210,7 @@ angular.module('myApp.controllers', []).
                             break;
                         }
                     }
-                    
+
 //                    if ($rootScope.newAppointment.unit) {
 //                        proposals[proposal].unit_name = $rootScope.newAppointment.unit.Header.unit_name;
 //                        for (var i in $rootScope.newAppointment.unit.Detail.Dep)
@@ -3297,31 +3299,33 @@ angular.module('myApp.controllers', []).
              * @param {type} proposal   selected proposal
              */
             $scope.next = function(proposal) {
-                console.log(proposal);
                 $scope.selectedProposal.day_name = $scope.getDay($scope.selectedProposal);
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
-                console.log($rootScope.newAppointment.proposal);
                 $rootScope.pageClass = 'right-to-left';
-                
+
                 /** 
-             * 15.05.2014 11:07  
-             * $rootScope.newAppointment.proposal.type_id is not set yet at this point in time.
-             * Should be set in step 2.
-             * */
-                $rootScope.questions = hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.newAppointment.proposal.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
-                
-                $q.all(questions).then(function(){
+                 * 15.05.2014 11:07  
+                 * $rootScope.newAppointment.proposal.type_id is not set yet at this point in time.
+                 * Should be set in step 2.
+                 * */
+                var questions = []
+                questions.push(hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.newAppointment.proposal.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
+
+                $q.all($rootScope.questions).then(function(responses) {
+                    console.log(responses);
+                    $rootScope.questions = responses;
                     $location.path('/patient/step5');
                 });
             };
 
             $scope.back = function() {
-                for (var i = 0; i < $rootScope.newAppointment.type.type_id_array.length; i++) {
+                console.log($rootScope.newAppointment.type)
+                for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                     hospiviewFactory.getProposalsRemoved(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
-                            $rootScope.newAppointment.type.unit_id_array[i],
-                            $rootScope.newAppointment.type.dep_id_array[i]);
+                            $rootScope.newAppointment.type.unit_id[i],
+                            $rootScope.newAppointment.type.dep_id[i]);
                 }
                 $location.path('/patient/step2');
             };
@@ -3332,52 +3336,56 @@ angular.module('myApp.controllers', []).
              */
             $scope.firstname = $rootScope.user.split(" ")[0];
             $scope.lastname = $rootScope.user.split(" ")[1];
-            
-            var questionsJson = parseJson($rootScope.questions.data);
-            var appendString = '';
-            var inputType;
-            var extraQuestionsModelArray = [];
-            var extraQuestionType;
-            
-            for(var question in questionsJson.QuestionsOnUnit.Detail){
-                if(questionsJson.QuestionsOnUnit.Detail[question].question_type == 1){
-                    extraQuestionType = 'select' + question;
-                    inputType = '<select class="form-control" ng-model="' + extraQuestionType + '" type.type_title for type in typeList" required>'; 
-                    for(var choice in questionsJson.QuestionsOnUnit.Detail[question].PossibleValues)
-                        /*TODO: value="" has to be filled. Webservice is not ready yet at this point in time*/
-                        inputType = inputType + '<option value="">' + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '</option>';
-                    inputType = inputType + '</select>';
-                        
+
+            console.log($rootScope.questions);
+            if (angular.isDefined($rootScope.questions.data)) {
+                var questionsJson = parseJson($rootScope.questions.data);
+                var appendString = '';
+                var inputType;
+                var extraQuestionsModelArray = [];
+                var extraQuestionType;
+
+
+                for (var question in questionsJson.QuestionsOnUnit.Detail) {
+                    if (questionsJson.QuestionsOnUnit.Detail[question].question_type == 1) {
+                        extraQuestionType = 'select' + question;
+                        inputType = '<select class="form-control" ng-model="' + extraQuestionType + '" type.type_title for type in typeList" required>';
+                        for (var choice in questionsJson.QuestionsOnUnit.Detail[question].PossibleValues)
+                            /*TODO: value="" has to be filled. Webservice is not ready yet at this point in time*/
+                            inputType = inputType + '<option value="">' + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '</option>';
+                        inputType = inputType + '</select>';
+
+                    }
+                    if (questionsJson.QuestionsOnUnit.Detail[question].question_type == 2) {
+                        extraQuestionType = 'radio' + question;
+                        inputType = '<div class="btn-group">';
+                        for (var choice in questionsJson.QuestionsOnUnit.Detail[question].PossibleValues)
+                            inputType = inputType + '<label class="btn btn-default" ng-model="' + extraQuestionType
+                                    + '" btn-radio="' + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '">'
+                                    + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '</label>';
+                        inputType = inputType + '</div>';
+                    }
+                    if (questionsJson.QuestionsOnUnit.Detail[question].question_type == 3) {
+                        extraQuestionType = 'input' + question;
+                        inputType = '<input type="text" class="form-control" ng-model="' + extraQuestionType + '" required/>';
+                    }
+
+                    if (questionsJson.QuestionsOnUnit.Detail[question].question_type == 4) {
+                        extraQuestionType = 'textarea' + question;
+                        inputType = '<textarea style="resize: none;" class="form-control" rows="3" ng-model="' + extraQuestionType + '" required></textarea>';
+                    }
+
+                    extraQuestionsModelArray.push(extraQuestionType);
+
+                    appendString = appendString + '<tr><td><p class="formLabel"><b>'
+                            + questionsJson.QuestionsOnUnit.Detail[question].question_title
+                            + '</b></p></td><td>' + inputType + '</td></tr>';
                 }
-                if(questionsJson.QuestionsOnUnit.Detail[question].question_type == 2){
-                    extraQuestionType = 'radio' + question;
-                    inputType = '<div class="btn-group">'; 
-                    for(var choice in questionsJson.QuestionsOnUnit.Detail[question].PossibleValues)
-                        inputType = inputType + '<label class="btn btn-default" ng-model="' + extraQuestionType 
-                            + '" btn-radio="' + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '">' 
-                            + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '</label>';
-                    inputType = inputType + '</div>';
-                }
-                if(questionsJson.QuestionsOnUnit.Detail[question].question_type == 3){
-                    extraQuestionType = 'input' + question;
-                    inputType = '<input type="text" class="form-control" ng-model="' + extraQuestionType + '" required/>';
-                }
-                    
-                if(questionsJson.QuestionsOnUnit.Detail[question].question_type == 4){
-                    extraQuestionType = 'textarea' + question;
-                    inputType = '<textarea style="resize: none;" class="form-control" rows="3" ng-model="' + extraQuestionType + '" required></textarea>';
-                }
-                
-                extraQuestionsModelArray.push(extraQuestionType);
-                
-                appendString = appendString + '<tr><td><p class="formLabel"><b>' 
-                        + questionsJson.QuestionsOnUnit.Detail[question].question_title 
-                        + '</b></p></td><td>' + inputType + '</td></tr>';
+                $("#questionTable").append(appendString);
             }
+
             
-            var table = document.getElementById("questionTable");
-            table.append(appendString);
-            
+
             /**
              * The properties 'firstname', 'lastname', 'phone', 'email' and 'dateOfBirth' are set
              * the user is redirected to the next step
@@ -3396,12 +3404,12 @@ angular.module('myApp.controllers', []).
                     confirmed.push(hospiviewFactory.getAppointmentConfirmed($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.proposal_id, pName, pFirstName, pBDate, pGender, pTel1, pTel2, pAddress, Reg_No, pEmail, pMemo, pUnique_PID, pDoctor, pUnique_GPID, pReferring_doctor, pReferring_GPID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
 
                     $q.all(confirmed).then(function(responses) {
-                        for (var i = 0; i < $rootScope.newAppointment.type.type_id_array.length; i++) {
+                        for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                             hospiviewFactory.getProposalsRemoved(
                                     $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                                     $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
-                                    $rootScope.newAppointment.type.unit_id_array[i],
-                                    $rootScope.newAppointment.type.dep_id_array[i]);
+                                    $rootScope.newAppointment.type.unit_id[i],
+                                    $rootScope.newAppointment.type.dep_id[i]);
                         }
                     });
                     $rootScope.pageClass = 'right-to-left';
