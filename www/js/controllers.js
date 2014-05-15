@@ -2850,7 +2850,6 @@ angular.module('myApp.controllers', []).
                     units: units,
                     unitOrGroupName: unitOrGroupName
                 };
-                console.log(units);
                 $location.path('/patient/step2');
             };
 
@@ -2877,11 +2876,10 @@ angular.module('myApp.controllers', []).
                 var unit = $rootScope.newAppointment.units[i];
                 for (var j = 0; j < unit.Detail.Dep.length; j++) {
                     var dep = unit.Detail.Dep[j],
-                            duplicate = false;
-                    console.log(dep.location_id);
-                    for (var h = 0; h < $scope.locations.length; h++) {
-                        if ($scope.locations[h].location_id == dep.location_id) {
-                            duplicate = true;
+                        duplicate = false;
+                    for(var h=0;h<$scope.locations.length;h++){
+                        if($scope.locations[h].location_id==dep.location_id){
+                            duplicate=true;
                             break;
                         }
 
@@ -2914,49 +2912,86 @@ angular.module('myApp.controllers', []).
              */
             function getTypes() {
                 var unit_id = $rootScope.newAppointment.units[unitTypesRequested].Header.unit_id,
-                        dep_id = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].dep_id,
-                        duplicate = false;
+                    dep_id = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].dep_id,
+                    duplicate = false;
+                if($rootScope.newAppointment.units[unitTypesRequested].Header.extern_step2==="0"){
+                    for(var d=0;d<$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length;d++){
+                        var dep_no_step2 = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[d],
+                            duplicate_stitle = false;
+                        
+                        for(var t=0;t<$scope.typeList.length;t++){
+                            if(dep_no_step2.stitle===$scope.typeList[t].type_title){
+                                duplicate_stitle=true;
+                                $scope.typeList[t].unit_id.push(unit_id);
+                                $scope.typeList[t].dep_id.push(dep_no_step2.dep_id);
+                                $scope.typeList[t].type_id.push("0");
+                                $scope.typeList[t].location_id.push(dep_no_step2.location_id);
+                                break;
+                            }
+                        }
+                        if(!duplicate_stitle&&dep_no_step2.stitle!==""){
+                            $scope.typeList.push({
+                                type_title: dep_no_step2.stitle,
+                                unit_id: [unit_id],
+                                dep_id: [dep_no_step2.dep_id],
+                                type_id: ["0"],
+                                location_id: [dep_no_step2.location_id]
+                            });
+                        }
+                    }
+                    depTypeRequested++;
+                    if(depTypeRequested==$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length){
+                        depTypeRequested=0;
+                        unitTypesRequested++;
+                    }
+                    if(unitTypesRequested!=$rootScope.newAppointment.units.length){
+                        getTypes();
+                    }else{
+                        $scope.typesLoaded = true;
+                        console.log($scope.typeList);
+                    }
+                }else{
                 hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, unit_id, dep_id, $rootScope.newAppointment.units[unitTypesRequested].Header.globaltypes, $rootScope.newAppointment.units[unitTypesRequested].Header.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url)
-                        .then(function(response) {
-                            var json = parseJson(response.data);
-                            if (json.TypesOnUnit.Header.StatusCode === "1") {
-                                console.log(unit_id + " " + dep_id);
-
-                                //Status is OK
-                                if (json.TypesOnUnit.Detail) {
-                                    //Response contains a Detail variable
-
-                                    //if there's only one type convert it to an array with a single element
-                                    if (json.TypesOnUnit.Header.TotalRecords === "1")
-                                        json.TypesOnUnit.Detail.Type = [json.TypesOnUnit.Detail.Type];
-
-                                    /*
-                                     * populate $scope.typeList while omitting duplicate values
-                                     * 
-                                     * if there is a duplicate, it will not be added to the list, 
-                                     * but the unit_id, type_id and dep_id are put into the 'Type' variable that's already been added
-                                     * 
-                                     * the unit_id, type_id and dep_id fields are arrays that hold more than one value if there was a duplicate
-                                     * these fields must always have the same length for each type to successfully retrieve data in the next step
-                                     * 
-                                     */
-                                    for (var t = 0; t < json.TypesOnUnit.Detail.Type.length; t++) {
-                                        duplicate = false;
-                                        json.TypesOnUnit.Detail.Type[t].dep_id = [dep_id];
-                                        json.TypesOnUnit.Detail.Type[t].unit_id = [unit_id];
-                                        json.TypesOnUnit.Detail.Type[t].type_id = [json.TypesOnUnit.Detail.Type[t].type_id];
-                                        for (var u = 0; u < $scope.typeList.length; u++) {
-                                            if (json.TypesOnUnit.Detail.Type[t].type_title === $scope.typeList[u].type_title) {
-                                                duplicate = true;
-                                                console.log('duplicate');
-                                                $scope.typeList[u].dep_id.push(json.TypesOnUnit.Detail.Type[t].dep_id[0]);
-                                                $scope.typeList[u].unit_id.push(json.TypesOnUnit.Detail.Type[t].unit_id[0]);
-                                                $scope.typeList[u].type_id.push(json.TypesOnUnit.Detail.Type[t].type_id[0]);
-                                                break;
-                                            }
+                    .then(function(response){
+                        var json = parseJson(response.data);
+                        if(json.TypesOnUnit.Header.StatusCode==="1"){
+                            
+                            //Status is OK
+                            if(json.TypesOnUnit.Detail){
+                                //Response contains a Detail variable
+                                
+                                //if there's only one type convert it to an array with a single element
+                                if(json.TypesOnUnit.Header.TotalRecords==="1")
+                                    json.TypesOnUnit.Detail.Type = [json.TypesOnUnit.Detail.Type];
+                                
+                                /*
+                                 * populate $scope.typeList while omitting duplicate values
+                                 * 
+                                 * if there is a duplicate, it will not be added to the list, 
+                                 * but the unit_id, type_id and dep_id are put into the 'Type' variable that's already been added
+                                 * 
+                                 * the unit_id, type_id and dep_id fields are arrays that hold more than one value if there was a duplicate
+                                 * these fields must always have the same length for each type to successfully retrieve data in the next step
+                                 * 
+                                 */
+                                for(var t=0;t<json.TypesOnUnit.Detail.Type.length;t++){
+                                    duplicate=false;
+                                    json.TypesOnUnit.Detail.Type[t].dep_id = [dep_id];
+                                    json.TypesOnUnit.Detail.Type[t].unit_id = [unit_id];
+                                    json.TypesOnUnit.Detail.Type[t].type_id = [json.TypesOnUnit.Detail.Type[t].type_id];
+                                    json.TypesOnUnit.Detail.Type[t].location_id = [$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].location_id];
+                                    for(var u=0;u<$scope.typeList.length;u++){
+                                        if(json.TypesOnUnit.Detail.Type[t].type_title===$scope.typeList[u].type_title){
+                                            duplicate=true;
+                                            $scope.typeList[u].dep_id.push(json.TypesOnUnit.Detail.Type[t].dep_id[0]);
+                                            $scope.typeList[u].unit_id.push(json.TypesOnUnit.Detail.Type[t].unit_id[0]);
+                                            $scope.typeList[u].type_id.push(json.TypesOnUnit.Detail.Type[t].type_id[0]);
+                                            $scope.typeList[u].location_id.push(json.TypesOnUnit.Detail.Type[t].location_id[0]);
+                                            break;
                                         }
-                                        if (!duplicate)
-                                            $scope.typeList.push(json.TypesOnUnit.Detail.Type[t]);
+                                    }
+                                    if (!duplicate){
+                                        $scope.typeList.push(json.TypesOnUnit.Detail.Type[t]);
                                     }
                                 }
                             }
@@ -2972,7 +3007,9 @@ angular.module('myApp.controllers', []).
                                 $scope.typesLoaded = true;
                                 console.log($scope.typeList);
                             }
+                        }
                         }, error);
+                    }
             }
 
             /**
@@ -2999,20 +3036,26 @@ angular.module('myApp.controllers', []).
             $scope.updateFormData = function() {
                 $scope.extraInfo = "";
                 for (var i = 0; i < $scope.locations.length; i++) {
-                    if ($scope.type && $scope.type.dep_id.indexOf($scope.locations[i].dep_id) == -1) {
+                    if ($scope.type && $scope.type.location_id.indexOf($scope.locations[i].location_id) == -1) {
+                        console.log($scope.type.dep_id + " does not contain " + $scope.locations[i].dep_id);
+                        console.log($scope.locations[i].location_name + " is disabled");
                         $scope.locations[i].disabled = true;
                         $scope.locations[i].checked = false;
                     } else {
+                        console.log($scope.type.dep_id + " contains " + $scope.locations[i].dep_id);
+                        console.log($scope.locations[i].location_name + " is selected");
                         $scope.locations[i].disabled = false;
                         $scope.locations[i].checked = true;
                     }
                 }
-                for (var j = 0; j < $scope.newAppointment.units.length; j++) {
-                    for (var h = 0; h < $scope.newAppointment.units[j].Detail.Dep.length; h++) {
-                        var dep = $scope.newAppointment.units[j].Detail.Dep[h];
-                        for (var k = 0; k < $scope.type.dep_id.length; k++) {
-                            if (dep.dep_id == $scope.type.dep_id[k] && dep.msg_extern_step2) {
-                                $scope.extraInfo += dep.msg_extern_step2;
+                if($scope.type){
+                    for (var j = 0; j < $scope.newAppointment.units.length; j++) {
+                        for (var h = 0; h < $scope.newAppointment.units[j].Detail.Dep.length; h++) {
+                            var dep = $scope.newAppointment.units[j].Detail.Dep[h];
+                            for (var k = 0; k < $scope.type.dep_id.length; k++) {
+                                if (dep.dep_id == $scope.type.dep_id[k] && dep.msg_extern_step2) {
+                                    $scope.extraInfo += dep.msg_extern_step2;
+                                }
                             }
                         }
                     }
