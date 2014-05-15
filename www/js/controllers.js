@@ -2872,15 +2872,31 @@ angular.module('myApp.controllers', []).
              */
             
             $scope.locations = [];
+            $scope.blank_locations = 0;
             for (var i = 0; i < $rootScope.newAppointment.units.length; i++) {
                 var unit = $rootScope.newAppointment.units[i];
                 for(var j = 0; j < unit.Detail.Dep.length;j++){
-                    var dep = unit.Detail.Dep[j];
-                    $scope.locations.push({
-                        checked: true,
-                        location_id: dep.location_id,
-                        location_name: dep.location_name
-                    }); 
+                    var dep = unit.Detail.Dep[j],
+                        duplicate = false;
+                    console.log(dep.location_id);
+                    for(var h=0;h<$scope.locations.length;h++){
+                        if($scope.locations[h].location_id==dep.location_id){
+                            duplicate=true;
+                            break;
+                        }
+                        
+                    }
+                    if(dep.location_name=="")
+                        $scope.blank_locations++;
+                    if(!duplicate||dep.location_name==""){
+                        $scope.locations.push({
+                            checked: true,
+                            disabled: false,
+                            location_id: dep.location_id,
+                            location_name: dep.location_name,
+                            dep_id: dep.dep_id
+                        });    
+                    }
                 }
             }
             
@@ -2971,6 +2987,37 @@ angular.module('myApp.controllers', []).
                 }
                 return false;
             };
+            
+            /**
+             * is called when a new type has been selected
+             * 
+             * disables and unchecks the locations that aren't linked to the selected type
+             * and enables and checks the locations that are
+             * 
+             * if there is extra info on the department that the selected type is linked to it is displayed in the extra info field
+             */
+            $scope.updateFormData = function(){
+                $scope.extraInfo="";
+                for(var i=0;i<$scope.locations.length;i++){
+                    if($scope.type&&$scope.type.dep_id.indexOf($scope.locations[i].dep_id)==-1){
+                        $scope.locations[i].disabled = true;
+                        $scope.locations[i].checked = false;
+                    }else{
+                        $scope.locations[i].disabled = false;
+                        $scope.locations[i].checked = true;
+                    }
+                }
+                for(var j=0;j<$scope.newAppointment.units.length;j++){
+                    for(var h=0;h<$scope.newAppointment.units[j].Detail.Dep.length;h++){
+                        var dep = $scope.newAppointment.units[j].Detail.Dep[h];
+                        for(var k=0;k<$scope.type.dep_id.length;k++){
+                            if(dep.dep_id==$scope.type.dep_id[k]&&dep.msg_extern_step2){
+                                $scope.extraInfo+=dep.msg_extern_step2;
+                            }
+                        }
+                    }
+                }
+            };
 
             /**
              * Function that is called when the request to the server fails for error handling
@@ -2991,7 +3038,6 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.next = function(formValid) {
-                alert($scope.type);
                 if (formValid && $scope.locationIsChecked()) {
                     $rootScope.newAppointment.type = $scope.type;
                     $rootScope.newAppointment.locations = [];
@@ -3000,11 +3046,6 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.locations.push($scope.locations[i]);
                     }
                     $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
-                    $rootScope.questionPromise = hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.unit.Header.unit_id, $rootScope.newAppointment.type.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
-                    $rootScope.questionPromise.then(function(response) {
-                        var json = parseJson(response.data);
-                        console.log(json);
-                    });
                     $rootScope.pageClass = 'right-to-left';
                     console.log($rootScope.newAppointment);
                     $location.path('/patient/step3');
