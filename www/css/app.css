@@ -108,20 +108,25 @@ body {
 .icasaCheckbox{
     position: relative;
     display: inline-block;
+    background-repeat: no-repeat;
 }
 
 .icasaCheckbox-normal{
-    width:25px;
-    height:25px;
+    height: 25px;
     background-size:25px 25px;
-    top:5px;
+    padding-left: 25px;
+}
+
+.icasaCheckbox-step2{
+    background-size:25px 25px;
+    padding-left: 25px; 
+    background-position:10px 10px;
 }
 
 .icasaCheckbox-large{
-    width:45px;
     height:45px;
+    width: 45px;
     background-size:45px 45px;
-    bottom: 10px;
 }
 
 .icasaCheckboxChecked{

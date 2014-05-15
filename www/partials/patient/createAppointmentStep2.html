@@ -30,7 +30,7 @@
                     </td>
                     <td>
                         <div class="list-group"  style="font-size: 15px;">
-                            <label ng-repeat="location in locations track by $index" ng-show="location.location_name" class="widthPercent list-group-item" ng-class="{'list-group-item-success':location.checked, 'list-group-item-danger':location.disabled}" ><div class="icasaCheckbox icasaCheckbox-normal" ng-class="{'icasaCheckboxChecked':location.checked, 'icasaCheckboxUnChecked':!location.checked,}"></div><input type="checkbox" ng-disabled="location.disabled" ng-model="location.checked" class="invisible" />{{location.location_name}}</label>
+                            <label ng-repeat="location in locations track by $index" ng-show="location.location_name" class="widthPercent list-group-item icasaCheckbox icasaCheckbox-step2" ng-class="{'list-group-item-success':location.checked, 'list-group-item-danger':location.disabled,'icasaCheckboxChecked':location.checked, 'icasaCheckboxUnChecked':!location.checked}" ><input type="checkbox" ng-disabled="location.disabled" ng-model="location.checked" class="invisible" />{{location.location_name}}</label>
                         </div>
                     </td>
                 </tr>
