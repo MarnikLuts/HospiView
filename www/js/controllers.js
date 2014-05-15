@@ -3275,6 +3275,22 @@ angular.module('myApp.controllers', []).
             };
 
             /**
+             * Detects the screen size and adjust the day names. If the screen
+             * is smaller than 768 px, the short names will be used.
+             */
+            var width = window.innerWidth;
+
+            width = window.innerWidth;
+            if (width <= 768) {
+                $scope.days = getDayNamesShort($rootScope.languageID);
+                $scope.$apply();
+            }
+            else {
+                $scope.days = getDayNames($rootScope.languageID);
+                $scope.$apply();
+            }
+
+            /**
              * Saves the proposal the user selected in this step to the rootScope.
              * Redirects the user to the next step.
              * 
