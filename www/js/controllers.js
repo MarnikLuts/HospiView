@@ -3047,7 +3047,6 @@ angular.module('myApp.controllers', []).
                     }
                     $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
                     $rootScope.pageClass = 'right-to-left';
-                    console.log($rootScope.newAppointment);
                     $location.path('/patient/step3');
                 } else {
                     $scope.displayError = true;
@@ -3067,9 +3066,9 @@ angular.module('myApp.controllers', []).
             var globalTypes;
             $scope.startProposalDate = new Date();
             $scope.today = new Date();
-
+            
             /**
-             * listens for changes in the startProposalDate model. Is is changed
+             * listens for changes in the startProposalDate model. It is changed
              * if the user selects another start date on the calendar.
              */
             $scope.$watch('startProposalDate',
@@ -3095,18 +3094,19 @@ angular.module('myApp.controllers', []).
                 } else {
                     searchDate = formatDate($scope.startProposalDate);
                 }
-                for (var i = 0; i < $rootScope.newAppointment.type.type_id_array.length; i++) {
-                    if (!$rootScope.newAppointment.group) {
-                        globalTypes = $rootScope.newAppointment.unit.Header.globaltypes;
-                    } else {
-                        globalTypes = $rootScope.newAppointment.group.Detail.UnitAndDep[i].globaltypes;
+                for(var i=0;i<$rootScope.newAppointment.type.unit_id.length;i++){
+                    for(var j=0;j<$rootScope.newAppointment.units.length;j++){
+                        if($rootScope.newAppointment.type.unit_id[i]==$rootScope.newAppointment.units[j].Header.unit_id){
+                            globalTypes = $rootScope.newAppointment.units[j].Header.globaltypes;
+                        }
                     }
+                    
                     retrievedRequests.push(hospiviewFactory.getProposals(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
-                            $rootScope.newAppointment.type.unit_id_array[i],
-                            $rootScope.newAppointment.type.dep_id_array[i],
-                            $rootScope.newAppointment.type.type_id_array[i],
+                            $rootScope.newAppointment.type.unit_id[i],
+                            $rootScope.newAppointment.type.dep_id[i],
+                            $rootScope.newAppointment.type.type_id[i],
                             "test maken reservatie",
                             $rootScope.newAppointment.reservationInfo,
                             globalTypes,
@@ -3116,8 +3116,8 @@ angular.module('myApp.controllers', []).
                             1,
                             $rootScope.languageID));
                 }
+                    
 
-                console.log($rootScope.newAppointment.type.type_id_array.length);
                 $q.all(retrievedRequests).then(function(requests) {
                     for (var requestCount in requests) {
                         var json = parseJson(requests[requestCount].data);
@@ -3128,7 +3128,7 @@ angular.module('myApp.controllers', []).
                     console.log(retrievedProposals);
                     editProposalInfo(retrievedProposals);
                 });
-            }
+            };
 
             /* test data */
             /*var proposals = [{proposal_id: '1', the_date: '2014-05-09', time_from: '07:00', time_till: '08:00', dep_id: '729', unit_id: '171'},
@@ -3195,17 +3195,30 @@ angular.module('myApp.controllers', []).
                     else
                         proposals[proposal].afternoon = true;
                     proposals[proposal].morning = !proposals[proposal].afternoon;
-
-                    if ($rootScope.newAppointment.unit) {
-                        proposals[proposal].unit_name = $rootScope.newAppointment.unit.Header.unit_name;
-                        for (var i in $rootScope.newAppointment.unit.Detail.Dep)
-                            proposals[proposal].location = $rootScope.newAppointment.unit.Detail.Dep[i].location_name;
-                    } else
-                        for (var i in $rootScope.newAppointment.group.Detail.UnitAndDep)
-                            if (proposals[proposal].unit_id === $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id) {
-                                proposals[proposal].unit_name = $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_name;
-                                proposals[proposal].location = $rootScope.newAppointment.group.Detail.UnitAndDep[i].location_name;
+                    
+                    for(var p=0;p<$rootScope.newAppointment.units.length;p++){
+                        if($rootScope.newAppointment.units[p].Header.unit_id===proposals[proposal].unit_id){
+                            proposals[proposal].unit_name = $rootScope.newAppointment.units[p].Header.unit_name;
+                            for(var d=0;d<$rootScope.newAppointment.units[p].Detail.Dep.length;d++){
+                                if(proposals[proposal].depid===$rootScope.newAppointment.units[p].Detail.Dep[d].dep_id){
+                                    proposals[proposal].location = $rootScope.newAppointment.units[p].Header.unit_name;
+                                    break;
+                                }
                             }
+                            break;
+                        }
+                    }
+                    
+//                    if ($rootScope.newAppointment.unit) {
+//                        proposals[proposal].unit_name = $rootScope.newAppointment.unit.Header.unit_name;
+//                        for (var i in $rootScope.newAppointment.unit.Detail.Dep)
+//                            proposals[proposal].location = $rootScope.newAppointment.unit.Detail.Dep[i].location_name;
+//                    } else
+//                        for (var i in $rootScope.newAppointment.group.Detail.UnitAndDep)
+//                            if (proposals[proposal].unit_id === $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id) {
+//                                proposals[proposal].unit_name = $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_name;
+//                                proposals[proposal].location = $rootScope.newAppointment.group.Detail.UnitAndDep[i].location_name;
+//                            }
 
                     $scope.proposals.push(proposals[proposal]);
                     $scope.filters[new Date(proposals[proposal].the_date).getDay()] = true;
@@ -3260,22 +3273,6 @@ angular.module('myApp.controllers', []).
                 var months = getMonthNames($rootScope.languageID);
                 $scope.proposalInfo = $scope.days[date.getDay()] + ", " + date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear() + ", " + proposal.time_from + "\n" + proposal.unit_name;
             };
-
-            /**
-             * Detects the screen size and adjust the day names. If the screen
-             * is smaller than 768 px, the short names will be used.
-             */
-            var width = window.innerWidth;
-
-            width = window.innerWidth;
-            if (width <= 768) {
-                $scope.days = getDayNamesShort($rootScope.languageID);
-                $scope.$apply();
-            }
-            else {
-                $scope.days = getDayNames($rootScope.languageID);
-                $scope.$apply();
-            }
 
             /**
              * Saves the proposal the user selected in this step to the rootScope.
