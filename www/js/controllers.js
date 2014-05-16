@@ -3348,11 +3348,11 @@ angular.module('myApp.controllers', []).
             width = window.innerWidth;
             if (width <= 768) {
                 $scope.days = getDayNamesShort($rootScope.languageID);
-                $scope.morningAfternoonName = 'Short';
+//                $scope.$apply();
             }
             else {
                 $scope.days = getDayNames($rootScope.languageID);
-                $scope.morningAfternoonName = '';
+//                $scope.$apply();
             }
 
             /**
