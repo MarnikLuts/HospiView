@@ -3037,13 +3037,13 @@ angular.module('myApp.controllers', []).
                 $scope.extraInfo = "";
                 for (var i = 0; i < $scope.locations.length; i++) {
                     if ($scope.type && $scope.type.location_id.indexOf($scope.locations[i].location_id) == -1) {
-                        console.log($scope.type.location_id + " does not contain " + $scope.locations[i].location_id);
-                        console.log($scope.locations[i].location_name + " is disabled");
+//                        console.log($scope.type.location_id + " does not contain " + $scope.locations[i].location_id);
+//                        console.log($scope.locations[i].location_name + " is disabled");
                         $scope.locations[i].disabled = true;
                         $scope.locations[i].checked = false;
                     } else {
-                        console.log($scope.type.location_id + " contains " + $scope.locations[i].location_id);
-                        console.log($scope.locations[i].location_name + " is selected");
+//                        console.log($scope.type.location_id + " contains " + $scope.locations[i].location_id);
+//                        console.log($scope.locations[i].location_name + " is selected");
                         $scope.locations[i].disabled = false;
                         $scope.locations[i].checked = true;
                     }
@@ -3253,17 +3253,6 @@ angular.module('myApp.controllers', []).
                             break;
                         }
                     }
-
-//                    if ($rootScope.newAppointment.unit) {
-//                        proposals[proposal].unit_name = $rootScope.newAppointment.unit.Header.unit_name;
-//                        for (var i in $rootScope.newAppointment.unit.Detail.Dep)
-//                            proposals[proposal].location = $rootScope.newAppointment.unit.Detail.Dep[i].location_name;
-//                    } else
-//                        for (var i in $rootScope.newAppointment.group.Detail.UnitAndDep)
-//                            if (proposals[proposal].unit_id === $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id) {
-//                                proposals[proposal].unit_name = $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_name;
-//                                proposals[proposal].location = $rootScope.newAppointment.group.Detail.UnitAndDep[i].location_name;
-//                            }
 
                     $scope.proposals.push(proposals[proposal]);
                     $scope.filters[new Date(proposals[proposal].the_date).getDay()] = true;
