@@ -3345,11 +3345,13 @@ angular.module('myApp.controllers', []).
             width = window.innerWidth;
             if (width <= 768) {
                 $scope.days = getDayNamesShort($rootScope.languageID);
-//                $scope.$apply();
+                $scope.morningAfternoonName = 'Short';
+                $scope.$apply();
             }
             else {
                 $scope.days = getDayNames($rootScope.languageID);
-//                $scope.$apply();
+                $scope.morningAfternoonName = '';
+                $scope.$apply();
             }
 
             /**
@@ -3379,7 +3381,6 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.back = function() {
-                console.log($rootScope.newAppointment.type);
                 for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                     hospiviewFactory.getProposalsRemoved(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
