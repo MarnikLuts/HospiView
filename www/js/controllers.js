@@ -3037,13 +3037,13 @@ angular.module('myApp.controllers', []).
                 $scope.extraInfo = "";
                 for (var i = 0; i < $scope.locations.length; i++) {
                     if ($scope.type && $scope.type.location_id.indexOf($scope.locations[i].location_id) == -1) {
-                        console.log($scope.type.location_id + " does not contain " + $scope.locations[i].location_id);
-                        console.log($scope.locations[i].location_name + " is disabled");
+//                        console.log($scope.type.location_id + " does not contain " + $scope.locations[i].location_id);
+//                        console.log($scope.locations[i].location_name + " is disabled");
                         $scope.locations[i].disabled = true;
                         $scope.locations[i].checked = false;
                     } else {
-                        console.log($scope.type.location_id + " contains " + $scope.locations[i].location_id);
-                        console.log($scope.locations[i].location_name + " is selected");
+//                        console.log($scope.type.location_id + " contains " + $scope.locations[i].location_id);
+//                        console.log($scope.locations[i].location_name + " is selected");
                         $scope.locations[i].disabled = false;
                         $scope.locations[i].checked = true;
                     }
@@ -3089,6 +3089,12 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.locations.push($scope.locations[i]);
                     }
                     $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
+                    
+                    //In the next step, units must be able to be checked and unchecked
+                    for(var j=0;j<$rootScope.newAppointment.units;j++){
+                        $rootScope.newAppointment.units[j].checked = true;
+                    }
+                    
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('/patient/step3');
                 } else {
@@ -3109,6 +3115,27 @@ angular.module('myApp.controllers', []).
             var globalTypes;
             $scope.startProposalDate = new Date();
             $scope.today = new Date();
+            $scope.unitList = [];
+            console.log($rootScope.newAppointment.units);
+            for(var i=0;i<$rootScope.newAppointment.units.length;i++){
+                for(var j=0;j<$rootScope.newAppointment.units[i].Detail.Dep.length;j++){
+                    var duplicate = false;
+                    console.log($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep.dep_id));
+                    if($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep[j].dep_id)!=-1){
+                        for(var k=0;k<$scope.unitList.length;k++){
+                            if($scope.unitList[k].Header.unit_id===$rootScope.newAppointment.units[i].Header.unit_id)
+                                duplicate=true;
+                        }
+                        if(!duplicate){
+                            var unit = $rootScope.newAppointment.units[i];
+                            unit.checked = true;
+                            $scope.unitList.push(unit);  
+                        }
+                        break;
+                    }
+                }
+            }
+            console.log($scope.unitList);
 
             /**
              * listens for changes in the startProposalDate model. It is changed
@@ -3254,17 +3281,6 @@ angular.module('myApp.controllers', []).
                         }
                     }
 
-//                    if ($rootScope.newAppointment.unit) {
-//                        proposals[proposal].unit_name = $rootScope.newAppointment.unit.Header.unit_name;
-//                        for (var i in $rootScope.newAppointment.unit.Detail.Dep)
-//                            proposals[proposal].location = $rootScope.newAppointment.unit.Detail.Dep[i].location_name;
-//                    } else
-//                        for (var i in $rootScope.newAppointment.group.Detail.UnitAndDep)
-//                            if (proposals[proposal].unit_id === $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_id) {
-//                                proposals[proposal].unit_name = $rootScope.newAppointment.group.Detail.UnitAndDep[i].unit_name;
-//                                proposals[proposal].location = $rootScope.newAppointment.group.Detail.UnitAndDep[i].location_name;
-//                            }
-
                     $scope.proposals.push(proposals[proposal]);
                     $scope.filters[new Date(proposals[proposal].the_date).getDay()] = true;
                 }
@@ -3363,6 +3379,7 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.back = function() {
+                console.log($rootScope.newAppointment.type);
                 for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                     hospiviewFactory.getProposalsRemoved(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
@@ -3370,6 +3387,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.type.unit_id[i],
                             $rootScope.newAppointment.type.dep_id[i]);
                 }
+                $rootScope.pageClass="left-to-right";
                 history.back();
             };
         }).

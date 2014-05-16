@@ -53,6 +53,23 @@
                     </div>
                 </div>
             </div><br/>
+            <div class="btn-group">
+                <button style="width: 25%;" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    {{getLocalizedString("createAppointmentCampus")}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu list-group" role="menu">
+                    <li ng-repeat="location in newAppointment.locations track by $index"><label class="widthPercent list-group-item icasaCheckbox icasaCheckbox-step2" ng-class="{'list-group-item-success':location.checked, 'icasaCheckboxChecked': location.checked, 'icasaCheckboxUnChecked': !location.checked}" ><input type="checkbox" class="invisible" ng-model="location.checked"/>{{location.location_name}}</label></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button style="width: 25%;" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    {{getLocalizedString("createAppointmentDoctor")}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdow-step3 list-group" role="menu">
+                    <li ng-repeat="unit in unitList track by $index"><label class="widthPercent list-group-item icasaCheckbox icasaCheckbox-step2" ng-class="{'list-group-item-success':unit.checked, 'icasaCheckboxChecked': unit.checked, 'icasaCheckboxUnChecked': !unit.checked}" ><input type="checkbox" class="invisible" ng-model="unit.checked"/>{{unit.Header.unit_name}}</label></li>
+                </ul>
+            </div>
+            <br><br><br><br>
             <div class="AcceleratedList btn-group-vertical list list_proposals list-unstyled">
                 <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in filteredProposals = (proposals| orderBy:['setRespectiveDayNumber', 'afternoon', 'the_date', 'time_from'] | orderProposals:filters)" ng-click="selectProposal(proposal)">
                     <div class=".container-fluid">
