@@ -3089,12 +3089,12 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.locations.push($scope.locations[i]);
                     }
                     $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
-                    
+
                     //In the next step, units must be able to be checked and unchecked
-                    for(var j=0;j<$rootScope.newAppointment.units;j++){
+                    for (var j = 0; j < $rootScope.newAppointment.units; j++) {
                         $rootScope.newAppointment.units[j].checked = true;
                     }
-                    
+
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('/patient/step3');
                 } else {
@@ -3117,22 +3117,22 @@ angular.module('myApp.controllers', []).
             $scope.today = new Date();
             $scope.unitList = [];
             console.log($rootScope.newAppointment.units);
-            for(var i=0;i<$rootScope.newAppointment.units.length;i++){
-                for(var j=0;j<$rootScope.newAppointment.units[i].Detail.Dep.length;j++){
+            for (var i = 0; i < $rootScope.newAppointment.units.length; i++) {
+                for (var j = 0; j < $rootScope.newAppointment.units[i].Detail.Dep.length; j++) {
                     var duplicate = false;
                     console.log($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep.dep_id));
-                    if($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep[j].dep_id)!=-1){
-                        for(var k=0;k<$scope.unitList.length;k++){
-                            if($scope.unitList[k].Header.unit_id===$rootScope.newAppointment.units[i].Header.unit_id)
-                                duplicate=true;
+                    if ($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep[j].dep_id) != -1) {
+                        for (var k = 0; k < $scope.unitList.length; k++) {
+                            if ($scope.unitList[k].Header.unit_id === $rootScope.newAppointment.units[i].Header.unit_id)
+                                duplicate = true;
                         }
-                        if(!duplicate){
+                        if (!duplicate) {
                             var unit = {
                                 Header: {unit_name: $rootScope.newAppointment.units[i].Header.unit_name,
-                                         unit_id: $rootScope.newAppointment.units[i].Header.unit_id},
+                                    unit_id: $rootScope.newAppointment.units[i].Header.unit_id},
                                 checked: true
                             };
-                            $scope.unitList.push(unit);  
+                            $scope.unitList.push(unit);
                         }
                         break;
                     }
@@ -3372,7 +3372,8 @@ angular.module('myApp.controllers', []).
                  * Should be set in step 2.
                  * */
                 var questions = []
-                console.log($rootScope.currentServers[$rootScope.newAppointment.server].uuid + " " + $rootScope.newAppointment.proposal.unit_id + " " + $rootScope.newAppointment.proposal.type_id + " " + $rootScope.languageID + " " + $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
+
+                questions.push(hospiviewFactory.getActiveFieldsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
                 questions.push(hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.newAppointment.proposal.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
 
                 $q.all(questions).then(function(responses) {
@@ -3389,7 +3390,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.type.unit_id[i],
                             $rootScope.newAppointment.type.dep_id[i]);
                 }
-                $rootScope.pageClass="left-to-right";
+                $rootScope.pageClass = "left-to-right";
                 history.back();
             };
         }).
@@ -3398,84 +3399,171 @@ angular.module('myApp.controllers', []).
              * The fields firstname and lastname are automatically filled with known data
              */
 
-            console.log($rootScope.newAppointment.type);
             $scope.firstname = $rootScope.user.split(" ")[0];
             $scope.lastname = $rootScope.user.split(" ")[1];
 
-            var questionsJson = parseJson($rootScope.questions[0].data);
-            if (questionsJson.QuestionsOnUnit.Header.StatusCode == 1) {
+            function setQuestions() {
                 var appendString = '';
-                var inputType;
-                var extraQuestionsModelArray = [];
-                var extraQuestionType;
 
-                console.log(questionsJson);
+                var standardQuestionsJson = parseJson($rootScope.questions[0].data);
+                if (standardQuestionsJson.ActiveFieldsOnUnit.Header.StatusCode == 1) {
+                    var activeFieldsArray = standardQuestionsJson.ActiveFieldsOnUnit.Detail.ActiveFields.split(",");
+                    var mustField;
 
-                for (var question in questionsJson.QuestionsOnUnit.Detail.Question) {
-                    if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 1) {
-                        extraQuestionType = 'select' + question;
-                        inputType = '<select class="form-control" ng-model="' + extraQuestionType + '" type.type_title for type in typeList" required>' +
-                                '<option value=""> - ' + $rootScope.getLocalizedString('createAppointmentStep4MakeYourChoice') + ' - </option>';
-                        for (var choice in questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue)
-                            /*TODO: value="" has to be filled. Webservice is not ready yet at this point in time*/
-                            inputType = inputType + '<option value="' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + '">' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value + '</option>';
-                        inputType = inputType + '</select>';
+                    if (activeFieldsArray.indexOf("26") !== -1) {
+                        mustField = checkMustField("26");
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('reg_no') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="currentServers[0].reg_no" disabled ' + mustField[1] + '/></td></tr>';
                     }
-                    if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 2) {
-                        /*extraQuestionType = 'radio' + question;
-                         if(angular.isDefined(questionsJson.QuestionsOnUnit.Detail.Question[question].default_value))
-                         $scope[extraQuestionType] = questionsJson.QuestionsOnUnit.Detail.Question[question].default_value;
-                         
-                         inputType = '<div class="btn-group widthPercent" data-toggle="buttons">';
-                         for (var choice in questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue)
-                         inputType = inputType + '<button type="button" class="btn btn-default width50Percent" ng-model="' + extraQuestionType
-                         + '" btn-radio="' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + '">'
-                         + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value + '</button>';
-                         inputType = inputType + '</div>';*/
-
-                        extraQuestionType = 'radio' + question;
-                        if (angular.isDefined(questionsJson.QuestionsOnUnit.Detail.Question[question].default_value))
-                            $scope[extraQuestionType] = questionsJson.QuestionsOnUnit.Detail.Question[question].default_value;
-
-                        inputType = '<div class="btn-group widthPercent" data-toggle="buttons">';
-                        for (var choice in questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue) {
-                            var buttonId = "" + extraQuestionType + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id;
-                            var activeClass;
-                            if(questionsJson.QuestionsOnUnit.Detail.Question[question].default_value === questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id)
-                                activeClass = 'active';
-                            else 
-                                activeClass = '';
-                            inputType = inputType + '<label class="btn btn-default width50Percent ' + activeClass + '" id="' + buttonId + '"><input type="radio" ng-model="'
-                                    + extraQuestionType + '" name="' + extraQuestionType
-                                    + '" value="'
-                                    + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id
-                                    + '">' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value
-                                    + '</label>';
-                        }
-                        inputType = inputType + '</div>';
+                    if (activeFieldsArray.indexOf("1") !== -1) {
+                        mustField = checkMustField("1");
+                        appendString = appendString
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Name') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" name="firstname" class="form-control" ng-model="firstname" ' + mustField[1] + '/>'
+                                + '<input type="text" name="lastname" class="form-control" ng-model="lastname" ' + mustField[1] + '/></td></tr>';
                     }
-                    if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 3) {
-                        extraQuestionType = 'input' + question;
-                        inputType = '<input type="text" class="form-control" ng-model="' + extraQuestionType + '" required/>';
+                    if (activeFieldsArray.indexOf("3") !== -1) {
+                        mustField = checkMustField("3");
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('newUserDateOfBirth') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="dateOfBirth" placeholder="dd/mm/yyyy" ' + mustField[1] + '/></td></tr>';
                     }
-
-                    if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 4) {
-                        extraQuestionType = 'textarea' + question;
-                        inputType = '<textarea style="resize: none;" class="form-control" rows="3" ng-model="' + extraQuestionType + '" required></textarea>';
+                    if (activeFieldsArray.indexOf("2") !== -1) {
+                        mustField = checkMustField("2");
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Phone') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="phone" ' + mustField[1] + '/></td></tr>';
                     }
+                    if (activeFieldsArray.indexOf("9") !== -1) {
+                        mustField = checkMustField("9");
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Phone2') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="phone2" ' + mustField[1] + '/></td></tr>';
+                    }
+                    if (activeFieldsArray.indexOf("14") !== -1) {
+                        mustField = checkMustField("14");
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('newUserEmail') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="email" ' + mustField[1] + '/></td></tr>';
+                    }
+                    if (activeFieldsArray.indexOf("8") !== -1) {
+                        mustField = checkMustField("8");
 
-                    extraQuestionsModelArray.push(extraQuestionType);
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Gendre') + mustField[0] + '</b></p>'
+                                + '</td><td><div class="btn-group widthPercent" data-toggle="buttons">'
+                                + '<label class="btn btn-default width30Percent"><input type="radio" ng-model="gender" name="" value="' + $rootScope.getLocalizedString('createAppointmentStep5Male') + '" ' + mustField[1] + '>' + $rootScope.getLocalizedString('createAppointmentStep5Male') + '</label>'
+                                + '<label class="btn btn-default width30Percent"><input type="radio" ng-model="gender" name="" value="' + $rootScope.getLocalizedString('createAppointmentStep5Female') + '" ' + mustField[1] + '>' + $rootScope.getLocalizedString('createAppointmentStep5Female') + '</label>'
+                                + '<label class="btn btn-default width30Percent"><input type="radio" ng-model="gender" name="" value="' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '" ' + mustField[1] + '>' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '</label>'
+                                + '</td></tr>';
+                    }
+                    if (activeFieldsArray.indexOf("11") !== -1) {
+                        mustField = checkMustField("11");
+                        appendString = appendString
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Street') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="street" ' + mustField[1] + '/></td></tr>'
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5HouseNumber') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="houseNumber" ' + mustField[1] + '/></td></tr>'
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5PostalCode') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="postalCode" ' + mustField[1] + '/></td></tr>'
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Town') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="town" ' + mustField[1] + '/></td></tr>'
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Country') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="land" ' + mustField[1] + '/></td></tr>';
+                    }
+                    if (activeFieldsArray.indexOf("25") !== -1) {
+                        mustField = checkMustField("25");
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Referring') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" class="form-control" ng-model="referringDoctor" ' + mustField[1] + '/></td></tr>';
 
-                    appendString = appendString + '<tr><td><p class="formLabel"><b>'
-                            + questionsJson.QuestionsOnUnit.Detail.Question[question].question_title
-                            + '</b></p></td><td>' + inputType + '</td></tr>';
+                    }
+                    if (activeFieldsArray.indexOf("10") !== -1) {
+                        mustField = checkMustField("10");
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5ExtraInformation') + mustField[0] + '</b></p>'
+                                + '</td><td><textarea style="resize: none;" class="form-control" rows="3" ng-model="extraInformation" ' + mustField[1] + '></textarea></td></tr>';
+                    }
                 }
-                $("#questionTable").append(appendString);
+
+                var extraQuestionsJson = parseJson($rootScope.questions[1].data);
+                if (extraQuestionsJson.QuestionsOnUnit.Header.StatusCode == 1) {
+
+                    var inputType;
+                    var extraQuestionsModelArray = [];
+                    var extraQuestionType;
+
+                    console.log(extraQuestionsJson);
+
+                    for (var question in extraQuestionsJson.QuestionsOnUnit.Detail.Question) {
+                        console.log(extraQuestionsJson.QuestionsOnUnit.Detail.Question[question]);
+                        if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 1) {
+                            extraQuestionType = 'select' + question;
+                            inputType = '<select class="form-control" ng-model="' + extraQuestionType + '" type.type_title for type in typeList" required>' +
+                                    '<option value=""> - ' + $rootScope.getLocalizedString('createAppointmentStep4MakeYourChoice') + ' - </option>';
+                            for (var choice in extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue)
+                                inputType = inputType + '<option value="' + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + '">' + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value + '</option>';
+                            inputType = inputType + '</select>';
+                        }
+                        if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 2) {
+                            /*extraQuestionType = 'radio' + question;
+                             if(angular.isDefined(extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value))
+                             $scope[extraQuestionType] = extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value;
+                             
+                             inputType = '<div class="btn-group widthPercent" data-toggle="buttons">';
+                             for (var choice in extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue)
+                             inputType = inputType + '<button type="button" class="btn btn-default width50Percent" ng-model="' + extraQuestionType
+                             + '" btn-radio="' + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + '">'
+                             + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value + '</button>';
+                             inputType = inputType + '</div>';*/
+
+                            extraQuestionType = 'radio' + question;
+                            if (angular.isDefined(extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value))
+                                $scope[extraQuestionType] = extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value;
+
+                            inputType = '<div class="btn-group widthPercent" data-toggle="buttons">';
+                            for (var choice in extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue) {
+                                var buttonId = "" + extraQuestionType + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id;
+                                var activeClass;
+                                if (angular.isDefined(extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value))
+                                    if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value === extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id)
+                                        activeClass = 'active';
+                                    else
+                                        activeClass = '';
+                                inputType = inputType + '<label class="btn btn-default width50Percent ' + activeClass + '" id="' + buttonId + '"><input type="radio" ng-model="'
+                                        + extraQuestionType + '" name="' + extraQuestionType
+                                        + '" value="'
+                                        + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id
+                                        + '">' + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value
+                                        + '</label>';
+                            }
+                            inputType = inputType + '</div>';
+                        }
+                        if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 3) {
+                            extraQuestionType = 'input' + question;
+                            inputType = '<input type="text" class="form-control" ng-model="' + extraQuestionType + '" required/>';
+                        }
+
+                        if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 4) {
+                            extraQuestionType = 'textarea' + question;
+                            inputType = '<textarea style="resize: none;" class="form-control" rows="3" ng-model="' + extraQuestionType + '" required></textarea>';
+                        }
+
+                        extraQuestionsModelArray.push(extraQuestionType);
+
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>'
+                                + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_title
+                                + '</b></p></td><td>' + inputType + '</td></tr>';
+                    }
+                    console.log(appendString);
+                    $("#questionTable").append(appendString);
+                }
             }
 
-            var testappend = '<tr><td><p class="formLabel"><b>testappend</b></p></td><td>'
-                    + '<div class="btn-group widthPercent"><button type="button" class="btn btn-default width50Percent" ng-model="testvalue" btn-radio="0">test</button><button type="button" class="btn btn-default width50Percent" ng-model="testvalue" btn-radio="1">test2</button></div></td></tr>';
-            $("#questionTable").append(testappend);
+            function checkMustField(number) {
+                var standardQuestionsJson = parseJson($rootScope.questions[0].data);
+                var mustFieldsArray = standardQuestionsJson.ActiveFieldsOnUnit.Detail.MustFields.split(",");
+
+                if (mustFieldsArray.indexOf(number) !== -1)
+                    return ["*", "required"];
+                else
+                    return ["", ""];
+            }
+
+            setQuestions();
 
             /**
              * The properties 'firstname', 'lastname', 'phone', 'email' and 'dateOfBirth' are set

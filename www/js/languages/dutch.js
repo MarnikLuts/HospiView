@@ -166,6 +166,14 @@ var dutchStrings = {
         //patient/step4
         createAppointmentStep4MakeYourChoice: "maak hier uw keuze",
         
+        //patient/step5
+        createAppointmentStep5Phone2: "Telefoon 2",
+        createAppointmentStep5Street: "Straat",
+        createAppointmentStep5HouseNumber: "Huisnummer",
+        createAppointmentStep5PostalCode: "Postcode",
+        createAppointmentStep5Town: "Gemeente",
+        createAppointmentStep5Country: "Land",
+        
         //patient/step6
         createAppointmentStep6End: "Einde"
 };

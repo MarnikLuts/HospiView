@@ -166,6 +166,14 @@ var frenchStrings = {
         //patient/step4
         createAppointmentStep4MakeYourChoice: "choisissez ici",
         
+        //patient/step5
+        createAppointmentStep5Phone2: "Téléphone 2",
+        createAppointmentStep5Street: "Rue",
+        createAppointmentStep5HouseNumber: "Numéro de la maison",
+        createAppointmentStep5PostalCode: "Code postal",
+        createAppointmentStep5Town: "Ville",
+        createAppointmentStep5Country: "Pays",
+        
         //patient/step6
         createAppointmentStep6End: "Fin"
 };

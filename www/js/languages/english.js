@@ -166,6 +166,14 @@ var englishStrings = {
         //patient/step4
         createAppointmentStep4MakeYourChoice: "make your choice",
         
+        //patient/step5
+        createAppointmentStep5Phone2: "Telephone 2",
+        createAppointmentStep5Street: "Street",
+        createAppointmentStep5HouseNumber: "House number",
+        createAppointmentStep5PostalCode: "Postal code",
+        createAppointmentStep5Town: "Town",
+        createAppointmentStep5Country: "Country",
+        
         //patient/step6
         createAppointmentStep6End: "End"
 };

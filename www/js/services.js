@@ -193,12 +193,11 @@ angular.module('myApp.services', []).
                  * @param {type} server_url
                  * @returns {unresolved}
                  */
-                getTypes: function(UUID, Unit_Id, Dep_Id, GlobalTypes, The_Online, Language_Id, server_url){
+                getTypes: function(UUID, Unit_Id, Dep_Id, GlobalTypes, The_Online, Language_Id, server_url) {
                     $rootScope.requestCounter++;
                     console.log("types requested for unit: " + Unit_Id + " dep: " + Dep_Id);
                     return $http.get(server_url + "method=GetTypesOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&GlobalTypes=" + GlobalTypes + "&The_Online=" + The_Online + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter);
                 },
-                
                 /**
                  * Get proposals for placing a reservation.
                  * 
@@ -217,12 +216,11 @@ angular.module('myApp.services', []).
                  * @param {type} Language_id
                  * @returns {unresolved}
                  */
-                getProposals: function(server_url, UUID, Unit_Id, Dep_Id, UnitType_Id, STitle, Additional_Info, GlobalTypes, Start_Date, Start_Time, Active_Days, Include_Today, Language_id){
+                getProposals: function(server_url, UUID, Unit_Id, Dep_Id, UnitType_Id, STitle, Additional_Info, GlobalTypes, Start_Date, Start_Time, Active_Days, Include_Today, Language_id) {
                     $rootScope.requestCounter++;
-                    console.log(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days  + "&Include_Today=" + Include_Today  + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
-                    return $http.get(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days  + "&Include_Today=" + Include_Today  + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
+                    console.log(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days + "&Include_Today=" + Include_Today + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days + "&Include_Today=" + Include_Today + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
                 },
-                
                 /**
                  * Deleted preserved proposals so the slots are free again.
                  * 
@@ -232,17 +230,20 @@ angular.module('myApp.services', []).
                  * @param {type} Dep_Id
                  * @returns {unresolved}
                  */
-                getProposalsRemoved: function(server_url, UUID, Unit_Id, Dep_Id){
+                getProposalsRemoved: function(server_url, UUID, Unit_Id, Dep_Id) {
                     $rootScope.requestCounter++;
-                    console.log(server_url + "method=GetProposalsRemoved&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&count=" + $rootScope.requestCounter);
                     return $http.get(server_url + "method=GetProposalsRemoved&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&count=" + $rootScope.requestCounter);
                 },
-                getQuestionsOnUnit: function(UUID, Unit_Id, UnitType_Id, Language_Id, server_url){
+                getActiveFieldsOnUnit: function(UUID, Unit_Id, server_url) {
+                    $rootScope.requestCounter++;
+                    return $http.get(server_url + "method=GetActiveFieldsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&count=" + $rootScope.requestCounter);
+                },
+                getQuestionsOnUnit: function(UUID, Unit_Id, UnitType_Id, Language_Id, server_url) {
                     $rootScope.requestCounter++;
                     return ($http.get(server_url + "method=GetQuestionsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&UnitType_Id=" + UnitType_Id + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter));
                 },
-                getAppointmentConfirmed: function(UUID, Proposal_Id, pName, pFirstName, pBDate, pGender, pTel1, pTel2, pAddress, Reg_No, pEmail, pMemo, pUnique_PID, pDoctor, pUnique_GPID, pReferring_doctor, pReferring_GPID, server_url){
-                    $rootScope.requestCounter++;                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                getAppointmentConfirmed: function(UUID, Proposal_Id, pName, pFirstName, pBDate, pGender, pTel1, pTel2, pAddress, Reg_No, pEmail, pMemo, pUnique_PID, pDoctor, pUnique_GPID, pReferring_doctor, pReferring_GPID, server_url) {
+                    $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetAppointmentConfirmed&UUID=" + UUID + "&Proposal_Id=" + Proposal_Id + "&pName=" + pName + "&pFirstName=" + pFirstName + "&pBDate=" + pBDate + "&pGender=" + pGender + "&pTel1=" + pTel1 + "&pTel2=" + pTel2 + "&pAddress=" + pAddress + "&Reg_No=" + Reg_No + "&pEmail=" + pEmail + "&pMemo=" + pMemo + "&pUnique_PID=" + pUnique_PID + "&pDoctor=" + pDoctor + "&pUnique_GPID=" + pUnique_GPID + "&pReferring_doctor=" + pReferring_doctor + "&pReferring_GPID=" + pReferring_GPID + "&count=" + $rootScope.requestCounter);
                 }
             };
@@ -557,17 +558,17 @@ angular.module('myApp.services', []).
 
                     function setReservations() {
                         console.log(allReservations);
-                        
-                        if(allReservations.length !== 0){
+
+                        if (allReservations.length !== 0) {
                             $rootScope[$rootScope.searchString] = [];
                             for (var i = 0; i < allReservations.length; i++)
                                 $rootScope[$rootScope.searchString].push(allReservations[i]);
                             $rootScope.$emit('setReservationsEvent', {});
-                        
+
                             $rootScope.refresh = false;
                             $rootScope.searchInProgress = false;
                         }
-                        
+
                         if (allReservations.length === 0) {
                             $rootScope.isOffline = true;
                             alert($rootScope.getLocalizedString('uuidExpiredMessage'));
@@ -604,10 +605,10 @@ angular.module('myApp.services', []).
          * @returns {unresolved}
          */
         initRemoteLanguageStrings: function(hosp_url) {
-            var listOfPidsSids = "-99,44,48;92,7,75,90;93,55,56,57,60;94,10;112,13;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
+            var listOfPidsSids = "-99,44,48;91,56;92,7,75,90,96;93,43,55,56,57,60;94,10;112,13;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,7,8,9,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
                     promises = [],
                     defer = $q.defer();
-            
+
             for (var i = 1; i < 4; i++) {
                 promises.push(hospiviewFactory.getLanguageStrings(i, listOfPidsSids, hosp_url));
             }
@@ -615,57 +616,52 @@ angular.module('myApp.services', []).
             $q.all(promises).then(function(responses) {
                 for (var j = 0; j < responses.length; j++) {
                     var json = parseJson(responses[j].data),
-                        languageString = json.LanguageStrings.Detail.LanguageString;
+                            languageString = json.LanguageStrings.Detail.LanguageString;
 
                     if (json.LanguageStrings.Header.StatusCode === "1") {
                         var remoteDict = {
                             reg_no: getStringByPidAndSid(languageString, -99, 44),
                             doctor: getStringByPidAndSid(languageString, -99, 48),
-                            
                             patientAppointmentsViewDate: getStringByPidAndSid(languageString, 92, 7),
                             createAppointmentStep2Error: getStringByPidAndSid(languageString, 92, 75),
                             department: getStringByPidAndSid(languageString, 92, 90),
-                            
+                            createAppointmentStep5Referring: getStringByPidAndSid(languageString, 92, 96),
+                            createAppointmentNotDetermined: getStringByPidAndSid(languageString, 93, 43),
                             createAppointmentSection: getStringByPidAndSid(languageString, 93, 55),
                             createAppointmentCampus: getStringByPidAndSid(languageString, 93, 56),
                             createAppointmentDoctor: getStringByPidAndSid(languageString, 93, 57).split('/')[0],
                             createAppointmentStep2ReservationInfo: getStringByPidAndSid(languageString, 93, 60),
-                            
                             createAppointmentType: getStringByPidAndSid(languageString, 94, 10),
-                            
                             patientAppointmentsViewTijdstip: getStringByPidAndSid(languageString, 112, 13),
-                            
                             createAppointmentGreeting: getStringByPidAndSid(languageString, 204, 1),
                             createAppointmentInfo: getStringByPidAndSid(languageString, 204, 2),
                             createAppointmentMakeChoice: getStringByPidAndSid(languageString, 204, 3),
                             createAppointmentRequest: getStringByPidAndSid(languageString, 204, 4),
                             createAppointmentView: getStringByPidAndSid(languageString, 204, 5),
-                            
                             createAppointmentStep1: getStringByPidAndSid(languageString, 205, 1),
                             createAppointmentStep1Info: getStringByPidAndSid(languageString, 205, 2),
                             createAppointmentNext: getStringByPidAndSid(languageString, 205, 4),
                             createAppointmentStep1Error: getStringByPidAndSid(languageString, 205, 5),
-                            
                             createAppointmentStep5: getStringByPidAndSid(languageString, 208, 1),
                             createAppointmentStep5Info: getStringByPidAndSid(languageString, 208, 2),
                             createAppointmentStep5Name: getStringByPidAndSid(languageString, 208, 6),
+                            createAppointmentStep5Gendre: getStringByPidAndSid(languageString, 208, 7),
+                            createAppointmentStep5Male: getStringByPidAndSid(languageString, 208, 8),
+                            createAppointmentStep5Female: getStringByPidAndSid(languageString, 208, 9),
                             createAppointmentStep5Phone: getStringByPidAndSid(languageString, 208, 15),
+                            createAppointmentStep5ExtraInformation: getStringByPidAndSid(languageString, 91, 56),
                             createAppointmentStep5Error: getStringByPidAndSid(languageString, 208, 16),
-                            
                             createAppointmentStep6: getStringByPidAndSid(languageString, 209, 1),
                             createAppointmentStep6With: getStringByPidAndSid(languageString, 209, 3),
                             createAppointmentStep6On: getStringByPidAndSid(languageString, 209, 4),
                             createAppointmentStep6At: getStringByPidAndSid(languageString, 209, 5),
                             createAppointmentStep6For: getStringByPidAndSid(languageString, 209, 6),
-                            
                             createAppointmentStep6EndCreate: getStringByPidAndSid(languageString, 211, 1),
-                            
                             createAppointmentStep2: getStringByPidAndSid(languageString, 214, 1),
                             createAppointmentStep2Info1: getStringByPidAndSid(languageString, 214, 2),
                             createAppointmentStep2Info2: getStringByPidAndSid(languageString, 214, 3),
                             createAppointmentStep2ExtraInfo: getStringByPidAndSid(languageString, 214, 5),
                             createAppointmentPrevious: getStringByPidAndSid(languageString, 214, 6),
-                            
                             createAppointmentStep3: getStringByPidAndSid(languageString, 206, 1)
                         };
 
@@ -692,7 +688,7 @@ angular.module('myApp.services', []).
             });
             return defer.promise;
         },
-        initLocalLanguageStrings: function(){
+        initLocalLanguageStrings: function() {
             var deferred = $q.defer();
             deferred.resolve();
             $rootScope.nlRemoteDict = JSON.parse(localStorage.getItem('nlRemoteDict'));
