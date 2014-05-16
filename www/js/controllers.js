@@ -2954,6 +2954,7 @@ angular.module('myApp.controllers', []).
                 hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, unit_id, dep_id, $rootScope.newAppointment.units[unitTypesRequested].Header.globaltypes, $rootScope.newAppointment.units[unitTypesRequested].Header.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url)
                     .then(function(response){
                         var json = parseJson(response.data);
+                        console.log(json);
                         if(json.TypesOnUnit.Header.StatusCode==="1"){
                             
                             //Status is OK
@@ -3089,6 +3090,12 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.locations.push($scope.locations[i]);
                     }
                     $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
+                    
+                    //In the next step, units must be able to be checked and unchecked
+                    for(var j=0;j<$rootScope.newAppointment.units;j++){
+                        $rootScope.newAppointment.units[j].checked = true;
+                    }
+                    
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('/patient/step3');
                 } else {
@@ -3109,6 +3116,27 @@ angular.module('myApp.controllers', []).
             var globalTypes;
             $scope.startProposalDate = new Date();
             $scope.today = new Date();
+            $scope.unitList = [];
+            console.log($rootScope.newAppointment.units);
+            for(var i=0;i<$rootScope.newAppointment.units.length;i++){
+                for(var j=0;j<$rootScope.newAppointment.units[i].Detail.Dep.length;j++){
+                    var duplicate = false;
+                    console.log($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep.dep_id));
+                    if($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep[j].dep_id)!=-1){
+                        for(var k=0;k<$scope.unitList.length;k++){
+                            if($scope.unitList[k].Header.unit_id===$rootScope.newAppointment.units[i].Header.unit_id)
+                                duplicate=true;
+                        }
+                        if(!duplicate){
+                            var unit = $rootScope.newAppointment.units[i];
+                            unit.checked = true;
+                            $scope.unitList.push(unit);  
+                        }
+                        break;
+                    }
+                }
+            }
+            console.log($scope.unitList);
 
             /**
              * listens for changes in the startProposalDate model. It is changed
@@ -3354,6 +3382,7 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.back = function() {
+                console.log($rootScope.newAppointment.type);
                 for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                     hospiviewFactory.getProposalsRemoved(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
@@ -3361,6 +3390,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.type.unit_id[i],
                             $rootScope.newAppointment.type.dep_id[i]);
                 }
+                $rootScope.pageClass="left-to-right";
                 history.back();
             };
         }).
