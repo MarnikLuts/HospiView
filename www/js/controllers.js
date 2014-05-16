@@ -2917,26 +2917,30 @@ angular.module('myApp.controllers', []).
                 if ($rootScope.newAppointment.units[unitTypesRequested].Header.extern_step2 === "0") {
                     for (var d = 0; d < $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length; d++) {
                         var dep_no_step2 = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[d],
-                                duplicate_stitle = false;
-
-                        for (var t = 0; t < $scope.typeList.length; t++) {
-                            if (dep_no_step2.stitle === $scope.typeList[t].type_title) {
-                                duplicate_stitle = true;
-                                $scope.typeList[t].unit_id.push(unit_id);
-                                $scope.typeList[t].dep_id.push(dep_no_step2.dep_id);
-                                $scope.typeList[t].type_id.push("0");
-                                $scope.typeList[t].location_id.push(dep_no_step2.location_id);
-                                break;
-                            }
-                        }
-                        if (!duplicate_stitle && dep_no_step2.stitle !== "") {
-                            $scope.typeList.push({
+                            duplicate_stitle = false,
+                            new_type = {
                                 type_title: dep_no_step2.stitle,
                                 unit_id: [unit_id],
                                 dep_id: [dep_no_step2.dep_id],
                                 type_id: ["0"],
                                 location_id: [dep_no_step2.location_id]
-                            });
+                            };
+
+                        for (var t = 0; t < $scope.typeList.length; t++) {
+                            if (dep_no_step2.stitle === $scope.typeList[t].type_title) {
+                                duplicate_stitle = true;
+                                console.log(combinationExists($scope.typeList, new_type));
+                                if(!combinationExists($scope.typeList, new_type)){
+                                    $scope.typeList[t].unit_id.push(unit_id);
+                                    $scope.typeList[t].dep_id.push(dep_no_step2.dep_id);
+                                    $scope.typeList[t].type_id.push("0");
+                                    $scope.typeList[t].location_id.push(dep_no_step2.location_id);
+                                }
+                                break;
+                            }
+                        }
+                        if (!duplicate_stitle && dep_no_step2.stitle !== "") {
+                            $scope.typeList.push(new_type);
                         }
                     }
                     depTypeRequested++;
@@ -2973,6 +2977,8 @@ angular.module('myApp.controllers', []).
                                          * the unit_id, type_id and dep_id fields are arrays that hold more than one value if there was a duplicate
                                          * these fields must always have the same length for each type to successfully retrieve data in the next step
                                          * 
+                                         * there should be a unique combination to form a request for a proposal when you combine the values of unit_id, type_id and dep_id for a given index
+                                         * 
                                          */
                                         for (var t = 0; t < json.TypesOnUnit.Detail.Type.length; t++) {
                                             duplicate = false;
@@ -2983,10 +2989,12 @@ angular.module('myApp.controllers', []).
                                             for (var u = 0; u < $scope.typeList.length; u++) {
                                                 if (json.TypesOnUnit.Detail.Type[t].type_title === $scope.typeList[u].type_title) {
                                                     duplicate = true;
-                                                    $scope.typeList[u].dep_id.push(json.TypesOnUnit.Detail.Type[t].dep_id[0]);
-                                                    $scope.typeList[u].unit_id.push(json.TypesOnUnit.Detail.Type[t].unit_id[0]);
-                                                    $scope.typeList[u].type_id.push(json.TypesOnUnit.Detail.Type[t].type_id[0]);
-                                                    $scope.typeList[u].location_id.push(json.TypesOnUnit.Detail.Type[t].location_id[0]);
+                                                    if(!combinationExists($scope.typeList, json.TypesOnUnit.Detail.Type[t])){
+                                                        $scope.typeList[u].dep_id.push(json.TypesOnUnit.Detail.Type[t].dep_id[0]);
+                                                        $scope.typeList[u].unit_id.push(json.TypesOnUnit.Detail.Type[t].unit_id[0]);
+                                                        $scope.typeList[u].type_id.push(json.TypesOnUnit.Detail.Type[t].type_id[0]);
+                                                        $scope.typeList[u].location_id.push(json.TypesOnUnit.Detail.Type[t].location_id[0]);
+                                                    }
                                                     break;
                                                 }
                                             }
@@ -3024,6 +3032,27 @@ angular.module('myApp.controllers', []).
                 }
                 return false;
             };
+            
+            /**
+             * checks if the combination of the new type's unit_id, dep_id and type_id already exists in the given type list
+             * 
+             * @param {type} typeList
+             * @param {type} new_type
+             * @returns {Boolean}
+             */
+            function combinationExists(typeList, new_type){
+                for(var i=0;i<typeList.length;i++){
+                    for(var j=0;j<typeList[i].unit_id.length;j++){
+                        if(typeList[i].unit_id[j]===new_type.unit_id[0]&&
+                        typeList[i].dep_id[j]===new_type.dep_id[0]&&
+                        typeList[i].type_id[j]===new_type.type_id[0]&&
+                        typeList[i].location_id[j]===new_type.location_id[0]){
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
 
             /**
              * is called when a new type has been selected
@@ -3089,12 +3118,6 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.locations.push($scope.locations[i]);
                     }
                     $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
-
-                    //In the next step, units must be able to be checked and unchecked
-                    for (var j = 0; j < $rootScope.newAppointment.units; j++) {
-                        $rootScope.newAppointment.units[j].checked = true;
-                    }
-
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('/patient/step3');
                 } else {
@@ -3120,11 +3143,10 @@ angular.module('myApp.controllers', []).
             for (var i = 0; i < $rootScope.newAppointment.units.length; i++) {
                 for (var j = 0; j < $rootScope.newAppointment.units[i].Detail.Dep.length; j++) {
                     var duplicate = false;
-                    console.log($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep.dep_id));
-                    if ($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep[j].dep_id) != -1) {
-                        for (var k = 0; k < $scope.unitList.length; k++) {
-                            if ($scope.unitList[k].Header.unit_id === $rootScope.newAppointment.units[i].Header.unit_id)
-                                duplicate = true;
+                    if($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep[j].dep_id)!=-1){
+                        for(var k=0;k<$scope.unitList.length;k++){
+                            if($scope.unitList[k].Header.unit_id===$rootScope.newAppointment.units[i].Header.unit_id)
+                                duplicate=true;
                         }
                         if (!duplicate) {
                             var unit = {
@@ -3138,7 +3160,6 @@ angular.module('myApp.controllers', []).
                     }
                 }
             }
-            console.log($scope.unitList);
 
             /**
              * listens for changes in the startProposalDate model. It is changed
@@ -3173,7 +3194,11 @@ angular.module('myApp.controllers', []).
                             globalTypes = $rootScope.newAppointment.units[j].Header.globaltypes;
                         }
                     }
-
+                    console.log("request");
+                    console.log($rootScope.newAppointment.type.unit_id[i] + " " 
+                                + $rootScope.newAppointment.type.dep_id[i] + " " 
+                                + $rootScope.newAppointment.type.type_id[i]);
+                    
                     retrievedRequests.push(hospiviewFactory.getProposals(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
@@ -3277,10 +3302,8 @@ angular.module('myApp.controllers', []).
                             for (var d = 0; d < $rootScope.newAppointment.units[p].Detail.Dep.length; d++) {
                                 if (proposals[proposal].depid === $rootScope.newAppointment.units[p].Detail.Dep[d].dep_id) {
                                     proposals[proposal].location = $rootScope.newAppointment.units[p].Detail.Dep[d].location_name;
-                                    break;
                                 }
                             }
-                            break;
                         }
                     }
 
