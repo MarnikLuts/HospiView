@@ -135,6 +135,10 @@ body {
 .icasaCheckboxUnChecked{
     background-image: url('../img/checkbox0.png');
 }
+.icasa-appointment-selected{
+    color: white;
+    background-color: #3044B5;
+}
 
 @media screen and (min-width: 768px) {
     .settingsLabels {

@@ -3384,11 +3384,20 @@ angular.module('myApp.controllers', []).
              * 
              * @param {type} proposal   selected proposal
              */
-            $scope.next = function(proposal) {
+            $scope.next = function() {
                 $scope.selectedProposal.day_name = $scope.getDay($scope.selectedProposal);
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
                 $rootScope.pageClass = 'right-to-left';
-
+                
+                //Release all proposals for testing
+                for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
+                    hospiviewFactory.getProposalsRemoved(
+                            $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
+                            $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
+                            $rootScope.newAppointment.type.unit_id[i],
+                            $rootScope.newAppointment.type.dep_id[i]);
+                }
+                
                 /** 
                  * 15.05.2014 11:07  
                  * $rootScope.newAppointment.proposal.type_id is not set yet at this point in time.
@@ -3404,7 +3413,7 @@ angular.module('myApp.controllers', []).
                     $location.path('/patient/step5');
                 });
             };
-
+            
             $scope.back = function() {
                 for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                     hospiviewFactory.getProposalsRemoved(
