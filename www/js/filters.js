@@ -31,8 +31,21 @@ angular.module('myApp.filters', []).
                 for (var proposal in proposals) {
                     for (var i = 0; i <= 6; i++) {
                         if (proposals[proposal].setDayNumber === i && filters[i] === true && 
-                                (proposals[proposal].afternoon === filters.afternoon || proposals[proposal].morning === filters.morning))
-                            filtered.push(proposals[proposal]);
+                                (proposals[proposal].afternoon === filters.afternoon || proposals[proposal].morning === filters.morning)){
+                            for(var j=0;j<filters.unitList.length;j++){
+                                if(filters.unitList[j].checked&&(proposals[proposal].unit_id===filters.unitList[j].Header.unit_id)){
+                                    if(proposals[proposal].location){
+                                        for(var k=0;k<filters.locations.length;k++){
+                                            if(filters.locations[k].checked&&(proposals[proposal].location===filters.locations[k].location_name)){
+                                                filtered.push(proposals[proposal]);
+                                            }
+                                        }
+                                    }else{
+                                        filtered.push(proposals[proposal]);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 return filtered;

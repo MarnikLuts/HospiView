@@ -195,6 +195,7 @@ angular.module('myApp.services', []).
                  */
                 getTypes: function(UUID, Unit_Id, Dep_Id, GlobalTypes, The_Online, Language_Id, server_url){
                     $rootScope.requestCounter++;
+                    console.log("types requested for unit: " + Unit_Id + " dep: " + Dep_Id);
                     return $http.get(server_url + "method=GetTypesOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&GlobalTypes=" + GlobalTypes + "&The_Online=" + The_Online + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter);
                 },
                 

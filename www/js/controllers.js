@@ -3127,8 +3127,11 @@ angular.module('myApp.controllers', []).
                                 duplicate=true;
                         }
                         if(!duplicate){
-                            var unit = $rootScope.newAppointment.units[i];
-                            unit.checked = true;
+                            var unit = {
+                                Header: {unit_name: $rootScope.newAppointment.units[i].Header.unit_name,
+                                         unit_id: $rootScope.newAppointment.units[i].Header.unit_id},
+                                checked: true
+                            };
                             $scope.unitList.push(unit);  
                         }
                         break;
@@ -3237,7 +3240,7 @@ angular.module('myApp.controllers', []).
              * so we can activate the filter on that day.
              */
             function editProposalInfo(proposals) {
-                $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true};
+                $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true, unitList: $scope.unitList, locations: $rootScope.newAppointment.locations};
 
                 /**
                  * Sorts the retrieved proposals by date.
@@ -3346,12 +3349,10 @@ angular.module('myApp.controllers', []).
             if (width <= 768) {
                 $scope.days = getDayNamesShort($rootScope.languageID);
                 $scope.morningAfternoonName = 'Short';
-                $scope.$apply();
             }
             else {
                 $scope.days = getDayNames($rootScope.languageID);
                 $scope.morningAfternoonName = '';
-                $scope.$apply();
             }
 
             /**
