@@ -163,6 +163,9 @@ var frenchStrings = {
         createAppointmentStep3Selected: "Vous avez choisi cette réservation:",
         createAppointmentStep3SelectDate: "la date de début",
         
+        //patient/step4
+        createAppointmentStep4MakeYourChoice: "choisissez ici",
+        
         //patient/step6
         createAppointmentStep6End: "Fin"
 };

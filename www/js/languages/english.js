@@ -163,6 +163,9 @@ var englishStrings = {
         createAppointmentStep3Selected: "You selected this appointment:",
         createAppointmentStep3SelectDate: "start date",
                 
+        //patient/step4
+        createAppointmentStep4MakeYourChoice: "make your choice",
+        
         //patient/step6
         createAppointmentStep6End: "End"
 };

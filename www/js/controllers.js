@@ -2876,10 +2876,10 @@ angular.module('myApp.controllers', []).
                 var unit = $rootScope.newAppointment.units[i];
                 for (var j = 0; j < unit.Detail.Dep.length; j++) {
                     var dep = unit.Detail.Dep[j],
-                        duplicate = false;
-                    for(var h=0;h<$scope.locations.length;h++){
-                        if($scope.locations[h].location_id==dep.location_id){
-                            duplicate=true;
+                            duplicate = false;
+                    for (var h = 0; h < $scope.locations.length; h++) {
+                        if ($scope.locations[h].location_id == dep.location_id) {
+                            duplicate = true;
                             break;
                         }
 
@@ -2912,16 +2912,16 @@ angular.module('myApp.controllers', []).
              */
             function getTypes() {
                 var unit_id = $rootScope.newAppointment.units[unitTypesRequested].Header.unit_id,
-                    dep_id = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].dep_id,
-                    duplicate = false;
-                if($rootScope.newAppointment.units[unitTypesRequested].Header.extern_step2==="0"){
-                    for(var d=0;d<$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length;d++){
+                        dep_id = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].dep_id,
+                        duplicate = false;
+                if ($rootScope.newAppointment.units[unitTypesRequested].Header.extern_step2 === "0") {
+                    for (var d = 0; d < $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length; d++) {
                         var dep_no_step2 = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[d],
-                            duplicate_stitle = false;
-                        
-                        for(var t=0;t<$scope.typeList.length;t++){
-                            if(dep_no_step2.stitle===$scope.typeList[t].type_title){
-                                duplicate_stitle=true;
+                                duplicate_stitle = false;
+
+                        for (var t = 0; t < $scope.typeList.length; t++) {
+                            if (dep_no_step2.stitle === $scope.typeList[t].type_title) {
+                                duplicate_stitle = true;
                                 $scope.typeList[t].unit_id.push(unit_id);
                                 $scope.typeList[t].dep_id.push(dep_no_step2.dep_id);
                                 $scope.typeList[t].type_id.push("0");
@@ -2929,7 +2929,7 @@ angular.module('myApp.controllers', []).
                                 break;
                             }
                         }
-                        if(!duplicate_stitle&&dep_no_step2.stitle!==""){
+                        if (!duplicate_stitle && dep_no_step2.stitle !== "") {
                             $scope.typeList.push({
                                 type_title: dep_no_step2.stitle,
                                 unit_id: [unit_id],
@@ -2940,76 +2940,76 @@ angular.module('myApp.controllers', []).
                         }
                     }
                     depTypeRequested++;
-                    if(depTypeRequested==$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length){
-                        depTypeRequested=0;
+                    if (depTypeRequested == $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length) {
+                        depTypeRequested = 0;
                         unitTypesRequested++;
                     }
-                    if(unitTypesRequested!=$rootScope.newAppointment.units.length){
+                    if (unitTypesRequested != $rootScope.newAppointment.units.length) {
                         getTypes();
-                    }else{
+                    } else {
                         $scope.typesLoaded = true;
                         console.log($scope.typeList);
                     }
-                }else{
-                hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, unit_id, dep_id, $rootScope.newAppointment.units[unitTypesRequested].Header.globaltypes, $rootScope.newAppointment.units[unitTypesRequested].Header.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url)
-                    .then(function(response){
-                        var json = parseJson(response.data);
-                        if(json.TypesOnUnit.Header.StatusCode==="1"){
-                            
-                            //Status is OK
-                            if(json.TypesOnUnit.Detail){
-                                //Response contains a Detail variable
-                                
-                                //if there's only one type convert it to an array with a single element
-                                if(json.TypesOnUnit.Header.TotalRecords==="1")
-                                    json.TypesOnUnit.Detail.Type = [json.TypesOnUnit.Detail.Type];
-                                
-                                /*
-                                 * populate $scope.typeList while omitting duplicate values
-                                 * 
-                                 * if there is a duplicate, it will not be added to the list, 
-                                 * but the unit_id, type_id and dep_id are put into the 'Type' variable that's already been added
-                                 * 
-                                 * the unit_id, type_id and dep_id fields are arrays that hold more than one value if there was a duplicate
-                                 * these fields must always have the same length for each type to successfully retrieve data in the next step
-                                 * 
-                                 */
-                                for(var t=0;t<json.TypesOnUnit.Detail.Type.length;t++){
-                                    duplicate=false;
-                                    json.TypesOnUnit.Detail.Type[t].dep_id = [dep_id];
-                                    json.TypesOnUnit.Detail.Type[t].unit_id = [unit_id];
-                                    json.TypesOnUnit.Detail.Type[t].type_id = [json.TypesOnUnit.Detail.Type[t].type_id];
-                                    json.TypesOnUnit.Detail.Type[t].location_id = [$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].location_id];
-                                    for(var u=0;u<$scope.typeList.length;u++){
-                                        if(json.TypesOnUnit.Detail.Type[t].type_title===$scope.typeList[u].type_title){
-                                            duplicate=true;
-                                            $scope.typeList[u].dep_id.push(json.TypesOnUnit.Detail.Type[t].dep_id[0]);
-                                            $scope.typeList[u].unit_id.push(json.TypesOnUnit.Detail.Type[t].unit_id[0]);
-                                            $scope.typeList[u].type_id.push(json.TypesOnUnit.Detail.Type[t].type_id[0]);
-                                            $scope.typeList[u].location_id.push(json.TypesOnUnit.Detail.Type[t].location_id[0]);
-                                            break;
+                } else {
+                    hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, unit_id, dep_id, $rootScope.newAppointment.units[unitTypesRequested].Header.globaltypes, $rootScope.newAppointment.units[unitTypesRequested].Header.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url)
+                            .then(function(response) {
+                                var json = parseJson(response.data);
+                                if (json.TypesOnUnit.Header.StatusCode === "1") {
+
+                                    //Status is OK
+                                    if (json.TypesOnUnit.Detail) {
+                                        //Response contains a Detail variable
+
+                                        //if there's only one type convert it to an array with a single element
+                                        if (json.TypesOnUnit.Header.TotalRecords === "1")
+                                            json.TypesOnUnit.Detail.Type = [json.TypesOnUnit.Detail.Type];
+
+                                        /*
+                                         * populate $scope.typeList while omitting duplicate values
+                                         * 
+                                         * if there is a duplicate, it will not be added to the list, 
+                                         * but the unit_id, type_id and dep_id are put into the 'Type' variable that's already been added
+                                         * 
+                                         * the unit_id, type_id and dep_id fields are arrays that hold more than one value if there was a duplicate
+                                         * these fields must always have the same length for each type to successfully retrieve data in the next step
+                                         * 
+                                         */
+                                        for (var t = 0; t < json.TypesOnUnit.Detail.Type.length; t++) {
+                                            duplicate = false;
+                                            json.TypesOnUnit.Detail.Type[t].dep_id = [dep_id];
+                                            json.TypesOnUnit.Detail.Type[t].unit_id = [unit_id];
+                                            json.TypesOnUnit.Detail.Type[t].type_id = [json.TypesOnUnit.Detail.Type[t].type_id];
+                                            json.TypesOnUnit.Detail.Type[t].location_id = [$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].location_id];
+                                            for (var u = 0; u < $scope.typeList.length; u++) {
+                                                if (json.TypesOnUnit.Detail.Type[t].type_title === $scope.typeList[u].type_title) {
+                                                    duplicate = true;
+                                                    $scope.typeList[u].dep_id.push(json.TypesOnUnit.Detail.Type[t].dep_id[0]);
+                                                    $scope.typeList[u].unit_id.push(json.TypesOnUnit.Detail.Type[t].unit_id[0]);
+                                                    $scope.typeList[u].type_id.push(json.TypesOnUnit.Detail.Type[t].type_id[0]);
+                                                    $scope.typeList[u].location_id.push(json.TypesOnUnit.Detail.Type[t].location_id[0]);
+                                                    break;
+                                                }
+                                            }
+                                            if (!duplicate) {
+                                                $scope.typeList.push(json.TypesOnUnit.Detail.Type[t]);
+                                            }
                                         }
                                     }
-                                    if (!duplicate){
-                                        $scope.typeList.push(json.TypesOnUnit.Detail.Type[t]);
+
+                                    depTypeRequested++;
+                                    if (depTypeRequested == $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length) {
+                                        depTypeRequested = 0;
+                                        unitTypesRequested++;
+                                    }
+                                    if (unitTypesRequested != $rootScope.newAppointment.units.length) {
+                                        getTypes();
+                                    } else {
+                                        $scope.typesLoaded = true;
+                                        console.log($scope.typeList);
                                     }
                                 }
-                            }
-
-                            depTypeRequested++;
-                            if (depTypeRequested == $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length) {
-                                depTypeRequested = 0;
-                                unitTypesRequested++;
-                            }
-                            if (unitTypesRequested != $rootScope.newAppointment.units.length) {
-                                getTypes();
-                            } else {
-                                $scope.typesLoaded = true;
-                                console.log($scope.typeList);
-                            }
-                        }
-                        }, error);
-                    }
+                            }, error);
+                }
             }
 
             /**
@@ -3048,7 +3048,7 @@ angular.module('myApp.controllers', []).
                         $scope.locations[i].checked = true;
                     }
                 }
-                if($scope.type){
+                if ($scope.type) {
                     for (var j = 0; j < $scope.newAppointment.units.length; j++) {
                         for (var h = 0; h < $scope.newAppointment.units[j].Detail.Dep.length; h++) {
                             var dep = $scope.newAppointment.units[j].Detail.Dep[h];
@@ -3302,7 +3302,7 @@ angular.module('myApp.controllers', []).
             $scope.getDate = function(proposal) {
                 var date = new Date(proposal.the_date);
                 var year = date.getFullYear() + "";
-                return date.getDate() + "/" + (date.getMonth() + 1) + "/" + year.substring(2,4);
+                return date.getDate() + "/" + (date.getMonth() + 1) + "/" + year.substring(2, 4);
             };
 
             /**
@@ -3330,12 +3330,10 @@ angular.module('myApp.controllers', []).
             if (width <= 768) {
                 $scope.days = getDayNamesShort($rootScope.languageID);
                 $scope.morningAfternoonName = 'Short';
-                $scope.$apply();
             }
             else {
                 $scope.days = getDayNames($rootScope.languageID);
                 $scope.morningAfternoonName = '';
-                $scope.$apply();
             }
 
             /**
@@ -3379,6 +3377,8 @@ angular.module('myApp.controllers', []).
             /**
              * The fields firstname and lastname are automatically filled with known data
              */
+
+            console.log($rootScope.newAppointment.type);
             $scope.firstname = $rootScope.user.split(" ")[0];
             $scope.lastname = $rootScope.user.split(" ")[1];
 
@@ -3394,20 +3394,44 @@ angular.module('myApp.controllers', []).
                 for (var question in questionsJson.QuestionsOnUnit.Detail.Question) {
                     if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 1) {
                         extraQuestionType = 'select' + question;
-                        inputType = '<select class="form-control" ng-model="' + extraQuestionType + '" type.type_title for type in typeList" required>';
-                        for (var choice in questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues)
+                        inputType = '<select class="form-control" ng-model="' + extraQuestionType + '" type.type_title for type in typeList" required>' +
+                                '<option value=""> - ' + $rootScope.getLocalizedString('createAppointmentStep4MakeYourChoice') + ' - </option>';
+                        for (var choice in questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue)
                             /*TODO: value="" has to be filled. Webservice is not ready yet at this point in time*/
-                            inputType = inputType + '<option value="">' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues[choice].answer_value + '</option>';
+                            inputType = inputType + '<option value="' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + '">' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value + '</option>';
                         inputType = inputType + '</select>';
-                        console.log(inputType);
                     }
                     if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 2) {
+                        /*extraQuestionType = 'radio' + question;
+                         if(angular.isDefined(questionsJson.QuestionsOnUnit.Detail.Question[question].default_value))
+                         $scope[extraQuestionType] = questionsJson.QuestionsOnUnit.Detail.Question[question].default_value;
+                         
+                         inputType = '<div class="btn-group widthPercent" data-toggle="buttons">';
+                         for (var choice in questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue)
+                         inputType = inputType + '<button type="button" class="btn btn-default width50Percent" ng-model="' + extraQuestionType
+                         + '" btn-radio="' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + '">'
+                         + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value + '</button>';
+                         inputType = inputType + '</div>';*/
+
                         extraQuestionType = 'radio' + question;
-                        inputType = '<div class="btn-group">';
-                        for (var choice in questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues)
-                            inputType = inputType + '<label class="btn btn-default" ng-model="' + extraQuestionType
-                                    + '" btn-radio="' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues[choice].answer_value + '">'
-                                    + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues[choice].answer_value + '</label>';
+                        if (angular.isDefined(questionsJson.QuestionsOnUnit.Detail.Question[question].default_value))
+                            $scope[extraQuestionType] = questionsJson.QuestionsOnUnit.Detail.Question[question].default_value;
+
+                        inputType = '<div class="btn-group widthPercent" data-toggle="buttons">';
+                        for (var choice in questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue) {
+                            var buttonId = "" + extraQuestionType + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id;
+                            var activeClass;
+                            if(questionsJson.QuestionsOnUnit.Detail.Question[question].default_value === questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id)
+                                activeClass = 'active';
+                            else 
+                                activeClass = '';
+                            inputType = inputType + '<label class="btn btn-default width50Percent ' + activeClass + '" id="' + buttonId + '"><input type="radio" ng-model="'
+                                    + extraQuestionType + '" name="' + extraQuestionType
+                                    + '" value="'
+                                    + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id
+                                    + '">' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value
+                                    + '</label>';
+                        }
                         inputType = inputType + '</div>';
                     }
                     if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 3) {
@@ -3429,7 +3453,9 @@ angular.module('myApp.controllers', []).
                 $("#questionTable").append(appendString);
             }
 
-            
+            var testappend = '<tr><td><p class="formLabel"><b>testappend</b></p></td><td>'
+                    + '<div class="btn-group widthPercent"><button type="button" class="btn btn-default width50Percent" ng-model="testvalue" btn-radio="0">test</button><button type="button" class="btn btn-default width50Percent" ng-model="testvalue" btn-radio="1">test2</button></div></td></tr>';
+            $("#questionTable").append(testappend);
 
             /**
              * The properties 'firstname', 'lastname', 'phone', 'email' and 'dateOfBirth' are set

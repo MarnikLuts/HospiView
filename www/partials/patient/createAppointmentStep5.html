@@ -54,7 +54,8 @@
                     </td>
                 </tr>
             </table>
-            <div class="alert alert-danger" ng-show="displayError||step5Form.lastname.$error.required&&step5Form.lastname.$dirty||step5Form.firstname.$error.required&&step5Form.firstname.$dirty||step5Form.phone.$error.required&&step5Form.phone.$dirty">
+
+            <div class="alert alert-danger" ng-show="displayError || step5Form.lastname.$error.required && step5Form.lastname.$dirty || step5Form.firstname.$error.required && step5Form.firstname.$dirty || step5Form.phone.$error.required && step5Form.phone.$dirty">
                 {{getLocalizedString('createAppointmentStep5Error')}}
             </div>
             <div class="text-center">

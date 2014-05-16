@@ -163,6 +163,9 @@ var dutchStrings = {
         createAppointmentStep3Selected: "U selecteerde volgende afspraak:",
         createAppointmentStep3SelectDate: "startdatum",
                         
+        //patient/step4
+        createAppointmentStep4MakeYourChoice: "maak hier uw keuze",
+        
         //patient/step6
         createAppointmentStep6End: "Einde"
 };

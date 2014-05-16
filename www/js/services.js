@@ -233,6 +233,7 @@ angular.module('myApp.services', []).
                  */
                 getProposalsRemoved: function(server_url, UUID, Unit_Id, Dep_Id){
                     $rootScope.requestCounter++;
+                    console.log(server_url + "method=GetProposalsRemoved&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&count=" + $rootScope.requestCounter);
                     return $http.get(server_url + "method=GetProposalsRemoved&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&count=" + $rootScope.requestCounter);
                 },
                 getQuestionsOnUnit: function(UUID, Unit_Id, UnitType_Id, Language_Id, server_url){
