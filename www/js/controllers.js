@@ -3246,7 +3246,7 @@ angular.module('myApp.controllers', []).
                             proposals[proposal].unit_name = $rootScope.newAppointment.units[p].Header.unit_name;
                             for (var d = 0; d < $rootScope.newAppointment.units[p].Detail.Dep.length; d++) {
                                 if (proposals[proposal].depid === $rootScope.newAppointment.units[p].Detail.Dep[d].dep_id) {
-                                    proposals[proposal].location = $rootScope.newAppointment.units[p].Header.unit_name;
+                                    proposals[proposal].location = $rootScope.newAppointment.units[p].Detail.Dep[d].location_name;
                                     break;
                                 }
                             }
@@ -3301,7 +3301,8 @@ angular.module('myApp.controllers', []).
              */
             $scope.getDate = function(proposal) {
                 var date = new Date(proposal.the_date);
-                return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+                var year = date.getFullYear() + "";
+                return date.getDate() + "/" + (date.getMonth() + 1) + "/" + year.substring(2,4);
             };
 
             /**
@@ -3328,10 +3329,12 @@ angular.module('myApp.controllers', []).
             width = window.innerWidth;
             if (width <= 768) {
                 $scope.days = getDayNamesShort($rootScope.languageID);
+                $scope.morningAfternoonName = 'Short';
                 $scope.$apply();
             }
             else {
                 $scope.days = getDayNames($rootScope.languageID);
+                $scope.morningAfternoonName = '';
                 $scope.$apply();
             }
 
@@ -3352,17 +3355,16 @@ angular.module('myApp.controllers', []).
                  * Should be set in step 2.
                  * */
                 var questions = []
+                console.log($rootScope.currentServers[$rootScope.newAppointment.server].uuid + " " + $rootScope.newAppointment.proposal.unit_id + " " + $rootScope.newAppointment.proposal.type_id + " " + $rootScope.languageID + " " + $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
                 questions.push(hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.newAppointment.proposal.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
 
-                $q.all($rootScope.questions).then(function(responses) {
-                    console.log(responses);
+                $q.all(questions).then(function(responses) {
                     $rootScope.questions = responses;
                     $location.path('/patient/step5');
                 });
             };
 
             $scope.back = function() {
-                console.log($rootScope.newAppointment.type)
                 for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                     hospiviewFactory.getProposalsRemoved(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
@@ -3370,7 +3372,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.type.unit_id[i],
                             $rootScope.newAppointment.type.dep_id[i]);
                 }
-                $location.path('/patient/step2');
+                history.back();
             };
         }).
         controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location, hospiviewFactory, $q) {
@@ -3380,40 +3382,40 @@ angular.module('myApp.controllers', []).
             $scope.firstname = $rootScope.user.split(" ")[0];
             $scope.lastname = $rootScope.user.split(" ")[1];
 
-            console.log($rootScope.questions);
-            if (angular.isDefined($rootScope.questions.data)) {
-                var questionsJson = parseJson($rootScope.questions.data);
+            var questionsJson = parseJson($rootScope.questions[0].data);
+            if (questionsJson.QuestionsOnUnit.Header.StatusCode == 1) {
                 var appendString = '';
                 var inputType;
                 var extraQuestionsModelArray = [];
                 var extraQuestionType;
 
+                console.log(questionsJson);
 
-                for (var question in questionsJson.QuestionsOnUnit.Detail) {
-                    if (questionsJson.QuestionsOnUnit.Detail[question].question_type == 1) {
+                for (var question in questionsJson.QuestionsOnUnit.Detail.Question) {
+                    if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 1) {
                         extraQuestionType = 'select' + question;
                         inputType = '<select class="form-control" ng-model="' + extraQuestionType + '" type.type_title for type in typeList" required>';
-                        for (var choice in questionsJson.QuestionsOnUnit.Detail[question].PossibleValues)
+                        for (var choice in questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues)
                             /*TODO: value="" has to be filled. Webservice is not ready yet at this point in time*/
-                            inputType = inputType + '<option value="">' + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '</option>';
+                            inputType = inputType + '<option value="">' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues[choice].answer_value + '</option>';
                         inputType = inputType + '</select>';
-
+                        console.log(inputType);
                     }
-                    if (questionsJson.QuestionsOnUnit.Detail[question].question_type == 2) {
+                    if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 2) {
                         extraQuestionType = 'radio' + question;
                         inputType = '<div class="btn-group">';
-                        for (var choice in questionsJson.QuestionsOnUnit.Detail[question].PossibleValues)
+                        for (var choice in questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues)
                             inputType = inputType + '<label class="btn btn-default" ng-model="' + extraQuestionType
-                                    + '" btn-radio="' + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '">'
-                                    + questionsJson.QuestionsOnUnit.Detail[question].PossibleValues[choice].answer_value + '</label>';
+                                    + '" btn-radio="' + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues[choice].answer_value + '">'
+                                    + questionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues[choice].answer_value + '</label>';
                         inputType = inputType + '</div>';
                     }
-                    if (questionsJson.QuestionsOnUnit.Detail[question].question_type == 3) {
+                    if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 3) {
                         extraQuestionType = 'input' + question;
                         inputType = '<input type="text" class="form-control" ng-model="' + extraQuestionType + '" required/>';
                     }
 
-                    if (questionsJson.QuestionsOnUnit.Detail[question].question_type == 4) {
+                    if (questionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 4) {
                         extraQuestionType = 'textarea' + question;
                         inputType = '<textarea style="resize: none;" class="form-control" rows="3" ng-model="' + extraQuestionType + '" required></textarea>';
                     }
@@ -3421,7 +3423,7 @@ angular.module('myApp.controllers', []).
                     extraQuestionsModelArray.push(extraQuestionType);
 
                     appendString = appendString + '<tr><td><p class="formLabel"><b>'
-                            + questionsJson.QuestionsOnUnit.Detail[question].question_title
+                            + questionsJson.QuestionsOnUnit.Detail.Question[question].question_title
                             + '</b></p></td><td>' + inputType + '</td></tr>';
                 }
                 $("#questionTable").append(appendString);
