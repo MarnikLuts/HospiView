@@ -2642,6 +2642,7 @@ angular.module('myApp.controllers', []).
                 {id: 5, the_date: '2014-05-08', time_from: '12:30', time_till: '13:00', title: 'Reservation5', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
                 {id: 6, the_date: '2014-05-08', time_from: '13:30', time_till: '14:00', title: 'Reservation6', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'}
             ];
+//            $scope.reservationList = [];
 
 
             /**
@@ -3172,6 +3173,9 @@ angular.module('myApp.controllers', []).
              */
             $scope.$watch('startProposalDate',
                     function() {
+                        $("#step3LoadingSpinner").removeClass("hiddenBlock");
+                        releaseProposals();
+                        $scope.proposals = [];
                         $scope.showCalendar = false;
                         $scope.getProposals();
                     }, true);
@@ -3232,6 +3236,7 @@ angular.module('myApp.controllers', []).
                     }
                     console.log(retrievedProposals);
                     editProposalInfo(retrievedProposals);
+                    $("#step3LoadingSpinner").addClass("hiddenBlock");
                 });
             };
 
@@ -3268,6 +3273,8 @@ angular.module('myApp.controllers', []).
              * 
              * We push the edited proposal into the scope. We also check the day of the proposal,
              * so we can activate the filter on that day.
+             * 
+             * @param proposals
              */
             function editProposalInfo(proposals) {
                 $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true, unitList: $scope.unitList, locations: $rootScope.newAppointment.locations};
@@ -3389,17 +3396,22 @@ angular.module('myApp.controllers', []).
              * 
              * @param {type} proposal   selected proposal
              */
-            $scope.next = function(proposal) {
+            $scope.next = function() {
                 $scope.selectedProposal.day_name = $scope.getDay($scope.selectedProposal);
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
                 $rootScope.pageClass = 'right-to-left';
-
+                
+//                releaseProposals($scope.selectedProposal.depid);
+                //Release all proposals for testing
+                releaseProposals();
+                
+                
                 /** 
                  * 15.05.2014 11:07  
                  * $rootScope.newAppointment.proposal.type_id is not set yet at this point in time.
                  * Should be set in step 2.
                  * */
-                var questions = []
+                var questions = [];
 
                 console.log($rootScope.currentServers[$rootScope.newAppointment.server]);
                 questions.push(hospiviewFactory.getActiveFieldsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
@@ -3411,15 +3423,30 @@ angular.module('myApp.controllers', []).
                     $location.path('/patient/step5');
                 });
             };
-
-            $scope.back = function() {
+            
+            /**
+             * releases all the proposals that have been requested so that other users can request them
+             * if a department id is given all the proposals from that department are still locked
+             * 
+             * @param {type} dep_id
+             */
+            function releaseProposals(dep_id){
                 for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
+                    if(dep_id){
+                        if($scope.selectedProposal.depid===dep_id){
+                            continue;
+                        }
+                    }
                     hospiviewFactory.getProposalsRemoved(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
                             $rootScope.newAppointment.type.unit_id[i],
                             $rootScope.newAppointment.type.dep_id[i]);
                 }
+            }
+            
+            $scope.back = function() {
+                releaseProposals();
                 $rootScope.pageClass = "left-to-right";
                 history.back();
             };
@@ -3539,10 +3566,10 @@ angular.module('myApp.controllers', []).
                     var extraQuestionsModelArray = [];
                     var extraQuestionType;
 
-                    console.log(extraQuestionsJson);
+//                    console.log(extraQuestionsJson);
 
                     for (var question in extraQuestionsJson.QuestionsOnUnit.Detail.Question) {
-                        console.log(extraQuestionsJson.QuestionsOnUnit.Detail.Question[question]);
+//                        console.log(extraQuestionsJson.QuestionsOnUnit.Detail.Question[question]);
                         if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 1) {
                             extraQuestionType = 'select' + question;
                             inputType = '<select name="' + extraQuestionType + '" class="form-control" ng-model="newAppointment.patientInfo.' + extraQuestionType + '" required>' +
