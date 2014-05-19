@@ -92,7 +92,7 @@ var frenchStrings = {
         //Validation
         isRequired: "Ce champ est obligatoire",
         and: "et",
-        mustBeNumber: "doit être un nombre",
+        mustBeNumber: "Doit être un nombre",
         
         //general app use
         settings: "Paramètres",
@@ -176,6 +176,7 @@ var frenchStrings = {
         createAppointmentStep5PostalCode: "Code postal",
         createAppointmentStep5Town: "Ville",
         createAppointmentStep5Country: "Pays",
+        createAppointmentStep5GenderNotDetermined: "I",
         
         //patient/step6
         createAppointmentStep6End: "Fin"

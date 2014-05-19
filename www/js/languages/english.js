@@ -92,7 +92,7 @@ var englishStrings = {
         //Validation
         isRequired: "This field is required",
         and: "and",
-        mustBeNumber: "has to be a number",
+        mustBeNumber: "Has to be a number",
         
         //general app use
         settings: "Settings",
@@ -176,6 +176,7 @@ var englishStrings = {
         createAppointmentStep5PostalCode: "Postal code",
         createAppointmentStep5Town: "Town",
         createAppointmentStep5Country: "Country",
+        createAppointmentStep5GenderNotDetermined: "U",
         
         //patient/step6
         createAppointmentStep6End: "End"

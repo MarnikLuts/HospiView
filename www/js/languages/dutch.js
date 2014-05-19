@@ -92,7 +92,7 @@ var dutchStrings = {
         //Validation
         isRequired: "Dit veld is verplicht.",        
         and: "en",
-        mustBeNumber: "moet een nummer zijn",
+        mustBeNumber: "Moet een nummer zijn",
         
         //general app use
         settings: "Instellingen",
@@ -176,6 +176,7 @@ var dutchStrings = {
         createAppointmentStep5PostalCode: "Postcode",
         createAppointmentStep5Town: "Gemeente",
         createAppointmentStep5Country: "Land",
+        createAppointmentStep5GenderNotDetermined: "O",
         
         //patient/step6
         createAppointmentStep6End: "Einde"
