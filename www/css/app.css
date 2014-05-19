@@ -153,6 +153,11 @@ body {
     height: 60px;
 }
 
+#step3LoadingSpinner{
+    text-align: center;
+    font-size: 30px;
+}
+
 @media screen and (min-width: 768px) {
     #serverImg {
         width: 64px;

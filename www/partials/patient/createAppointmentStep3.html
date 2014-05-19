@@ -10,13 +10,13 @@
     <div class="col-md-12 widthPercent">
         <div class="well well-sm widthPercent">
             <p class="input-group">
-                <input type="text" ng-disabled="true" class="form-control input-lg" datepicker-popup="dd/MM/yyyy" ng-model="startProposalDate" ng-required="true"/>
+                <input type="text" ng-disabled="true" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="startProposalDate" ng-required="true"/>
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-lg" ng-click="showCalendar = true">{{ getLocalizedString('createAppointmentStep3SelectDate')}}</button>
+                    <button type="button" class="btn btn-default" ng-click="showCalendar = !showCalendar">{{ getLocalizedString('createAppointmentStep3SelectDate')}}</button>
                 </span>
             </p>
             <div ng-show="showCalendar" class='widthPercent center-block' style="display:inline-block; min-height:290px;">
-                <datepicker class="datePickCalendar" ng-model="startProposalDate" datepicker-options="datePickerOptions" starting-day="1" min-date="today" date-disabled="disabled(date, mode)" format-day-title='MM/yyyy' show-weeks="false" class="well well-sm"></datepicker>
+                <datepicker class="datePickCalendar well well-sm" ng-model="startProposalDate" datepicker-options="datePickerOptions" starting-day="1" min-date="today" date-disabled="disabled(date, mode)" format-day-title='MM/yyyy' show-weeks="false"></datepicker>
             </div>
             <div class="btn-group btn-group-justified">
                 <div class="btn-group">
@@ -70,6 +70,7 @@
                 </ul>
             </div>
             <br><br><br><br>
+            <div id="step3LoadingSpinner" class="has-spinner"><span class="glyphicon glyphicon-refresh"></span></div>
             <div class="AcceleratedList btn-group-vertical list list_proposals list-unstyled">
                 <div class="btn btn-default btn-reservation btn-group-justified widthPercent" ng-repeat="proposal in filteredProposals = (proposals| orderBy:['setRespectiveDayNumber', 'afternoon', 'the_date', 'time_from'] | orderProposals:filters)" ng-class="{'icasa-appointment-selected': proposal===selectedProposal}"  ng-click="selectProposal(proposal)">
                     <div class=".container-fluid">
