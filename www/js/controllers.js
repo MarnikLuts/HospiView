@@ -3530,7 +3530,7 @@ angular.module('myApp.controllers', []).
                     if (activeFieldsArray.indexOf("9") !== -1) {
                         mustField = checkMustField("9");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Phone2') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="number" name="phone2" class="form-control" ng-model="newAppointment.patientInfo.phone2" ng-pattern=' + "'/^[0-9]*$/'" + ' ' + mustField[1] + '/></td></tr>';
+                                + '</td><td><input type="number" name="phone2" class="form-control" ng-model="newAppointment.patientInfo.phone2" ng-pattern=' + "'/^[0-9]*$/'" + ' ' + mustField[1] + '/>';
                         if (mustField[1] === 'required') {
                             appendString = appendString + '<div class="alert alert-danger" ng-show="subform.phone2.$dirty && subform.phone2.$error.required">'
                                     + $rootScope.getLocalizedString('isRequired') + '</div>';
@@ -3542,6 +3542,7 @@ angular.module('myApp.controllers', []).
                     }
                     if (activeFieldsArray.indexOf("14") !== -1) {
                         mustField = checkMustField("14");
+                        
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('newUserEmail') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="email" name="email" class="form-control" ng-model="newAppointment.patientInfo.email" ' + mustField[1] + '/></td></tr>';
                     }
