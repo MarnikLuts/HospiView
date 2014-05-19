@@ -721,6 +721,8 @@ angular.module('myApp.controllers', []).
              */
             $scope.reservations = $rootScope[$rootScope.searchString];
 
+
+
             /**
              * Used to display an animation when loading reservations.
              */
@@ -1072,6 +1074,9 @@ angular.module('myApp.controllers', []).
                 for (var i = 0; i < reservations.length; i++)
                     $rootScope[$rootScope.searchString].push(reservations[i]);
                 $scope.reservations = $rootScope[$rootScope.searchString];
+                for (var i = 0; i < 100; i++) {
+                    console.log(JSON.stringify($scope.reservations[i]).length)
+                }
                 if (reservations.length === 0 && !$scope.loadingCalendar) {
                     console.log("modal");
                     callModal();
@@ -2917,20 +2922,20 @@ angular.module('myApp.controllers', []).
                 if ($rootScope.newAppointment.units[unitTypesRequested].Header.extern_step2 === "0") {
                     for (var d = 0; d < $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length; d++) {
                         var dep_no_step2 = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[d],
-                            duplicate_stitle = false,
-                            new_type = {
-                                type_title: dep_no_step2.stitle,
-                                unit_id: [unit_id],
-                                dep_id: [dep_no_step2.dep_id],
-                                type_id: ["0"],
-                                location_id: [dep_no_step2.location_id]
-                            };
+                                duplicate_stitle = false,
+                                new_type = {
+                                    type_title: dep_no_step2.stitle,
+                                    unit_id: [unit_id],
+                                    dep_id: [dep_no_step2.dep_id],
+                                    type_id: ["0"],
+                                    location_id: [dep_no_step2.location_id]
+                                };
 
                         for (var t = 0; t < $scope.typeList.length; t++) {
                             if (dep_no_step2.stitle === $scope.typeList[t].type_title) {
                                 duplicate_stitle = true;
                                 console.log(combinationExists($scope.typeList, new_type));
-                                if(!combinationExists($scope.typeList, new_type)){
+                                if (!combinationExists($scope.typeList, new_type)) {
                                     $scope.typeList[t].unit_id.push(unit_id);
                                     $scope.typeList[t].dep_id.push(dep_no_step2.dep_id);
                                     $scope.typeList[t].type_id.push("0");
@@ -2989,7 +2994,7 @@ angular.module('myApp.controllers', []).
                                             for (var u = 0; u < $scope.typeList.length; u++) {
                                                 if (json.TypesOnUnit.Detail.Type[t].type_title === $scope.typeList[u].type_title) {
                                                     duplicate = true;
-                                                    if(!combinationExists($scope.typeList, json.TypesOnUnit.Detail.Type[t])){
+                                                    if (!combinationExists($scope.typeList, json.TypesOnUnit.Detail.Type[t])) {
                                                         $scope.typeList[u].dep_id.push(json.TypesOnUnit.Detail.Type[t].dep_id[0]);
                                                         $scope.typeList[u].unit_id.push(json.TypesOnUnit.Detail.Type[t].unit_id[0]);
                                                         $scope.typeList[u].type_id.push(json.TypesOnUnit.Detail.Type[t].type_id[0]);
@@ -3032,7 +3037,7 @@ angular.module('myApp.controllers', []).
                 }
                 return false;
             };
-            
+
             /**
              * checks if the combination of the new type's unit_id, dep_id and type_id already exists in the given type list
              * 
@@ -3040,13 +3045,13 @@ angular.module('myApp.controllers', []).
              * @param {type} new_type
              * @returns {Boolean}
              */
-            function combinationExists(typeList, new_type){
-                for(var i=0;i<typeList.length;i++){
-                    for(var j=0;j<typeList[i].unit_id.length;j++){
-                        if(typeList[i].unit_id[j]===new_type.unit_id[0]&&
-                        typeList[i].dep_id[j]===new_type.dep_id[0]&&
-                        typeList[i].type_id[j]===new_type.type_id[0]&&
-                        typeList[i].location_id[j]===new_type.location_id[0]){
+            function combinationExists(typeList, new_type) {
+                for (var i = 0; i < typeList.length; i++) {
+                    for (var j = 0; j < typeList[i].unit_id.length; j++) {
+                        if (typeList[i].unit_id[j] === new_type.unit_id[0] &&
+                                typeList[i].dep_id[j] === new_type.dep_id[0] &&
+                                typeList[i].type_id[j] === new_type.type_id[0] &&
+                                typeList[i].location_id[j] === new_type.location_id[0]) {
                             return true;
                         }
                     }
@@ -3143,10 +3148,10 @@ angular.module('myApp.controllers', []).
             for (var i = 0; i < $rootScope.newAppointment.units.length; i++) {
                 for (var j = 0; j < $rootScope.newAppointment.units[i].Detail.Dep.length; j++) {
                     var duplicate = false;
-                    if($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep[j].dep_id)!=-1){
-                        for(var k=0;k<$scope.unitList.length;k++){
-                            if($scope.unitList[k].Header.unit_id===$rootScope.newAppointment.units[i].Header.unit_id)
-                                duplicate=true;
+                    if ($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep[j].dep_id) != -1) {
+                        for (var k = 0; k < $scope.unitList.length; k++) {
+                            if ($scope.unitList[k].Header.unit_id === $rootScope.newAppointment.units[i].Header.unit_id)
+                                duplicate = true;
                         }
                         if (!duplicate) {
                             var unit = {
@@ -3195,10 +3200,10 @@ angular.module('myApp.controllers', []).
                         }
                     }
                     console.log("request");
-                    console.log($rootScope.newAppointment.type.unit_id[i] + " " 
-                                + $rootScope.newAppointment.type.dep_id[i] + " " 
-                                + $rootScope.newAppointment.type.type_id[i]);
-                    
+                    console.log($rootScope.newAppointment.type.unit_id[i] + " "
+                            + $rootScope.newAppointment.type.dep_id[i] + " "
+                            + $rootScope.newAppointment.type.type_id[i]);
+
                     retrievedRequests.push(hospiviewFactory.getProposals(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
@@ -3396,8 +3401,10 @@ angular.module('myApp.controllers', []).
                  * */
                 var questions = []
 
+                console.log($rootScope.currentServers[$rootScope.newAppointment.server]);
                 questions.push(hospiviewFactory.getActiveFieldsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
                 questions.push(hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.newAppointment.proposal.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
+                questions.push(hospiviewFactory.getPatientLookup($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.currentServers[$rootScope.newAppointment.server].reg_no, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
 
                 $q.all(questions).then(function(responses) {
                     $rootScope.questions = responses;
@@ -3417,16 +3424,34 @@ angular.module('myApp.controllers', []).
                 history.back();
             };
         }).
-        controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location, hospiviewFactory, $q) {
+        controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location, hospiviewFactory, $q, $compile) {
             /**
              * The fields firstname and lastname are automatically filled with known data
              */
 
+            console.log($rootScope.newAppointment);
+
             $scope.firstname = $rootScope.user.split(" ")[0];
             $scope.lastname = $rootScope.user.split(" ")[1];
 
+            $scope.setRadioButtonScope = function(model, value) {
+                $scope[model] = value;
+            };
+
             function setQuestions() {
-                var appendString = '';
+                var appendString = '<table ng-form="subform" class="appointmentFormTable" id="questionTable">';
+                var radioButtonValueCheck = '';
+
+                var answersJson = parseJson($rootScope.questions[2].data);
+                console.log(answersJson);
+                
+                console.log($rootScope.currentServers);
+                console.log($rootScope.currentServers[0]);
+                console.log($rootScope.currentServers[0].reg_no);
+                
+                //TODO: REMOVE NEXT 2 LINEs IF PATIENTLOOKUP WORKS
+                $rootScope.newAppointment.patientInfo = {};
+                $rootScope.newAppointment.patientInfo.reg_no = $rootScope.currentServers[0].reg_no;
 
                 var standardQuestionsJson = parseJson($rootScope.questions[0].data);
                 if (standardQuestionsJson.ActiveFieldsOnUnit.Header.StatusCode == 1) {
@@ -3436,69 +3461,74 @@ angular.module('myApp.controllers', []).
                     if (activeFieldsArray.indexOf("26") !== -1) {
                         mustField = checkMustField("26");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('reg_no') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="currentServers[0].reg_no" disabled ' + mustField[1] + '/></td></tr>';
+                                + '</td><td><input type="text" name="reg_no" class="form-control" ng-model="newAppointment.patientInfo.reg_no" ' + mustField[1] + ' disabled/></td></tr>';
                     }
                     if (activeFieldsArray.indexOf("1") !== -1) {
                         mustField = checkMustField("1");
                         appendString = appendString
-                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Name') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" name="firstname" class="form-control" ng-model="firstname" ' + mustField[1] + '/>'
-                                + '<input type="text" name="lastname" class="form-control" ng-model="lastname" ' + mustField[1] + '/></td></tr>';
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5FirstName') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" name="firstname" class="form-control" ng-model="newAppointment.patientInfo.firstname" ' + mustField[1] + '/></td></tr>'
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5LastName') + mustField[0] + '</b></p>'
+                                + '</td><td><input type="text" name="lastname" class="form-control" ng-model="newAppointment.patientInfo.lastname" ' + mustField[1] + '/></td></tr>';
                     }
                     if (activeFieldsArray.indexOf("3") !== -1) {
                         mustField = checkMustField("3");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('newUserDateOfBirth') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="dateOfBirth" placeholder="dd/mm/yyyy" ' + mustField[1] + '/></td></tr>';
+                                + '</td><td><input type="date" name="dateOfBirth" class="form-control" ng-model="newAppointment.patientInfo.dateOfBirth" placeholder="dd-mm-yyyy"' + mustField[1]
+                                + '/></td></tr>';
                     }
                     if (activeFieldsArray.indexOf("2") !== -1) {
                         mustField = checkMustField("2");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Phone') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="phone" ' + mustField[1] + '/></td></tr>';
+                                + '</td><td><input type="number" name="phone" class="form-control" ng-model="newAppointment.patientInfo.phone" ' + mustField[1] + '/></td></tr>';
                     }
                     if (activeFieldsArray.indexOf("9") !== -1) {
                         mustField = checkMustField("9");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Phone2') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="phone2" ' + mustField[1] + '/></td></tr>';
+                                + '</td><td><input type="number" name="phone2" class="form-control" ng-model="newAppointment.patientInfo.phone2" ' + mustField[1] + '/></td></tr>';
                     }
                     if (activeFieldsArray.indexOf("14") !== -1) {
                         mustField = checkMustField("14");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('newUserEmail') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="email" ' + mustField[1] + '/></td></tr>';
+                                + '</td><td><input type="email" name="email" class="form-control" ng-model="newAppointment.patientInfo.email" ' + mustField[1] + '/></td></tr>';
                     }
                     if (activeFieldsArray.indexOf("8") !== -1) {
                         mustField = checkMustField("8");
 
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Gendre') + mustField[0] + '</b></p>'
                                 + '</td><td><div class="btn-group widthPercent" data-toggle="buttons">'
-                                + '<label class="btn btn-default width30Percent"><input type="radio" ng-model="gender" name="" value="' + $rootScope.getLocalizedString('createAppointmentStep5Male') + '" ' + mustField[1] + '>' + $rootScope.getLocalizedString('createAppointmentStep5Male') + '</label>'
-                                + '<label class="btn btn-default width30Percent"><input type="radio" ng-model="gender" name="" value="' + $rootScope.getLocalizedString('createAppointmentStep5Female') + '" ' + mustField[1] + '>' + $rootScope.getLocalizedString('createAppointmentStep5Female') + '</label>'
-                                + '<label class="btn btn-default width30Percent"><input type="radio" ng-model="gender" name="" value="' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '" ' + mustField[1] + '>' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '</label>'
-                                + '</td></tr>';
+                                + '<label class="btn btn-default width30Percent" ng-click="setRadioButtonScope(' + "'gender','male'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep5Male') + '"/>' + $rootScope.getLocalizedString('createAppointmentStep5Male') + '</label>'
+                                + '<label class="btn btn-default width30Percent" ng-click="setRadioButtonScope(' + "'gender','female'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep5Female') + '"/>' + $rootScope.getLocalizedString('createAppointmentStep5Female') + '</label>'
+                                + '<label class="btn btn-default width30Percent" ng-click="setRadioButtonScope(' + "'gender','undefined'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '"/>' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '</label>'
+                                + '</div></td></tr>';
+
+                        if (mustField[1] === "required")
+                            radioButtonValueCheck = radioButtonValueCheck + ' || !gender';
                     }
                     if (activeFieldsArray.indexOf("11") !== -1) {
                         mustField = checkMustField("11");
                         appendString = appendString
                                 + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Street') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="street" ' + mustField[1] + '/></td></tr>'
+                                + '</td><td><input type="text" name="street" class="form-control" ng-model="newAppointment.patientInfo.street" ' + mustField[1] + '/></td></tr>'
                                 + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5HouseNumber') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="houseNumber" ' + mustField[1] + '/></td></tr>'
+                                + '</td><td><input type="number" name="houseNumber" class="form-control" ng-model="newAppointment.patientInfo.houseNumber" ' + mustField[1] + '/></td></tr>'
                                 + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5PostalCode') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="postalCode" ' + mustField[1] + '/></td></tr>'
+                                + '</td><td><input type="number" name="postalCode" class="form-control" ng-model="newAppointment.patientInfo.postalCode" ' + mustField[1] + '/></td></tr>'
                                 + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Town') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="town" ' + mustField[1] + '/></td></tr>'
+                                + '</td><td><input type="text" name="town" class="form-control" ng-model="newAppointment.patientInfo.town" ' + mustField[1] + '/></td></tr>'
                                 + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Country') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="land" ' + mustField[1] + '/></td></tr>';
+                                + '</td><td><input type="text" name="country" class="form-control" ng-model="newAppointment.patientInfo.land" ' + mustField[1] + '/></td></tr>';
                     }
                     if (activeFieldsArray.indexOf("25") !== -1) {
                         mustField = checkMustField("25");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Referring') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" class="form-control" ng-model="referringDoctor" ' + mustField[1] + '/></td></tr>';
+                                + '</td><td><input type="text" name="referringDoctor" class="form-control" ng-model="newAppointment.patientInfo.referringDoctor" ' + mustField[1] + '/></td></tr>';
 
                     }
                     if (activeFieldsArray.indexOf("10") !== -1) {
                         mustField = checkMustField("10");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5ExtraInformation') + mustField[0] + '</b></p>'
-                                + '</td><td><textarea style="resize: none;" class="form-control" rows="3" ng-model="extraInformation" ' + mustField[1] + '></textarea></td></tr>';
+                                + '</td><td><textarea style="resize: none;" name="extraInformation" class="form-control" rows="3" ng-model="newAppointment.patientInfo.extraInformation" ' + mustField[1] + '></textarea></td></tr>';
                     }
                 }
 
@@ -3515,23 +3545,13 @@ angular.module('myApp.controllers', []).
                         console.log(extraQuestionsJson.QuestionsOnUnit.Detail.Question[question]);
                         if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 1) {
                             extraQuestionType = 'select' + question;
-                            inputType = '<select class="form-control" ng-model="' + extraQuestionType + '" type.type_title for type in typeList" required>' +
+                            inputType = '<select name="' + extraQuestionType + '" class="form-control" ng-model="newAppointment.patientInfo.' + extraQuestionType + '" required>' +
                                     '<option value=""> - ' + $rootScope.getLocalizedString('createAppointmentStep4MakeYourChoice') + ' - </option>';
                             for (var choice in extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue)
                                 inputType = inputType + '<option value="' + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + '">' + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value + '</option>';
                             inputType = inputType + '</select>';
                         }
                         if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 2) {
-                            /*extraQuestionType = 'radio' + question;
-                             if(angular.isDefined(extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value))
-                             $scope[extraQuestionType] = extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value;
-                             
-                             inputType = '<div class="btn-group widthPercent" data-toggle="buttons">';
-                             for (var choice in extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue)
-                             inputType = inputType + '<button type="button" class="btn btn-default width50Percent" ng-model="' + extraQuestionType
-                             + '" btn-radio="' + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + '">'
-                             + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value + '</button>';
-                             inputType = inputType + '</div>';*/
 
                             extraQuestionType = 'radio' + question;
                             if (angular.isDefined(extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value))
@@ -3546,33 +3566,46 @@ angular.module('myApp.controllers', []).
                                         activeClass = 'active';
                                     else
                                         activeClass = '';
-                                inputType = inputType + '<label class="btn btn-default width50Percent ' + activeClass + '" id="' + buttonId + '"><input type="radio" ng-model="'
+                                inputType = inputType + '<label class="btn btn-default width50Percent ' + activeClass + '" id="' + buttonId
+                                        + '" ng-click="setRadioButtonScope(' + "'" + extraQuestionType + "','" + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + "'" + ')"><input name="'
+                                        + extraQuestionType + '"type="radio" ng-model="newAppointment.patientInfo.'
                                         + extraQuestionType + '" name="' + extraQuestionType
                                         + '" value="'
                                         + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id
-                                        + '">' + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value
+                                        + '" >'
+                                        + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value
                                         + '</label>';
                             }
+                            radioButtonValueCheck = radioButtonValueCheck + ' || ' + extraQuestionType + '== -1';
                             inputType = inputType + '</div>';
                         }
                         if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 3) {
                             extraQuestionType = 'input' + question;
-                            inputType = '<input type="text" class="form-control" ng-model="' + extraQuestionType + '" required/>';
+                            inputType = '<input name="' + extraQuestionType + '" type="text" class="form-control" ng-model="newAppointment.patientInfo.' + extraQuestionType + '" required/>';
                         }
 
                         if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 4) {
                             extraQuestionType = 'textarea' + question;
-                            inputType = '<textarea style="resize: none;" class="form-control" rows="3" ng-model="' + extraQuestionType + '" required></textarea>';
+                            inputType = '<textarea name="' + extraQuestionType + '" style="resize: none;" class="form-control" rows="3" ng-model="newAppointment.patientInfo.' + extraQuestionType + '" ng-required="true"></textarea>';
                         }
 
                         extraQuestionsModelArray.push(extraQuestionType);
 
                         appendString = appendString + '<tr><td><p class="formLabel"><b>'
                                 + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_title
-                                + '</b></p></td><td>' + inputType + '</td></tr>';
+                                + '*</b></p></td><td>' + inputType + '</td></tr>';
                     }
-                    console.log(appendString);
-                    $("#questionTable").append(appendString);
+                    appendString = appendString + '</table><p class="formLabel">' + $rootScope.getLocalizedString('createAppointmentStep5FieldsRequired') + '</p>'
+                            + '<div class="text-center">'
+                            + '<button type="submit" class="btn btn-xl" ng-click="next(subform.$valid)" ng-disabled="subform.$invalid' + radioButtonValueCheck + '">'
+                            + $rootScope.getLocalizedString('createAppointmentNext') + '</button></div>' 
+                            ;
+                            
+                    for(var i in extraQuestionsModelArray)
+                        appendString = appendString + '';
+
+                    var compiledHtml = $(appendString).appendTo("#step5form");
+                    $compile(compiledHtml)($scope);
                 }
             }
 
@@ -3581,11 +3614,10 @@ angular.module('myApp.controllers', []).
                 var mustFieldsArray = standardQuestionsJson.ActiveFieldsOnUnit.Detail.MustFields.split(",");
 
                 if (mustFieldsArray.indexOf(number) !== -1)
-                    return ["*", "required"];
+                    return ["*", 'required'];
                 else
                     return ["", ""];
             }
-
             setQuestions();
 
             /**
@@ -3595,15 +3627,27 @@ angular.module('myApp.controllers', []).
              */
             $scope.next = function(formValid) {
                 if (formValid) {
-                    $rootScope.newAppointment.firstname = $scope.firstname;
-                    $rootScope.newAppointment.lastname = $scope.lastname;
-                    $rootScope.newAppointment.phone = $scope.phone;
-                    $rootScope.newAppointment.email = $scope.email;
-                    $rootScope.newAppointment.dateOfBirth = $scope.dateOfBirth;
-
                     var confirmed = [];
                     //Parameters moeten nog ingevuld worden
-                    confirmed.push(hospiviewFactory.getAppointmentConfirmed($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.proposal_id, pName, pFirstName, pBDate, pGender, pTel1, pTel2, pAddress, Reg_No, pEmail, pMemo, pUnique_PID, pDoctor, pUnique_GPID, pReferring_doctor, pReferring_GPID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
+                    confirmed.push(hospiviewFactory.getAppointmentConfirmed(
+                            $rootScope.currentServers[$rootScope.newAppointment.server].uuid, 
+                    $rootScope.newAppointment.proposal.proposal_id, 
+                    $scope.newAppointment.patientInfo.lastname, 
+                    $scope.newAppointment.patientInfo.firstname, 
+                    $scope.newAppointment.patientInfo.dateOfBirth, 
+                    $scope.newAppointment.patientInfo.gender, 
+                    $scope.newAppointment.patientInfo.phone, 
+                    $scope.newAppointment.patientInfo.phone2, 
+                    $scope.newAppointment.patientInfo.street,           //ADRES NOG INVULLEN
+                    $scope.newAppointment.patientInfo.reg_no, 
+                    $scope.newAppointment.patientInfo.email, 
+                    $scope.newAppointment.patientInfo.extraInformation, 
+                    pUnique_PID, 
+                    pDoctor, 
+                    pUnique_GPID, 
+                    $scope.newAppointment.patientInfo.referringDoctor, 
+                    pReferring_GPID, 
+                    $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
 
                     $q.all(confirmed).then(function(responses) {
                         for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {

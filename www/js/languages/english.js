@@ -167,6 +167,9 @@ var englishStrings = {
         createAppointmentStep4MakeYourChoice: "make your choice",
         
         //patient/step5
+        createAppointmentStep5FieldsRequired: "* indicates required fields",
+        createAppointmentStep5FirstName: "First name",
+        createAppointmentStep5LastName: "Last name",
         createAppointmentStep5Phone2: "Telephone 2",
         createAppointmentStep5Street: "Street",
         createAppointmentStep5HouseNumber: "House number",

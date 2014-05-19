@@ -167,6 +167,9 @@ var dutchStrings = {
         createAppointmentStep4MakeYourChoice: "maak hier uw keuze",
         
         //patient/step5
+        createAppointmentStep5FieldsRequired: "Velden met een * zijn verplicht in te vullen",
+        createAppointmentStep5FirstName: "Voornaam",
+        createAppointmentStep5LastName: "Achternaam",
         createAppointmentStep5Phone2: "Telefoon 2",
         createAppointmentStep5Street: "Straat",
         createAppointmentStep5HouseNumber: "Huisnummer",

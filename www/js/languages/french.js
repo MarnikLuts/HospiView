@@ -167,6 +167,9 @@ var frenchStrings = {
         createAppointmentStep4MakeYourChoice: "choisissez ici",
         
         //patient/step5
+        createAppointmentStep5FieldsRequired: "* indique les champs obligatoires",
+        createAppointmentStep5FirstName: "Prénom",
+        createAppointmentStep5LastName: "Nom",
         createAppointmentStep5Phone2: "Téléphone 2",
         createAppointmentStep5Street: "Rue",
         createAppointmentStep5HouseNumber: "Numéro de la maison",

@@ -10,14 +10,12 @@
 <div class="col-md-12">
     <div class="well well-lg">
         <h4>{{getLocalizedString('createAppointmentStep5Info')}}</h4>
-        <form name="step5Form" novalidate>
-            <table class="appointmentFormTable" id="questionTable"></table>
-            <div class="alert alert-danger" ng-show="displayError || step5Form.lastname.$error.required && step5Form.lastname.$dirty || step5Form.firstname.$error.required && step5Form.firstname.$dirty || step5Form.phone.$error.required && step5Form.phone.$dirty">
-                {{getLocalizedString('createAppointmentStep5Error')}}
-            </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-xl" ng-click="next(step5Form.$valid)" ng-disabled="step5Form.$invalid">{{getLocalizedString('createAppointmentNext')}}</button>
-            </div>
+        <form name="step5form" id="step5form" ng-submit="next()" novalidate>
         </form>
     </div>
-</div>
+</div><!--<tr><td>
+                        <input type="text" required name="name" ng-model="test"/></td>
+                    <td><span ng-show="subForm.name.$error.required">required</span></td>
+                    <td><button type="button" ng-disabled="subForm.$invalid" 
+                                ng-click="submitOne('test')">Submit One</button></td>
+                    </tr></table>-->

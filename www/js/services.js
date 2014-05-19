@@ -237,6 +237,10 @@ angular.module('myApp.services', []).
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetActiveFieldsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&count=" + $rootScope.requestCounter);
                 },
+                getPatientLookup: function(UUID, Unit_Id, Reg_No, Language_Id, server_url) {
+                    $rootScope.requestCounter++;
+                    return $http.get(server_url + "method=GetPatientLookup&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Reg_No=" + Reg_No + "&Language_Id=" + Language_Id);
+                },
                 getQuestionsOnUnit: function(UUID, Unit_Id, UnitType_Id, Language_Id, server_url) {
                     $rootScope.requestCounter++;
                     return ($http.get(server_url + "method=GetQuestionsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&UnitType_Id=" + UnitType_Id + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter));
@@ -245,6 +249,7 @@ angular.module('myApp.services', []).
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetAppointmentConfirmed&UUID=" + UUID + "&Proposal_Id=" + Proposal_Id + "&pName=" + pName + "&pFirstName=" + pFirstName + "&pBDate=" + pBDate + "&pGender=" + pGender + "&pTel1=" + pTel1 + "&pTel2=" + pTel2 + "&pAddress=" + pAddress + "&Reg_No=" + Reg_No + "&pEmail=" + pEmail + "&pMemo=" + pMemo + "&pUnique_PID=" + pUnique_PID + "&pDoctor=" + pDoctor + "&pUnique_GPID=" + pUnique_GPID + "&pReferring_doctor=" + pReferring_doctor + "&pReferring_GPID=" + pReferring_GPID + "&count=" + $rootScope.requestCounter);
                 }
+                
             };
         }).
         factory('dataFactory', function($rootScope, $q, hospiviewFactory) {
@@ -604,7 +609,7 @@ angular.module('myApp.services', []).
          * @returns {unresolved}
          */
         initRemoteLanguageStrings: function(hosp_url) {
-            var listOfPidsSids = "-99,44,48;91,56;92,7,75,90,96;93,43,55,56,57,60;94,10;112,13;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,6,7,8,9,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
+            var listOfPidsSids = "-99,44,48;91,56;92,7,75,90,96;93,43,55,56,57,60;94,10;112,13;204,1,2,3,4,5;205,1,2,4,5;206,1;208,1,2,7,8,9,15,16;209,1,3,4,5,6;211,1;214,1,2,3,5,6,7",
                     promises = [],
                     defer = $q.defer();
 
@@ -643,7 +648,6 @@ angular.module('myApp.services', []).
                             createAppointmentStep1Error: getStringByPidAndSid(languageString, 205, 5),
                             createAppointmentStep5: getStringByPidAndSid(languageString, 208, 1),
                             createAppointmentStep5Info: getStringByPidAndSid(languageString, 208, 2),
-                            createAppointmentStep5Name: getStringByPidAndSid(languageString, 208, 6),
                             createAppointmentStep5Gendre: getStringByPidAndSid(languageString, 208, 7),
                             createAppointmentStep5Male: getStringByPidAndSid(languageString, 208, 8),
                             createAppointmentStep5Female: getStringByPidAndSid(languageString, 208, 9),
