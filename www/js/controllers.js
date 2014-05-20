@@ -2606,38 +2606,37 @@ angular.module('myApp.controllers', []).
             console.log($rootScope.getLocalizedString('patientAppointmentsViewUnit'));
             console.log($rootScope.getLocalizedString('doctor'));
 
-//            $scope.reservationList = [];
-//            for(var s=0;s<$rootScope.currentServers.length;s++){
-//                var server = $rootScope.currentServers[s];
-//                reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url ));
-//            }
-//            
-//            $q.all(reservationPromises)
-//                .then(function(responses){
-//                    for(var r=0;r<responses.length;r++){
-//                        var json = parseJson(responses[r].data);
-//                        if(json.Reservations.Header.StatusCode == 1){
-//                            for(var i=0;i<json.Reservations.Detail.Reservation.length;i++){
-//                                json.Reservations.Detail.Reservation[i].hosp_full_name = $rootScope.currentServers[r].hosp_full_name;
-//                                $scope.reservationList.push(json.Reservations.Detail.Reservation[i]);
-//                            }
-//                        }
-//                    }
-//                }, error);
-//
-//            function error(data) {
-//                console.log(data);
-//            }
+            $scope.reservationList = [];
+            for(var s=0;s<$rootScope.currentServers.length;s++){
+                var server = $rootScope.currentServers[s];
+                reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url ));
+            }
+            
+           $q.all(reservationPromises)
+                .then(function(responses){
+                    for(var r=0;r<responses.length;r++){
+                        var json = parseJson(responses[r].data);
+                        if(json.ReservationsOnPatient.Header.StatusCode == 1){
+                            for(var i=0;i<json.ReservationsOnPatient.Detail.Reservation.length;i++){
+                                json.ReservationsOnPatient.Detail.Reservation[i].hosp_full_name = $rootScope.currentServers[r].hosp_full_name;
+                                $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
+                            }
+                        }
+                    }
+                }, error);
+            function error(data) {
+                console.log(data);
+            }
 
             //TEST VALUES
-            $scope.reservationList = [
-                {id: 1, the_date: '2014-05-06', time_from: '12:30', time_till: '13:00', title: 'Reservation1', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
-                {id: 2, the_date: '2014-05-06', time_from: '13:30', time_till: '14:00', title: 'Reservation2', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
-                {id: 3, the_date: '2014-05-07', time_from: '12:30', time_till: '13:00', title: 'Reservation3', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
-                {id: 4, the_date: '2014-05-07', time_from: '13:30', time_till: '14:00', title: 'Reservation4', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
-                {id: 5, the_date: '2014-05-08', time_from: '12:30', time_till: '13:00', title: 'Reservation5', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
-                {id: 6, the_date: '2014-05-08', time_from: '13:30', time_till: '14:00', title: 'Reservation6', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'}
-            ];
+//            $scope.reservationList = [
+//                {id: 1, the_date: '2014-05-06', time_from: '12:30', time_till: '13:00', title: 'Reservation1', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
+//                {id: 2, the_date: '2014-05-06', time_from: '13:30', time_till: '14:00', title: 'Reservation2', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
+//                {id: 3, the_date: '2014-05-07', time_from: '12:30', time_till: '13:00', title: 'Reservation3', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
+//                {id: 4, the_date: '2014-05-07', time_from: '13:30', time_till: '14:00', title: 'Reservation4', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
+//                {id: 5, the_date: '2014-05-08', time_from: '12:30', time_till: '13:00', title: 'Reservation5', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'},
+//                {id: 6, the_date: '2014-05-08', time_from: '13:30', time_till: '14:00', title: 'Reservation6', unit_id: 13, unit_name: 'ACHTEN Francoise', dep_id: 20, dep_name: 'Achten cons', hosp_full_name: 'Agendaview demo'}
+//            ];
 //            $scope.reservationList = [];
 
 
