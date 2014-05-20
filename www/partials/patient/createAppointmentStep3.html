@@ -54,7 +54,7 @@
                 </div>
             </div><br/>
             <div class="btn-group">
-                <button style="width: 25%;" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button style="width: 25%;" type="button" class="btn btn-default dropdown-toggle" ng-disabled="newAppointment.locations.length<=1" data-toggle="dropdown">
                     {{getLocalizedString("createAppointmentCampus")}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu list-group" role="menu">
@@ -62,7 +62,7 @@
                 </ul>
             </div>
             <div class="btn-group">
-                <button style="width: 25%;" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button style="width: 25%;" type="button" class="btn btn-default dropdown-toggle" ng-disabled="unitList.length<=1" data-toggle="dropdown">
                     {{getLocalizedString("createAppointmentDoctor")}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdow-step3 list-group" role="menu">
@@ -100,7 +100,7 @@
             <textarea style="resize: none;" class="form-control" disabled rows="2" ng-model="proposalInfo"></textarea>            
             <br/>
             <div class="text-center">
-                <button class="btn btn-xl" ng-click="next()" ng-disabled="!proposalInfo || proposalInfo === ''" type="submit">{{getLocalizedString('createAppointmentNext')}}</button>
+                <button class="btn btn-xl has-spinner" ng-click="next()" ng-disabled="!proposalInfo || proposalInfo === '' || loadingStep4" type="submit"><span class="glyphicon glyphicon-refresh" ng-show="loadingStep4"></span>{{getLocalizedString('createAppointmentNext')}}</button>
             </div>
         </div>
     </div>
