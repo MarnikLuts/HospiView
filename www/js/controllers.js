@@ -2668,8 +2668,8 @@ angular.module('myApp.controllers', []).
              */
             $scope.getUnitsAndGroups = function() {
                 var index = $rootScope.currentServers.indexOf($scope.server);
-                $scope.unitList = null;
-                $scope.groupList = null;
+                $scope.unitList = [];
+                $scope.groupList = [];
                 $scope.unit = null;
                 $scope.group = null;
                 if (angular.isDefined($scope.server)) {

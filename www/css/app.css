@@ -637,12 +637,18 @@ ul li{
 }
 
 .mainMenuButtonArea{
-    position: absolute;
-    padding-right: 15px;
-    padding-left: 15px;
-    width: 100%;
-    top: 170px;
-    bottom: 70px;
+    position: relative;
+    width: 300px;
+    margin-left: -150px;
+    left: 50%;
+}
+.mainMenuButtonArea .btn-xl{
+    background-color: #3044B5;
+    color: white;
+}
+.mainMenuButtonArea .btn-xl:active{
+    background-color: white;
+    color: #3044B5;
 }
 
 .reservationTable th {
