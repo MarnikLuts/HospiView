@@ -42,18 +42,7 @@ angular.module('myApp', [
                 $routeProvider.otherwise({redirectTo: '/login'});
             }]).
         run(function($rootScope, $window) {
-		$rootScope.slide = '';
-		$rootScope.$on('$routeChangeStart', function() {
-			//event button to move backward
-			$rootScope.back = function() {
-				$rootScope.slide = 'slide-right';
-				$window.history.back();
-			}
-			//event button item list to move forward
-			$rootScope.next = function() {
-				$rootScope.slide = 'slide-left';
-			}
-		});
+            $rootScope.pageClass = '';
             FastClick.attach(document.body);
             //default languageID
             $rootScope.languageID = 3;
