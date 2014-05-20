@@ -2865,6 +2865,7 @@ angular.module('myApp.controllers', []).
             $scope.step2Blocked = false;
             $scope.typesLoaded = false;
             $scope.displayError = false;
+            $scope.loadingStep3=false;
 
             /**
              * The locations from the unit or group from step 1 are put into a list
@@ -3113,6 +3114,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.next = function(formValid) {
                 if (formValid && $scope.locationIsChecked()) {
+                    $scope.loadingStep3 = true;
                     $rootScope.newAppointment.type = $scope.type;
                     $rootScope.newAppointment.locations = [];
                     for (var i = 0; i < $scope.locations.length; i++) {
@@ -3123,6 +3125,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('/patient/step3');
                 } else {
+                    $scope.loadingStep3 = true;
                     $scope.displayError = true;
                 }
             };
@@ -3141,6 +3144,8 @@ angular.module('myApp.controllers', []).
             $scope.startProposalDate = new Date();
             $scope.today = new Date();
             $scope.unitList = [];
+            $scope.loadingStep4 = false;
+            
             console.log($rootScope.newAppointment.units);
             for (var i = 0; i < $rootScope.newAppointment.units.length; i++) {
                 for (var j = 0; j < $rootScope.newAppointment.units[i].Detail.Dep.length; j++) {
@@ -3380,6 +3385,7 @@ angular.module('myApp.controllers', []).
              * @param {type} proposal   selected proposal
              */
             $scope.next = function() {
+                $scope.loadingStep4 = true;
                 $scope.selectedProposal.day_name = $scope.getDay($scope.selectedProposal);
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
                 $rootScope.pageClass = 'right-to-left';
