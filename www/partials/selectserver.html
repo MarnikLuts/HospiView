@@ -128,7 +128,7 @@
                     </div>
                     <div class="alert alert-danger" ng-show="createAccountForm.dateOfBirth.$dirty && createAccountForm.dateOfBirth.$invalid">
                         <span ng-show="createAccountForm.dateOfBirth.$error.required">{{ getLocalizedString('newUserDateOfBirth') + " " +getLocalizedString('isRequired')+"." }}</span>
-                        <span ng-show="createAccountForm.dateOfBirth.$error.pattern">{{ getLocalizedString('newUserDateIncorrect')}} dd/mm/yyyy.</span>
+                        <span ng-show="createAccountForm.dateOfBirth.$error.pattern">{{ getLocalizedString('newUserDateIncorrect')}} dd-mm-yyyy.</span>
                     </div>
                 </div>
                 
