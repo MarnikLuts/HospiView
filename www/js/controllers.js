@@ -2600,27 +2600,28 @@ angular.module('myApp.controllers', []).
                 return formatShowDate(date, $rootScope.languageID);
             };
 
-            console.log($rootScope.getLocalizedString('patientAppointmentsViewDate'));
-            console.log($rootScope.getLocalizedString('patientAppointmentsViewTijdstip'));
-            console.log($rootScope.getLocalizedString('patientAppointmentsViewType'));
-            console.log($rootScope.getLocalizedString('patientAppointmentsViewUnit'));
-            console.log($rootScope.getLocalizedString('doctor'));
-
             $scope.reservationList = [];
             for (var s = 0; s < $rootScope.currentServers.length; s++) {
                 var server = $rootScope.currentServers[s];
                 reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url));
             }
-
-            $q.all(reservationPromises)
-                    .then(function(responses) {
-                        for (var r = 0; r < responses.length; r++) {
-                            var json = parseJson(responses[r].data);
-                            if (json.ReservationsOnPatient.Header.StatusCode == 1) {
-                                for (var i = 0; i < json.ReservationsOnPatient.Detail.Reservation.length; i++) {
-                                    json.ReservationsOnPatient.Detail.Reservation[i].hosp_full_name = $rootScope.currentServers[r].hosp_full_name;
-                                    $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
-                                }
+            
+           $q.all(reservationPromises)
+                .then(function(responses){
+                    for(var r=0;r<responses.length;r++){
+                        var json = parseJson(responses[r].data);
+                        console.log(json);
+                        if(json.ReservationsOnPatient.Header.StatusCode == 1){
+                            
+                            /*
+                             * Convert json.ReservationsOnPatient.Detail.Reservation to an array if there's only one record
+                             */
+                            if(json.ReservationsOnPatient.Header.TotalRecords==1)
+                                json.ReservationsOnPatient.Detail.Reservation = [json.ReservationsOnPatient.Detail.Reservation];
+                            
+                            for(var i=0;i<json.ReservationsOnPatient.Detail.Reservation.length;i++){
+                                json.ReservationsOnPatient.Detail.Reservation[i].hosp_full_name = $rootScope.currentServers[r].hosp_full_name;
+                                $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
                             }
                         }
                     }, error);
@@ -2666,8 +2667,8 @@ angular.module('myApp.controllers', []).
              */
             $scope.getUnitsAndGroups = function() {
                 var index = $rootScope.currentServers.indexOf($scope.server);
-                $scope.unitList = null;
-                $scope.groupList = null;
+                $scope.unitList = [];
+                $scope.groupList = [];
                 $scope.unit = null;
                 $scope.group = null;
                 if (angular.isDefined($scope.server)) {
