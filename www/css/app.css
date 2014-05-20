@@ -342,6 +342,16 @@ table td {
 .filterTitle{
     font-size: 1.5em;
 }
+
+.day-filter-group .btn-group .btn-default{
+    text-decoration: line-through;
+}
+.day-filter-group .btn-group .btn-default:active,
+.day-filter-group .btn-group .btn-default.active,
+.day-filter-group .btn-group .open .dropdown-toggle.btn-default {
+    text-decoration: none;
+}
+
 /*http://stackoverflow.com/questions/15305914/bootstrap-buttons-get-stuck-down-on-mobile-devices*/
 .mobileHoverFix:hover,
 .mobileHoverFix.hover{

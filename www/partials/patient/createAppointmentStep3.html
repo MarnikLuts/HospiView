@@ -18,7 +18,7 @@
             <div ng-show="showCalendar" class='widthPercent center-block' style="display:inline-block; min-height:290px;">
                 <datepicker class="datePickCalendar well well-sm" ng-model="startProposalDate" datepicker-options="datePickerOptions" starting-day="1" min-date="today" date-disabled="disabled(date, mode)" format-day-title='MM/yyyy' show-weeks="false"></datepicker>
             </div>
-            <div class="btn-group btn-group-justified">
+            <div class="btn-group btn-group-justified day-filter-group">
                 <div class="btn-group">
                     <button type="button" class="btn btn-default btn-md" ng-model="filters[1]" btn-checkbox>{{days[1]}}</button>
                 </div>
@@ -36,7 +36,7 @@
                 </div>
             </div><br/>
             <div class="btn-group btn-group-justified">
-                <div class="btn-group btn-group-justified">
+                <div class="btn-group btn-group-justified day-filter-group">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-md" ng-model="filters[6]" btn-checkbox>{{days[6]}}</button>
                     </div>

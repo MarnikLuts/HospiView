@@ -2624,7 +2624,8 @@ angular.module('myApp.controllers', []).
                                 $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
                             }
                         }
-                    }, error);
+                    }
+                }, error);
             function error(data) {
                 console.log(data);
             }
