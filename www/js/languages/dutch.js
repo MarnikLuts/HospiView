@@ -166,18 +166,18 @@ var dutchStrings = {
         //patient/step4
         createAppointmentStep4MakeYourChoice: "maak hier uw keuze",
         
-        //patient/step5
-        createAppointmentStep5FieldsRequired: "Velden met een * zijn verplicht in te vullen",
-        createAppointmentStep5FirstName: "Voornaam",
-        createAppointmentStep5LastName: "Achternaam",
-        createAppointmentStep5Phone2: "Telefoon 2",
-        createAppointmentStep5Street: "Straat",
-        createAppointmentStep5HouseNumber: "Huisnummer",
-        createAppointmentStep5PostalCode: "Postcode",
-        createAppointmentStep5Town: "Gemeente",
-        createAppointmentStep5Country: "Land",
-        createAppointmentStep5GenderNotDetermined: "O",
+        //patient/step4
+        createAppointmentStep4FieldsRequired: "Velden met een * zijn verplicht in te vullen",
+        createAppointmentStep4FirstName: "Voornaam",
+        createAppointmentStep4LastName: "Achternaam",
+        createAppointmentStep4Phone2: "Telefoon 2",
+        createAppointmentStep4Street: "Straat",
+        createAppointmentStep4HouseNumber: "Huisnummer",
+        createAppointmentStep4PostalCode: "Postcode",
+        createAppointmentStep4Town: "Gemeente",
+        createAppointmentStep4Country: "Land",
+        createAppointmentStep4GenderNotDetermined: "O",
         
-        //patient/step6
-        createAppointmentStep6End: "Einde"
+        //patient/step5
+        createAppointmentStep5End: "Einde"
 };

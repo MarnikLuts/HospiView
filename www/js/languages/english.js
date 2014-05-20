@@ -166,18 +166,18 @@ var englishStrings = {
         //patient/step4
         createAppointmentStep4MakeYourChoice: "make your choice",
         
-        //patient/step5
-        createAppointmentStep5FieldsRequired: "* indicates required fields",
-        createAppointmentStep5FirstName: "First name",
-        createAppointmentStep5LastName: "Last name",
-        createAppointmentStep5Phone2: "Telephone 2",
-        createAppointmentStep5Street: "Street",
-        createAppointmentStep5HouseNumber: "House number",
-        createAppointmentStep5PostalCode: "Postal code",
-        createAppointmentStep5Town: "Town",
-        createAppointmentStep5Country: "Country",
-        createAppointmentStep5GenderNotDetermined: "U",
+        //patient/step4
+        createAppointmentStep4FieldsRequired: "* indicates required fields",
+        createAppointmentStep4FirstName: "First name",
+        createAppointmentStep4LastName: "Last name",
+        createAppointmentStep4Phone2: "Telephone 2",
+        createAppointmentStep4Street: "Street",
+        createAppointmentStep4HouseNumber: "House number",
+        createAppointmentStep4PostalCode: "Postal code",
+        createAppointmentStep4Town: "Town",
+        createAppointmentStep4Country: "Country",
+        createAppointmentStep4GenderNotDetermined: "U",
         
-        //patient/step6
-        createAppointmentStep6End: "End"
+        //patient/step5
+        createAppointmentStep5End: "End"
 };

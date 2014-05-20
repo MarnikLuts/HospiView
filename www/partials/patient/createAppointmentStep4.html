@@ -6,3 +6,11 @@
     <div class="title">{{ getLocalizedString('createAppointmentStep4')}}</div>
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
+
+<div class="col-md-12">
+    <div class="well well-lg">
+        <h4>{{getLocalizedString('createAppointmentStep4Info')}}</h4>
+        <form name="step4Form" id="step4Form" ng-submit="next()" novalidate>
+        </form>
+    </div>
+</div>

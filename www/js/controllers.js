@@ -3409,7 +3409,7 @@ angular.module('myApp.controllers', []).
 
                 $q.all(questions).then(function(responses) {
                     $rootScope.questions = responses;
-                    $location.path('/patient/step5');
+                    $location.path('/patient/step4');
                 });
             };
 
@@ -3444,7 +3444,7 @@ angular.module('myApp.controllers', []).
                 history.back();
             };
         }).
-        controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location, hospiviewFactory, $q, $compile) {
+        controller("CreateAppointmentStep4Ctrl", function($rootScope, $scope, $location, hospiviewFactory, $q, $compile) {
 
             console.log($rootScope.newAppointment);
 
@@ -3529,7 +3529,7 @@ angular.module('myApp.controllers', []).
                     if (activeFieldsArray.indexOf("1") !== -1) {
                         mustField = checkMustField("1");
                         appendString = appendString
-                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5FirstName') + mustField[0] + '</b></p>'
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4FirstName') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="text" name="firstname" class="form-control" ng-model="newAppointment.patientInfo.firstname" ' + mustField[1] + '/>';
 
                         if (mustField[1] === 'required')
@@ -3537,7 +3537,7 @@ angular.module('myApp.controllers', []).
                                     + $rootScope.getLocalizedString('isRequired') + '</div>';
 
                         appendString = appendString
-                                + '</td></tr><tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5LastName') + mustField[0] + '</b></p>'
+                                + '</td></tr><tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4LastName') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="text" name="lastname" class="form-control" ng-model="newAppointment.patientInfo.lastname" ' + mustField[1] + '/>';
 
                         if (mustField[1] === 'required')
@@ -3563,7 +3563,7 @@ angular.module('myApp.controllers', []).
                     }
                     if (activeFieldsArray.indexOf("2") !== -1) {
                         mustField = checkMustField("2");
-                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Phone') + mustField[0] + '</b></p>'
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Phone') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="text" name="phone" class="form-control" ng-model="newAppointment.patientInfo.phone" ng-pattern=' + "'/^[0-9]*$/'" + ' ' + mustField[1] + '/>';
                         if (mustField[1] === 'required') {
                             appendString = appendString + '<div class="alert alert-danger" ng-show="subform.phone.$dirty && subform.phone.$error.required">'
@@ -3576,7 +3576,7 @@ angular.module('myApp.controllers', []).
                     }
                     if (activeFieldsArray.indexOf("9") !== -1) {
                         mustField = checkMustField("9");
-                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Phone2') + mustField[0] + '</b></p>'
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Phone2') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="text" name="phone2" class="form-control" ng-model="newAppointment.patientInfo.phone2" ng-pattern=' + "'/^[0-9]*$/'" + ' ' + mustField[1] + '/>';
                         if (mustField[1] === 'required') {
                             appendString = appendString + '<div class="alert alert-danger" ng-show="subform.phone2.$dirty && subform.phone2.$error.required">'
@@ -3606,10 +3606,10 @@ angular.module('myApp.controllers', []).
                         if ($rootScope.shortName === 'Short') {
                             var genderTextM = "M";
                             var genderTextF = "F";
-                            var genderTextU = $rootScope.getLocalizedString("createAppointmentStep5GenderNotDetermined");
+                            var genderTextU = $rootScope.getLocalizedString("createAppointmentStep4GenderNotDetermined");
                         } else {
-                            var genderTextM = $rootScope.getLocalizedString("createAppointmentStep5Male");
-                            var genderTextF = $rootScope.getLocalizedString("createAppointmentStep5Female");
+                            var genderTextM = $rootScope.getLocalizedString("createAppointmentStep4Male");
+                            var genderTextF = $rootScope.getLocalizedString("createAppointmentStep4Female");
                             var genderTextU = $rootScope.getLocalizedString("createAppointmentNotDetermined");
                         }
                         var activeClassM = '';
@@ -3623,10 +3623,10 @@ angular.module('myApp.controllers', []).
                         else
                             activeClassU = 'active';
 
-                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Gendre') + mustField[0] + '</b></p>'
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Gendre') + mustField[0] + '</b></p>'
                                 + '</td><td><div class="btn-group widthPercent" data-toggle="buttons">'
-                                + '<label class="btn btn-default width30Percent ' + activeClassM + '" ng-click="setRadioButtonScope(' + "'gender','male'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep5Male') + '"/>' + genderTextM + '</label>'
-                                + '<label class="btn btn-default width30Percent ' + activeClassF + '" ng-click="setRadioButtonScope(' + "'gender','female'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep5Female') + '"/>' + genderTextF + '</label>'
+                                + '<label class="btn btn-default width30Percent ' + activeClassM + '" ng-click="setRadioButtonScope(' + "'gender','male'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep4Male') + '"/>' + genderTextM + '</label>'
+                                + '<label class="btn btn-default width30Percent ' + activeClassF + '" ng-click="setRadioButtonScope(' + "'gender','female'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep4Female') + '"/>' + genderTextF + '</label>'
                                 + '<label class="btn btn-default width30Percent ' + activeClassU + '" ng-click="setRadioButtonScope(' + "'gender','undefined'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '"/>' + genderTextU + '</label>'
                                 + '</div></td></tr>';
 
@@ -3637,7 +3637,7 @@ angular.module('myApp.controllers', []).
                         mustField = checkMustField("11");
 
                         appendString = appendString
-                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Street') + ' & ' + $rootScope.getLocalizedString('createAppointmentStep5HouseNumber') + mustField[0] + '</b></p>'
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Street') + ' & ' + $rootScope.getLocalizedString('createAppointmentStep4HouseNumber') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="text" name="streetAndNumber" class="form-control" ng-model="newAppointment.patientInfo.streetAndNumber" ' + mustField[1] + '/>';
                         if (mustField[1] === 'required') {
                             appendString = appendString + '<div class="alert alert-danger" ng-show="subform.streetAndNumber.$dirty && subform.streetAndNumber.$error.required">'
@@ -3645,7 +3645,7 @@ angular.module('myApp.controllers', []).
                         }
 
                         appendString = appendString + '</td></tr>'
-                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5PostalCode') + mustField[0] + '</b></p>'
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4PostalCode') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="text" name="postalCode" class="form-control" ng-model="newAppointment.patientInfo.postalCode" ' + mustField[1] + '/>';
 
                         if (mustField[1] === 'required') {
@@ -3653,7 +3653,7 @@ angular.module('myApp.controllers', []).
                                     + $rootScope.getLocalizedString('isRequired') + '</div>';
                         }
                         appendString = appendString + '</td></tr>'
-                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Town') + mustField[0] + '</b></p>'
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Town') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="text" name="town" class="form-control" ng-model="newAppointment.patientInfo.town" ' + mustField[1] + '/>';
 
                         if (mustField[1] === 'required') {
@@ -3661,7 +3661,7 @@ angular.module('myApp.controllers', []).
                                     + $rootScope.getLocalizedString('isRequired') + '</div>';
                         }
                         appendString = appendString + '</td></tr>'
-                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Country') + mustField[0] + '</b></p>'
+                                + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Country') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="text" name="country" class="form-control" ng-model="newAppointment.patientInfo.country" ' + mustField[1] + '/>';
 
                         if (mustField[1] === 'required') {
@@ -3672,7 +3672,7 @@ angular.module('myApp.controllers', []).
                     }
                     if (activeFieldsArray.indexOf("25") !== -1) {
                         mustField = checkMustField("25");
-                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5Referring') + mustField[0] + '</b></p>'
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Referring') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="text" name="referringDoctor" class="form-control" ng-model="newAppointment.patientInfo.referringDoctor" ' + mustField[1] + '/>';
 
                         if (mustField[1] === 'required') {
@@ -3684,7 +3684,7 @@ angular.module('myApp.controllers', []).
                     }
                     if (activeFieldsArray.indexOf("10") !== -1) {
                         mustField = checkMustField("10");
-                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep5ExtraInformation') + mustField[0] + '</b></p>'
+                        appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4ExtraInformation') + mustField[0] + '</b></p>'
                                 + '</td><td><textarea style="resize: none;" name="extraInformation" class="form-control" rows="3" ng-model="newAppointment.patientInfo.extraInformation" ' + mustField[1] + '></textarea>';
 
                         if (mustField[1] === 'required') {
@@ -3769,12 +3769,12 @@ angular.module('myApp.controllers', []).
                     }
                 }
 
-                appendString = appendString + '</table><p class="formLabel">' + $rootScope.getLocalizedString('createAppointmentStep5FieldsRequired') + '</p>'
+                appendString = appendString + '</table><p class="formLabel">' + $rootScope.getLocalizedString('createAppointmentStep4FieldsRequired') + '</p>'
                         + '<div class="text-center">'
                         + '<button type="submit" class="btn btn-xl" ng-click="next(subform.$valid)" ng-disabled="subform.$invalid' + radioButtonValueCheck + '">'
                         + $rootScope.getLocalizedString('createAppointmentNext') + '</button></div>';
 
-                var compiledHtml = $(appendString).appendTo("#step5form");
+                var compiledHtml = $(appendString).appendTo("#step4Form");
                 $compile(compiledHtml)($scope);
             }
 
@@ -3854,7 +3854,7 @@ angular.module('myApp.controllers', []).
                         }
                     });
                     $rootScope.pageClass = 'right-to-left';
-                    $location.path('patient/step6');
+                    $location.path('patient/step5');
                 } else {
                     $scope.displayError = true;
                 }
@@ -3862,7 +3862,7 @@ angular.module('myApp.controllers', []).
 
             changeSelect();
         }).
-        controller("CreateAppointmentStep6Ctrl", function($rootScope, $scope, $location) {
+        controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location) {
 
             /**
              * The reservation is sent to the server

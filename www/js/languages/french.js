@@ -166,18 +166,18 @@ var frenchStrings = {
         //patient/step4
         createAppointmentStep4MakeYourChoice: "choisissez ici",
         
-        //patient/step5
-        createAppointmentStep5FieldsRequired: "* indique les champs obligatoires",
-        createAppointmentStep5FirstName: "Prénom",
-        createAppointmentStep5LastName: "Nom",
-        createAppointmentStep5Phone2: "Téléphone 2",
-        createAppointmentStep5Street: "Rue",
-        createAppointmentStep5HouseNumber: "Numéro de la maison",
-        createAppointmentStep5PostalCode: "Code postal",
-        createAppointmentStep5Town: "Ville",
-        createAppointmentStep5Country: "Pays",
-        createAppointmentStep5GenderNotDetermined: "I",
+        //patient/4
+        createAppointmentStep4FieldsRequired: "* indique les champs obligatoires",
+        createAppointmentStep4FirstName: "Prénom",
+        createAppointmentStep4LastName: "Nom",
+        createAppointmentStep4Phone2: "Téléphone 2",
+        createAppointmentStep4Street: "Rue",
+        createAppointmentStep4HouseNumber: "Numéro de la maison",
+        createAppointmentStep4PostalCode: "Code postal",
+        createAppointmentStep4Town: "Ville",
+        createAppointmentStep4Country: "Pays",
+        createAppointmentStep4GenderNotDetermined: "I",
         
-        //patient/step6
-        createAppointmentStep6End: "Fin"
+        //patient/step5
+        createAppointmentStep5End: "Fin"
 };
