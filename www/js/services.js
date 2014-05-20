@@ -247,7 +247,7 @@ angular.module('myApp.services', []).
                 },
                 getAppointmentConfirmed: function(UUID, Proposal_Id, pName, pFirstName, pBDate, pGender, pTel1, pTel2, pAddress, Reg_No, pEmail, pMemo, pUnique_PID, pDoctor, pUnique_GPID, pReferring_doctor, pReferring_GPID, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetAppointmentConfirmed&UUID=" + UUID + "&Proposal_Id=" + Proposal_Id + "&pName=" + pName + "&pFirstName=" + pFirstName + "&pBDate=" + pBDate + "&pGender=" + pGender + "&pTel1=" + pTel1 + "&pTel2=" + pTel2 + "&pAddress=" + pAddress + "&Reg_No=" + Reg_No + "&pEmail=" + pEmail + "&pMemo=" + pMemo + "&pUnique_PID=" + pUnique_PID + "&pDoctor=" + pDoctor + "&pUnique_GPID=" + pUnique_GPID + "&pReferring_doctor=" + pReferring_doctor + "&pReferring_GPID=" + pReferring_GPID + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetAppointmentConfirmed&UUID=" + UUID + "&Proposal_Id=" + Proposal_Id + "&pName=" + pName + "&pFirstName=" + pFirstName + "&pBDate=" + pBDate + "&pGender=" + pGender + "&pTel1=" + pTel1 + "&pTel2=" + pTel2 + "&pAddress=" + pAddress + "&pReg_No=" + Reg_No + "&pEmail=" + pEmail + "&pMemo=" + pMemo + "&pUnique_PID=" + pUnique_PID + "&pDoctor=" + pDoctor + "&pUnique_GPID=" + pUnique_GPID + "&pReferring_doctor=" + pReferring_doctor + "&pReferring_GPID=" + pReferring_GPID + "&count=" + $rootScope.requestCounter);
                 }
                 
             };

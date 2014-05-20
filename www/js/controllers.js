@@ -3390,9 +3390,9 @@ angular.module('myApp.controllers', []).
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
                 $rootScope.pageClass = 'right-to-left';
 
-//                releaseProposals($scope.selectedProposal.depid);
+                releaseProposals($scope.selectedProposal.depid);
                 //Release all proposals for testing
-                releaseProposals();
+ //               releaseProposals();
 
 
                 /** 
@@ -3628,7 +3628,7 @@ angular.module('myApp.controllers', []).
                                 + '</div></td></tr>';
 
                         if (mustField[1] === "required")
-                            radioButtonValueCheck = radioButtonValueCheck + ' || !gender';
+                            radioButtonValueCheck = radioButtonValueCheck + ' || !newAppointment.patientInfo.gender';
                     }
                     if (activeFieldsArray.indexOf("11") !== -1) {
                         mustField = checkMustField("11");
@@ -3796,7 +3796,27 @@ angular.module('myApp.controllers', []).
             $scope.next = function(formValid) {
                 if (formValid) {
                     var confirmed = [];
-                    //Parameters moeten nog ingevuld worden
+                    console.log($rootScope.currentServers[$rootScope.newAppointment.server].uuid);
+                            console.log($rootScope.newAppointment.proposal.proposal_id);
+                            console.log($rootScope.newAppointment.patientInfo.lastname);
+                            console.log($rootScope.newAppointment.patientInfo.firstname);
+                            console.log($rootScope.newAppointment.patientInfo.dateOfBirth);
+                            console.log($rootScope.newAppointment.patientInfo.gender);
+                            console.log($rootScope.newAppointment.patientInfo.phone);
+                            console.log($rootScope.newAppointment.patientInfo.phone2);
+                            console.log($rootScope.newAppointment.patientInfo.streetAndNumber
+                            + '^^' + $rootScope.newAppointment.patientInfo.town
+                            + '^^' + $rootScope.newAppointment.patientInfo.postalCode
+                            + '^' + $rootScope.newAppointment.patientInfo.country);
+                            console.log($rootScope.newAppointment.patientInfo.reg_no);
+                            console.log($rootScope.newAppointment.patientInfo.email);
+                            console.log($rootScope.newAppointment.patientInfo.extraInformation);
+                            console.log($rootScope.newAppointment.patientInfo.unique_pid);
+                            console.log($rootScope.newAppointment.patientInfo.doctor);
+                            console.log($rootScope.newAppointment.patientInfo.unique_gpid);
+                            console.log($rootScope.newAppointment.patientInfo.referringDoctor);
+                            console.log($rootScope.newAppointment.patientInfo.referringDoctor_gpid);
+                            console.log($rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
                     confirmed.push(hospiviewFactory.getAppointmentConfirmed(
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
                             $rootScope.newAppointment.proposal.proposal_id,
@@ -3819,8 +3839,9 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.patientInfo.referringDoctor,
                             $rootScope.newAppointment.patientInfo.referringDoctor_gpid,
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
-                            
-                    $q.all(confirmed).then(function() {
+                         
+                    $q.all(confirmed).then(function(response) {
+                        console.log(response);
                         for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                             hospiviewFactory.getProposalsRemoved(
                                     $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
