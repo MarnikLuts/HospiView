@@ -2,7 +2,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" xmlns:cdv="http://cordova.apache.org/ns/1.0" id="com.icasa-group.HospiView" version="1.0.0">
     <name>HospiView</name>
     <description>Mobile HospiView application</description>
-    <author email="Marnik.Luts@com.icasa-group" href="http://http://www.icasa-group.com/">Stijn & Frank</author>
+    <author email="Marnik.Luts@com.icasa-group" href="http://http://www.icasa-group.com/">Stijn &amp; Frank</author>
     <access origin="*"/>
     <preference name="webviewbounce" value="false"/>
     <preference name="fullscreen" value="false" />
