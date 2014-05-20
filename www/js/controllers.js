@@ -2607,23 +2607,23 @@ angular.module('myApp.controllers', []).
             console.log($rootScope.getLocalizedString('doctor'));
 
             $scope.reservationList = [];
-            for(var s=0;s<$rootScope.currentServers.length;s++){
+            for (var s = 0; s < $rootScope.currentServers.length; s++) {
                 var server = $rootScope.currentServers[s];
-                reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url ));
+                reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url));
             }
-            
-           $q.all(reservationPromises)
-                .then(function(responses){
-                    for(var r=0;r<responses.length;r++){
-                        var json = parseJson(responses[r].data);
-                        if(json.ReservationsOnPatient.Header.StatusCode == 1){
-                            for(var i=0;i<json.ReservationsOnPatient.Detail.Reservation.length;i++){
-                                json.ReservationsOnPatient.Detail.Reservation[i].hosp_full_name = $rootScope.currentServers[r].hosp_full_name;
-                                $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
+
+            $q.all(reservationPromises)
+                    .then(function(responses) {
+                        for (var r = 0; r < responses.length; r++) {
+                            var json = parseJson(responses[r].data);
+                            if (json.ReservationsOnPatient.Header.StatusCode == 1) {
+                                for (var i = 0; i < json.ReservationsOnPatient.Detail.Reservation.length; i++) {
+                                    json.ReservationsOnPatient.Detail.Reservation[i].hosp_full_name = $rootScope.currentServers[r].hosp_full_name;
+                                    $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
+                                }
                             }
                         }
-                    }
-                }, error);
+                    }, error);
             function error(data) {
                 console.log(data);
             }
@@ -2864,7 +2864,7 @@ angular.module('myApp.controllers', []).
             $scope.step2Blocked = false;
             $scope.typesLoaded = false;
             $scope.displayError = false;
-            $scope.loadingStep3=false;
+            $scope.loadingStep3 = false;
 
             /**
              * The locations from the unit or group from step 1 are put into a list
@@ -3144,7 +3144,7 @@ angular.module('myApp.controllers', []).
             $scope.today = new Date();
             $scope.unitList = [];
             $scope.loadingStep4 = false;
-            
+
             console.log($rootScope.newAppointment.units);
             for (var i = 0; i < $rootScope.newAppointment.units.length; i++) {
                 for (var j = 0; j < $rootScope.newAppointment.units[i].Detail.Dep.length; j++) {
@@ -3229,7 +3229,6 @@ angular.module('myApp.controllers', []).
                 $q.all(retrievedRequests).then(function(requests) {
                     for (var requestCount in requests) {
                         var json = parseJson(requests[requestCount].data);
-                        console.log(json);
                         for (var proposalCount in json.Proposals.Detail.Proposal) {
                             json.Proposals.Detail.Proposal[proposalCount].type_id = $rootScope.newAppointment.type.type_id[requestCount];
                             retrievedProposals.push(json.Proposals.Detail.Proposal[proposalCount]);
@@ -3389,9 +3388,10 @@ angular.module('myApp.controllers', []).
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
                 $rootScope.pageClass = 'right-to-left';
 
+                console.log($rootScope.newAppointment.type);
                 releaseProposals($scope.selectedProposal.depid);
                 //Release all proposals for testing
- //               releaseProposals();
+                //               releaseProposals();
 
 
                 /** 
@@ -3422,15 +3422,19 @@ angular.module('myApp.controllers', []).
             function releaseProposals(dep_id) {
                 for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                     if (dep_id) {
-                        if ($scope.selectedProposal.depid === dep_id) {
+                        console.log($scope.selectedProposal.depid);
+                        if ($scope.selectedProposal.depid == $rootScope.newAppointment.type.dep_id[i]) {
                             continue;
                         }
                     }
+                    
+                    console.log("remove: " + $rootScope.newAppointment.type.dep_id[i]);
                     hospiviewFactory.getProposalsRemoved(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
                             $rootScope.newAppointment.type.unit_id[i],
                             $rootScope.newAppointment.type.dep_id[i]);
+
                 }
             }
 
@@ -3475,7 +3479,7 @@ angular.module('myApp.controllers', []).
             $rootScope.newAppointment.patientInfo.doctor = '';
             $rootScope.newAppointment.patientInfo.unique_gpid = '-1';
             $rootScope.newAppointment.patientInfo.referringDoctor = '';
-            $rootScope.newAppointment.patientInfo.referringDoctor_gpid = '';           
+            $rootScope.newAppointment.patientInfo.referringDoctor_gpid = '';
 
             if (answersJson.PatientLookup.Header.StatusCode == 1) {
                 if (answersJson.PatientLookup.Detail) {
@@ -3796,26 +3800,26 @@ angular.module('myApp.controllers', []).
                 if (formValid) {
                     var confirmed = [];
                     console.log($rootScope.currentServers[$rootScope.newAppointment.server].uuid);
-                            console.log($rootScope.newAppointment.proposal.proposal_id);
-                            console.log($rootScope.newAppointment.patientInfo.lastname);
-                            console.log($rootScope.newAppointment.patientInfo.firstname);
-                            console.log($rootScope.newAppointment.patientInfo.dateOfBirth);
-                            console.log($rootScope.newAppointment.patientInfo.gender);
-                            console.log($rootScope.newAppointment.patientInfo.phone);
-                            console.log($rootScope.newAppointment.patientInfo.phone2);
-                            console.log($rootScope.newAppointment.patientInfo.streetAndNumber
+                    console.log($rootScope.newAppointment.proposal.proposal_id);
+                    console.log($rootScope.newAppointment.patientInfo.lastname);
+                    console.log($rootScope.newAppointment.patientInfo.firstname);
+                    console.log($rootScope.newAppointment.patientInfo.dateOfBirth);
+                    console.log($rootScope.newAppointment.patientInfo.gender);
+                    console.log($rootScope.newAppointment.patientInfo.phone);
+                    console.log($rootScope.newAppointment.patientInfo.phone2);
+                    console.log($rootScope.newAppointment.patientInfo.streetAndNumber
                             + '^^' + $rootScope.newAppointment.patientInfo.town
                             + '^^' + $rootScope.newAppointment.patientInfo.postalCode
                             + '^' + $rootScope.newAppointment.patientInfo.country);
-                            console.log($rootScope.newAppointment.patientInfo.reg_no);
-                            console.log($rootScope.newAppointment.patientInfo.email);
-                            console.log($rootScope.newAppointment.patientInfo.extraInformation);
-                            console.log($rootScope.newAppointment.patientInfo.unique_pid);
-                            console.log($rootScope.newAppointment.patientInfo.doctor);
-                            console.log($rootScope.newAppointment.patientInfo.unique_gpid);
-                            console.log($rootScope.newAppointment.patientInfo.referringDoctor);
-                            console.log($rootScope.newAppointment.patientInfo.referringDoctor_gpid);
-                            console.log($rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
+                    console.log($rootScope.newAppointment.patientInfo.reg_no);
+                    console.log($rootScope.newAppointment.patientInfo.email);
+                    console.log($rootScope.newAppointment.patientInfo.extraInformation);
+                    console.log($rootScope.newAppointment.patientInfo.unique_pid);
+                    console.log($rootScope.newAppointment.patientInfo.doctor);
+                    console.log($rootScope.newAppointment.patientInfo.unique_gpid);
+                    console.log($rootScope.newAppointment.patientInfo.referringDoctor);
+                    console.log($rootScope.newAppointment.patientInfo.referringDoctor_gpid);
+                    console.log($rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
                     confirmed.push(hospiviewFactory.getAppointmentConfirmed(
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
                             $rootScope.newAppointment.proposal.proposal_id,
@@ -3838,7 +3842,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.patientInfo.referringDoctor,
                             $rootScope.newAppointment.patientInfo.referringDoctor_gpid,
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
-                         
+
                     $q.all(confirmed).then(function(response) {
                         console.log(response);
                         for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
