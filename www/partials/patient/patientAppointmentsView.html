@@ -15,6 +15,7 @@
     <div class="AcceleratedList patientAppointment">
         <table class="table reservationTable">
             <tr>
+                <th>{{getLocalizedString('patientAppointmentsViewFacility')}}</th>
                 <th>{{getLocalizedString('patientAppointmentsViewDate')}}</th>
                 <th>{{getLocalizedString('patientAppointmentsViewTijdstip')}}</th>
                 <th>{{getLocalizedString('patientAppointmentsViewType')}}</th>
@@ -22,7 +23,10 @@
             </tr>
             <tr ng-repeat="reservation in reservationList| orderBy:'the_date'" >
                 <td>
-                    {{formatDate(reservation.the_date)}}
+                    {{reservation.hosp_short_name}}
+                </td>
+                <td>
+                    {{formatShortDate(reservation.the_date)}}
                 </td>
                 <td>
                     {{reservation.time_from}}
@@ -35,6 +39,9 @@
                 </td>
             </tr>
         </table>
+        <div ng-repeat="server in currentServers">
+            {{server.hosp_short_name}}: {{server.hosp_full_name}}
+        </div>
         <div class="alert alert-info" ng-hide="reservationList.length"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('patientAppointmentsViewNoReservations')}}</div>
     </div>
 </div>

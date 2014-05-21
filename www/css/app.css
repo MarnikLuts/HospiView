@@ -485,7 +485,7 @@ ul li{
 }
 
 .formLabel{
-    font-size: 15px;
+    font-size: 1.5em;
 }
 
 .appointmentFormTable{
@@ -503,6 +503,9 @@ ul li{
 }
 
 @media screen and (max-width: 400px) {// Smartphones in portrait mode
+    .formLabel{
+        font-size: 1.1em;
+    }
     .dateAppointmentsViewScaled{
         width: 100px;
     }
