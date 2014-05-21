@@ -98,7 +98,6 @@ function formatDate(date) {
  * @returns {Date|String|formatShowDate.newDate}
  */
 function formatShowDate(date, languageID) {
-    alert(date + " " + languageID);
     var newDate = new Date(date);
     
     if(languageID===undefined)

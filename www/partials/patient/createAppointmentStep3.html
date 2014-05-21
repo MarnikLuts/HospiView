@@ -100,7 +100,7 @@
             <textarea style="resize: none;" class="form-control" ng-class="{proposalInfoText: selectedProposal}" disabled rows="2" ng-model="proposalInfo"></textarea>            
             <br/>
             <div class="text-center">
-                <button class="btn btn-xl has-spinner" ng-click="next()" ng-disabled="!proposalInfo || proposalInfo === '' || loadingStep4" type="submit"><span class="glyphicon glyphicon-refresh" ng-show="loadingStep4"></span>{{getLocalizedString('createAppointmentNext')}}</button>
+                <button class="btn btn-xl has-spinner" ng-click="next()" ng-disabled="!proposalInfo || proposalInfo === '' || loadingStep4" type="submit"><span class="glyphicon glyphicon-refresh" ng-show="loadingStep4"></span> {{getLocalizedString('createAppointmentNext')}}</button>
             </div>
         </div>
     </div>

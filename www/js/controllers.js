@@ -2912,7 +2912,6 @@ angular.module('myApp.controllers', []).
             $scope.step2Blocked = false;
             $scope.typesLoaded = false;
             $scope.displayError = false;
-            $scope.loadingStep3 = false;
             
             //If the user came back to step 2 from step 3 the extra info field is remebered
             if($rootScope.newAppointment.reservationInfo)
@@ -3154,7 +3153,7 @@ angular.module('myApp.controllers', []).
                             var dep = $scope.newAppointment.units[j].Detail.Dep[h];
                             for (var k = 0; k < $scope.type.dep_id.length; k++) {
                                 if (dep.dep_id == $scope.type.dep_id[k] && dep.msg_extern_step2) {
-                                    $("#extraInfo").append("<b>" + dep.location_name + ":</b> " + dep.msg_extern_step2 + "<br>");
+                                    $("#extraInfo").append("<a style=\"color: red;\"><b>" + dep.location_name + ":</b></a> " + dep.msg_extern_step2 + "<br>");
                                 }
                             }
                         }
@@ -3162,7 +3161,7 @@ angular.module('myApp.controllers', []).
                 }
                 
                 if($scope.type.public_msg)
-                    $("#extraInfo").append("<b>" + $scope.type.type_title + ":</b> " + $scope.type.public_msg);
+                    $("#extraInfo").append("<a style=\"color: red;\"><b>" + $scope.type.type_title + ":</b></a> " + $scope.type.public_msg);
             };
 
             /**
@@ -3190,8 +3189,8 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.next = function(formValid) {
+                $("#loadingStep3Spinner").removeClass("hiddenBlock");
                 if (formValid && $scope.locationIsChecked()) {
-                    $scope.loadingStep3 = true;
                     $rootScope.newAppointment.type = $scope.type;
                     $rootScope.newAppointment.locations = [];
                     for (var i = 0; i < $scope.locations.length; i++) {
@@ -3202,7 +3201,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('/patient/step3');
                 } else {
-                    $scope.loadingStep3 = true;
+                    $("#loadingStep3Spinner").addClass("hiddenBlock");
                     $scope.displayError = true;
                 }
             };
@@ -3293,7 +3292,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.type.unit_id[i],
                             $rootScope.newAppointment.type.dep_id[i],
                             $rootScope.newAppointment.type.type_id[i],
-                            "test maken reservatie",
+                            $rootScope.newAppointment.type.type_title,
                             $rootScope.newAppointment.reservationInfo,
                             globalTypes,
                             searchDate,
