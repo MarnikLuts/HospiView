@@ -146,6 +146,7 @@ var englishStrings = {
         patientAppointmentsViewNoReservations: "You don't have any appointments the next 14 days.",
         patientAppointmentsViewType: "Appointment Type",
         patientAppointmentsViewUnit: "With",
+        patientAppointmentsViewFacility: "Facility",
         
         //patient/step1
         createAppointmentStep1Server: "Hospital",
