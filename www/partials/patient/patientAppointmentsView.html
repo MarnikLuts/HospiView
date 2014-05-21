@@ -23,7 +23,7 @@
             </tr>
             <tr ng-repeat="reservation in reservationList| orderBy:'the_date'" >
                 <td>
-                    {{reservation.hosp_short_name}}
+                    {{reservation.hosp_short_name}} {{reservation.location_name}}
                 </td>
                 <td>
                     {{formatShortDate(reservation.the_date)}}

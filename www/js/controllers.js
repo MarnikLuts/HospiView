@@ -1438,7 +1438,7 @@ angular.module('myApp.controllers', []).
              * will be searched.
              */
             $scope.next = function() {
-                if(!$scope.loadingMonth){
+                if (!$scope.loadingMonth) {
                     var calDate = $("#doctorCalendar").fullCalendar('getDate');
                     var months = getMonthNames($rootScope.languageID);
                     if (calDate.getMonth() + 1 < 12)
@@ -1451,7 +1451,7 @@ angular.module('myApp.controllers', []).
                         $('#doctorCalendar').fullCalendar('next');
                     } else {
                         calendarView();
-                    } 
+                    }
                 }
             };
 
@@ -1460,7 +1460,7 @@ angular.module('myApp.controllers', []).
              * will be searched.
              */
             $scope.prev = function() {
-                if(!$scope.loadingMonth){
+                if (!$scope.loadingMonth) {
                     var calDate = $("#doctorCalendar").fullCalendar('getDate');
                     var months = getMonthNames($rootScope.languageID);
                     if (calDate.getMonth() - 1 > -1)
@@ -1472,7 +1472,7 @@ angular.module('myApp.controllers', []).
                         $('#doctorCalendar').fullCalendar('prev');
                     } else {
                         calendarView();
-                    }  
+                    }
                 }
             };
 
@@ -2227,25 +2227,25 @@ angular.module('myApp.controllers', []).
                             localStorage.setItem("users", JSON.stringify(localUsers));
                         }
                         var server = {"servers": [{"id": $rootScope.currentServer.id,
-                                            "hosp_short_name": $rootScope.currentServer.hosp_short_name,
-                                            "hosp_full_name": $rootScope.currentServer.hosp_full_name,
-                                            "hosp_url": $rootScope.currentServer.hosp_url,
-                                            "user_password": $scope.password,
-                                            "user_login": $scope.username,
-                                            "reg_no": json.Detail.reg_no,
-                                            "unique_pid": json.Detail.unique_pid,
-                                            "uuid": json.Detail.uuid,
-                                            "isexternal": json.Detail.isexternal,
-                                            "save_password": $scope.savePassword,
-                                            "shortcut1": {"unit": "", "department": ""},
-                                            "shortcut2": {"unit": "", "department": ""},
-                                            "shortcut3": {"unit": "", "department": ""}}],
-                                    "language_id": json.Detail.language_id,
-                                    "cellcontent": {"patient": true,
-                                        "title": true,
-                                        "department": true},
-                                    "refreshrate": 60}
-                        addToLocalStorage(localStorageName,server);
+                                    "hosp_short_name": $rootScope.currentServer.hosp_short_name,
+                                    "hosp_full_name": $rootScope.currentServer.hosp_full_name,
+                                    "hosp_url": $rootScope.currentServer.hosp_url,
+                                    "user_password": $scope.password,
+                                    "user_login": $scope.username,
+                                    "reg_no": json.Detail.reg_no,
+                                    "unique_pid": json.Detail.unique_pid,
+                                    "uuid": json.Detail.uuid,
+                                    "isexternal": json.Detail.isexternal,
+                                    "save_password": $scope.savePassword,
+                                    "shortcut1": {"unit": "", "department": ""},
+                                    "shortcut2": {"unit": "", "department": ""},
+                                    "shortcut3": {"unit": "", "department": ""}}],
+                            "language_id": json.Detail.language_id,
+                            "cellcontent": {"patient": true,
+                                "title": true,
+                                "department": true},
+                            "refreshrate": 60}
+                        addToLocalStorage(localStorageName, server);
                         $rootScope.currentServers[0] = server.servers[0];
                         /*
                          * 0: dokter (oude hospiview service)
@@ -2597,8 +2597,8 @@ angular.module('myApp.controllers', []).
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory, $q) {
             var searchStart = new Date(),
-                    searchEnd = new Date(),
-                    reservationPromises = [];
+                    searchEnd = new Date();
+            $scope.reservationPromises = [];
             searchEnd.setDate(searchStart.getDate() + 90);
 
             $scope.formatShowDate = function(date) {
@@ -2609,38 +2609,72 @@ angular.module('myApp.controllers', []).
                 date = new Date(date);
                 return date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
             };
-            
-            $scope.reservationList = [];
-            for (var s = 0; s < $rootScope.currentServers.length; s++) {
-                var server = $rootScope.currentServers[s];
-                console.log(server);
-                console.log(server.reg_no);console.log(formatDate(searchStart));console.log(formatDate(searchEnd)); console.log(server.hosp_url);
-                reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url));
+
+
+
+            var depLocations = [];
+            for (var i = 0; i < $rootScope.currentServers.length; i++) {
+                depLocations.push(hospiviewFactory.getUnitAndDepList($rootScope.currentServers[i].uuid, 1, $rootScope.currentServers[i].hosp_url));
             }
 
-            $q.all(reservationPromises)
+            var jsonServerLocations = [];
+            $q.all(depLocations)
                     .then(function(responses) {
-                        for (var r = 0; r < responses.length; r++) {
-                            var json = parseJson(responses[r].data);
-                            console.log(json);
-                            if (json.ReservationsOnPatient.Header.StatusCode == 1&&json.ReservationsOnPatient.Detail) {
+                        $scope.reservationPromises = [];
+                        for (var i in responses)
+                            jsonServerLocations.push(parseJson(responses[i].data));
 
-                                /*
-                                 * Convert json.ReservationsOnPatient.Detail.Reservation to an array if there's only one record
-                                 */
-                                if (json.ReservationsOnPatient.Header.TotalRecords == 1)
-                                    json.ReservationsOnPatient.Detail.Reservation = [json.ReservationsOnPatient.Detail.Reservation];
-
-                                for (var i = 0; i < json.ReservationsOnPatient.Detail.Reservation.length; i++) {
-                                    json.ReservationsOnPatient.Detail.Reservation[i].hosp_short_name = $rootScope.currentServers[r].hosp_short_name;
-                                    $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
-                                }
-                                localStorage.setItem($rootScope.user + "PatientReservations", JSON.stringify($scope.reservationList));
-                            }
+                        $scope.reservationList = [];
+                        for (var s = 0; s < $rootScope.currentServers.length; s++) {
+                            var server = $rootScope.currentServers[s];
+                            console.log(server);
+                            console.log(server.reg_no);
+                            console.log(formatDate(searchStart));
+                            console.log(formatDate(searchEnd));
+                            console.log(server.hosp_url);
+                            $scope.reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url));
                         }
-                    }, error);
+
+                        var locationDepObject = {};
+                        $q.all($scope.reservationPromises)
+                                .then(function(responses) {
+                                    console.log(responses);
+                                    for (var r = 0; r < responses.length; r++) {
+                                        var json = parseJson(responses[r].data);
+                                        console.log(json);
+                                        if (json.ReservationsOnPatient.Header.StatusCode == 1 && json.ReservationsOnPatient.Detail) {
+
+                                            /*
+                                             * Convert json.ReservationsOnPatient.Detail.Reservation to an array if there's only one record
+                                             */
+                                            if (json.ReservationsOnPatient.Header.TotalRecords == 1)
+                                                json.ReservationsOnPatient.Detail.Reservation = [json.ReservationsOnPatient.Detail.Reservation];
+
+                                            for (var k in jsonServerLocations[r].UnitsAndDeps.Detail.Unit)
+                                                for (var m in jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep) {
+                                                    locationDepObject[jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep[m].dep_id]
+                                                            = jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep[m].location_name;
+                                                }
+
+                                            for (var i = 0; i < json.ReservationsOnPatient.Detail.Reservation.length; i++) {
+                                                json.ReservationsOnPatient.Detail.Reservation[i].hosp_short_name = $rootScope.currentServers[r].hosp_short_name;
+                                                console.log(json.ReservationsOnPatient.Detail.Reservation[i].unit_id);
+                                                json.ReservationsOnPatient.Detail.Reservation[i].location_name = locationDepObject[json.ReservationsOnPatient.Detail.Reservation[i].dep_id];
+                                                $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
+                                            }
+                                            localStorage.setItem($rootScope.user + "PatientReservations", JSON.stringify($scope.reservationList));
+                                        }
+                                    }
+                                }, error);
+                    });
+
+
+
+
+
+
             function error(data) {
-                if(!$rootScope.isOffline){
+                if (!$rootScope.isOffline) {
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnection"));
                     $rootScope.isOffline = true;
                 }
@@ -2687,7 +2721,7 @@ angular.module('myApp.controllers', []).
                                 console.log(json);
                                 if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail != null) {
                                     $scope.unitList = json.UnitsAndDeps.Detail.Unit;
-                                    /*
+                                    /**
                                      * Filter out departments for which there aren't enough permissions
                                      * if the unit has no more departments delete the unit
                                      */
@@ -2772,7 +2806,7 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function error(data) {
-                if(!$rootScope.isOffline){
+                if (!$rootScope.isOffline) {
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;
                     $location.path("/patient/mainmenu");
@@ -3114,7 +3148,7 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function error(data) {
-                if(!$rootScope.isOffline){
+                if (!$rootScope.isOffline) {
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;
                     $location.path("/patient/mainmenu");
@@ -3261,7 +3295,7 @@ angular.module('myApp.controllers', []).
             };
 
             function error(data) {
-                if(!$rootScope.isOffline){
+                if (!$rootScope.isOffline) {
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;
                     $location.path("/patient/mainmenu");
@@ -3269,7 +3303,7 @@ angular.module('myApp.controllers', []).
                 console.log(data);
                 $scope.error = true;
             }
-            
+
             /**
              * Initiation of variables needed.
              */
@@ -3479,7 +3513,7 @@ angular.module('myApp.controllers', []).
             console.log($rootScope.newAppointment);
 
             $scope.showInvalidFields = false;
-            
+
             $scope.setRadioButtonScope = function(model, value) {
                 $scope.newAppointment.patientInfo[model] = value;
             };
@@ -3539,7 +3573,7 @@ angular.module('myApp.controllers', []).
 
             console.log(standardQuestionsJson.ActiveFieldsOnUnit);
             console.log(extraQuestionsJson.QuestionsOnUnit);
-            
+
             var radioButtonValueCheck = [];
             function setQuestions() {
                 var appendString = '<table ng-form="subform" class="appointmentFormTable" id="questionTable">';
@@ -3662,9 +3696,9 @@ angular.module('myApp.controllers', []).
 
                         if (mustField[1] === "required")
                             radioButtonValueCheck.push("gender");
-                        
+
                         appendString = appendString + '<div class="alert alert-danger" ng-show="showInvalidFields && (!newAppointment.patientInfo.gender || newAppointment.patientInfo.gender == ' + "''" + ')">'
-                                    + $rootScope.getLocalizedString('isRequired') + '</div></td></tr>';
+                                + $rootScope.getLocalizedString('isRequired') + '</div></td></tr>';
                     }
                     if (activeFieldsArray.indexOf("11") !== -1) {
                         mustField = checkMustField("11");
@@ -3831,10 +3865,10 @@ angular.module('myApp.controllers', []).
              */
             $scope.next = function(formValid) {
                 var radioButtonBooleanChecks = true;
-                for(var i in radioButtonValueCheck){
+                for (var i in radioButtonValueCheck) {
                     console.log(radioButtonValueCheck);
                     console.log($scope.newAppointment.patientInfo[radioButtonValueCheck[i]])
-                    if($scope.newAppointment.patientInfo[radioButtonValueCheck[i]] == -1 || $scope.newAppointment.patientInfo[radioButtonValueCheck[i]] == "" || !$scope.newAppointment.patientInfo[radioButtonValueCheck[i]])
+                    if ($scope.newAppointment.patientInfo[radioButtonValueCheck[i]] == -1 || $scope.newAppointment.patientInfo[radioButtonValueCheck[i]] == "" || !$scope.newAppointment.patientInfo[radioButtonValueCheck[i]])
                         radioButtonBooleanChecks = false;
                 }
                 if (formValid && radioButtonBooleanChecks) {
@@ -3881,7 +3915,7 @@ angular.module('myApp.controllers', []).
             };
 
             function error(data) {
-                if(!$rootScope.isOffline){
+                if (!$rootScope.isOffline) {
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;
                     $location.path("/patient/mainmenu");
@@ -3889,7 +3923,7 @@ angular.module('myApp.controllers', []).
                 console.log(data);
                 $scope.error = true;
             }
-            
+
             changeSelect();
         }).
         controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location) {
