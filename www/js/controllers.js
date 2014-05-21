@@ -2879,6 +2879,10 @@ angular.module('myApp.controllers', []).
             $scope.typesLoaded = false;
             $scope.displayError = false;
             $scope.loadingStep3 = false;
+            
+            //If the user came back to step 2 from step 3 the extra info field is remebered
+            if($rootScope.newAppointment.reservationInfo)
+                $scope.reservationInfo = $rootScope.newAppointment.reservationInfo;
 
             /**
              * The locations from the unit or group from step 1 are put into a list
@@ -2968,6 +2972,7 @@ angular.module('myApp.controllers', []).
                         getTypes();
                     } else {
                         $scope.typesLoaded = true;
+                        rememberType();
                         console.log($scope.typeList);
                     }
                 } else {
@@ -3029,10 +3034,25 @@ angular.module('myApp.controllers', []).
                                         getTypes();
                                     } else {
                                         $scope.typesLoaded = true;
+                                        rememberType();
                                         console.log($scope.typeList);
                                     }
                                 }
                             }, error);
+                }
+            }
+            
+            /*
+             * If the patient came back to step 2 from step 3 the type is remembered
+             */
+            function rememberType(){
+                if($rootScope.newAppointment.type){
+//                    console.log($rootScope.newAppointment.type);
+//                    $scope.type = $rootScope.newAppointment.type;
+                    for(var i=0;i<$scope.typeList.length;i++){
+                        if($scope.typeList[i].type_title===$rootScope.newAppointment.type.type_title)
+                            $scope.type = $scope.typeList[i];
+                    }
                 }
             }
 
@@ -3079,7 +3099,7 @@ angular.module('myApp.controllers', []).
              * if there is extra info on the department that the selected type is linked to it is displayed in the extra info field
              */
             $scope.updateFormData = function() {
-                $scope.extraInfo = "";
+                $("#extraInfo").empty();
                 for (var i = 0; i < $scope.locations.length; i++) {
                     if ($scope.type && $scope.type.location_id.indexOf($scope.locations[i].location_id) == -1) {
 //                        console.log($scope.type.location_id + " does not contain " + $scope.locations[i].location_id);
@@ -3093,18 +3113,22 @@ angular.module('myApp.controllers', []).
                         $scope.locations[i].checked = true;
                     }
                 }
+                
                 if ($scope.type) {
                     for (var j = 0; j < $scope.newAppointment.units.length; j++) {
                         for (var h = 0; h < $scope.newAppointment.units[j].Detail.Dep.length; h++) {
                             var dep = $scope.newAppointment.units[j].Detail.Dep[h];
                             for (var k = 0; k < $scope.type.dep_id.length; k++) {
                                 if (dep.dep_id == $scope.type.dep_id[k] && dep.msg_extern_step2) {
-                                    $scope.extraInfo += dep.msg_extern_step2;
+                                    $("#extraInfo").append("<b>" + dep.location_name + ":</b> " + dep.msg_extern_step2 + "<br>");
                                 }
                             }
                         }
                     }
                 }
+                
+                if($scope.type.public_msg)
+                    $("#extraInfo").append("<b>" + $scope.type.type_title + ":</b> " + $scope.type.public_msg);
             };
 
             /**
@@ -3414,7 +3438,6 @@ angular.module('myApp.controllers', []).
              */
             $scope.next = function() {
                 $scope.loadingStep4 = true;
-                $scope.selectedProposal.day_name = $scope.getDay($scope.selectedProposal);
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
                 $rootScope.pageClass = 'right-to-left';
 
@@ -3893,9 +3916,11 @@ angular.module('myApp.controllers', []).
             changeSelect();
         }).
         controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location) {
-
+            
+            $scope.displayDate = formatShowDate($rootScope.newAppointment.proposal.the_date, $rootScope.languageID);
+        
             /**
-             * The reservation is sent to the server
+             * The patient returns to the main menu
              * @returns {undefined}
              */
             $scope.end = function() {

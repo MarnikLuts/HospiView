@@ -80,7 +80,7 @@
                         </div>
                     </div>
                     <div class="savePasswordText">
-                        <label><div class="icasaCheckbox icasaCheckbox-normal" ng-class="{'icasaCheckboxChecked':savePassword, 'icasaCheckboxUnChecked':!savePassword,}"></div><input type="checkbox" ng-model="savePassword" ng-click="changeCheckbox()"  class="invisible"/> {{ getLocalizedString('loginAutomaticallyEnterPassword')}}</label>
+                        <label class="icasaCheckbox icasaCheckbox-normal" ng-class="{'icasaCheckboxChecked':savePassword, 'icasaCheckboxUnChecked':!savePassword}"><input type="checkbox" ng-model="savePassword" ng-click="changeCheckbox()" class="invisible"/>{{ getLocalizedString('loginAutomaticallyEnterPassword')}}</label>
                     </div>
                     <div class="alert alert-danger" ng-show="error">{{errormessage}}</div>
                     <div class="form-group text-center">

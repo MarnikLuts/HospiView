@@ -18,6 +18,12 @@ body {
     padding: 0 0 0.5em;
 }
 
+#extraInfo{
+    height: 100px;
+    overflow: scroll;
+    font-size: 14px;
+}
+
 .hiddenBlock{
     display: none;
 }
@@ -148,6 +154,15 @@ body {
 #step3LoadingSpinner{
     text-align: center;
     font-size: 30px;
+}
+
+.proposalInfoText{
+    background-color: #5cb85c !important;
+    border-color: #4cae4c;
+    color: white;
+    
+    /* color: #3c763d; */
+    /* background-color: #dff0d8 !important; */
 }
 
 .widthSettingsLabels {
@@ -597,6 +612,9 @@ ul li{
     overflow: hidden;
 }
 
+.line-through-text{
+    text-decoration: line-through;
+}
 
 @media screen and (min-width: 768px) {
     .settingsLabels {

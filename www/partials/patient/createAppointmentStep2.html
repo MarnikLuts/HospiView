@@ -39,16 +39,17 @@
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ReservationInfo')}}</b></p>
                     </td>
                     <td>
-                        <textarea style="resize: none;" class="form-control AcceleratedList" rows="3" ng-model="reservationInfo" placeholder="{{getLocalizedString('createAppointmentStep2ReservationInfo')}}" ></textarea>
-                    </td>    
+                        <div id="extraInfo" class="well AcceleratedList"></div>
+                    </td>
+                       
                 </tr>
                 <tr>
                     <td>
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ExtraInfo')}}</b></p>
                     </td>
                     <td>
-                        <textarea style="resize: none;" class="form-control AcceleratedList" disabled rows="3" ng-model="extraInfo" placeholder="{{getLocalizedString('createAppointmentStep2ExtraInfo')}}" ></textarea>
-                    </td>    
+                        <textarea style="resize: none;" class="form-control AcceleratedList" rows="3" ng-model="reservationInfo" placeholder="{{getLocalizedString('createAppointmentStep2ExtraInfoPlaceholer')}}" ></textarea>
+                    </td>  
                 </tr>
             </table>
             <div class="alert alert-danger" ng-show="displayError || type === null && step2Form.typeSelect.$dirty || !locationIsChecked()">

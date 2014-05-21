@@ -36,7 +36,7 @@
                 </div>
             </div><br/>
             <div class="btn-group btn-group-justified">
-                <div class="btn-group btn-group-justified day-filter-group">
+                <div class="day-filter-group btn-group btn-group-justified day-filter-group">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-md" ng-model="filters[6]" btn-checkbox>{{days[6]}}</button>
                     </div>
@@ -44,7 +44,7 @@
                         <button type="button" class="btn btn-default btn-md" ng-model="filters[0]" btn-checkbox>{{days[0]}}</button>
                     </div>
                 </div>
-                <div style="left: 10px; padding-right: 10px;" class="btn-group btn-group-justified">
+                <div style="left: 10px; padding-right: 10px;" class="day-filter-group btn-group btn-group-justified">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-md" ng-model="filters.morning" btn-checkbox>{{getLocalizedString('createAppointmentStep3Morning' + shortName)}}</button>
                     </div>
@@ -54,7 +54,7 @@
                 </div>
             </div><br/>
             <div class="btn-group">
-                <button style="width: 25%;" type="button" class="btn btn-default dropdown-toggle" ng-disabled="newAppointment.locations.length<=1" data-toggle="dropdown">
+                <button style="width: 25%;" type="button" class="btn btn-default dropdown-toggle" ng-class="{'line-through-text': newAppointment.locations.length<=1}" ng-disabled="newAppointment.locations.length<=1" data-toggle="dropdown">
                     {{getLocalizedString("createAppointmentCampus")}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu list-group" role="menu">
@@ -62,7 +62,7 @@
                 </ul>
             </div>
             <div class="btn-group">
-                <button style="width: 25%;" type="button" class="btn btn-default dropdown-toggle" ng-disabled="unitList.length<=1" data-toggle="dropdown">
+                <button style="width: 25%;" type="button" class="btn btn-default dropdown-toggle" ng-class="{'line-through-text': unitList.length<=1}" ng-disabled="unitList.length<=1" data-toggle="dropdown">
                     {{getLocalizedString("createAppointmentDoctor")}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdow-step3 list-group" role="menu">
@@ -97,7 +97,7 @@
             </div>
             <br/>
             <h4>{{getLocalizedString('createAppointmentStep3Selected')}}</h4>
-            <textarea style="resize: none;" class="form-control" disabled rows="2" ng-model="proposalInfo"></textarea>            
+            <textarea style="resize: none;" class="form-control" ng-class="{proposalInfoText: selectedProposal}" disabled rows="2" ng-model="proposalInfo"></textarea>            
             <br/>
             <div class="text-center">
                 <button class="btn btn-xl has-spinner" ng-click="next()" ng-disabled="!proposalInfo || proposalInfo === '' || loadingStep4" type="submit"><span class="glyphicon glyphicon-refresh" ng-show="loadingStep4"></span>{{getLocalizedString('createAppointmentNext')}}</button>

@@ -55,12 +55,12 @@ var dutchStrings = {
         
         //Selectserver/new
         newGreeting: "Welkom bij HospiView",
-        newInfo: "Selecteer de zorginstelling waarmee u verbinding wil maken:_"
+        newInfo: "Selecteer de instelling waarmee u verbinding wil maken:_"
                 +"Om onze demoserver te gebruiken selecteer \"Agendaview Demo\" en gebruik de volgende login gegevens:_"
                 +"Gebruikersnaam:_apple-user_"
                 +"Wachtwoord:_apple-user",
         newServerSelectDefault: "Klik hier om te selecteren",
-        newServerHasAccount: "Heeft u een account bij deze zorginstelling?",
+        newServerHasAccount: "Heeft u een account bij deze instelling?",
         newServerEnterAccount: "Geef uw login gegevens in:",
         
         newFunctionSelectDefault: "Selecteer een functie",
@@ -80,7 +80,7 @@ var dutchStrings = {
         newUserNatReg: "Rijksregisternummer",
         newUserFirm: "Firma",
         newUserRiziv: "RIZIV nummer",
-        newUserNoKiosk: "Deze zorginstelling heeft ervoor gekozen om patiënten momenteel geen afspraken te laten maken via deze app. Hierdoor kan u zich niet registreren.",
+        newUserNoKiosk: "Deze instelling heeft ervoor gekozen om patiënten momenteel geen afspraken te laten maken via deze app. Hierdoor kan u zich niet registreren.",
         newUserNoAccountCreation: "Functie nog niet beschikbaar in deze versie van de app.",
         
         //Selectserver/new validation
@@ -159,6 +159,7 @@ var dutchStrings = {
                 
         //patient/step2
         createAppointmentStep2SelectType: "Kies een type",
+        createAppointmentStep2ExtraInfoPlaceholer: "Indien u nog iets aan de arts wil meegeven over de afspraak kan u dit hier doen.",
         
         //patient/step3
         createAppointmentStep3Morning: "voormiddag",
@@ -184,5 +185,7 @@ var dutchStrings = {
         createAppointmentStep4GenderNotDetermined: "O",
         
         //patient/step5
+        createAppointmentStep5Info: "U kan uw afspraak terugvinden als u op \"Afspraak Bekijken\" drukt in het hoofdmenu",
+        createAppointmentStep5Thanks: "dankt u om dit systeem te gebruiken",
         createAppointmentStep5End: "Einde"
 };
