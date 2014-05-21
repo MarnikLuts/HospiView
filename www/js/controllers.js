@@ -2634,7 +2634,8 @@ angular.module('myApp.controllers', []).
                                 }
                             }
                         }
-                    }, error);
+                    }
+                }, error);
             function error(data) {
                 console.log(data);
             }
