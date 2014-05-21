@@ -2611,8 +2611,7 @@ angular.module('myApp.controllers', []).
                     for(var r=0;r<responses.length;r++){
                         var json = parseJson(responses[r].data);
                         console.log(json);
-                        if(json.ReservationsOnPatient.Header.StatusCode == 1){
-                            
+                        if(json.ReservationsOnPatient.Header.StatusCode == 1&&json.ReservationsOnPatient.Detail){
                             /*
                              * Convert json.ReservationsOnPatient.Detail.Reservation to an array if there's only one record
                              */
