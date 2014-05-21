@@ -1438,18 +1438,20 @@ angular.module('myApp.controllers', []).
              * will be searched.
              */
             $scope.next = function() {
-                var calDate = $("#doctorCalendar").fullCalendar('getDate');
-                var months = getMonthNames($rootScope.languageID);
-                if (calDate.getMonth() + 1 < 12)
-                    $rootScope.displayMonthDate = months[calDate.getMonth() + 1] + " " + calDate.getFullYear();
-                else
-                    $rootScope.displayMonthDate = months[0] + " " + (calDate.getFullYear() + 1);
+                if(!$scope.loadingMonth){
+                    var calDate = $("#doctorCalendar").fullCalendar('getDate');
+                    var months = getMonthNames($rootScope.languageID);
+                    if (calDate.getMonth() + 1 < 12)
+                        $rootScope.displayMonthDate = months[calDate.getMonth() + 1] + " " + calDate.getFullYear();
+                    else
+                        $rootScope.displayMonthDate = months[0] + " " + (calDate.getFullYear() + 1);
 
-                $scope.calendarBrows = 'next';
-                if ($rootScope.isOffline) {
-                    $('#doctorCalendar').fullCalendar('next');
-                } else {
-                    calendarView();
+                    $scope.calendarBrows = 'next';
+                    if ($rootScope.isOffline) {
+                        $('#doctorCalendar').fullCalendar('next');
+                    } else {
+                        calendarView();
+                    } 
                 }
             };
 
@@ -1458,17 +1460,19 @@ angular.module('myApp.controllers', []).
              * will be searched.
              */
             $scope.prev = function() {
-                var calDate = $("#doctorCalendar").fullCalendar('getDate');
-                var months = getMonthNames($rootScope.languageID);
-                if (calDate.getMonth() - 1 > -1)
-                    $rootScope.displayMonthDate = months[calDate.getMonth() - 1] + " " + calDate.getFullYear();
-                else
-                    $rootScope.displayMonthDate = months[11] + " " + (calDate.getFullYear() - 1);
-                $scope.calendarBrows = 'prev';
-                if ($rootScope.isOffline) {
-                    $('#doctorCalendar').fullCalendar('prev');
-                } else {
-                    calendarView();
+                if(!$scope.loadingMonth){
+                    var calDate = $("#doctorCalendar").fullCalendar('getDate');
+                    var months = getMonthNames($rootScope.languageID);
+                    if (calDate.getMonth() - 1 > -1)
+                        $rootScope.displayMonthDate = months[calDate.getMonth() - 1] + " " + calDate.getFullYear();
+                    else
+                        $rootScope.displayMonthDate = months[11] + " " + (calDate.getFullYear() - 1);
+                    $scope.calendarBrows = 'prev';
+                    if ($rootScope.isOffline) {
+                        $('#doctorCalendar').fullCalendar('prev');
+                    } else {
+                        calendarView();
+                    }  
                 }
             };
 
