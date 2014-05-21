@@ -2912,6 +2912,7 @@ angular.module('myApp.controllers', []).
             $scope.step2Blocked = false;
             $scope.typesLoaded = false;
             $scope.displayError = false;
+            $scope.loadingStep3 = false;
             
             //If the user came back to step 2 from step 3 the extra info field is remebered
             if($rootScope.newAppointment.reservationInfo)
@@ -3190,6 +3191,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.next = function(formValid) {
                 $("#loadingStep3Spinner").removeClass("hiddenBlock");
+                $scope.loadingStep3 = true;
                 if (formValid && $scope.locationIsChecked()) {
                     $rootScope.newAppointment.type = $scope.type;
                     $rootScope.newAppointment.locations = [];
@@ -3201,6 +3203,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('/patient/step3');
                 } else {
+                    $scope.loadingStep3 = false;
                     $("#loadingStep3Spinner").addClass("hiddenBlock");
                     $scope.displayError = true;
                 }

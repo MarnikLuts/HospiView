@@ -19,8 +19,7 @@ body {
 }
 
 #extraInfo{
-    height: 100px;
-    overflow: scroll;
+    min-height: 75px;
     font-size: 14px;
 }
 
@@ -159,7 +158,7 @@ body {
 .proposalInfoText{
     background-color: #5cb85c !important;
     border-color: #4cae4c;
-    color: white;
+    color: white; 
     
     /* color: #3c763d; */
     /* background-color: #dff0d8 !important; */
