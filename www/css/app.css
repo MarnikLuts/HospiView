@@ -140,14 +140,6 @@ body {
     background-color: #3044B5;
 }
 
-@media screen and (min-width: 768px) {
-    .settingsLabels {
-        font-size: 1.2em;
-        font-weight: normal;
-        min-width: 130px;
-    }
-}
-
 #serverImg{
     width: 42px;
     height: 60px;
@@ -156,13 +148,6 @@ body {
 #step3LoadingSpinner{
     text-align: center;
     font-size: 30px;
-}
-
-@media screen and (min-width: 768px) {
-    #serverImg {
-        width: 64px;
-        height: 90px;
-    }
 }
 
 .widthSettingsLabels {
@@ -275,20 +260,6 @@ body {
     display: table-cell;
 }
 
-@media screen and (min-width: 768px) {
-    .detailTitle{
-        font-weight: bold;
-        font-size: 1.8em;
-        width: 40%;
-        display: table-cell;
-    }
-
-    .detailInfo{
-        width: 60%;
-        font-size: 1.8em;
-        display: table-cell;
-    }
-}
 .dayButtonWidth{
     width:14%;
 }
@@ -452,12 +423,6 @@ ul li{
     font-size: 1.2em;
 }
 
-@media screen and (min-width: 768px) {
-    .patientAppointment{
-        font-size: 1.6em;
-    }
-}
-
 .btn-appointments-filter{
     height: 50px;
     position: absolute;
@@ -485,9 +450,9 @@ ul li{
 }
 
 .formLabel{
-    font-size: 1.5em;
+    font-size: 1.1em;
 }
-
+    
 .appointmentFormTable{
     border-spacing: 10px; 
     border-collapse:separate;
@@ -500,21 +465,6 @@ ul li{
 
 .appointmentFormTable tr td:first-child{
     width: 10%;
-}
-
-@media screen and (max-width: 400px) {// Smartphones in portrait mode
-    .formLabel{
-        font-size: 1.1em;
-    }
-    .dateAppointmentsViewScaled{
-        width: 100px;
-    }
-    #todayBtn{
-        font-size: 12px;
-    }
-    #weekendBtn{
-        font-size: 12px;
-    }
 }
 
 @-webkit-keyframes slideInRight {
@@ -613,34 +563,6 @@ ul li{
     transform: translateX(100%);  
 }  
 
-@media screen and (max-width: 768px) {
-    .title{
-        font-size: 20px;
-    }
-    .icasaLogo{
-        width: 70px;
-        top: 22px;
-    }
-    ul{
-        width:100%;
-    }
-    ul li a{
-        width: 30%;
-    }
-}
-@media screen and (min-width: 768px) {
-    ul{
-        width:43%;
-    }
-    ul li{
-        width: 33%;
-    }
-    ul li a{
-        font-size: 15px;
-        width: 100%;
-    }
-}
-
 .datePickCalendar td {
     width: 1%;
 }
@@ -670,4 +592,88 @@ ul li{
 
 .reservationTable td {
     border-top: 1px solid #ddd;
+}
+
+
+
+@media screen and (min-width: 768px) {
+    .settingsLabels {
+        font-size: 1.2em;
+        font-weight: normal;
+        min-width: 130px;
+    }
+}
+
+
+@media screen and (min-width: 768px) {
+    #serverImg {
+        width: 64px;
+        height: 90px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .title{
+        font-size: 20px;
+    }
+    .icasaLogo{
+        width: 70px;
+        top: 22px;
+    }
+    ul{
+        width:100%;
+    }
+    ul li a{
+        width: 30%;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    ul{
+        width:43%;
+    }
+    ul li{
+        width: 33%;
+    }
+    ul li a{
+        font-size: 15px;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 400px) {// Smartphones in portrait mode  
+    .dateAppointmentsViewScaled{
+        width: 100px;
+    }
+    #todayBtn{
+        font-size: 12px;
+    }
+    #weekendBtn{
+        font-size: 12px;
+    }
+}
+
+
+@media screen and (min-width: 400px) {
+    .formLabel{
+        font-size: 1.5em;
+    }
+    .patientAppointment{
+        font-size: 1.6em;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .detailTitle{
+        font-weight: bold;
+        font-size: 1.8em;
+        width: 40%;
+        display: table-cell;
+    }
+
+    .detailInfo{
+        width: 60%;
+        font-size: 1.8em;
+        display: table-cell;
+    }
 }
