@@ -147,7 +147,7 @@ var dutchStrings = {
         notAvailableInOffline: "Deze functie is niet beschikbaar in offline mode.",
         
         //patient/patientAppointmentsView
-        patientAppointmentsViewNoReservations: "U heeft de volgende 14 dagen geen afspraken.",
+        patientAppointmentsViewNoReservations: "U heeft de volgende 90 dagen geen afspraken.",
         patientAppointmentsViewType: "Type afspraak",
         patientAppointmentsViewUnit: "Bij",
         patientAppointmentsViewFacility: "Instelling",

@@ -593,7 +593,9 @@ ul li{
 .reservationTable td {
     border-top: 1px solid #ddd;
 }
-
+.showCompleteFloat {
+    overflow: hidden;
+}
 
 
 @media screen and (min-width: 768px) {

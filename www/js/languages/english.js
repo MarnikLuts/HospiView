@@ -148,7 +148,7 @@ var englishStrings = {
         notAvailableInOffline: "This feature is not available in offline mode.",
         
         //patient/patientAppointmentsView
-        patientAppointmentsViewNoReservations: "You don't have any appointments the next 14 days.",
+        patientAppointmentsViewNoReservations: "You don't have any appointments the next 90 days.",
         patientAppointmentsViewType: "Appointment Type",
         patientAppointmentsViewUnit: "With",
         patientAppointmentsViewFacility: "Facility",

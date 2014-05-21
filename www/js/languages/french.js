@@ -147,7 +147,7 @@ var frenchStrings = {
         notAvailableInOffline: "Cette fonction n'est pas disponible sans connexion.",
 
         //patient/patientAppointmentsView
-        patientAppointmentsViewNoReservations: "Vous n'avez pas de réservations les 14 jours suivant.",
+        patientAppointmentsViewNoReservations: "Vous n'avez pas de réservations les 90 jours suivant.",
         patientAppointmentsViewType: "Type de réservation",
         patientAppointmentsViewUnit: "Bij",
         patientAppointmentsViewFacility: "Institution",
