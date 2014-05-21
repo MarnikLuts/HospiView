@@ -18,6 +18,11 @@ var englishStrings = {
         appointmentsViewNoReservations: "No reservations.",
         appointmentsViewEndOfDateRange: "There are no more reservations.",
         
+        //patient/appointmentsView
+        appointmentsViewPatientNoConnection: "There is no internet connection or a connection to the server can't be made. You are now in offline mode.",
+        appointmentsViewPatientNoConnectionCreateAppointment: "There is no internet connection or a connection to the server can't be made. To create an appointment, you need internetconnection. Please try again when you have internetconnection.",
+        
+        
         //AppointmentsCalendar
         appointmentsCalendarToday: "Today",
         appointmentsCalendarWeekends: "Weekends",

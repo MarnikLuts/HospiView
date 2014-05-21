@@ -18,6 +18,10 @@ var dutchStrings = {
         appointmentsViewNoReservations: "Geen afspraken op deze dag.",
         appointmentsViewEndOfDateRange: "Er zijn geen afspraken meer gevonden.",
         
+        //patient/appointmentsView
+        appointmentsViewPatientNoConnection: "Er is geen internetconnectie of er kan geen connectie worden gemaakt met de server. U bent nu in offline modus.",
+        appointmentsViewPatientNoConnectionCreateAppointment: "Er is geen internetconnectie of er kan geen connectie worden gemaakt met de server. U heeft connectie nodig om een afspraak te maken. Probeer opnieuw als u internetconnectie heeft.",
+        
         //AppointmentsCalendar
         appointmentsCalendarToday: "Vandaag",
         appointmentsCalendarWeekends: "Weekends",
@@ -103,7 +107,7 @@ var dutchStrings = {
         no: "Nee",
         cancel: "annuleer",
         wait: "Even geduld a.u.b.",
-        tooManyReservations: "Uw account is gebonden aan heel veel afspraken. Deze kunnen niet lokaal opgeslagen worden dus de offlinemodus van deze applicatie werkt niet voor uw account. Ook zal de applicatie iets trager werken.",
+        tooManyReservations: "Uw account is gebonden aan heel veel afspraken. Deze kunnen niet lokaal opgeslagen worden dus de offline modus van deze applicatie werkt niet voor uw account. Ook zal de applicatie iets trager werken.",
         or: "OF",
         
         //Connection messages
@@ -146,7 +150,7 @@ var dutchStrings = {
         patientAppointmentsViewNoReservations: "U heeft de volgende 14 dagen geen afspraken.",
         patientAppointmentsViewType: "Type afspraak",
         patientAppointmentsViewUnit: "Bij",
-        patientAppointmentsViewFacility: "Zorginstelling",
+        patientAppointmentsViewFacility: "Instelling",
         
         //patient/step1
         createAppointmentStep1Server: "Ziekenhuis",

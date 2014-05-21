@@ -10,13 +10,17 @@ var frenchStrings = {
         loginError: "Le mot de passe et/ou l'email que vous avez saisi est invalide.",
         loginPasswordCheckedMessage: "Attention! Par entrer votre mot de passe automatiquement tous les utilisatuers de l'appareil peuvent enregistrer avec votre codes d'accès.",
         loginNoReservationsFound: "Il n'y a pas de des réservations les 14 jours prochaines. Vous voulez continer à cherchez?",
-        loginNoConnection: "Il n'y a pas un connection avec l'internet ou ce n'est pas possible de connecter avec le serveur. Sans connections vous pouvez encore regarder les réservations qui sont déjà obtenues. Vous voulez continuer sans connection?",
+        loginNoConnection: "Il n'y a pas un connexion avec l'internet ou ce n'est pas possible de connecter avec le serveur. Sans connexions vous pouvez encore regarder les réservations qui sont déjà obtenues. Vous voulez continuer sans connexion?",
         loginServerListFailed: "Enregistration est echouée à les serveurs suivantes:",
         
         //AppointmentsView
         appointmentsViewReservations: "Réservations",
         appointmentsViewNoReservations: "Pas de Réservation",
         appointmentsViewEndOfDateRange: "Il n'ya plus des réservations",
+        
+        //patient/appointmentsView
+        appointmentsViewPatientNoConnection: "Il n'y a pas un connexion avec l'internet ou ce n'est pas possible de connecter avec le serveur. Vous êtes maintenant dans la mode hors-ligne.",
+        appointmentsViewPatientNoConnectionCreateAppointment: "Il n'y a pas un connexion avec l'internet ou ce n'est pas possible de connecter avec le serveur. Pour faire une reservation, vous avez besoin d'une connexion d'internet. Essayer à nouveau si vous avez connexion d'internet s'il vous plait.",
         
         //AppointmentsCalendar
         appointmentsCalendarToday: "Aujourd'hui",
@@ -140,7 +144,7 @@ var frenchStrings = {
         settingsDeleteCurrentUserConfirm: "Êtes-vous sûr vous voulez supprimer l'utilisateur courant?",
         
         //patient/mainmenu
-        notAvailableInOffline: "Cette fonction n'est pas disponible sans connection.",
+        notAvailableInOffline: "Cette fonction n'est pas disponible sans connexion.",
 
         //patient/patientAppointmentsView
         patientAppointmentsViewNoReservations: "Vous n'avez pas de réservations les 14 jours suivant.",

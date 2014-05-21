@@ -2628,14 +2628,19 @@ angular.module('myApp.controllers', []).
                                     json.ReservationsOnPatient.Detail.Reservation = [json.ReservationsOnPatient.Detail.Reservation];
 
                                 for (var i = 0; i < json.ReservationsOnPatient.Detail.Reservation.length; i++) {
-                                    json.ReservationsOnPatient.Detail.Reservation[i].hosp_full_name = $rootScope.currentServers[r].hosp_full_name;
                                     json.ReservationsOnPatient.Detail.Reservation[i].hosp_short_name = $rootScope.currentServers[r].hosp_short_name;
                                     $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
                                 }
+                                localStorage.setItem($rootScope.user + "PatientReservations", JSON.stringify($scope.reservationList));
                             }
                         }
                     }, error);
             function error(data) {
+                if(!$rootScope.isOffline){
+                    alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnection"));
+                    $rootScope.isOffline = true;
+                }
+                $scope.reservationList = JSON.parse(localStorage.getItem($rootScope.user + "PatientReservations"));
                 console.log(data);
             }
 
@@ -2763,6 +2768,12 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function error(data) {
+                if(!$rootScope.isOffline){
+                    alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
+                    $rootScope.isOffline = true;
+                    $location.path("/patient/mainmenu");
+                }
+                console.log(data);
                 $scope.error = true;
             }
 
@@ -3099,6 +3110,12 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function error(data) {
+                if(!$rootScope.isOffline){
+                    alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
+                    $rootScope.isOffline = true;
+                    $location.path("/patient/mainmenu");
+                }
+                console.log(data);
                 $scope.error = true;
             }
 
@@ -3236,9 +3253,19 @@ angular.module('myApp.controllers', []).
                     console.log(retrievedProposals);
                     editProposalInfo(retrievedProposals);
                     $("#step3LoadingSpinner").addClass("hiddenBlock");
-                });
+                }, error);
             };
 
+            function error(data) {
+                if(!$rootScope.isOffline){
+                    alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
+                    $rootScope.isOffline = true;
+                    $location.path("/patient/mainmenu");
+                }
+                console.log(data);
+                $scope.error = true;
+            }
+            
             /**
              * Initiation of variables needed.
              */
@@ -3409,7 +3436,7 @@ angular.module('myApp.controllers', []).
                 $q.all(questions).then(function(responses) {
                     $rootScope.questions = responses;
                     $location.path('/patient/step4');
-                });
+                }, error);
             };
 
             /**
@@ -3851,7 +3878,7 @@ angular.module('myApp.controllers', []).
                                     $rootScope.newAppointment.type.unit_id[i],
                                     $rootScope.newAppointment.type.dep_id[i]);
                         }
-                    });
+                    }, error);
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('patient/step5');
                 } else {
@@ -3859,6 +3886,16 @@ angular.module('myApp.controllers', []).
                 }
             };
 
+            function error(data) {
+                if(!$rootScope.isOffline){
+                    alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
+                    $rootScope.isOffline = true;
+                    $location.path("/patient/mainmenu");
+                }
+                console.log(data);
+                $scope.error = true;
+            }
+            
             changeSelect();
         }).
         controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location) {
