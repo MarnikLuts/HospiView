@@ -3366,7 +3366,7 @@ angular.module('myApp.controllers', []).
             var width = window.innerWidth;
 
             width = window.innerWidth;
-            if (width <= 768) {
+            if (width <= 400) {
                 $scope.days = getDayNamesShort($rootScope.languageID);
                 $rootScope.shortName = 'Short';
             }
