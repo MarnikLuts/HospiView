@@ -42,7 +42,7 @@
                 </td>
             </tr>
         </table>
-        <div ng-repeat="server in currentServers">
+        <div ng-show="currentServers.length > 1" ng-repeat="server in currentServers">
             {{server.hosp_short_name}}: {{server.hosp_full_name}}
         </div>
         <div class="alert alert-info" ng-hide="reservationList.length&&!loadingPatientReservations"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('patientAppointmentsViewNoReservations')}}</div>

@@ -142,6 +142,8 @@ var frenchStrings = {
         settingsDeleteCurrentUser: "Supprimer utilisateur",
         settingsDeleteServerConfirm: "Êtes-vous sûr vous voulez supprimer cette serveur?",
         settingsDeleteCurrentUserConfirm: "Êtes-vous sûr vous voulez supprimer l'utilisateur courant?",
+        settingsChangeName: "Change votre nom",
+        settingsChangeEmail: "Change votre courrier",
         
         //patient/mainmenu
         notAvailableInOffline: "Cette fonction n'est pas disponible sans connexion.",

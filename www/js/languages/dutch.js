@@ -91,7 +91,7 @@ var dutchStrings = {
         newUserNatRegIncorrect: "Rijksregisternummer is niet correct.",
         newUserRizivIncorrect: "RIZIV nummer is niet correct.",
         newUserRequest: "Vraag account aan",
-        newUserRequestMessage: "U ontvangt dadelijk een email met uw logingegevens.",
+        newUserRequestMessage: "U ontvangt dadelijk een e-mail met uw logingegevens.",
         
         //Validation
         isRequired: "Dit veld is verplicht.",        
@@ -142,6 +142,8 @@ var dutchStrings = {
         settingsDeleteCurrentUser: "Verwijder gebruiker",
         settingsDeleteServerConfirm: "Weet u zeker dat u de geselecteerde server wil verwijderen?",
         settingsDeleteCurrentUserConfirm: "Weet u zeker dat u de huidige gebruiker wil verwijderen?",
+        settingsChangeName: "Naam wijzigen",
+        settingsChangeEmail: "E-mail wijzigen",
         
         //patient/mainmenu
         notAvailableInOffline: "Deze functie is niet beschikbaar in offline mode.",

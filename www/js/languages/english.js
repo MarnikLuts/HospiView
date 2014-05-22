@@ -22,7 +22,6 @@ var englishStrings = {
         appointmentsViewPatientNoConnection: "There is no internet connection or a connection to the server can't be made. You are now in offline mode.",
         appointmentsViewPatientNoConnectionCreateAppointment: "There is no internet connection or a connection to the server can't be made. To create an appointment, you need internetconnection. Please try again when you have internetconnection.",
         
-        
         //AppointmentsCalendar
         appointmentsCalendarToday: "Today",
         appointmentsCalendarWeekends: "Weekends",
@@ -143,6 +142,8 @@ var englishStrings = {
         settingsDeleteCurrentUser: "Delete user",
         settingsDeleteServerConfirm: "Are you sure you want to delete the selected server?",
         settingsDeleteCurrentUserConfirm: "Are you sure you want to delete the current user?",
+        settingsChangeName: "Change name",
+        settingsChangeEmail: "Change email address",
         
         //patient/mainmenu
         notAvailableInOffline: "This feature is not available in offline mode.",
