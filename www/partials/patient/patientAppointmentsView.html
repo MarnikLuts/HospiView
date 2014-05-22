@@ -21,6 +21,9 @@
                 <th>{{getLocalizedString('patientAppointmentsViewType')}}</th>
                 <th>{{getLocalizedString('patientAppointmentsViewUnit')}}</th>
             </tr>
+            <tr>
+                <td colspan="5" class="text-center"><span class="has-spinner"><span class="glyphicon glyphicon-refresh" ng-show="loadingPatientReservations"></span></span></td>
+            </tr>
             <tr ng-repeat="reservation in reservationList| orderBy:'the_date'" >
                 <td>
                     {{reservation.hosp_short_name}} {{reservation.location_name}}
@@ -42,6 +45,6 @@
         <div ng-repeat="server in currentServers">
             {{server.hosp_short_name}}: {{server.hosp_full_name}}
         </div>
-        <div class="alert alert-info" ng-hide="reservationList.length"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('patientAppointmentsViewNoReservations')}}</div>
+        <div class="alert alert-info" ng-hide="reservationList.length&&!loadingPatientReservations"><span class="glyphicon glyphicon-info-sign"></span>{{ getLocalizedString('patientAppointmentsViewNoReservations')}}</div>
     </div>
 </div>

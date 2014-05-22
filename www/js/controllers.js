@@ -2142,7 +2142,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.requestAccount = function() {
                 if ($scope.userFunctionSelect === $rootScope.getLocalizedString('newFunctionPatient')) {
-                    hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, '021545214', $rootScope.languageID, 0, $scope.server.hosp_url)
+                    hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, $scope.phone, $rootScope.languageID, 0, $scope.server.hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
                                 $scope.accountTrue = true;
@@ -2599,8 +2599,9 @@ angular.module('myApp.controllers', []).
             var searchStart = new Date(),
                     searchEnd = new Date();
             $scope.reservationPromises = [];
+            $scope.loadingPatientReservations = true;
             searchEnd.setDate(searchStart.getDate() + 90);
-
+            
             $scope.formatShowDate = function(date) {
                 return formatShowDate(date, $rootScope.languageID);
             };
@@ -2665,6 +2666,7 @@ angular.module('myApp.controllers', []).
                                             localStorage.setItem($rootScope.user + "PatientReservations", JSON.stringify($scope.reservationList));
                                         }
                                     }
+                                    $scope.loadingPatientReservations = false;
                                 }, error);
                     });
 
@@ -2679,6 +2681,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.isOffline = true;
                 }
                 $scope.reservationList = JSON.parse(localStorage.getItem($rootScope.user + "PatientReservations"));
+                $scope.loadingPatientReservations = false;
                 console.log(data);
             }
 
@@ -3288,7 +3291,10 @@ angular.module('myApp.controllers', []).
                     console.log($rootScope.newAppointment.type.unit_id[i] + " "
                             + $rootScope.newAppointment.type.dep_id[i] + " "
                             + $rootScope.newAppointment.type.type_id[i]);
-
+                    
+                    if(!$rootScope.newAppointment.reservationInfo)
+                        $rootScope.newAppointment.reservationInfo='';
+                    
                     retrievedRequests.push(hospiviewFactory.getProposals(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
