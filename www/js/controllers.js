@@ -3667,7 +3667,7 @@ angular.module('myApp.controllers', []).
             if (!standardQuestionsJson.ActiveFieldsOnUnit.Detail && !extraQuestionsJson.QuestionsOnUnit.Detail)
                 $scope.next(true);
 
-            var disableRegno = "disable";
+            var disableRegno = "disabled";
             if($rootScope.type === 3||$rootScope.type === 0 ||$rootScope.type === 1)
                 disableRegno = "";
 
