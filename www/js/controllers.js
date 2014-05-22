@@ -680,6 +680,11 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/settings/default');
             };
+            
+            $scope.createAppointment = function(){
+                $rootScope.pageClass = "right-to-left";
+                $location.path('/patient/step1');
+            };
 
             /**
              * Redirects to the filter screen. The refresh is stopped with removeEvent().
@@ -2995,6 +3000,23 @@ angular.module('myApp.controllers', []).
 
             var unitTypesRequested = 0,
                     depTypeRequested = 0;
+                    
+            /*
+             * If the patient came back to step 2 from step 3 the type is remembered
+             */
+            $scope.rememberType = function(){
+                if($rootScope.newAppointment.type){
+//                    console.log($rootScope.newAppointment.type);
+//                    $scope.type = $rootScope.newAppointment.type;
+                    for(var i=0;i<$scope.typeList.length;i++){
+                        if($scope.typeList[i].type_title===$rootScope.newAppointment.type.type_title){
+                            $scope.type = $scope.typeList[i];
+                            $scope.updateFormData();
+                        }
+                    }
+                }
+            };
+            
             getTypes();
             /*
              * gets called by itself until every department of every unit in '$rootScope.newAppointment.units' has done a request
@@ -3047,7 +3069,7 @@ angular.module('myApp.controllers', []).
                         getTypes();
                     } else {
                         $scope.typesLoaded = true;
-                        rememberType();
+                        $scope.rememberType();
                         console.log($scope.typeList);
                     }
                 } else {
@@ -3109,7 +3131,7 @@ angular.module('myApp.controllers', []).
                                         getTypes();
                                     } else {
                                         $scope.typesLoaded = true;
-                                        rememberType();
+                                        $scope.rememberType();
                                         console.log($scope.typeList);
                                     }
                                 }
@@ -3117,21 +3139,7 @@ angular.module('myApp.controllers', []).
                 }
             }
             
-            /*
-             * If the patient came back to step 2 from step 3 the type is remembered
-             */
-            function rememberType(){
-                if($rootScope.newAppointment.type){
-//                    console.log($rootScope.newAppointment.type);
-//                    $scope.type = $rootScope.newAppointment.type;
-                    for(var i=0;i<$scope.typeList.length;i++){
-                        if($scope.typeList[i].type_title===$rootScope.newAppointment.type.type_title){
-                            $scope.type = $scope.typeList[i];
-                            $scope.updateFormData();
-                        }
-                    }
-                }
-            }
+            
 
             /**
              * Function used to help with form validation
@@ -3207,7 +3215,7 @@ angular.module('myApp.controllers', []).
                 if($scope.type.public_msg)
                     $("#extraInfo").append("<a style=\"color: red;\"><b>" + $scope.type.type_title + ":</b></a> " + $scope.type.public_msg);
             };
-
+            
             /**
              * Function that is called when the request to the server fails for error handling
              * 
@@ -3643,7 +3651,7 @@ angular.module('myApp.controllers', []).
                 $scope.next(true);
 
             var disableRegno = "disable";
-            if($rootScope.type === 3)
+            if($rootScope.type === 3||$rootScope.type === 0 ||$rootScope.type === 1)
                 disableRegno = "";
 
             console.log(standardQuestionsJson.ActiveFieldsOnUnit);
@@ -4012,7 +4020,18 @@ angular.module('myApp.controllers', []).
              */
             $scope.end = function() {
                 $rootScope.pageClass = 'left-to-right';
-                $location.path('/patient/mainmenu');
+                
+                switch($rootScope.type){
+                    case 0:
+                    case 1:
+                        $location.path('/doctor/appointmentsView');
+                        break;
+                    case 2:
+                    case 3:
+                        $location.path('/patient/mainmenu');
+                        break;
+                }
+                
             };
         }).
         controller("BackButtonCtrl", function($rootScope, $scope) {
