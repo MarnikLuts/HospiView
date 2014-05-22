@@ -30,6 +30,7 @@ angular.module('myApp', [
 
                 $routeProvider.when('/patient/mainmenu', {templateUrl: 'partials/patient/mainmenu.html', controller: 'MainmenuCtrl'});
                 $routeProvider.when('/settingsPatient/:action', {templateUrl: 'partials/patient/settingsPatient.html', controller: 'SettingsCtrl'});
+                $routeProvider.when('/changeUser/:action', {templateUrl: 'partials/changeUser.html', controller: 'ChangeUserCtrl'});
                 $routeProvider.when('/patient/appointmentsView', {templateUrl: 'partials/patient/patientAppointmentsView.html', controller: 'PatientViewAppointmentsCtrl'});
                 $routeProvider.when('/patient/step1', {templateUrl: 'partials/patient/createAppointmentStep1.html', controller: 'CreateAppointmentStep1Ctrl'});
                 $routeProvider.when('/patient/step2', {templateUrl: 'partials/patient/createAppointmentStep2.html', controller: 'CreateAppointmentStep2Ctrl'});

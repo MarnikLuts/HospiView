@@ -1959,6 +1959,11 @@ angular.module('myApp.controllers', []).
                 }
             };
 
+            $scope.changeCurrentUser = function(routeParam) {
+                $rootScope.pageClass = 'left-to-right';
+                $location.path('/changeUser/' + routeParam);
+            };
+            
             /**
              * Prompts the user with a confirmation dialog,
              * Deletes the selected server
@@ -2601,6 +2606,7 @@ angular.module('myApp.controllers', []).
             $scope.reservationPromises = [];
             searchEnd.setDate(searchStart.getDate() + 90);
 
+            console.log(searchEnd);
             $scope.formatShowDate = function(date) {
                 return formatShowDate(date, $rootScope.languageID);
             };
@@ -2695,6 +2701,28 @@ angular.module('myApp.controllers', []).
              * The user is redirected back to the main menu
              */
             $scope.save = function() {
+                $rootScope.pageClass = 'left-to-right';
+                $location.path('/patient/mainmenu');
+            };
+        }).
+        controller("ChangeUserCtrl", function($rootScope, $scope, $routeParams, $location, hospiviewFactory) {
+            
+            
+            
+            $scope.save = function() {
+                for(var server in $rootScope.currentServers){
+                    hospiviewFactory.getLogin($scope.firstName, $rootScope.currentServers[server].reg_no, $scope.emailAddress, '021545214', $rootScope.languageID, 0, $scope.server.hosp_url)
+                            .then(function(response) {
+                                var json = parseJson(response.data);
+                                $scope.accountTrue = true;
+                                $scope.accountFalse = false;
+                                console.log(json);
+                                postAuthentication(json.Authentication);
+                            }, function(errorData) {
+                                error(errorData);
+                            });
+                }
+                
                 $rootScope.pageClass = 'left-to-right';
                 $location.path('/patient/mainmenu');
             };
