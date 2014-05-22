@@ -3125,8 +3125,10 @@ angular.module('myApp.controllers', []).
 //                    console.log($rootScope.newAppointment.type);
 //                    $scope.type = $rootScope.newAppointment.type;
                     for(var i=0;i<$scope.typeList.length;i++){
-                        if($scope.typeList[i].type_title===$rootScope.newAppointment.type.type_title)
+                        if($scope.typeList[i].type_title===$rootScope.newAppointment.type.type_title){
                             $scope.type = $scope.typeList[i];
+                            $scope.updateFormData();
+                        }
                     }
                 }
             }

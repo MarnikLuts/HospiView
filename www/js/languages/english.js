@@ -187,7 +187,7 @@ var englishStrings = {
         createAppointmentStep4GenderNotDetermined: "U",
         
         //patient/step5
-        createAppointmentStep5Info: "U kan uw afspraak terugvinden als u op \"Afspraak Bekijken\" drukt in het hoofdmenu",
-        createAppointmentStep5Thanks: "dankt u om dit systeem te gebruiken",
+        createAppointmentStep5Info: "You can find your appointment if you click on the \"Look at reservations\" button in the main menu",
+        createAppointmentStep5Thanks: " thanks you for using this app",
         createAppointmentStep5End: "End"
 };
