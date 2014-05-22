@@ -124,7 +124,7 @@ var dutchStrings = {
         settingsUser: "Gebruiker",
         settingsRefresh: "Verversing",
         settingsRefreshUnit: "sec",
-        settingsAddDelete: "Toevoegen of verwijderen",
+        settingsAddDelete: "Toevoegen, wijzigen of verwijderen",
         settingsEditDelete: "Wijzigen of verwijderen",
         settingsCellcontent: "Reservatie instellingen",
         settingsPatient: "Patiënt",

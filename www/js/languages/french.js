@@ -124,7 +124,7 @@ var frenchStrings = {
         settingsUser: "Utilisateur",
         settingsRefresh: "Rafraîchissement",
         settingsRefreshUnit: "sec",
-        settingsAddDelete: "Ajouter ou supprimer",
+        settingsAddDelete: "Ajouter, modifier ou supprimer",
         settingsEditDelete: "Modifier ou supprimer",
         settingsCellcontent: "Paramètres des réservations",
         settingsPatient: "Patient",

@@ -210,6 +210,9 @@ angular.module('myApp.controllers', []).
                             case 2:
                                 postLoginPatient();
                                 break;
+                            //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
+                            case 3:
+                                postLoginPatient();
                         }
                     } else {
                         $scope.loggingIn = false;
@@ -413,6 +416,9 @@ angular.module('myApp.controllers', []).
                             case 2:
                                 postLoginPatient();
                                 break;
+                            //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
+                            case 3:
+                                postLoginPatient();
                         }
 
                     } else {
@@ -514,6 +520,10 @@ angular.module('myApp.controllers', []).
                                     $location.path('/doctor/appointmentsView');
                                     break;
                                 case '2':
+                                    languageFactory.initLocalLanguageStrings();
+                                    $location.path('/patient/mainmenu');
+                                    break;
+                                case '3':
                                     languageFactory.initLocalLanguageStrings();
                                     $location.path('/patient/mainmenu');
                                     break;
@@ -1959,9 +1969,9 @@ angular.module('myApp.controllers', []).
                 }
             };
 
-            $scope.changeCurrentUser = function(routeParam) {
+            $scope.changeCurrentUser = function() {
                 $rootScope.pageClass = 'left-to-right';
-                $location.path('/changeUser/' + routeParam);
+                $location.path('/changeUser');
             };
             
             /**
@@ -2268,6 +2278,9 @@ angular.module('myApp.controllers', []).
                                 postLoginDoctor();
                                 break;
                             case 2:
+                                postLoginPatient();
+                                break;
+                            case 3:
                                 postLoginPatient();
                                 break;
                         }
@@ -2708,8 +2721,6 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller("ChangeUserCtrl", function($rootScope, $scope, $routeParams, $location, hospiviewFactory) {
-            
-            
             
             $scope.save = function() {
                 for(var server in $rootScope.currentServers){
@@ -3629,6 +3640,10 @@ angular.module('myApp.controllers', []).
             if (!standardQuestionsJson.ActiveFieldsOnUnit.Detail && !extraQuestionsJson.QuestionsOnUnit.Detail)
                 $scope.next(true);
 
+            var disableRegno = "disable";
+            if($rootScope.type === 3)
+                disableRegno = "";
+
             console.log(standardQuestionsJson.ActiveFieldsOnUnit);
             console.log(extraQuestionsJson.QuestionsOnUnit);
 
@@ -3645,8 +3660,9 @@ angular.module('myApp.controllers', []).
                     if (activeFieldsArray.indexOf("26") !== -1) {
                         mustField = checkMustField("26");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('reg_no') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" name="reg_no" class="form-control" ng-model="newAppointment.patientInfo.reg_no" ' + mustField[1] + ' disabled/>'
+                                + '</td><td><input type="text" name="reg_no" class="form-control" ng-model="newAppointment.patientInfo.reg_no" ' + mustField[1] + ' ' + disableRegno +'/>'
                                 + '</td></tr>';
+                        
                     }
                     if (activeFieldsArray.indexOf("1") !== -1) {
                         mustField = checkMustField("1");

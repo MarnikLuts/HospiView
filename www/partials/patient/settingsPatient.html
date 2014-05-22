@@ -38,21 +38,10 @@
                 <table class="table table-condensed list">
                     <tr>
                         <td class="widthSettingsTabelLabel"><label class="tableLabel">{{getLocalizedString('settingsAddDelete')}}</label></td>
-                        <td class="width25Percent">&nbsp;</td>
+                        
                         <td class="width25Percent"><button type="button" class="btn btn-sm-add btn-default" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-plus"></span></button></td>
+                        <td class="width25Percent"><button type="button" class="btn btn-sm-add btn-default" ng-click="changeCurrentUser()"><span class="glyphicon glyphicon-transfer"></span></button></td>
                         <td class="width25Percent"><button type="button" class="btn btn-sm-add btn-danger" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-minus"></span></button></td>   
-                    </tr>
-                    <tr>
-                        <td class="widthSettingsTabelLabel"><label class="tableLabel">{{getLocalizedString('settingsChangeName')}}</label></td>
-                        <td class="width25Percent">&nbsp;</td>
-                        <td class="width25Percent">&nbsp;</td>
-                        <td class="width25Percent"><button type="button" class="btn btn-sm-add btn-default" ng-click="changeCurrentUser('name')"><span class="glyphicon glyphicon-transfer"></span></button></td>   
-                    </tr>
-                    <tr>
-                        <td class="widthSettingsTabelLabel"><label class="tableLabel">{{getLocalizedString('settingsChangeEmail')}}</label></td>
-                        <td class="width25Percent">&nbsp;</td>
-                        <td class="width25Percent">&nbsp;</td>
-                        <td class="width25Percent"><button type="button" class="btn btn-sm-add btn-default" ng-click="changeCurrentUser('email')"><span class="glyphicon glyphicon-transfer"></span></button></td>   
                     </tr>
                 </table>
             </div>

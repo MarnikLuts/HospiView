@@ -124,7 +124,7 @@ var englishStrings = {
         settingsUser: "User",
         settingsRefresh: "Refresh rate",
         settingsRefreshUnit: "sec",
-        settingsAddDelete: "Add or delete",
+        settingsAddDelete: "Add, edit or delete",
         settingsEditDelete: "Edit or delete",
         settingsCellcontent: "Reservation settings",
         settingsPatient: "Patient",

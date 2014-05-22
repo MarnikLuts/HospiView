@@ -11,5 +11,51 @@
     <img onclick="window.open('http://www.icasa-group.com', '_system');" class="icasaLogo" src="img/ICASA_logo_200px.png" alt="ICASA logo" />
 </nav>
 <div class="widthPercent" ng-cloak>
-    
+    <div class="well">
+        <table class="appointmentFormTable">
+            <tr>
+                <td>
+                    <p class="formLabel"><b>{{getLocalizedString('reg_no')}}</b></p>
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="reg_no" disabled/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="formLabel"><b>{{getLocalizedString('newUserFirstName')}}</b></p>
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="firstName"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="formLabel"><b>{{getLocalizedString('newUserFirstLast')}}</b></p>
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="lastName"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep4Phone')}}</b></p>
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="phone"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="formLabel"><b>{{getLocalizedString('newUserEmail')}}</b></p>
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="email"/>
+                </td>  
+            </tr>
+            <div class="text-center">
+                <button type="submit" class="btn btn-xl" ng-click="">{{getLocalizedString('createAppointmentNext')}}</button>
+            </div>
+        </table>
+    </div>
 </div>
