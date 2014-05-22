@@ -2147,7 +2147,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.requestAccount = function() {
                 if ($scope.userFunctionSelect === $rootScope.getLocalizedString('newFunctionPatient')) {
-                    hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, '021545214', $rootScope.languageID, 0, $scope.server.hosp_url)
+                    hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, $scope.phone, $rootScope.languageID, 0, $scope.server.hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
                                 $scope.accountTrue = true;
@@ -2604,9 +2604,9 @@ angular.module('myApp.controllers', []).
             var searchStart = new Date(),
                     searchEnd = new Date();
             $scope.reservationPromises = [];
+            $scope.loadingPatientReservations = true;
             searchEnd.setDate(searchStart.getDate() + 90);
-
-            console.log(searchEnd);
+            
             $scope.formatShowDate = function(date) {
                 return formatShowDate(date, $rootScope.languageID);
             };
@@ -2671,6 +2671,7 @@ angular.module('myApp.controllers', []).
                                             localStorage.setItem($rootScope.user + "PatientReservations", JSON.stringify($scope.reservationList));
                                         }
                                     }
+                                    $scope.loadingPatientReservations = false;
                                 }, error);
                     });
 
@@ -2685,6 +2686,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.isOffline = true;
                 }
                 $scope.reservationList = JSON.parse(localStorage.getItem($rootScope.user + "PatientReservations"));
+                $scope.loadingPatientReservations = false;
                 console.log(data);
             }
 
@@ -2941,6 +2943,10 @@ angular.module('myApp.controllers', []).
             $scope.typesLoaded = false;
             $scope.displayError = false;
             $scope.loadingStep3 = false;
+            
+            //If the user came back to step 2 from step 3 the extra info field is remebered
+            if($rootScope.newAppointment.reservationInfo)
+                $scope.reservationInfo = $rootScope.newAppointment.reservationInfo;
 
             /**
              * The locations from the unit or group from step 1 are put into a list
@@ -3030,6 +3036,7 @@ angular.module('myApp.controllers', []).
                         getTypes();
                     } else {
                         $scope.typesLoaded = true;
+                        rememberType();
                         console.log($scope.typeList);
                     }
                 } else {
@@ -3091,10 +3098,25 @@ angular.module('myApp.controllers', []).
                                         getTypes();
                                     } else {
                                         $scope.typesLoaded = true;
+                                        rememberType();
                                         console.log($scope.typeList);
                                     }
                                 }
                             }, error);
+                }
+            }
+            
+            /*
+             * If the patient came back to step 2 from step 3 the type is remembered
+             */
+            function rememberType(){
+                if($rootScope.newAppointment.type){
+//                    console.log($rootScope.newAppointment.type);
+//                    $scope.type = $rootScope.newAppointment.type;
+                    for(var i=0;i<$scope.typeList.length;i++){
+                        if($scope.typeList[i].type_title===$rootScope.newAppointment.type.type_title)
+                            $scope.type = $scope.typeList[i];
+                    }
                 }
             }
 
@@ -3141,7 +3163,7 @@ angular.module('myApp.controllers', []).
              * if there is extra info on the department that the selected type is linked to it is displayed in the extra info field
              */
             $scope.updateFormData = function() {
-                $scope.extraInfo = "";
+                $("#extraInfo").empty();
                 for (var i = 0; i < $scope.locations.length; i++) {
                     if ($scope.type && $scope.type.location_id.indexOf($scope.locations[i].location_id) == -1) {
 //                        console.log($scope.type.location_id + " does not contain " + $scope.locations[i].location_id);
@@ -3155,18 +3177,22 @@ angular.module('myApp.controllers', []).
                         $scope.locations[i].checked = true;
                     }
                 }
+                
                 if ($scope.type) {
                     for (var j = 0; j < $scope.newAppointment.units.length; j++) {
                         for (var h = 0; h < $scope.newAppointment.units[j].Detail.Dep.length; h++) {
                             var dep = $scope.newAppointment.units[j].Detail.Dep[h];
                             for (var k = 0; k < $scope.type.dep_id.length; k++) {
                                 if (dep.dep_id == $scope.type.dep_id[k] && dep.msg_extern_step2) {
-                                    $scope.extraInfo += dep.msg_extern_step2;
+                                    $("#extraInfo").append("<a style=\"color: red;\"><b>" + dep.location_name + ":</b></a> " + dep.msg_extern_step2 + "<br>");
                                 }
                             }
                         }
                     }
                 }
+                
+                if($scope.type.public_msg)
+                    $("#extraInfo").append("<a style=\"color: red;\"><b>" + $scope.type.type_title + ":</b></a> " + $scope.type.public_msg);
             };
 
             /**
@@ -3194,8 +3220,9 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.next = function(formValid) {
+                $("#loadingStep3Spinner").removeClass("hiddenBlock");
+                $scope.loadingStep3 = true;
                 if (formValid && $scope.locationIsChecked()) {
-                    $scope.loadingStep3 = true;
                     $rootScope.newAppointment.type = $scope.type;
                     $rootScope.newAppointment.locations = [];
                     for (var i = 0; i < $scope.locations.length; i++) {
@@ -3206,7 +3233,8 @@ angular.module('myApp.controllers', []).
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('/patient/step3');
                 } else {
-                    $scope.loadingStep3 = true;
+                    $scope.loadingStep3 = false;
+                    $("#loadingStep3Spinner").addClass("hiddenBlock");
                     $scope.displayError = true;
                 }
             };
@@ -3290,14 +3318,17 @@ angular.module('myApp.controllers', []).
                     console.log($rootScope.newAppointment.type.unit_id[i] + " "
                             + $rootScope.newAppointment.type.dep_id[i] + " "
                             + $rootScope.newAppointment.type.type_id[i]);
-
+                    
+                    if(!$rootScope.newAppointment.reservationInfo)
+                        $rootScope.newAppointment.reservationInfo='';
+                    
                     retrievedRequests.push(hospiviewFactory.getProposals(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
                             $rootScope.newAppointment.type.unit_id[i],
                             $rootScope.newAppointment.type.dep_id[i],
                             $rootScope.newAppointment.type.type_id[i],
-                            "test maken reservatie",
+                            $rootScope.newAppointment.type.type_title,
                             $rootScope.newAppointment.reservationInfo,
                             globalTypes,
                             searchDate,
@@ -3476,7 +3507,6 @@ angular.module('myApp.controllers', []).
              */
             $scope.next = function() {
                 $scope.loadingStep4 = true;
-                $scope.selectedProposal.day_name = $scope.getDay($scope.selectedProposal);
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
                 $rootScope.pageClass = 'right-to-left';
 
@@ -3955,9 +3985,11 @@ angular.module('myApp.controllers', []).
             changeSelect();
         }).
         controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location) {
-
+            
+            $scope.displayDate = formatShowDate($rootScope.newAppointment.proposal.the_date, $rootScope.languageID);
+        
             /**
-             * The reservation is sent to the server
+             * The patient returns to the main menu
              * @returns {undefined}
              */
             $scope.end = function() {

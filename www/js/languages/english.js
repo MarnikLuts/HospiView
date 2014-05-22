@@ -161,6 +161,7 @@ var englishStrings = {
                 
         //patient/step2
         createAppointmentStep2SelectType: "Choose a type",
+        createAppointmentStep2ExtraInfoPlaceholer: "Indien u nog iets aan de arts wil meegeven over de afspraak kan u dit hier doen.",
                 
         //patient/step3
         createAppointmentStep3Morning: "morning",
@@ -186,5 +187,7 @@ var englishStrings = {
         createAppointmentStep4GenderNotDetermined: "U",
         
         //patient/step5
+        createAppointmentStep5Info: "U kan uw afspraak terugvinden als u op \"Afspraak Bekijken\" drukt in het hoofdmenu",
+        createAppointmentStep5Thanks: "dankt u om dit systeem te gebruiken",
         createAppointmentStep5End: "End"
 };

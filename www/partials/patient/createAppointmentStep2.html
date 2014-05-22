@@ -38,17 +38,18 @@
                     <td>
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ReservationInfo')}}</b></p>
                     </td>
-                    <td>
-                        <textarea style="resize: none;" class="form-control AcceleratedList" rows="3" ng-model="reservationInfo" placeholder="{{getLocalizedString('createAppointmentStep2ReservationInfo')}}" ></textarea>
-                    </td>    
+                    <td class="well">
+                        <div id="extraInfo"></div>
+                    </td>
+                       
                 </tr>
                 <tr>
                     <td>
                         <p class="formLabel"><b>{{getLocalizedString('createAppointmentStep2ExtraInfo')}}</b></p>
                     </td>
                     <td>
-                        <textarea style="resize: none;" class="form-control AcceleratedList" disabled rows="3" ng-model="extraInfo" placeholder="{{getLocalizedString('createAppointmentStep2ExtraInfo')}}" ></textarea>
-                    </td>    
+                        <textarea style="resize: none;" class="form-control AcceleratedList" rows="3" ng-model="reservationInfo" placeholder="{{getLocalizedString('createAppointmentStep2ExtraInfoPlaceholer')}}" ></textarea>
+                    </td>  
                 </tr>
             </table>
             <div class="alert alert-danger" ng-show="displayError || type === null && step2Form.typeSelect.$dirty || !locationIsChecked()">
@@ -56,7 +57,7 @@
             </div>
             <br>
             <div class="text-center">
-                <button class="btn btn-xl has-spinner" ng-disabled="loadingStep3 || step2Form.$invalid || !locationIsChecked()" ng-click="next(step2Form.$valid)" type="submit"><span class="glyphicon glyphicon-refresh" ng-show="loadingStep3"></span>{{getLocalizedString('createAppointmentNext')}}</button>
+                <button class="btn btn-xl has-spinner" ng-disabled="loadingStep3 || step2Form.$invalid || !locationIsChecked()" ng-click="next(step2Form.$valid)" type="submit"><span class="glyphicon glyphicon-refresh hiddenBlock" id="loadingStep3Spinner"></span> {{getLocalizedString('createAppointmentNext')}}</button>
             </div>
         </form>
     </div>
