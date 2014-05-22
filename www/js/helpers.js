@@ -53,16 +53,29 @@ function addToLocalStorage(lsKey, data) {
 }
 
 /**
- * Parses the incoming XML to a JSON object using the xml2sjon library.
+ * Parses the incoming XML string to a JSON object using the xml2sjon library.
  * (/js/xml2json.min.js).
  * 
- * @param {type} xml    
+ * @param {string} xml    
  * @returns             json object
  */
 function parseJson(xml) {
     var x2js = new X2JS();
     var json = x2js.xml_str2json(xml);
     return json;
+}
+
+/**
+ * Parses the JSON object to XML string using the xml2sjon library.
+ * (/js/xml2json.min.js).
+ * 
+ * @param {object} json     
+ * @returns             xml string
+ */
+function parseXml(json) {
+    var x2js = new X2JS();
+    var xml = x2js.json2xml_str(json);
+    return xml;
 }
 
 /**

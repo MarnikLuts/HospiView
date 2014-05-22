@@ -233,23 +233,89 @@ angular.module('myApp.services', []).
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetProposalsRemoved&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Get the basic questions for the user to create an appointment.
+                 * Also receives the required fields.
+                 * 
+                 * @param {type} UUID
+                 * @param {type} Unit_Id
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getActiveFieldsOnUnit: function(UUID, Unit_Id, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetActiveFieldsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&count=" + $rootScope.requestCounter);
                 },
+                /**
+                 * Get the information about the patient to fill out the fields
+                 * received by getActiveFieldsOnUnit.
+                 * 
+                 * @param {type} UUID
+                 * @param {type} Unit_Id
+                 * @param {type} Reg_No
+                 * @param {type} Language_Id
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getPatientLookup: function(UUID, Unit_Id, Reg_No, Language_Id, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetPatientLookup&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Reg_No=" + Reg_No + "&Language_Id=" + Language_Id);
                 },
+                /**
+                 * Get the extra questions the doctor has configured for the patient
+                 * to create an appointment.
+                 * 
+                 * @param {type} UUID
+                 * @param {type} Unit_Id
+                 * @param {type} UnitType_Id
+                 * @param {type} Language_Id
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getQuestionsOnUnit: function(UUID, Unit_Id, UnitType_Id, Language_Id, server_url) {
                     $rootScope.requestCounter++;
                     return ($http.get(server_url + "method=GetQuestionsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&UnitType_Id=" + UnitType_Id + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter));
                 },
+                /**
+                 * Confirm the choosen proposal resulting in creating an appointment.
+                 * 
+                 * @param {type} UUID
+                 * @param {type} Proposal_Id
+                 * @param {type} pName
+                 * @param {type} pFirstName
+                 * @param {type} pBDate
+                 * @param {type} pGender
+                 * @param {type} pTel1
+                 * @param {type} pTel2
+                 * @param {type} pAddress
+                 * @param {type} Reg_No
+                 * @param {type} pEmail
+                 * @param {type} pMemo
+                 * @param {type} pUnique_PID
+                 * @param {type} pDoctor
+                 * @param {type} pUnique_GPID
+                 * @param {type} pReferring_doctor
+                 * @param {type} pReferring_GPID
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
                 getAppointmentConfirmed: function(UUID, Proposal_Id, pName, pFirstName, pBDate, pGender, pTel1, pTel2, pAddress, Reg_No, pEmail, pMemo, pUnique_PID, pDoctor, pUnique_GPID, pReferring_doctor, pReferring_GPID, server_url) {
                     $rootScope.requestCounter++;
                     return $http.get(server_url + "method=GetAppointmentConfirmed&UUID=" + UUID + "&Proposal_Id=" + Proposal_Id + "&pName=" + pName + "&pFirstName=" + pFirstName + "&pBDate=" + pBDate + "&pGender=" + pGender + "&pTel1=" + pTel1 + "&pTel2=" + pTel2 + "&pAddress=" + pAddress + "&pReg_No=" + Reg_No + "&pEmail=" + pEmail + "&pMemo=" + pMemo + "&pUnique_PID=" + pUnique_PID + "&pDoctor=" + pDoctor + "&pUnique_GPID=" + pUnique_GPID + "&pReferring_doctor=" + pReferring_doctor + "&pReferring_GPID=" + pReferring_GPID + "&count=" + $rootScope.requestCounter);
+                },
+                /**
+                 * Confirm the answers of the extra questions of the proposal.
+                 * 
+                 * @param {type} UUID
+                 * @param {type} Reservation_Id
+                 * @param {type} Unit_Id
+                 * @param {type} server_url
+                 * @returns {unresolved}
+                 */
+                postAnswers: function(UUID, Reservation_Id, Unit_Id, AnswersXML, server_url) {
+                    $rootScope.requestCounter++;
+                    return $http.get(server_url + "method=PostAnswers&UUID=" + UUID + "&Reservation_id=" + Reservation_Id + "&Unit_id=" + Unit_Id + "&AnswersXML=" + AnswersXML + "&count=" + $rootScope.requestCounter);
                 }
-                
             };
         }).
         factory('dataFactory', function($rootScope, $q, hospiviewFactory) {

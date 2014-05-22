@@ -210,7 +210,7 @@ angular.module('myApp.controllers', []).
                             case 2:
                                 postLoginPatient();
                                 break;
-                            //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
+                                //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
                             case 3:
                                 postLoginPatient();
                         }
@@ -416,7 +416,7 @@ angular.module('myApp.controllers', []).
                             case 2:
                                 postLoginPatient();
                                 break;
-                            //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
+                                //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
                             case 3:
                                 postLoginPatient();
                         }
@@ -1973,7 +1973,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'left-to-right';
                 $location.path('/changeUser');
             };
-            
+
             /**
              * Prompts the user with a confirmation dialog,
              * Deletes the selected server
@@ -2619,7 +2619,7 @@ angular.module('myApp.controllers', []).
             $scope.reservationPromises = [];
             $scope.loadingPatientReservations = true;
             searchEnd.setDate(searchStart.getDate() + 90);
-            
+
             $scope.formatShowDate = function(date) {
                 return formatShowDate(date, $rootScope.languageID);
             };
@@ -2631,17 +2631,17 @@ angular.module('myApp.controllers', []).
 
 
 
-            var depLocations = [];
+            /*var depLocations = [];
             for (var i = 0; i < $rootScope.currentServers.length; i++) {
                 depLocations.push(hospiviewFactory.getUnitAndDepList($rootScope.currentServers[i].uuid, 1, $rootScope.currentServers[i].hosp_url));
             }
 
             var jsonServerLocations = [];
             $q.all(depLocations)
-                    .then(function(responses) {
+                    .then(function(responses) {*/
                         $scope.reservationPromises = [];
-                        for (var i in responses)
-                            jsonServerLocations.push(parseJson(responses[i].data));
+                        /*for (var i in responses)
+                            jsonServerLocations.push(parseJson(responses[i].data));*/
 
                         $scope.reservationList = [];
                         for (var s = 0; s < $rootScope.currentServers.length; s++) {
@@ -2654,7 +2654,7 @@ angular.module('myApp.controllers', []).
                             $scope.reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url));
                         }
 
-                        var locationDepObject = {};
+                        //var locationDepObject = {};
                         $q.all($scope.reservationPromises)
                                 .then(function(responses) {
                                     console.log(responses);
@@ -2669,16 +2669,16 @@ angular.module('myApp.controllers', []).
                                             if (json.ReservationsOnPatient.Header.TotalRecords == 1)
                                                 json.ReservationsOnPatient.Detail.Reservation = [json.ReservationsOnPatient.Detail.Reservation];
 
-                                            for (var k in jsonServerLocations[r].UnitsAndDeps.Detail.Unit)
+                                            /*for (var k in jsonServerLocations[r].UnitsAndDeps.Detail.Unit)
                                                 for (var m in jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep) {
                                                     locationDepObject[jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep[m].dep_id]
                                                             = jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep[m].location_name;
-                                                }
+                                                }*/
 
                                             for (var i = 0; i < json.ReservationsOnPatient.Detail.Reservation.length; i++) {
                                                 json.ReservationsOnPatient.Detail.Reservation[i].hosp_short_name = $rootScope.currentServers[r].hosp_short_name;
                                                 console.log(json.ReservationsOnPatient.Detail.Reservation[i].unit_id);
-                                                json.ReservationsOnPatient.Detail.Reservation[i].location_name = locationDepObject[json.ReservationsOnPatient.Detail.Reservation[i].dep_id];
+                                                //json.ReservationsOnPatient.Detail.Reservation[i].location_name = locationDepObject[json.ReservationsOnPatient.Detail.Reservation[i].dep_id];
                                                 $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
                                             }
                                             localStorage.setItem($rootScope.user + "PatientReservations", JSON.stringify($scope.reservationList));
@@ -2686,7 +2686,7 @@ angular.module('myApp.controllers', []).
                                     }
                                     $scope.loadingPatientReservations = false;
                                 }, error);
-                    });
+                    /*});*/
 
 
 
@@ -2721,9 +2721,9 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller("ChangeUserCtrl", function($rootScope, $scope, $routeParams, $location, hospiviewFactory) {
-            
+
             $scope.save = function() {
-                for(var server in $rootScope.currentServers){
+                for (var server in $rootScope.currentServers) {
                     hospiviewFactory.getLogin($scope.firstName, $rootScope.currentServers[server].reg_no, $scope.emailAddress, '021545214', $rootScope.languageID, 0, $scope.server.hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response.data);
@@ -2735,7 +2735,7 @@ angular.module('myApp.controllers', []).
                                 error(errorData);
                             });
                 }
-                
+
                 $rootScope.pageClass = 'left-to-right';
                 $location.path('/patient/mainmenu');
             };
@@ -2954,9 +2954,9 @@ angular.module('myApp.controllers', []).
             $scope.typesLoaded = false;
             $scope.displayError = false;
             $scope.loadingStep3 = false;
-            
+
             //If the user came back to step 2 from step 3 the extra info field is remebered
-            if($rootScope.newAppointment.reservationInfo)
+            if ($rootScope.newAppointment.reservationInfo)
                 $scope.reservationInfo = $rootScope.newAppointment.reservationInfo;
 
             /**
@@ -3116,16 +3116,16 @@ angular.module('myApp.controllers', []).
                             }, error);
                 }
             }
-            
+
             /*
              * If the patient came back to step 2 from step 3 the type is remembered
              */
-            function rememberType(){
-                if($rootScope.newAppointment.type){
+            function rememberType() {
+                if ($rootScope.newAppointment.type) {
 //                    console.log($rootScope.newAppointment.type);
 //                    $scope.type = $rootScope.newAppointment.type;
-                    for(var i=0;i<$scope.typeList.length;i++){
-                        if($scope.typeList[i].type_title===$rootScope.newAppointment.type.type_title){
+                    for (var i = 0; i < $scope.typeList.length; i++) {
+                        if ($scope.typeList[i].type_title === $rootScope.newAppointment.type.type_title) {
                             $scope.type = $scope.typeList[i];
                             $scope.updateFormData();
                         }
@@ -3190,7 +3190,7 @@ angular.module('myApp.controllers', []).
                         $scope.locations[i].checked = true;
                     }
                 }
-                
+
                 if ($scope.type) {
                     for (var j = 0; j < $scope.newAppointment.units.length; j++) {
                         for (var h = 0; h < $scope.newAppointment.units[j].Detail.Dep.length; h++) {
@@ -3203,8 +3203,8 @@ angular.module('myApp.controllers', []).
                         }
                     }
                 }
-                
-                if($scope.type.public_msg)
+
+                if ($scope.type.public_msg)
                     $("#extraInfo").append("<a style=\"color: red;\"><b>" + $scope.type.type_title + ":</b></a> " + $scope.type.public_msg);
             };
 
@@ -3331,10 +3331,10 @@ angular.module('myApp.controllers', []).
                     console.log($rootScope.newAppointment.type.unit_id[i] + " "
                             + $rootScope.newAppointment.type.dep_id[i] + " "
                             + $rootScope.newAppointment.type.type_id[i]);
-                    
-                    if(!$rootScope.newAppointment.reservationInfo)
-                        $rootScope.newAppointment.reservationInfo='';
-                    
+
+                    if (!$rootScope.newAppointment.reservationInfo)
+                        $rootScope.newAppointment.reservationInfo = '';
+
                     retrievedRequests.push(hospiviewFactory.getProposals(
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
@@ -3433,11 +3433,11 @@ angular.module('myApp.controllers', []).
                     for (var p = 0; p < $rootScope.newAppointment.units.length; p++) {
                         if ($rootScope.newAppointment.units[p].Header.unit_id === proposals[proposal].unit_id) {
                             proposals[proposal].unit_name = $rootScope.newAppointment.units[p].Header.unit_name;
-                            for (var d = 0; d < $rootScope.newAppointment.units[p].Detail.Dep.length; d++) {
+                            /*for (var d = 0; d < $rootScope.newAppointment.units[p].Detail.Dep.length; d++) {
                                 if (proposals[proposal].depid === $rootScope.newAppointment.units[p].Detail.Dep[d].dep_id) {
                                     proposals[proposal].location = $rootScope.newAppointment.units[p].Detail.Dep[d].location_name;
                                 }
-                            }
+                            }*/
                         }
                     }
 
@@ -3585,8 +3585,11 @@ angular.module('myApp.controllers', []).
 
             $scope.showInvalidFields = false;
 
-            $scope.setRadioButtonScope = function(model, value) {
-                $scope.newAppointment.patientInfo[model] = value;
+            $scope.setRadioButtonScope = function(model, value, extra) {
+                if (!extra)
+                    $scope.newAppointment.patientInfo[model] = value;
+                if (extra)
+                    $scope.PostAnswers.PostAnswers.Detail.Answers.Answer[model].answer_value = value;
             };
 
 
@@ -3642,8 +3645,8 @@ angular.module('myApp.controllers', []).
             if (!standardQuestionsJson.ActiveFieldsOnUnit.Detail && !extraQuestionsJson.QuestionsOnUnit.Detail)
                 $scope.next(true);
 
-            var disableRegno = "disable";
-            if($rootScope.type === 3)
+            var disableRegno = "disabled";
+            if ($rootScope.type === 3)
                 disableRegno = "";
 
             console.log(standardQuestionsJson.ActiveFieldsOnUnit);
@@ -3662,9 +3665,9 @@ angular.module('myApp.controllers', []).
                     if (activeFieldsArray.indexOf("26") !== -1) {
                         mustField = checkMustField("26");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('reg_no') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" name="reg_no" class="form-control" ng-model="newAppointment.patientInfo.reg_no" ' + mustField[1] + ' ' + disableRegno +'/>'
+                                + '</td><td><input type="text" name="reg_no" class="form-control" ng-model="newAppointment.patientInfo.reg_no" ' + mustField[1] + ' ' + disableRegno + '/>'
                                 + '</td></tr>';
-                        
+
                     }
                     if (activeFieldsArray.indexOf("1") !== -1) {
                         mustField = checkMustField("1");
@@ -3765,9 +3768,9 @@ angular.module('myApp.controllers', []).
 
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Gendre') + mustField[0] + '</b></p>'
                                 + '</td><td><div class="btn-group showCompleteFloat widthPercent" data-toggle="buttons">'
-                                + '<label class="btn btn-default width30Percent ' + activeClassM + '" ng-click="setRadioButtonScope(' + "'gender','male'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep4Male') + '"/>' + genderTextM + '</label>'
-                                + '<label class="btn btn-default width30Percent ' + activeClassF + '" ng-click="setRadioButtonScope(' + "'gender','female'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep4Female') + '"/>' + genderTextF + '</label>'
-                                + '<label class="btn btn-default width30Percent ' + activeClassU + '" ng-click="setRadioButtonScope(' + "'gender','undefined'" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '"/>' + genderTextU + '</label>'
+                                + '<label class="btn btn-default width30Percent ' + activeClassM + '" ng-click="setRadioButtonScope(' + "'gender','male',false" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep4Male') + '"/>' + genderTextM + '</label>'
+                                + '<label class="btn btn-default width30Percent ' + activeClassF + '" ng-click="setRadioButtonScope(' + "'gender','female',false" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep4Female') + '"/>' + genderTextF + '</label>'
+                                + '<label class="btn btn-default width30Percent ' + activeClassU + '" ng-click="setRadioButtonScope(' + "'gender','undefined',false" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '"/>' + genderTextU + '</label>'
                                 + '</div>';
 
                         if (mustField[1] === "required")
@@ -3844,11 +3847,13 @@ angular.module('myApp.controllers', []).
                     var inputType;
                     var extraQuestionsModelArray = [];
                     var extraQuestionType;
-
+                    $scope.PostAnswers = {PostAnswers:{Header: {Reservation_Id: "", Unit_Id: ""}, Detail: {Answers: {Answer: []}}}};
                     for (var question in extraQuestionsJson.QuestionsOnUnit.Detail.Question) {
+                        $scope.PostAnswers.PostAnswers.Detail.Answers.Answer.push({question_id: "", answer_value: ""});
+                        console.log($scope.PostAnswers);
                         if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 1) {
                             extraQuestionType = 'select' + question;
-                            inputType = '<select name="' + extraQuestionType + '" class="form-control" ng-model="newAppointment.patientInfo.' + extraQuestionType + '" required>' +
+                            inputType = '<select name="' + extraQuestionType + '" class="form-control" ng-model="PostAnswers.PostAnswers.Detail.Answers.Answer[' + question + '].answer_value" required>' +
                                     '<option value=""> - ' + $rootScope.getLocalizedString('createAppointmentStep4MakeYourChoice') + ' - </option>';
                             for (var choice in extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue)
                                 inputType = inputType + '<option value="' + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + '">' + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value + '</option>';
@@ -3861,7 +3866,7 @@ angular.module('myApp.controllers', []).
 
                             extraQuestionType = 'radio' + question;
                             if (angular.isDefined(extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value))
-                                $scope.newAppointment.patientInfo[extraQuestionType] = extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value;
+                                $scope.PostAnswers.PostAnswers.Detail.Answers.Answer[question].answer_value = extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].default_value;
 
                             inputType = '<div class="btn-group showCompleteFloat widthPercent" data-toggle="buttons">';
                             for (var choice in extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue) {
@@ -3873,24 +3878,24 @@ angular.module('myApp.controllers', []).
                                     else
                                         activeClass = '';
                                 inputType = inputType + '<label class="btn btn-default width50Percent ' + activeClass + '" id="' + buttonId
-                                        + '" ng-click="setRadioButtonScope(' + "'" + extraQuestionType + "','" + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + "'" + ')"><input name="'
-                                        + extraQuestionType + '"type="radio" ng-model="newAppointment.patientInfo.'
-                                        + extraQuestionType + '" name="' + extraQuestionType
+                                        + '" ng-click="setRadioButtonScope(' + "'" + question + "','" + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id + "',true" + ')"><input name="'
+                                        + extraQuestionType + '"type="radio" ng-model="PostAnswers.PostAnswers.Detail.Answers.Answer['
+                                        + question + '].answer_value" name="' + extraQuestionType
                                         + '" value="'
                                         + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value_id
                                         + '">'
                                         + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].PossibleValues.PossibleValue[choice].answer_value
                                         + '</label>';
                             }
-                            radioButtonValueCheck.push(extraQuestionType);
+                            radioButtonValueCheck.push(question);
                             inputType = inputType + '</div>';
 
-                            inputType = inputType + '<div class="alert alert-danger" ng-show="showInvalidFields && (!newAppointment.patientInfo.' + extraQuestionType + ' || newAppointment.patientInfo.' + extraQuestionType + ' == -1)">'
+                            inputType = inputType + '<div class="alert alert-danger" ng-show="showInvalidFields && (!PostAnswers.PostAnswers.Detail.Answers.Answer[' + question + '].answer_value || PostAnswers.PostAnswers.Detail.Answers.Answer[' + question + '].answer_value == -1)">'
                                     + $rootScope.getLocalizedString('isRequired') + '</div>';
                         }
                         if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 3) {
                             extraQuestionType = 'input' + question;
-                            inputType = '<input name="' + extraQuestionType + '" type="text" class="form-control" ng-model="newAppointment.patientInfo.' + extraQuestionType + '" required/>';
+                            inputType = '<input name="' + extraQuestionType + '" type="text" class="form-control" ng-model="PostAnswers.PostAnswers.Detail.Answers.Answer[' + question + '].answer_value" required/>';
 
                             inputType = inputType + '<div class="alert alert-danger" ng-show="showInvalidFields && subform.' + extraQuestionType + '.$error.required">'
                                     + $rootScope.getLocalizedString('isRequired') + '</div>';
@@ -3898,7 +3903,7 @@ angular.module('myApp.controllers', []).
 
                         if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 4) {
                             extraQuestionType = 'textarea' + question;
-                            inputType = '<textarea name="' + extraQuestionType + '" style="resize: none;" class="form-control" rows="3" ng-model="newAppointment.patientInfo.' + extraQuestionType + '" required></textarea>';
+                            inputType = '<textarea name="' + extraQuestionType + '" style="resize: none;" class="form-control" rows="3" ng-model="PostAnswers.PostAnswers.Detail.Answers.Answer[' + question + '].answer_value" required></textarea>';
 
                             inputType = inputType + '<div class="alert alert-danger" ng-show="showInvalidFields && subform.' + extraQuestionType + '.$error.required">'
                                     + $rootScope.getLocalizedString('isRequired') + '</div>';
@@ -3909,7 +3914,11 @@ angular.module('myApp.controllers', []).
                         appendString = appendString + '<tr><td><p class="formLabel"><b>'
                                 + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_title
                                 + '*</b></p></td><td>' + inputType + '</td></tr>';
+
+                        $scope.PostAnswers.PostAnswers.Detail.Answers.Answer[question].question_id = extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_id;
+
                     }
+
                 }
 
                 appendString = appendString + '</table><p class="formLabel">' + $rootScope.getLocalizedString('createAppointmentStep4FieldsRequired') + '</p>'
@@ -3942,11 +3951,17 @@ angular.module('myApp.controllers', []).
             $scope.next = function(formValid) {
                 var radioButtonBooleanChecks = true;
                 for (var i in radioButtonValueCheck) {
-                    console.log(radioButtonValueCheck);
-                    console.log($scope.newAppointment.patientInfo[radioButtonValueCheck[i]])
-                    if ($scope.newAppointment.patientInfo[radioButtonValueCheck[i]] == -1 || $scope.newAppointment.patientInfo[radioButtonValueCheck[i]] == "" || !$scope.newAppointment.patientInfo[radioButtonValueCheck[i]])
-                        radioButtonBooleanChecks = false;
+                    if(radioButtonValueCheck[i] === "gender"){
+                        if ($scope.newAppointment.patientInfo["gender"] == -1 || $scope.newAppointment.patientInfo["gender"] == "" || !$scope.newAppointment.patientInfo["gender"])
+                            radioButtonBooleanChecks = false;
+                    } else {
+                        
+                        if ($scope.PostAnswers.PostAnswers.Detail.Answers.Answer[radioButtonValueCheck[i]].answer_value == -1 || $scope.PostAnswers.PostAnswers.Detail.Answers.Answer[radioButtonValueCheck[i]].answer_value == "" || !$scope.PostAnswers.PostAnswers.Detail.Answers.Answer[radioButtonValueCheck[i]].answer_value)
+                            radioButtonBooleanChecks = false;
+                    }
                 }
+                
+                
                 if (formValid && radioButtonBooleanChecks) {
                     var confirmed = [];
                     confirmed.push(hospiviewFactory.getAppointmentConfirmed(
@@ -3973,7 +3988,13 @@ angular.module('myApp.controllers', []).
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
 
                     $q.all(confirmed).then(function(response) {
-                        console.log(response);
+                        var json = parseJson(response[0].data);
+                        console.log(json);
+                        $scope.PostAnswers.PostAnswers.Header.Reservation_Id = json.AppointmentConfirmed.Detail.id;
+                        $scope.PostAnswers.PostAnswers.Header.Unit_Id = json.AppointmentConfirmed.Detail.unit_id;
+                        console.log($scope.PostAnswers);
+                        var xml = parseXml($scope.PostAnswers);
+                        console.log(xml);
                         for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                             hospiviewFactory.getProposalsRemoved(
                                     $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
@@ -3981,10 +4002,18 @@ angular.module('myApp.controllers', []).
                                     $rootScope.newAppointment.type.unit_id[i],
                                     $rootScope.newAppointment.type.dep_id[i]);
                         }
+                        hospiviewFactory.postAnswers(
+                                $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
+                                json.AppointmentConfirmed.Detail.id,
+                                json.AppointmentConfirmed.Detail.unit_id,
+                                xml,
+                                $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
+
                     }, error);
                     $rootScope.pageClass = 'right-to-left';
-                    $location.path('patient/step5');
+                    //$location.path('patient/step5');
                 } else {
+                    console.log($scope.PostAnswers);
                     $scope.showInvalidFields = true;
                     $scope.displayError = true;
                 }
@@ -4003,9 +4032,9 @@ angular.module('myApp.controllers', []).
             changeSelect();
         }).
         controller("CreateAppointmentStep5Ctrl", function($rootScope, $scope, $location) {
-            
+
             $scope.displayDate = formatShowDate($rootScope.newAppointment.proposal.the_date, $rootScope.languageID);
-        
+
             /**
              * The patient returns to the main menu
              * @returns {undefined}
