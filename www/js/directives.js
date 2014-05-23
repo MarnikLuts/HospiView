@@ -9,12 +9,14 @@ angular.module('myApp.directives', []).
                 restrict: 'A',
                 require: 'ngModel',
                 link: function(scope, elm, attrs, ctrl) {
-                    scope.$watch('userFunctionSelect', validate);
+                    if(scope.userFunctionSelect)
+                        scope.$watch('userFunctionSelect', validate);
                     scope.$watch('dateOfBirth', validate);
                     scope.$watch('nationalRegister', validate);
                     function validate(value) {
-                        var userFunction = scope.userFunctionSelect;
-                        if (!scope.needsNationalReg(userFunction)) {
+                        if(scope.userFunctionSelect)
+                            var userFunction = scope.userFunctionSelect;
+                        if (scope.userFunctionSelect && !scope.needsNationalReg(userFunction)) {
                             ctrl.$setValidity('checknational', true);
                         } else if (typeof scope.dateOfBirth !== "undefined") {
                             var nationalRegisterNumber = scope.nationalRegister;
@@ -44,8 +46,7 @@ angular.module('myApp.directives', []).
                         else {
                             ctrl.$setValidity('checknational', false);
                         }
-                    }
-                    ;
+                    };
                 }
             };
         }).

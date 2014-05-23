@@ -113,6 +113,7 @@ var englishStrings = {
         //Connection messages
         internalError: "Internal server error.",
         connectionError: "Cannot connect to the server.",
+        connectionErrorRetrievingAppointments: "Cannot connect to the server. Please try again later",
         connectionErrorSelectServer: "Cannot connect to the server. If you have internet connection, press the refreshbutton to get all servers.",
         uuidExpiredMessage: "Your login time is expired or you are logged in on another mobile device. You are now in offline mode.",
                 

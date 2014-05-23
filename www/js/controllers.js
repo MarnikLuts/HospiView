@@ -680,8 +680,8 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/settings/default');
             };
-            
-            $scope.createAppointment = function(){
+
+            $scope.createAppointment = function() {
                 $rootScope.pageClass = "right-to-left";
                 $location.path('/patient/step1');
             };
@@ -2637,61 +2637,61 @@ angular.module('myApp.controllers', []).
 
 
             /*var depLocations = [];
-            for (var i = 0; i < $rootScope.currentServers.length; i++) {
-                depLocations.push(hospiviewFactory.getUnitAndDepList($rootScope.currentServers[i].uuid, 1, $rootScope.currentServers[i].hosp_url));
+             for (var i = 0; i < $rootScope.currentServers.length; i++) {
+             depLocations.push(hospiviewFactory.getUnitAndDepList($rootScope.currentServers[i].uuid, 1, $rootScope.currentServers[i].hosp_url));
+             }
+             
+             var jsonServerLocations = [];
+             $q.all(depLocations)
+             .then(function(responses) {*/
+            $scope.reservationPromises = [];
+            /*for (var i in responses)
+             jsonServerLocations.push(parseJson(responses[i].data));*/
+
+            $scope.reservationList = [];
+            for (var s = 0; s < $rootScope.currentServers.length; s++) {
+                var server = $rootScope.currentServers[s];
+                console.log(server);
+                console.log(server.reg_no);
+                console.log(formatDate(searchStart));
+                console.log(formatDate(searchEnd));
+                console.log(server.hosp_url);
+                $scope.reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url));
             }
 
-            var jsonServerLocations = [];
-            $q.all(depLocations)
-                    .then(function(responses) {*/
-                        $scope.reservationPromises = [];
-                        /*for (var i in responses)
-                            jsonServerLocations.push(parseJson(responses[i].data));*/
+            //var locationDepObject = {};
+            $q.all($scope.reservationPromises)
+                    .then(function(responses) {
+                        console.log(responses);
+                        for (var r = 0; r < responses.length; r++) {
+                            var json = parseJson(responses[r].data);
+                            console.log(json);
+                            if (json.ReservationsOnPatient.Header.StatusCode == 1 && json.ReservationsOnPatient.Detail) {
 
-                        $scope.reservationList = [];
-                        for (var s = 0; s < $rootScope.currentServers.length; s++) {
-                            var server = $rootScope.currentServers[s];
-                            console.log(server);
-                            console.log(server.reg_no);
-                            console.log(formatDate(searchStart));
-                            console.log(formatDate(searchEnd));
-                            console.log(server.hosp_url);
-                            $scope.reservationPromises.push(hospiviewFactory.getReservationsOnPatient(server.uuid, 2, server.reg_no, formatDate(searchStart), formatDate(searchEnd), server.hosp_url));
+                                /*
+                                 * Convert json.ReservationsOnPatient.Detail.Reservation to an array if there's only one record
+                                 */
+                                if (json.ReservationsOnPatient.Header.TotalRecords == 1)
+                                    json.ReservationsOnPatient.Detail.Reservation = [json.ReservationsOnPatient.Detail.Reservation];
+
+                                /*for (var k in jsonServerLocations[r].UnitsAndDeps.Detail.Unit)
+                                 for (var m in jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep) {
+                                 locationDepObject[jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep[m].dep_id]
+                                 = jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep[m].location_name;
+                                 }*/
+
+                                for (var i = 0; i < json.ReservationsOnPatient.Detail.Reservation.length; i++) {
+                                    json.ReservationsOnPatient.Detail.Reservation[i].hosp_short_name = $rootScope.currentServers[r].hosp_short_name;
+                                    console.log(json.ReservationsOnPatient.Detail.Reservation[i].unit_id);
+                                    //json.ReservationsOnPatient.Detail.Reservation[i].location_name = locationDepObject[json.ReservationsOnPatient.Detail.Reservation[i].dep_id];
+                                    $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
+                                }
+                                localStorage.setItem($rootScope.user + "PatientReservations", JSON.stringify($scope.reservationList));
+                            }
                         }
-
-                        //var locationDepObject = {};
-                        $q.all($scope.reservationPromises)
-                                .then(function(responses) {
-                                    console.log(responses);
-                                    for (var r = 0; r < responses.length; r++) {
-                                        var json = parseJson(responses[r].data);
-                                        console.log(json);
-                                        if (json.ReservationsOnPatient.Header.StatusCode == 1 && json.ReservationsOnPatient.Detail) {
-
-                                            /*
-                                             * Convert json.ReservationsOnPatient.Detail.Reservation to an array if there's only one record
-                                             */
-                                            if (json.ReservationsOnPatient.Header.TotalRecords == 1)
-                                                json.ReservationsOnPatient.Detail.Reservation = [json.ReservationsOnPatient.Detail.Reservation];
-
-                                            /*for (var k in jsonServerLocations[r].UnitsAndDeps.Detail.Unit)
-                                                for (var m in jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep) {
-                                                    locationDepObject[jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep[m].dep_id]
-                                                            = jsonServerLocations[r].UnitsAndDeps.Detail.Unit[k].Detail.Dep[m].location_name;
-                                                }*/
-
-                                            for (var i = 0; i < json.ReservationsOnPatient.Detail.Reservation.length; i++) {
-                                                json.ReservationsOnPatient.Detail.Reservation[i].hosp_short_name = $rootScope.currentServers[r].hosp_short_name;
-                                                console.log(json.ReservationsOnPatient.Detail.Reservation[i].unit_id);
-                                                //json.ReservationsOnPatient.Detail.Reservation[i].location_name = locationDepObject[json.ReservationsOnPatient.Detail.Reservation[i].dep_id];
-                                                $scope.reservationList.push(json.ReservationsOnPatient.Detail.Reservation[i]);
-                                            }
-                                            localStorage.setItem($rootScope.user + "PatientReservations", JSON.stringify($scope.reservationList));
-                                        }
-                                    }
-                                    $scope.loadingPatientReservations = false;
-                                }, error);
-                    /*});*/
+                        $scope.loadingPatientReservations = false;
+                    }, error);
+            /*});*/
 
 
 
@@ -2782,6 +2782,8 @@ angular.module('myApp.controllers', []).
 
                                     if ($scope.unitList.length == 1)
                                         $scope.unit = $scope.unitList[0];
+                                } else {
+                                    error("statuscode not 1");
                                 }
                                 defer.resolve();
                                 return defer.promise;
@@ -2826,6 +2828,8 @@ angular.module('myApp.controllers', []).
 
                                             if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
                                                 $scope.group = $scope.groupList[0];
+                                        } else {
+                                            error("statuscode not 1");
                                         }
                                         $scope.dataLoading = false;
                                         //Not using ng-show/ng-hide because iOS does not cooperate
@@ -3000,23 +3004,23 @@ angular.module('myApp.controllers', []).
 
             var unitTypesRequested = 0,
                     depTypeRequested = 0;
-                    
+
             /*
              * If the patient came back to step 2 from step 3 the type is remembered
              */
-            $scope.rememberType = function(){
-                if($rootScope.newAppointment.type){
+            $scope.rememberType = function() {
+                if ($rootScope.newAppointment.type) {
 //                    console.log($rootScope.newAppointment.type);
 //                    $scope.type = $rootScope.newAppointment.type;
-                    for(var i=0;i<$scope.typeList.length;i++){
-                        if($scope.typeList[i].type_title===$rootScope.newAppointment.type.type_title){
+                    for (var i = 0; i < $scope.typeList.length; i++) {
+                        if ($scope.typeList[i].type_title === $rootScope.newAppointment.type.type_title) {
                             $scope.type = $scope.typeList[i];
                             $scope.updateFormData();
                         }
                     }
                 }
             };
-            
+
             getTypes();
             /*
              * gets called by itself until every department of every unit in '$rootScope.newAppointment.units' has done a request
@@ -3134,6 +3138,8 @@ angular.module('myApp.controllers', []).
                                         $scope.rememberType();
                                         console.log($scope.typeList);
                                     }
+                                } else {
+                                    error("statuscode not 1");
                                 }
                             }, error);
                 }
@@ -3229,7 +3235,7 @@ angular.module('myApp.controllers', []).
                 if ($scope.type.public_msg)
                     $("#extraInfo").append("<a style=\"color: red;\"><b>" + $scope.type.type_title + ":</b></a> " + $scope.type.public_msg);
             };
-            
+
             /**
              * Function that is called when the request to the server fails for error handling
              * 
@@ -3377,6 +3383,9 @@ angular.module('myApp.controllers', []).
                 $q.all(retrievedRequests).then(function(requests) {
                     for (var requestCount in requests) {
                         var json = parseJson(requests[requestCount].data);
+                        if (json.Proposals.Header.StatusCode != 1) {
+                            error("statuscode not 1");
+                        }
                         for (var proposalCount in json.Proposals.Detail.Proposal) {
                             json.Proposals.Detail.Proposal[proposalCount].type_id = $rootScope.newAppointment.type.type_id[requestCount];
                             retrievedProposals.push(json.Proposals.Detail.Proposal[proposalCount]);
@@ -3456,10 +3465,10 @@ angular.module('myApp.controllers', []).
                         if ($rootScope.newAppointment.units[p].Header.unit_id === proposals[proposal].unit_id) {
                             proposals[proposal].unit_name = $rootScope.newAppointment.units[p].Header.unit_name;
                             /*for (var d = 0; d < $rootScope.newAppointment.units[p].Detail.Dep.length; d++) {
-                                if (proposals[proposal].depid === $rootScope.newAppointment.units[p].Detail.Dep[d].dep_id) {
-                                    proposals[proposal].location = $rootScope.newAppointment.units[p].Detail.Dep[d].location_name;
-                                }
-                            }*/
+                             if (proposals[proposal].depid === $rootScope.newAppointment.units[p].Detail.Dep[d].dep_id) {
+                             proposals[proposal].location = $rootScope.newAppointment.units[p].Detail.Dep[d].location_name;
+                             }
+                             }*/
                         }
                     }
 
@@ -3631,7 +3640,7 @@ angular.module('myApp.controllers', []).
             $rootScope.newAppointment.patientInfo.postalCode = '';
             $rootScope.newAppointment.patientInfo.town = '';
             $rootScope.newAppointment.patientInfo.country = '';
-            $rootScope.newAppointment.patientInfo.reg_no = $rootScope.currentServers[0].reg_no;
+            $scope.nationalRegister = $rootScope.currentServers[0].reg_no;
             $rootScope.newAppointment.patientInfo.email = '';
             $rootScope.newAppointment.patientInfo.extraInformation = '';
             $rootScope.newAppointment.patientInfo.unique_pid = '-1';
@@ -3644,7 +3653,7 @@ angular.module('myApp.controllers', []).
                 if (answersJson.PatientLookup.Detail) {
                     $rootScope.newAppointment.patientInfo.lastname = answersJson.PatientLookup.Detail.pName;
                     $rootScope.newAppointment.patientInfo.firstname = answersJson.PatientLookup.Detail.pFirstName;
-                    $rootScope.newAppointment.patientInfo.dateOfBirth = answersJson.PatientLookup.Detail.pBDate;
+                    $scope.dateOfBirth = answersJson.PatientLookup.Detail.pBDate;
                     $rootScope.newAppointment.patientInfo.gender = answersJson.PatientLookup.Detail.pGender;
                     $rootScope.newAppointment.patientInfo.phone = answersJson.PatientLookup.Detail.pTel1;
                     $rootScope.newAppointment.patientInfo.phone2 = answersJson.PatientLookup.Detail.pTel2;
@@ -3653,7 +3662,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.newAppointment.patientInfo.postalCode = address[4];
                     $rootScope.newAppointment.patientInfo.town = address[2];
                     $rootScope.newAppointment.patientInfo.country = address[5];
-                    $rootScope.newAppointment.patientInfo.reg_no = answersJson.PatientLookup.Detail.pReg_No;
+                    $scope.nationalRegister = answersJson.PatientLookup.Detail.pReg_No;
                     $rootScope.newAppointment.patientInfo.email = answersJson.PatientLookup.Detail.pEmail;
                     $rootScope.newAppointment.patientInfo.extraInformation = answersJson.PatientLookup.Detail.pMemo;
                     $rootScope.newAppointment.patientInfo.unique_pid = answersJson.PatientLookup.Detail.pUnique_pid;
@@ -3662,13 +3671,15 @@ angular.module('myApp.controllers', []).
                     $rootScope.newAppointment.patientInfo.referringDoctor = '';
                     $rootScope.newAppointment.patientInfo.referringDoctor_gpid = '';
                 }
+            } else {
+                error("statuscode not 1");     
             }
 
             if (!standardQuestionsJson.ActiveFieldsOnUnit.Detail && !extraQuestionsJson.QuestionsOnUnit.Detail)
                 $scope.next(true);
 
             var disableRegno = "disabled";
-            if($rootScope.type === 3||$rootScope.type === 0 ||$rootScope.type === 1)
+            if ($rootScope.type === 3 || $rootScope.type === 0 || $rootScope.type === 1)
                 disableRegno = "";
 
             console.log(standardQuestionsJson.ActiveFieldsOnUnit);
@@ -3687,9 +3698,16 @@ angular.module('myApp.controllers', []).
                     if (activeFieldsArray.indexOf("26") !== -1) {
                         mustField = checkMustField("26");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('reg_no') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" name="reg_no" class="form-control" ng-model="newAppointment.patientInfo.reg_no" ' + mustField[1] + ' ' + disableRegno + '/>'
-                                + '</td></tr>';
+                                + '</td><td><input type="text" name="reg_no" class="form-control" ng-model="nationalRegister" ' + mustField[1] + ' ' + disableRegno + ' checknational/>';
+                        
+                        if (mustField[1] === 'required')
+                            appendString = appendString + '<div class="alert alert-danger" ng-show="showInvalidFields && subform.reg_no.$error.required">'
+                                    + $rootScope.getLocalizedString('isRequired') + '</div>';
 
+                        appendString = appendString + '<div class="alert alert-danger" ng-show="showInvalidFields && subform.reg_no.$error.checknational">'
+                                    + $rootScope.getLocalizedString('newUserNatRegIncorrect') + '</div>';
+                            
+                        appendString = appendString + '</td></tr>';
                     }
                     if (activeFieldsArray.indexOf("1") !== -1) {
                         mustField = checkMustField("1");
@@ -3714,7 +3732,7 @@ angular.module('myApp.controllers', []).
                     if (activeFieldsArray.indexOf("3") !== -1) {
                         mustField = checkMustField("3");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('newUserDateOfBirth') + mustField[0] + '</b></p>'
-                                + '</td><td><input type="text" name="dateOfBirth" class="form-control" ng-model="newAppointment.patientInfo.dateOfBirth" placeholder="dd-mm-yyyy" ng-pattern=' + "'/^(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-(19[0-9]{2})|(20[0-9]{2})$/'" + ' ' + mustField[1]
+                                + '</td><td><input type="text" name="dateOfBirth" class="form-control" ng-model="dateOfBirth" placeholder="dd-mm-yyyy" ng-pattern=' + "'/^(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-(19[0-9]{2})|(20[0-9]{2})$/'" + ' ' + mustField[1]
                                 + '/>';
 
                         if (mustField[1] === 'required') {
@@ -3862,6 +3880,8 @@ angular.module('myApp.controllers', []).
 
                         appendString = appendString + '</td></tr>';
                     }
+                } else {
+                    error("statuscode not 1");
                 }
 
                 if (extraQuestionsJson.QuestionsOnUnit.Header.StatusCode == 1 && extraQuestionsJson.QuestionsOnUnit.Detail) {
@@ -3869,7 +3889,7 @@ angular.module('myApp.controllers', []).
                     var inputType;
                     var extraQuestionsModelArray = [];
                     var extraQuestionType;
-                    $scope.PostAnswers = {PostAnswers:{Header: {Reservation_Id: "", Unit_Id: ""}, Detail: {Answers: {Answer: []}}}};
+                    $scope.PostAnswers = {PostAnswers: {Header: {Reservation_Id: "", Unit_Id: ""}, Detail: {Answers: {Answer: []}}}};
                     for (var question in extraQuestionsJson.QuestionsOnUnit.Detail.Question) {
                         $scope.PostAnswers.PostAnswers.Detail.Answers.Answer.push({question_id: "", answer_value: ""});
                         console.log($scope.PostAnswers);
@@ -3973,19 +3993,21 @@ angular.module('myApp.controllers', []).
             $scope.next = function(formValid) {
                 var radioButtonBooleanChecks = true;
                 for (var i in radioButtonValueCheck) {
-                    if(radioButtonValueCheck[i] === "gender"){
+                    if (radioButtonValueCheck[i] === "gender") {
                         if ($scope.newAppointment.patientInfo["gender"] == -1 || $scope.newAppointment.patientInfo["gender"] == "" || !$scope.newAppointment.patientInfo["gender"])
                             radioButtonBooleanChecks = false;
                     } else {
-                        
+
                         if ($scope.PostAnswers.PostAnswers.Detail.Answers.Answer[radioButtonValueCheck[i]].answer_value == -1 || $scope.PostAnswers.PostAnswers.Detail.Answers.Answer[radioButtonValueCheck[i]].answer_value == "" || !$scope.PostAnswers.PostAnswers.Detail.Answers.Answer[radioButtonValueCheck[i]].answer_value)
                             radioButtonBooleanChecks = false;
                     }
                 }
-                
-                
+
+
                 if (formValid && radioButtonBooleanChecks) {
                     var confirmed = [];
+                    $rootScope.newAppointment.patientInfo.reg_no = $scope.nationalRegister;
+                    $rootScope.newAppointment.patientInfo.dateOfBirth = $scope.dateOfBirth;
                     confirmed.push(hospiviewFactory.getAppointmentConfirmed(
                             $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
                             $rootScope.newAppointment.proposal.proposal_id,
@@ -4063,8 +4085,8 @@ angular.module('myApp.controllers', []).
              */
             $scope.end = function() {
                 $rootScope.pageClass = 'left-to-right';
-                
-                switch($rootScope.type){
+
+                switch ($rootScope.type) {
                     case 0:
                     case 1:
                         $location.path('/doctor/appointmentsView');
@@ -4074,7 +4096,7 @@ angular.module('myApp.controllers', []).
                         $location.path('/patient/mainmenu');
                         break;
                 }
-                
+
             };
         }).
         controller("BackButtonCtrl", function($rootScope, $scope) {

@@ -218,7 +218,7 @@ angular.module('myApp.services', []).
                  */
                 getProposals: function(server_url, UUID, Unit_Id, Dep_Id, UnitType_Id, STitle, Additional_Info, GlobalTypes, Start_Date, Start_Time, Active_Days, Include_Today, Language_id) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days  + "&Include_Today=" + Include_Today  + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
+                    return $http.get(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days + "&Include_Today=" + Include_Today + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
                 },
                 /**
                  * Deleted preserved proposals so the slots are free again.
@@ -441,31 +441,38 @@ angular.module('myApp.services', []).
                     }
                     $q.all(promises).then(function(responses) {
                         for (var l = 0; l < responses.length; l++) {
+                            console.log(responses[l].data);
                             var json = parseJson(responses[l].data);
                             var reservation;
-                            if (angular.isDefined(json.ReservationsOnUnit.Detail)) {
-                                if (json.ReservationsOnUnit.Header.StatusCode === "1") {
-                                    /**
-                                     * We needed to add a check for the length of the amount of reservations.
-                                     * This is because, if only one reservation is returned by the webservice, the
-                                     * parser won't put it in an array, but just pass it as object. This results
-                                     * in not being able to use the .length method of an array, since it's not an array,
-                                     * which would return undefined and cause the application to not show the reservation.
-                                     */
-                                    if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
-                                        reservation = json.ReservationsOnUnit.Detail.Reservation;
-                                        reservation.step_buttons = getSteps(reservation.unit_id);
-                                        reservations.push(reservation);
-                                    } else {
-                                        for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
-                                            reservation = json.ReservationsOnUnit.Detail.Reservation[s];
+                            console.log(json);
+                            if (json) {
+                                if (angular.isDefined(json.ReservationsOnUnit.Detail)) {
+                                    if (json.ReservationsOnUnit.Header.StatusCode === "1") {
+                                        /**
+                                         * We needed to add a check for the length of the amount of reservations.
+                                         * This is because, if only one reservation is returned by the webservice, the
+                                         * parser won't put it in an array, but just pass it as object. This results
+                                         * in not being able to use the .length method of an array, since it's not an array,
+                                         * which would return undefined and cause the application to not show the reservation.
+                                         */
+                                        if (json.ReservationsOnUnit.Header.TotalRecords === "1") {
+                                            reservation = json.ReservationsOnUnit.Detail.Reservation;
                                             reservation.step_buttons = getSteps(reservation.unit_id);
                                             reservations.push(reservation);
+                                        } else {
+                                            for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
+                                                reservation = json.ReservationsOnUnit.Detail.Reservation[s];
+                                                reservation.step_buttons = getSteps(reservation.unit_id);
+                                                reservations.push(reservation);
+                                            }
                                         }
+                                    } else {
+                                        defer.reject($rootScope.getLocalizedString('internalError'));
                                     }
-                                } else {
-                                    defer.reject($rootScope.getLocalizedString('internalError'));
                                 }
+                            } else {
+                                //alert($rootScope.getLocalizedString("connectionErrorRetrievingAppointments"));
+                                //defer.reject($rootScope.getLocalizedString('connectionErrorRetrievingAppointments'));
                             }
                         }
                         console.log(reservations);
