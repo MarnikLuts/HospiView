@@ -4096,7 +4096,7 @@ angular.module('myApp.controllers', []).
 
                     }, error);
                     $rootScope.pageClass = 'right-to-left';
-                    //$location.path('patient/step5');
+                    $location.path('patient/step5');
                 } else {
                     console.log($scope.PostAnswers);
                     $scope.showInvalidFields = true;
