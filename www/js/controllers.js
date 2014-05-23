@@ -208,11 +208,12 @@ angular.module('myApp.controllers', []).
                                 postLoginDoctor();
                                 break;
                             case 2:
-                                postLoginPatient();
-                                break;
-                                //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
+                            //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
                             case 3:
                                 postLoginPatient();
+                                break;
+                                
+                            
                         }
                     } else {
                         $scope.loggingIn = false;
