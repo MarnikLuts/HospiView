@@ -208,12 +208,12 @@ angular.module('myApp.controllers', []).
                                 postLoginDoctor();
                                 break;
                             case 2:
-                            //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
+                                //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
                             case 3:
                                 postLoginPatient();
                                 break;
-                                
-                            
+
+
                         }
                     } else {
                         $scope.loggingIn = false;
@@ -683,8 +683,12 @@ angular.module('myApp.controllers', []).
             };
 
             $scope.createAppointment = function() {
-                $rootScope.pageClass = "right-to-left";
-                $location.path('/patient/step1');
+                if ($rootScope.isOffline) {
+                    alert($rootScope.getLocalizedString('notAvailableInOffline'));
+                } else {
+                    $rootScope.pageClass = "right-to-left";
+                    $location.path('/patient/step1');
+                }
             };
 
             /**
@@ -2860,7 +2864,16 @@ angular.module('myApp.controllers', []).
                 if (!$rootScope.isOffline) {
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;
-                    $location.path("/patient/mainmenu");
+                    switch ($rootScope.type) {
+                    case 0:
+                    case 1:
+                        $location.path('/doctor/appointmentsView');
+                        break;
+                    case 2:
+                    case 3:
+                        $location.path('/patient/mainmenu');
+                        break;
+                }
                 }
                 console.log(data);
                 $scope.error = true;
@@ -3247,7 +3260,16 @@ angular.module('myApp.controllers', []).
                 if (!$rootScope.isOffline) {
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;
-                    $location.path("/patient/mainmenu");
+                    switch ($rootScope.type) {
+                    case 0:
+                    case 1:
+                        $location.path('/doctor/appointmentsView');
+                        break;
+                    case 2:
+                    case 3:
+                        $location.path('/patient/mainmenu');
+                        break;
+                }
                 }
                 console.log(data);
                 $scope.error = true;
@@ -3402,7 +3424,16 @@ angular.module('myApp.controllers', []).
                 if (!$rootScope.isOffline) {
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;
-                    $location.path("/patient/mainmenu");
+                    switch ($rootScope.type) {
+                        case 0:
+                        case 1:
+                            $location.path('/doctor/appointmentsView');
+                            break;
+                        case 2:
+                        case 3:
+                            $location.path('/patient/mainmenu');
+                            break;
+                    }
                 }
                 console.log(data);
                 $scope.error = true;
@@ -3572,9 +3603,13 @@ angular.module('myApp.controllers', []).
                 console.log($rootScope.currentServers[$rootScope.newAppointment.server]);
                 questions.push(hospiviewFactory.getActiveFieldsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
                 questions.push(hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.newAppointment.proposal.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
-                questions.push(hospiviewFactory.getPatientLookup($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.currentServers[$rootScope.newAppointment.server].reg_no, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
+                if ($rootScope.type != 0 || $rootScope.type != 1 || $rootScope.type != 3)
+                    questions.push(hospiviewFactory.getPatientLookup($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.currentServers[$rootScope.newAppointment.server].reg_no, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
 
                 $q.all(questions).then(function(responses) {
+                    console.log(responses[0].data);
+                    console.log(responses[1].data);
+                    console.log(responses[2].data);
                     $rootScope.questions = responses;
                     $location.path('/patient/step4');
                 }, error);
@@ -3627,7 +3662,8 @@ angular.module('myApp.controllers', []).
 
             var standardQuestionsJson = parseJson($rootScope.questions[0].data);
             var extraQuestionsJson = parseJson($rootScope.questions[1].data);
-            var answersJson = parseJson($rootScope.questions[2].data);
+            if ($rootScope.type != 3)
+                var answersJson = parseJson($rootScope.questions[2].data);
 
             $rootScope.newAppointment.patientInfo = {};
 
@@ -3641,7 +3677,10 @@ angular.module('myApp.controllers', []).
             $rootScope.newAppointment.patientInfo.postalCode = '';
             $rootScope.newAppointment.patientInfo.town = '';
             $rootScope.newAppointment.patientInfo.country = '';
-            $scope.nationalRegister = $rootScope.currentServers[0].reg_no;
+            if ($rootScope.type != 3)
+                $scope.nationalRegister = $rootScope.currentServers[0].reg_no;
+            else
+                $scope.nationalRegister = '';
             $rootScope.newAppointment.patientInfo.email = '';
             $rootScope.newAppointment.patientInfo.extraInformation = '';
             $rootScope.newAppointment.patientInfo.unique_pid = '-1';
@@ -3650,31 +3689,32 @@ angular.module('myApp.controllers', []).
             $rootScope.newAppointment.patientInfo.referringDoctor = '';
             $rootScope.newAppointment.patientInfo.referringDoctor_gpid = '';
 
-            if (answersJson.PatientLookup.Header.StatusCode == 1) {
-                if (answersJson.PatientLookup.Detail) {
-                    $rootScope.newAppointment.patientInfo.lastname = answersJson.PatientLookup.Detail.pName;
-                    $rootScope.newAppointment.patientInfo.firstname = answersJson.PatientLookup.Detail.pFirstName;
-                    $scope.dateOfBirth = answersJson.PatientLookup.Detail.pBDate;
-                    $rootScope.newAppointment.patientInfo.gender = answersJson.PatientLookup.Detail.pGender;
-                    $rootScope.newAppointment.patientInfo.phone = answersJson.PatientLookup.Detail.pTel1;
-                    $rootScope.newAppointment.patientInfo.phone2 = answersJson.PatientLookup.Detail.pTel2;
-                    var address = answersJson.PatientLookup.Detail.pAddress.split("^");
-                    $rootScope.newAppointment.patientInfo.streetAndNumber = address[0];
-                    $rootScope.newAppointment.patientInfo.postalCode = address[4];
-                    $rootScope.newAppointment.patientInfo.town = address[2];
-                    $rootScope.newAppointment.patientInfo.country = address[5];
-                    $scope.nationalRegister = answersJson.PatientLookup.Detail.pReg_No;
-                    $rootScope.newAppointment.patientInfo.email = answersJson.PatientLookup.Detail.pEmail;
-                    $rootScope.newAppointment.patientInfo.extraInformation = answersJson.PatientLookup.Detail.pMemo;
-                    $rootScope.newAppointment.patientInfo.unique_pid = answersJson.PatientLookup.Detail.pUnique_pid;
-                    $rootScope.newAppointment.patientInfo.doctor = answersJson.PatientLookup.Detail.pDoctor;
-                    $rootScope.newAppointment.patientInfo.unique_gpid = answersJson.PatientLookup.Detail.pUnique_GPID;
-                    $rootScope.newAppointment.patientInfo.referringDoctor = '';
-                    $rootScope.newAppointment.patientInfo.referringDoctor_gpid = '';
+            if ($rootScope.type != 3)
+                if (answersJson.PatientLookup.Header.StatusCode == 1) {
+                    if (answersJson.PatientLookup.Detail) {
+                        $rootScope.newAppointment.patientInfo.lastname = answersJson.PatientLookup.Detail.pName;
+                        $rootScope.newAppointment.patientInfo.firstname = answersJson.PatientLookup.Detail.pFirstName;
+                        $scope.dateOfBirth = answersJson.PatientLookup.Detail.pBDate;
+                        $rootScope.newAppointment.patientInfo.gender = answersJson.PatientLookup.Detail.pGender;
+                        $rootScope.newAppointment.patientInfo.phone = answersJson.PatientLookup.Detail.pTel1;
+                        $rootScope.newAppointment.patientInfo.phone2 = answersJson.PatientLookup.Detail.pTel2;
+                        var address = answersJson.PatientLookup.Detail.pAddress.split("^");
+                        $rootScope.newAppointment.patientInfo.streetAndNumber = address[0];
+                        $rootScope.newAppointment.patientInfo.postalCode = address[4];
+                        $rootScope.newAppointment.patientInfo.town = address[2];
+                        $rootScope.newAppointment.patientInfo.country = address[5];
+                        $scope.nationalRegister = answersJson.PatientLookup.Detail.pReg_No;
+                        $rootScope.newAppointment.patientInfo.email = answersJson.PatientLookup.Detail.pEmail;
+                        $rootScope.newAppointment.patientInfo.extraInformation = answersJson.PatientLookup.Detail.pMemo;
+                        $rootScope.newAppointment.patientInfo.unique_pid = answersJson.PatientLookup.Detail.pUnique_pid;
+                        $rootScope.newAppointment.patientInfo.doctor = answersJson.PatientLookup.Detail.pDoctor;
+                        $rootScope.newAppointment.patientInfo.unique_gpid = answersJson.PatientLookup.Detail.pUnique_GPID;
+                        $rootScope.newAppointment.patientInfo.referringDoctor = '';
+                        $rootScope.newAppointment.patientInfo.referringDoctor_gpid = '';
+                    }
+                } else {
+                    error("statuscode not 1");
                 }
-            } else {
-                error("statuscode not 1");     
-            }
 
             if (!standardQuestionsJson.ActiveFieldsOnUnit.Detail && !extraQuestionsJson.QuestionsOnUnit.Detail)
                 $scope.next(true);
@@ -3700,14 +3740,14 @@ angular.module('myApp.controllers', []).
                         mustField = checkMustField("26");
                         appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('reg_no') + mustField[0] + '</b></p>'
                                 + '</td><td><input type="text" name="reg_no" class="form-control" ng-model="nationalRegister" ' + mustField[1] + ' ' + disableRegno + ' checknational/>';
-                        
+
                         if (mustField[1] === 'required')
                             appendString = appendString + '<div class="alert alert-danger" ng-show="showInvalidFields && subform.reg_no.$error.required">'
                                     + $rootScope.getLocalizedString('isRequired') + '</div>';
 
                         appendString = appendString + '<div class="alert alert-danger" ng-show="showInvalidFields && subform.reg_no.$error.checknational">'
-                                    + $rootScope.getLocalizedString('newUserNatRegIncorrect') + '</div>';
-                            
+                                + $rootScope.getLocalizedString('newUserNatRegIncorrect') + '</div>';
+
                         appendString = appendString + '</td></tr>';
                     }
                     if (activeFieldsArray.indexOf("1") !== -1) {
@@ -4068,7 +4108,16 @@ angular.module('myApp.controllers', []).
                 if (!$rootScope.isOffline) {
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;
-                    $location.path("/patient/mainmenu");
+                    switch ($rootScope.type) {
+                        case 0:
+                        case 1:
+                            $location.path('/doctor/appointmentsView');
+                            break;
+                        case 2:
+                        case 3:
+                            $location.path('/patient/mainmenu');
+                            break;
+                    }
                 }
                 console.log(data);
                 $scope.error = true;
