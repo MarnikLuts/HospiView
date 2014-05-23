@@ -3603,13 +3603,11 @@ angular.module('myApp.controllers', []).
                 console.log($rootScope.currentServers[$rootScope.newAppointment.server]);
                 questions.push(hospiviewFactory.getActiveFieldsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
                 questions.push(hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.newAppointment.proposal.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
-                if ($rootScope.type != 0 || $rootScope.type != 1 || $rootScope.type != 3)
+                console.log($rootScope.type);
+                if ($rootScope.type == 2)
                     questions.push(hospiviewFactory.getPatientLookup($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.currentServers[$rootScope.newAppointment.server].reg_no, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
 
                 $q.all(questions).then(function(responses) {
-                    console.log(responses[0].data);
-                    console.log(responses[1].data);
-                    console.log(responses[2].data);
                     $rootScope.questions = responses;
                     $location.path('/patient/step4');
                 }, error);
@@ -3662,7 +3660,7 @@ angular.module('myApp.controllers', []).
 
             var standardQuestionsJson = parseJson($rootScope.questions[0].data);
             var extraQuestionsJson = parseJson($rootScope.questions[1].data);
-            if ($rootScope.type != 3)
+            if ($rootScope.type == 2)
                 var answersJson = parseJson($rootScope.questions[2].data);
 
             $rootScope.newAppointment.patientInfo = {};
@@ -3677,7 +3675,7 @@ angular.module('myApp.controllers', []).
             $rootScope.newAppointment.patientInfo.postalCode = '';
             $rootScope.newAppointment.patientInfo.town = '';
             $rootScope.newAppointment.patientInfo.country = '';
-            if ($rootScope.type != 3)
+            if ($rootScope.type == 2)
                 $scope.nationalRegister = $rootScope.currentServers[0].reg_no;
             else
                 $scope.nationalRegister = '';
@@ -3689,7 +3687,7 @@ angular.module('myApp.controllers', []).
             $rootScope.newAppointment.patientInfo.referringDoctor = '';
             $rootScope.newAppointment.patientInfo.referringDoctor_gpid = '';
 
-            if ($rootScope.type != 3)
+            if ($rootScope.type == 2)
                 if (answersJson.PatientLookup.Header.StatusCode == 1) {
                     if (answersJson.PatientLookup.Detail) {
                         $rootScope.newAppointment.patientInfo.lastname = answersJson.PatientLookup.Detail.pName;
