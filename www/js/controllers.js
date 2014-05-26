@@ -3664,6 +3664,7 @@ angular.module('myApp.controllers', []).
             
             $rootScope.newAppointment.patientInfo = {};
 
+
             $rootScope.newAppointment.patientInfo.lastname = '';
             $rootScope.newAppointment.patientInfo.firstname = '';
             $rootScope.newAppointment.patientInfo.dateOfBirth = '';
@@ -3687,7 +3688,7 @@ angular.module('myApp.controllers', []).
             $scope.doPatientLookup = function(){
                 hospiviewFactory.getPatientLookup($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $scope.nationalRegister, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url)
                         .then(function(response){
-                            var answersJson = parseJson(response.data);
+                            var answersJson = parseJson(response);
                             console.log(answersJson);
                                 if (answersJson.PatientLookup.Header.StatusCode == 1) {
                                     if (answersJson.PatientLookup.Detail) {
@@ -3718,10 +3719,10 @@ angular.module('myApp.controllers', []).
                 }, error);
             };
             
-//            var standardQuestionsJson = parseJson($rootScope.questions[0].data);
-//            var extraQuestionsJson = parseJson($rootScope.questions[1].data);
+//            var standardQuestionsJson = parseJson($rootScope.questions[0]);
+//            var extraQuestionsJson = parseJson($rootScope.questions[1]);
 //            if ($rootScope.type == 2)
-//                var answersJson = parseJson($rootScope.questions[2].data);
+//                var answersJson = parseJson($rootScope.questions[2]);
 
             
 //            if (!standardQuestionsJson.ActiveFieldsOnUnit.Detail && !extraQuestionsJson.QuestionsOnUnit.Detail)
@@ -3740,8 +3741,8 @@ angular.module('myApp.controllers', []).
                 questions.push(hospiviewFactory.getQuestionsOnUnit($rootScope.currentServers[$rootScope.newAppointment.server].uuid, $rootScope.newAppointment.proposal.unit_id, $rootScope.newAppointment.proposal.type_id, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
                 
                 $q.all(questions).then(function(responses){
-                    standardQuestionsJson = parseJson(responses[0].data);
-                    extraQuestionsJson = parseJson(responses[1].data);
+                    standardQuestionsJson = parseJson(responses[0]);
+                    extraQuestionsJson = parseJson(responses[1]);
                     
                     console.log(standardQuestionsJson);
                     
@@ -4045,7 +4046,7 @@ angular.module('myApp.controllers', []).
             
 
             function checkMustField(number) {
-//                var standardQuestionsJson = parseJson($rootScope.questions[0].data);
+//                var standardQuestionsJson = parseJson($rootScope.questions[0]);
                 var mustFieldsArray = standardQuestionsJson.ActiveFieldsOnUnit.Detail.MustFields.split(",");
 
                 if (mustFieldsArray.indexOf(number) !== -1)
