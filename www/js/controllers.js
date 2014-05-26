@@ -542,6 +542,10 @@ angular.module('myApp.controllers', []).
                 });
             }
 
+            var l = $rootScope.$on('stopLoadingEvent', function() {
+                $scope.loggingIn = false;
+            });
+            
             /**
              * Check if the select box CSS needs to be changed.
              */
@@ -1674,6 +1678,11 @@ angular.module('myApp.controllers', []).
         }).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
             $scope.reservation = $rootScope.reservationDetail;
+            console.log($scope.reservation);
+            
+            $scope.getDate = function(date){
+                return formatShowDate(date, $rootScope.languageID);
+            };
             /**
              * Redirect the user back to the appointments screen.
              */

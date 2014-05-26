@@ -52,6 +52,7 @@ var frenchStrings = {
         appointmentDetailComment: "Commentaire ",
         appointmentDetailPatientId: "Id patient ",
         appointmentDetailPatientName: "Nom ",
+        appointmentDetailDate: "Date",
         
         //Selectserver/new
         newGreeting: "Bienvenue chez HospiView",
@@ -118,7 +119,7 @@ var frenchStrings = {
         uuidExpiredMessage: "Votre temps de connexion est expirer ou vous avez connecté sur un autre appareil mobile. Vous êtes hors ligne",
         
         //Settings
-        settingsNew: "Ici sont les paramètres, vous pouvez ajouter ou supprimer des utilisateurs ou serverurs ici\n\nPour quitter les paramètres appuyer sur 'Retour'.",
+        settingsNew: "Ici sont les paramètres, vous pouvez ajouter ou supprimer des utilisateurs ou serverurs ici\n\nPour quitter les paramètres appuyer sur 'Retour' en haut.",
         settingsSave: "Sauver",
         settingsAddServer: "Ajouter un serveur",
         settingsEditServer: "Changez le serveur",
@@ -138,7 +139,7 @@ var frenchStrings = {
         settingsLanguage: "Langue",
         settingsRefreshMin: "Minimum 30",
         settingsRefreshMax: "Maximum 7200",
-        settingsRefreshDecimal: "Doit être décimal",
+        settingsRefreshDecimal: "Maximum 7200 et doit être décimal",
         settingsDeleteServer: "Supprimer serveur",
         settingsDeleteCurrentUser: "Supprimer utilisateur",
         settingsDeleteServerConfirm: "Êtes-vous sûr vous voulez supprimer cette serveur?",

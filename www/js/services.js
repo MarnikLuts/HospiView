@@ -734,6 +734,10 @@ angular.module('myApp.services', []).
                     }
                 }
             }
+            
+            function error(){
+                $rootScope.$emit('stopLoadingEvent', {});
+            }
 
             return{
                 /**
@@ -753,6 +757,7 @@ angular.module('myApp.services', []).
                             }
                         } else {
                             defer.reject($rootScope.getLocalizedString('internalError'));
+                            error();
                         }
                     }
                     defer.resolve();
@@ -776,6 +781,7 @@ angular.module('myApp.services', []).
                         defer.resolve(server);
                     } else {
                         defer.reject($rootScope.getLocalizedString('internalError'));
+                        error();
                     }
                     return defer.promise;
                 },
@@ -808,12 +814,14 @@ angular.module('myApp.services', []).
                                 }
                             } else {
                                 defer.reject($rootScope.getLocalizedString('internalError'));
+                                error();
                             }
                         }
                         localStorage.setItem($rootScope.user + "AbsentDays", JSON.stringify($rootScope.absentDays));
                         defer.resolve(server);
                     }, function(error) {
                         defer.reject($rootScope.getLocalizedString('connectionError'));
+                        error();
                     });
                     return defer.promise;
                 },
@@ -871,18 +879,17 @@ angular.module('myApp.services', []).
                                         }
                                     } else {
                                         defer.reject($rootScope.getLocalizedString('internalError'));
+                                        error();
                                     }
                                 }
-                            } else {
-                                //alert($rootScope.getLocalizedString("connectionErrorRetrievingAppointments"));
-                                //defer.reject($rootScope.getLocalizedString('connectionErrorRetrievingAppointments'));
-                            }
+                            } 
                         }
                         console.log(reservations);
                         console.log("end get reservations");
                         defer.resolve(reservations);
                     }, function(error) {
                         defer.reject($rootScope.getLocalizedString('connectionError'));
+                        error();
                     });
                     return defer.promise;
                 },
@@ -1053,10 +1060,6 @@ angular.module('myApp.services', []).
                             $rootScope.isOffline = true;
                             alert($rootScope.getLocalizedString('uuidExpiredMessage'));
                         }
-                    }
-
-                    function error(data) {
-                        
                     }
                 }
             };

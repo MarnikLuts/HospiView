@@ -39,10 +39,10 @@ var dutchStrings = {
         appointmentsFilterDepartment: "Selecteer een departement",
         
         //AppointmentDetail
-        appointmentDetail: "Reservatie info",
+        appointmentDetail: "Afspraak info",
         appointmentDetailPatient: "Patiënt info",
         appointmentDetailDepartment: "Departement ",
-        appointmentDetailId: "Reservatie id ",
+        appointmentDetailId: "Afspraak id ",
         appointmentDetailTitle: "Titel ",
         appointmentDetailBooking: "Geboekt door ",
         appointmentDetailMarking: "Markering(en) ",
@@ -52,6 +52,7 @@ var dutchStrings = {
         appointmentDetailComment: "Commentaar ",
         appointmentDetailPatientId: "Patiënt id ",
         appointmentDetailPatientName: "Naam en voornaam ",
+        appointmentDetailDate: "Datum",
         
         //Selectserver/new
         newGreeting: "Welkom bij HospiView",
@@ -118,7 +119,7 @@ var dutchStrings = {
         uuidExpiredMessage: "Uw login tijd is verlopen of u bent op een ander mobile toestel ingelogd. U bent nu in offline mode.",
         
         //Settings
-        settingsNew: "Dit zijn de instellingen, hier kan u nieuwe gebruikers en servers toevoegen.\n\nOm uit dit scherm te gaan klik op 'Terug'.",
+        settingsNew: "Dit zijn de instellingen, hier kan u nieuwe gebruikers en servers toevoegen.\n\nOm uit dit scherm te gaan klik bovenaan op 'Terug'.",
         settingsSave: "Opslaan",
         settingsAddServer: "Voeg server toe",
         settingsEditServer: "Wijzig server",
@@ -127,7 +128,7 @@ var dutchStrings = {
         settingsRefreshUnit: "sec",
         settingsAddDelete: "Toevoegen, wijzigen of verwijderen",
         settingsEditDelete: "Wijzigen of verwijderen",
-        settingsCellcontent: "Reservatie instellingen",
+        settingsCellcontent: "Afspraak instellingen",
         settingsPatient: "Patiënt",
         settingsTitle: "Titel",
         settingsDepartment: "Departement",
@@ -138,7 +139,7 @@ var dutchStrings = {
         settingsLanguage: "Taal",
         settingsRefreshMin: "Minimum 30",
         settingsRefreshMax: "Maximum 7200",
-        settingsRefreshDecimal: "Mag geen komma getal zijn",
+        settingsRefreshDecimal: "Maximum 7200 toegestaan en mag geen komma getal zijn",
         settingsDeleteServer: "Verwijder server",
         settingsDeleteCurrentUser: "Verwijder gebruiker",
         settingsDeleteServerConfirm: "Weet u zeker dat u de geselecteerde server wil verwijderen?",

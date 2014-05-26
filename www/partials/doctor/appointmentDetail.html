@@ -14,10 +14,13 @@
     <h2>{{reservation.title}} / {{reservation.name}}</h2>
     <h4>{{getLocalizedString('appointmentDetail')}}</h4>
     <div class="well detailTable widthPercent">
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailId')}}</span><span class="detailInfo">{{reservation.id}}</span></div>
         <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('doctor')}}</span><span class="detailInfo">{{reservation.unit_name}}</span></div>
         <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailDepartment')}}</span><span class="detailInfo">{{reservation.dep_name}}</span></div>
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailId')}}</span><span class="detailInfo">{{reservation.id}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('patientAppointmentsViewFacility')}}</span><span class="detailInfo">{{reservation.hosp_short_name}}</span></div>
         <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailTitle')}}</span><span class="detailInfo">{{reservation.title}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailDate')}}</span><span class="detailInfo">{{getDate(reservation.the_date)}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('patientAppointmentsViewTijdstip')}}</span><span class="detailInfo">{{reservation.time_from}}</span></div>
         <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailBooking')}}</span><span class="detailInfo">{{reservation.user_name}}</span></div>
         <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailMarking')}}</span><span class="detailInfo">
                 <span ng-switch on="reservation.color">
@@ -52,6 +55,6 @@
     <div class="well detailTable widthPercent">
         <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientId')}}</span><span class="detailInfo">{{reservation.unique_pid}}</span></div>
         <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientName')}}</span><span class="detailInfo">{{reservation.name}}</span></div>
-        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('appointmentDetailPatientNational')}}</span><span class="detailInfo">{{reservation.reg_no}}</span></div>
+        <div class="detailTableRow"><span class="detailTitle">{{getLocalizedString('newUserNatReg')}}</span><span class="detailInfo">{{reservation.reg_no}}</span></div>
     </div>
 </div>

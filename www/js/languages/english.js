@@ -9,14 +9,14 @@ var englishStrings = {
         login: "Log In",
         loginError: "Invalid username or password.",
         loginPasswordCheckedMessage: "Attention! By automatically entering your password every user of this device can log in with your account.",
-        loginNoReservationsFound: "There are no reservations found in the next 14 days. Would you like to continue searching?",
-        loginNoConnection: "There is no internet connection or a connection to the server can't be made. Offline you can still view the reservations from the last time you logged in. Would you like to continue offline?",
+        loginNoReservationsFound: "There are no appointments found in the next 14 days. Would you like to continue searching?",
+        loginNoConnection: "There is no internet connection or a connection to the server can't be made. Offline you can still view the appointments from the last time you logged in. Would you like to continue offline?",
         loginServerListFailed: "Login failed on the following servers:",
         
         //AppointmentsView
-        appointmentsViewReservations: "Reservations",
-        appointmentsViewNoReservations: "No reservations.",
-        appointmentsViewEndOfDateRange: "There are no more reservations.",
+        appointmentsViewReservations: "Appointments",
+        appointmentsViewNoReservations: "No appointments.",
+        appointmentsViewEndOfDateRange: "There are no more appointments.",
         
         //patient/appointmentsView
         appointmentsViewPatientNoConnection: "There is no internet connection or a connection to the server can't be made. You are now in offline mode.",
@@ -39,10 +39,10 @@ var englishStrings = {
         appointmentsFilterDepartment: "Select a department",
         
         //AppointmentDetail
-        appointmentDetail: "Reservation info",
+        appointmentDetail: "Appointment info",
         appointmentDetailPatient: "Patient info",
         appointmentDetailDepartment: "Department ",
-        appointmentDetailId: "Reservation id ",
+        appointmentDetailId: "Appointment id ",
         appointmentDetailTitle: "Title ",
         appointmentDetailBooking: "Booked by ",
         appointmentDetailMarking: "Marking ",
@@ -52,6 +52,7 @@ var englishStrings = {
         appointmentDetailComment: "Comment ",
         appointmentDetailPatientId: "Patient id ",
         appointmentDetailPatientName: "Name ",
+        appointmentDetailDate: "Date",
         
         //Selectserver/new
         newGreeting: "Welcome to HospiView",
@@ -80,7 +81,7 @@ var englishStrings = {
         newUserNatReg: "National register number",
         newUserFirm: "Firm",
         newUserRiziv: "RIZIV number",
-        newUserNoKiosk: "This health institution has chosen not to allow patients to make reservations using this app. Therefore you can't register.",
+        newUserNoKiosk: "This health institution has chosen not to allow patients to make appointments using this app. Therefore you can't register.",
         newUserNoAccountCreation: "Function not yet available in this version of the App.",
         
         //Selectserver/new validation
@@ -118,7 +119,7 @@ var englishStrings = {
         uuidExpiredMessage: "Your login time is expired or you are logged in on another mobile device. You are now in offline mode.",
                 
         //Settings
-        settingsNew: "These are the settings, here you can add new users and servers.\n\nTo exit this screen press 'Back'",
+        settingsNew: "These are the settings, here you can add new users and servers.\n\nTo exit this screen press 'Back' on top of the screen.",
         settingsSave: "Save",
         settingsAddServer: "Add server",
         settingsEditServer: "Edit server",
@@ -127,7 +128,7 @@ var englishStrings = {
         settingsRefreshUnit: "sec",
         settingsAddDelete: "Add, edit or delete",
         settingsEditDelete: "Edit or delete",
-        settingsCellcontent: "Reservation settings",
+        settingsCellcontent: "Appointment settings",
         settingsPatient: "Patient",
         settingsTitle: "Title",
         settingsDepartment: "Department",
@@ -138,7 +139,7 @@ var englishStrings = {
         settingsLanguage: "Language",
         settingsRefreshMin: "Minimum 30",
         settingsRefreshMax: "Maximum 7200",
-        settingsRefreshDecimal: "Has to be decimal",
+        settingsRefreshDecimal: "Maximum 7200 and has to be decimal",
         settingsDeleteServer: "Delete server",
         settingsDeleteCurrentUser: "Delete user",
         settingsDeleteServerConfirm: "Are you sure you want to delete the selected server?",
@@ -188,7 +189,7 @@ var englishStrings = {
         createAppointmentStep4GenderNotDetermined: "U",
         
         //patient/step5
-        createAppointmentStep5Info: "You can find your appointment if you click on the \"Look at reservations\" button in the main menu",
+        createAppointmentStep5Info: "You can find your appointment if you click on the \"Look at appointments\" button in the main menu",
         createAppointmentStep5Thanks: " thanks you for using this app",
         createAppointmentStep5End: "End"
 };
