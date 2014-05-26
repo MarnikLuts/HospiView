@@ -615,12 +615,14 @@ ul li{
     text-decoration: line-through;
 }
 
-.form-control-light{
-    display: inline !important;
-    position: relative;
-    padding-right: 100px;
-    width: 90%;
-    top: 2px;
+.form-control-step4{
+    left: -9px;
+    
+}
+
+.step4-search{
+    margin-left: -10px;
+    
 }
 
 @media screen and (min-width: 768px) {

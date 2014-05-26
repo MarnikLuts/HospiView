@@ -3755,9 +3755,9 @@ angular.module('myApp.controllers', []).
                             if ($rootScope.type === 3 || $rootScope.type === 0 || $rootScope.type === 1){
                                 $scope.disableRegno = false;
                                 
-                                regNoField = '<button class="btn btn-primary btn-sm" ng-click="doPatientLookup()" style="width: 10%;" ><span class="glyphicon glyphicon-search"></span></button>'
-                                       + '<input type="number" name="reg_no"  class="form-control form-control-light input-sm" ng-model="nationalRegister" ng-disabled="disableRegno" checknational/>'
-                                       + '<label><input type="checkbox"  ng-model="disableRegno"/>Onbekend nummer</label>';
+                                regNoField = '<div class="input-group" style="margin-right: -19px;"><span class="input-group-btn"><button type="button" class="btn btn-primary step4-search" ng-click="doPatientLookup()" ><span class="glyphicon glyphicon-search"></span></button></span>'
+                                       + '<input type="number" name="reg_no"  class="form-control form-control-step4" ng-model="nationalRegister" ng-disabled="disableRegno" checknational/></div>'
+                                       + '<label class="icasaCheckbox icasaCheckbox-normal" ng-class="{\'icasaCheckboxChecked\':disableRegno, \'icasaCheckboxUnChecked\':!disableRegno}"><input type="checkbox" ng-model="disableRegno" class="invisible" />{{ getLocalizedString(\'createAppointmentStep4UnknownRegno\') }}</label>';
                             }else{
                                 regNoField = '<input type="text" name="reg_no"  class="form-control input-sm" ng-model="nationalRegister" ' + mustField[1] + ' ng-disabled="disableRegno" checknational/>';
                             }

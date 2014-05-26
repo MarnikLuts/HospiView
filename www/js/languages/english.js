@@ -175,8 +175,6 @@ var englishStrings = {
                 
         //patient/step4
         createAppointmentStep4MakeYourChoice: "make your choice",
-        
-        //patient/step4
         createAppointmentStep4FieldsRequired: "* indicates required fields",
         createAppointmentStep4FirstName: "First name",
         createAppointmentStep4LastName: "Last name",
@@ -187,6 +185,7 @@ var englishStrings = {
         createAppointmentStep4Town: "Town",
         createAppointmentStep4Country: "Country",
         createAppointmentStep4GenderNotDetermined: "U",
+        createAppointmentStep4UnknownRegno: "Unknown national register number",
         
         //patient/step5
         createAppointmentStep5Info: "You can find your appointment if you click on the \"Look at appointments\" button in the main menu",

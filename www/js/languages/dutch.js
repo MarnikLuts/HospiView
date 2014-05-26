@@ -175,8 +175,6 @@ var dutchStrings = {
                         
         //patient/step4
         createAppointmentStep4MakeYourChoice: "maak hier uw keuze",
-        
-        //patient/step4
         createAppointmentStep4FieldsRequired: "Velden met een * zijn verplicht in te vullen",
         createAppointmentStep4FirstName: "Voornaam",
         createAppointmentStep4LastName: "Achternaam",
@@ -187,6 +185,7 @@ var dutchStrings = {
         createAppointmentStep4Town: "Gemeente",
         createAppointmentStep4Country: "Land",
         createAppointmentStep4GenderNotDetermined: "O",
+        createAppointmentStep4UnknownRegno: "Onbekend rijksregisternummer",
         
         //patient/step5
         createAppointmentStep5Info: "U kan uw afspraak terugvinden als u op \"Afspraak Bekijken\" drukt in het hoofdmenu",
