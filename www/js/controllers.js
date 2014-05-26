@@ -3795,7 +3795,7 @@ angular.module('myApp.controllers', []).
                         if (activeFieldsArray.indexOf("2") !== -1) {
                             mustField = checkMustField("2");
                             appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Phone') + mustField[0] + '</b></p>'
-                                    + '</td><td><input type="text" name="phone" class="form-control" ng-model="newAppointment.patientInfo.phone" ng-pattern=' + "'/^[0-9]*$/'" + ' ' + mustField[1] + '/>';
+                                    + '</td><td><input type="number" name="phone" class="form-control" ng-model="newAppointment.patientInfo.phone" ng-pattern=' + "'/^[0-9]*$/'" + ' ' + mustField[1] + '/>';
                             if (mustField[1] === 'required') {
                                 appendString = appendString + '<div class="alert alert-danger" ng-show="showInvalidFields && subform.phone.$error.required">'
                                         + $rootScope.getLocalizedString('isRequired') + '</div>';
@@ -3808,7 +3808,7 @@ angular.module('myApp.controllers', []).
                         if (activeFieldsArray.indexOf("9") !== -1) {
                             mustField = checkMustField("9");
                             appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Phone2') + mustField[0] + '</b></p>'
-                                    + '</td><td><input type="text" name="phone2" class="form-control" ng-model="newAppointment.patientInfo.phone2" ng-pattern=' + "'/^[0-9]*$/'" + ' ' + mustField[1] + '/>';
+                                    + '</td><td><input type="number" name="phone2" class="form-control" ng-model="newAppointment.patientInfo.phone2" ng-pattern=' + "'/^[0-9]*$/'" + ' ' + mustField[1] + '/>';
                             if (mustField[1] === 'required') {
                                 appendString = appendString + '<div class="alert alert-danger" ng-show="showInvalidFields && subform.phone2.$error.required">'
                                         + $rootScope.getLocalizedString('isRequired') + '</div>';
@@ -3856,9 +3856,9 @@ angular.module('myApp.controllers', []).
 
                             appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('createAppointmentStep4Gendre') + mustField[0] + '</b></p>'
                                     + '</td><td><div class="btn-group showCompleteFloat widthPercent" data-toggle="buttons">'
-                                    + '<label class="btn btn-default width30Percent ' + activeClassM + '" ng-click="setRadioButtonScope(' + "'gender','male',false" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep4Male') + '"/>' + genderTextM + '</label>'
-                                    + '<label class="btn btn-default width30Percent ' + activeClassF + '" ng-click="setRadioButtonScope(' + "'gender','female',false" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep4Female') + '"/>' + genderTextF + '</label>'
-                                    + '<label class="btn btn-default width30Percent ' + activeClassU + '" ng-click="setRadioButtonScope(' + "'gender','undefined',false" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '"/>' + genderTextU + '</label>'
+                                    + '<label class="btn btn-default width30Percent ' + activeClassM + '" ng-click="setRadioButtonScope(' + "'gender','1',false" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep4Male') + '"/>' + genderTextM + '</label>'
+                                    + '<label class="btn btn-default width30Percent ' + activeClassF + '" ng-click="setRadioButtonScope(' + "'gender','2',false" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentStep4Female') + '"/>' + genderTextF + '</label>'
+                                    + '<label class="btn btn-default width30Percent ' + activeClassU + '" ng-click="setRadioButtonScope(' + "'gender','0',false" + ')" ><input type="radio" name="gender" ng-model="newAppointment.patientInfo.gender" value="' + $rootScope.getLocalizedString('createAppointmentNotDetermined') + '"/>' + genderTextU + '</label>'
                                     + '</div>';
 
                             if (mustField[1] === "required")
@@ -4125,10 +4125,10 @@ angular.module('myApp.controllers', []).
                                 json.AppointmentConfirmed.Detail.unit_id,
                                 xml,
                                 $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
-
+                        $rootScope.pageClass = 'right-to-left';
+                        $location.path('patient/step5');
                     }, error);
-                    $rootScope.pageClass = 'right-to-left';
-                    $location.path('patient/step5');
+                    
                 } else {
                     console.log($scope.PostAnswers);
                     $scope.showInvalidFields = true;
