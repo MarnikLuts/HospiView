@@ -3255,7 +3255,8 @@ angular.module('myApp.controllers', []).
                     $rootScope.newAppointment.type = $scope.type;
                     $rootScope.newAppointment.locations = [];
                     for (var i = 0; i < $scope.locations.length; i++) {
-                        if ($scope.locations[i].checked)
+//                        if ($scope.locations[i].checked)
+                        if($scope.locations[i].location_name)
                             $rootScope.newAppointment.locations.push($scope.locations[i]);
                     }
                     $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
