@@ -13,7 +13,13 @@ angular.module('myApp.directives', []).
                         scope.$watch('userFunctionSelect', validate);
                     scope.$watch('dateOfBirth', validate);
                     scope.$watch('nationalRegister', validate);
+                    scope.$watch('disableRegno', validate);
                     function validate(value) {
+                        
+                        if(scope.disableRegno){
+                            ctrl.$setValidity('checknational', true);
+                        }
+                        
                         if(scope.userFunctionSelect)
                             var userFunction = scope.userFunctionSelect;
                         if (scope.userFunctionSelect && !scope.needsNationalReg(userFunction)) {

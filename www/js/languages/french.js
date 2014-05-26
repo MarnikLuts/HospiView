@@ -175,8 +175,6 @@ var frenchStrings = {
         
         //patient/step4
         createAppointmentStep4MakeYourChoice: "choisissez ici",
-        
-        //patient/4
         createAppointmentStep4FieldsRequired: "* indique les champs obligatoires",
         createAppointmentStep4FirstName: "Prénom",
         createAppointmentStep4LastName: "Nom",
@@ -187,6 +185,7 @@ var frenchStrings = {
         createAppointmentStep4Town: "Ville",
         createAppointmentStep4Country: "Pays",
         createAppointmentStep4GenderNotDetermined: "I",
+        createAppointmentStep4UnknownRegno: "Numéro de registre national inconnu",
         
         //patient/step5
         createAppointmentStep5Info: "Vous pouvez trouver votre rendez-vous si vous cliquez sur le bouton \"Regarder les réservations\" dans le menu principal",

@@ -615,6 +615,16 @@ ul li{
     text-decoration: line-through;
 }
 
+.form-control-step4{
+    left: -9px;
+    
+}
+
+.step4-search{
+    margin-left: -10px;
+    
+}
+
 @media screen and (min-width: 768px) {
     .settingsLabels {
         font-size: 1.2em;
