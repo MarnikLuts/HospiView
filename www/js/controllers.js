@@ -3692,7 +3692,6 @@ angular.module('myApp.controllers', []).
                             console.log(answersJson);
                                 if (answersJson.PatientLookup.Header.StatusCode == 1) {
                                     if (answersJson.PatientLookup.Detail) {
-                                        alert('setting fields');
                                         $rootScope.newAppointment.patientInfo.lastname = answersJson.PatientLookup.Detail.pName;
                                         $rootScope.newAppointment.patientInfo.firstname = answersJson.PatientLookup.Detail.pFirstName;
                                         $scope.dateOfBirth = answersJson.PatientLookup.Detail.pBDate;

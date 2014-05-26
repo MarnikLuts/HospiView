@@ -19,14 +19,15 @@ angular.module('myApp.services', []).
          *      Cache-Control: no-cache
          * If possible, try to change the webservice to pass this header.
          * 
-         * @param {type} $http
-         * @param {type} base_url
-         * @returns {_L13.Anonym$1}.
+         * In each method, the function doQuery is declared. This function will
+         * execute the request again in the request is not fulfilled. The request
+         * will be done maximum 5 times. The function is declared in each method
+         * because otherwise, the variable queryResults is overriden if multiple
+         * requests are done after each other. This would result in unresolved promises
+         * and the application waiting forever for these promises to be resolved.
          */
         factory('hospiviewFactory', function($http, $rootScope, $q, $timeout, kiosk_url) {
             var count = 0;
-
-
 
             return{
                 /**
