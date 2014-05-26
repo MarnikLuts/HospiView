@@ -2628,6 +2628,8 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('patient/appointmentsView');
             };
+            
+            $scope.images = ["img/TEMPlogos/BZIO.jpg", "img/TEMPlogos/SOMEDI.jpg", "img/TEMPlogos/RUSTENBURG.JPG"];
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory, $q) {
             var searchStart = new Date(),
