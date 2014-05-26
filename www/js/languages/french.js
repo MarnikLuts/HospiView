@@ -9,14 +9,14 @@ var frenchStrings = {
         login: "Enregistrer",
         loginError: "Le mot de passe et/ou l'email que vous avez saisi est invalide.",
         loginPasswordCheckedMessage: "Attention! Par entrer votre mot de passe automatiquement tous les utilisatuers de l'appareil peuvent enregistrer avec votre codes d'accès.",
-        loginNoReservationsFound: "Il n'y a pas de des réservations les 14 jours prochaines. Vous voulez continer à cherchez?",
+        loginNoReservationsFound: "Il n'y a pas de des rendez-vous les 14 jours prochaines. Vous voulez continer à cherchez?",
         loginNoConnection: "Il n'y a pas un connexion avec l'internet ou ce n'est pas possible de connecter avec le serveur. Sans connexions vous pouvez encore regarder les réservations qui sont déjà obtenues. Vous voulez continuer sans connexion?",
         loginServerListFailed: "Enregistration est echouée à les serveurs suivantes:",
         
         //AppointmentsView
-        appointmentsViewReservations: "Réservations",
-        appointmentsViewNoReservations: "Pas de Réservation",
-        appointmentsViewEndOfDateRange: "Il n'ya plus des réservations",
+        appointmentsViewReservations: "Rendez-vous",
+        appointmentsViewNoReservations: "Pas de rendez-vous",
+        appointmentsViewEndOfDateRange: "Il n'ya plus des rendez-vous",
         
         //patient/appointmentsView
         appointmentsViewPatientNoConnection: "Il n'y a pas un connexion avec l'internet ou ce n'est pas possible de connecter avec le serveur. Vous êtes maintenant dans la mode hors-ligne.",
@@ -39,10 +39,10 @@ var frenchStrings = {
         appointmentsFilterDepartment: "Choisissez un département",
 
         //AppointmentDetail
-        appointmentDetail: "Info du réservation",
+        appointmentDetail: "Info du rendez-vous",
         appointmentDetailPatient: "Info du patient",
         appointmentDetailDepartment: "Département ",
-        appointmentDetailId: "Réservation id ",
+        appointmentDetailId: "Rendez-vous id ",
         appointmentDetailTitle: "Titre ",
         appointmentDetailBooking: "Réservé par ",
         appointmentDetailMarking: "Marquage(s) ",
@@ -129,7 +129,7 @@ var frenchStrings = {
         settingsAddDelete: "Ajouter ou supprimer",
         //settingsAddDelete: "Ajouter, modifier ou supprimer",
         settingsEditDelete: "Modifier ou supprimer",
-        settingsCellcontent: "Paramètres des réservations",
+        settingsCellcontent: "Paramètres des rendez-vous",
         settingsPatient: "Patient",
         settingsTitle: "Titre",
         settingsDepartment: "Département",
@@ -152,8 +152,8 @@ var frenchStrings = {
         notAvailableInOffline: "Cette fonction n'est pas disponible sans connexion.",
 
         //patient/patientAppointmentsView
-        patientAppointmentsViewNoReservations: "Vous n'avez pas de réservations les 90 jours suivant.",
-        patientAppointmentsViewType: "Type de réservation",
+        patientAppointmentsViewNoReservations: "Vous n'avez pas de rendez-vous les 90 jours suivant.",
+        patientAppointmentsViewType: "Type de rendez-vous",
         patientAppointmentsViewUnit: "Bij",
         patientAppointmentsViewFacility: "Institution",
                 
@@ -171,7 +171,7 @@ var frenchStrings = {
         createAppointmentStep3Afternoon: "après-midi",
         createAppointmentStep3MorningShort: "AM",
         createAppointmentStep3AfternoonShort: "PM",
-        createAppointmentStep3Selected: "Vous avez choisi cette réservation:",
+        createAppointmentStep3Selected: "Vous avez choisi cette rendez-vous:",
         createAppointmentStep3SelectDate: "la date de début",
         
         //patient/step4
@@ -189,7 +189,7 @@ var frenchStrings = {
         createAppointmentStep4UnknownRegno: "Numéro de registre national inconnu",
         
         //patient/step5
-        createAppointmentStep5Info: "Vous pouvez trouver votre rendez-vous si vous cliquez sur le bouton \"Regarder les réservations\" dans le menu principal",
+        createAppointmentStep5Info: "Vous pouvez trouver votre rendez-vous si vous cliquez sur le bouton \"Regarder les rendez-vous\" dans le menu principal",
         createAppointmentStep5Thanks: "vous remercie pour utiliser cette app",
         createAppointmentStep5End: "Fin"
 };
