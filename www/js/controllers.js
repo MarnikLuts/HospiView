@@ -168,12 +168,12 @@ angular.module('myApp.controllers', []).
                     } else
                         $scope.failedServers.push($scope.selectedUser.servers[i].hosp_short_name);
                 }
-
+                console.log(promises);
                 $q.all(promises).then(function(responses) {
                     if (responses.length == 0)
                         authFailed = true;
                     for (var r = 0; r < responses.length; r++) {
-                        var json = parseJson(responses[r].data);
+                        var json = parseJson(responses[r]);
                         if (json.Authentication.Header.StatusCode != 1) {
                             $scope.failedServers.push(validServers[r].hosp_short_name);
                             if ($scope.failedServers.length === $scope.selectedUser.servers.length)
@@ -296,7 +296,7 @@ angular.module('myApp.controllers', []).
                     return dataFactory.searchReservations(server);
                 }, error).then(function(reservations) {
                     addReservations(reservations);
-                });
+                }, error);
             }
 
             /**
@@ -345,6 +345,7 @@ angular.module('myApp.controllers', []).
                 $scope.loggingIn = false;
                 $scope.error = true;
                 $scope.errormessage = data;
+                callOfflineModal();
             }
 
             /**
@@ -2169,7 +2170,7 @@ angular.module('myApp.controllers', []).
                 if ($scope.userFunctionSelect === $rootScope.getLocalizedString('newFunctionPatient')) {
                     hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, $scope.phone, $rootScope.languageID, 0, $scope.server.hosp_url)
                             .then(function(response) {
-                                var json = parseJson(response.data);
+                                var json = parseJson(response);
                                 $scope.accountTrue = true;
                                 $scope.accountFalse = false;
                                 console.log(json);
@@ -2651,7 +2652,7 @@ angular.module('myApp.controllers', []).
              .then(function(responses) {*/
             $scope.reservationPromises = [];
             /*for (var i in responses)
-             jsonServerLocations.push(parseJson(responses[i].data));*/
+             jsonServerLocations.push(parseJson(responses[i]));*/
 
             $scope.reservationList = [];
             for (var s = 0; s < $rootScope.currentServers.length; s++) {
@@ -2669,7 +2670,8 @@ angular.module('myApp.controllers', []).
                     .then(function(responses) {
                         console.log(responses);
                         for (var r = 0; r < responses.length; r++) {
-                            var json = parseJson(responses[r].data);
+                            console.log(responses);
+                            var json = parseJson(responses[r]);
                             console.log(json);
                             if (json.ReservationsOnPatient.Header.StatusCode == 1 && json.ReservationsOnPatient.Detail) {
 
@@ -2736,7 +2738,7 @@ angular.module('myApp.controllers', []).
                 for (var server in $rootScope.currentServers) {
                     hospiviewFactory.getLogin($scope.firstName, $rootScope.currentServers[server].reg_no, $scope.emailAddress, '021545214', $rootScope.languageID, 0, $scope.server.hosp_url)
                             .then(function(response) {
-                                var json = parseJson(response.data);
+                                var json = parseJson(response);
                                 $scope.accountTrue = true;
                                 $scope.accountFalse = false;
                                 console.log(json);
@@ -2767,7 +2769,7 @@ angular.module('myApp.controllers', []).
                     $scope.dataLoading = true;
                     hospiviewFactory.getUnitAndDepList($rootScope.currentServers[index].uuid, 1, $rootScope.currentServers[index].hosp_url)
                             .then(function(response) {
-                                var json = parseJson(response.data),
+                                var json = parseJson(response),
                                         defer = $q.defer();
                                 console.log(json);
                                 if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail != null) {
@@ -2803,7 +2805,7 @@ angular.module('myApp.controllers', []).
                         if ($scope.unitList.length != 0) {
                             hospiviewFactory.getUnitDepGroups($rootScope.currentServers[index].uuid, $rootScope.currentServers[index].hosp_url)
                                     .then(function(response) {
-                                        var json = parseJson(response.data);
+                                        var json = parseJson(response);
                                         console.log(json);
                                         if (json.UnitDepGroups.Header.StatusCode == 1 && json.UnitDepGroups.Detail != null) {
                                             $scope.groupList = json.UnitDepGroups.Detail.Group;
@@ -2865,15 +2867,15 @@ angular.module('myApp.controllers', []).
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;
                     switch ($rootScope.type) {
-                    case 0:
-                    case 1:
-                        $location.path('/doctor/appointmentsView');
-                        break;
-                    case 2:
-                    case 3:
-                        $location.path('/patient/mainmenu');
-                        break;
-                }
+                        case 0:
+                        case 1:
+                            $location.path('/doctor/appointmentsView');
+                            break;
+                        case 2:
+                        case 3:
+                            $location.path('/patient/mainmenu');
+                            break;
+                    }
                 }
                 console.log(data);
                 $scope.error = true;
@@ -3093,7 +3095,9 @@ angular.module('myApp.controllers', []).
                 } else {
                     hospiviewFactory.getTypes($rootScope.currentServers[$rootScope.newAppointment.server].uuid, unit_id, dep_id, $rootScope.newAppointment.units[unitTypesRequested].Header.globaltypes, $rootScope.newAppointment.units[unitTypesRequested].Header.the_online, $rootScope.languageID, $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url)
                             .then(function(response) {
-                                var json = parseJson(response.data);
+                                console.log(response);
+                                var json = parseJson(response);
+                                console.log(json);
                                 if (json.TypesOnUnit.Header.StatusCode === "1") {
 
                                     //Status is OK
@@ -3261,15 +3265,15 @@ angular.module('myApp.controllers', []).
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;
                     switch ($rootScope.type) {
-                    case 0:
-                    case 1:
-                        $location.path('/doctor/appointmentsView');
-                        break;
-                    case 2:
-                    case 3:
-                        $location.path('/patient/mainmenu');
-                        break;
-                }
+                        case 0:
+                        case 1:
+                            $location.path('/doctor/appointmentsView');
+                            break;
+                        case 2:
+                        case 3:
+                            $location.path('/patient/mainmenu');
+                            break;
+                    }
                 }
                 console.log(data);
                 $scope.error = true;
@@ -3400,12 +3404,13 @@ angular.module('myApp.controllers', []).
                             "1,2,3,4,5,6,7",
                             0,
                             $rootScope.languageID));
+                     console.log(retrievedRequests);
                 }
-
 
                 $q.all(retrievedRequests).then(function(requests) {
                     for (var requestCount in requests) {
-                        var json = parseJson(requests[requestCount].data);
+                        var json = parseJson(requests[requestCount]);
+                        console.log(json);
                         if (json.Proposals.Header.StatusCode != 1) {
                             error("statuscode not 1");
                         }
@@ -3658,10 +3663,10 @@ angular.module('myApp.controllers', []).
             };
 
 
-            var standardQuestionsJson = parseJson($rootScope.questions[0].data);
-            var extraQuestionsJson = parseJson($rootScope.questions[1].data);
+            var standardQuestionsJson = parseJson($rootScope.questions[0]);
+            var extraQuestionsJson = parseJson($rootScope.questions[1]);
             if ($rootScope.type == 2)
-                var answersJson = parseJson($rootScope.questions[2].data);
+                var answersJson = parseJson($rootScope.questions[2]);
 
             $rootScope.newAppointment.patientInfo = {};
 
@@ -4012,7 +4017,7 @@ angular.module('myApp.controllers', []).
             }
 
             function checkMustField(number) {
-                var standardQuestionsJson = parseJson($rootScope.questions[0].data);
+                var standardQuestionsJson = parseJson($rootScope.questions[0]);
                 var mustFieldsArray = standardQuestionsJson.ActiveFieldsOnUnit.Detail.MustFields.split(",");
 
                 if (mustFieldsArray.indexOf(number) !== -1)
@@ -4071,7 +4076,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
 
                     $q.all(confirmed).then(function(response) {
-                        var json = parseJson(response[0].data);
+                        var json = parseJson(response[0]);
                         console.log(json);
                         $scope.PostAnswers.PostAnswers.Header.Reservation_Id = json.AppointmentConfirmed.Detail.id;
                         $scope.PostAnswers.PostAnswers.Header.Unit_Id = json.AppointmentConfirmed.Detail.unit_id;

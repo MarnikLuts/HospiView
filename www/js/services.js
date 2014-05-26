@@ -23,7 +23,11 @@ angular.module('myApp.services', []).
          * @param {type} base_url
          * @returns {_L13.Anonym$1}.
          */
-        factory('hospiviewFactory', function($http, $rootScope, kiosk_url) {
+        factory('hospiviewFactory', function($http, $rootScope, $q, $timeout, kiosk_url) {
+            var count = 0;
+
+
+
             return{
                 /**
                  * Gets All the HospiView servers
@@ -31,7 +35,28 @@ angular.module('myApp.services', []).
                  */
                 getHospiViewServerList: function() {
                     $rootScope.requestCounter++;
-                    return $http.get("http://agenda.agendaview.be/cfcs/webservices/agendaview/hospiview_servers.cfc?method=GetHospiviewServerList");
+                    var requestString = "http://agenda.agendaview.be/cfcs/webservices/agendaview/hospiview_servers.cfc?method=GetHospiviewServerList";
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Gets a UUID from the server if the given username and password are valid
@@ -44,7 +69,28 @@ angular.module('myApp.services', []).
                  */
                 getAuthentication: function(username, password, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetAuthentication&user_login=" + username + "&user_password=" + password + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetAuthentication&user_login=" + username + "&user_password=" + password + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Checks if the given Hospiview server has a kiosk webservice
@@ -54,7 +100,28 @@ angular.module('myApp.services', []).
                  */
                 checkForKiosk: function(server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + kiosk_url + "method=GetAuthentication&user_login=user&user_password=pass&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + kiosk_url + "method=GetAuthentication&user_login=user&user_password=pass&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Gets all units and departments for which the requesting user has permissions
@@ -65,7 +132,28 @@ angular.module('myApp.services', []).
                  */
                 getUnitAndDepList: function(uuid, The_Online, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetUnitAndDepList&UUID=" + uuid + "&The_Online=" + The_Online + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetUnitAndDepList&UUID=" + uuid + "&The_Online=" + The_Online + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Gets all unit groups for which the requesting user has permissions
@@ -76,7 +164,28 @@ angular.module('myApp.services', []).
                  */
                 getUnitDepGroups: function(uuid, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=getUnitDepGroups&UUID=" + uuid + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=getUnitDepGroups&UUID=" + uuid + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Gets all the reservation from a given unit and department between the start date and end date
@@ -91,7 +200,28 @@ angular.module('myApp.services', []).
                  */
                 getReservationsOnUnit: function(uuid, unit_id, dep_id, start_date, end_date, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetReservationsOnUnit&UUID=" + uuid + "&unit_id=" + unit_id + "&dep_id=" + dep_id + "&start_date=" + start_date + "&end_date=" + end_date + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetReservationsOnUnit&UUID=" + uuid + "&unit_id=" + unit_id + "&dep_id=" + dep_id + "&start_date=" + start_date + "&end_date=" + end_date + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Gets the reservations for a particular patient
@@ -111,7 +241,28 @@ angular.module('myApp.services', []).
                  */
                 getReservationsOnPatient: function(uuid, pid_or_regno, patsearchvar, start_date, end_date, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetReservationsOnPatient&UUID=" + uuid + "&pid_or_regno=" + pid_or_regno + "&patsearchvar=" + patsearchvar + "&start_date=" + start_date + "&end_date=" + end_date + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetReservationsOnPatient&UUID=" + uuid + "&pid_or_regno=" + pid_or_regno + "&patsearchvar=" + patsearchvar + "&start_date=" + start_date + "&end_date=" + end_date + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Gets the dates for public holidays
@@ -124,7 +275,28 @@ angular.module('myApp.services', []).
                  */
                 getPublicHolidays: function(Language_Id, year, month, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetPublicHolidays&Language_Id=" + Language_Id + "&Year=" + year + "&Month=" + month + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetPublicHolidays&Language_Id=" + Language_Id + "&Year=" + year + "&Month=" + month + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Gets all the dates where doctors are reported as absent
@@ -140,7 +312,28 @@ angular.module('myApp.services', []).
                  */
                 getUnitAbsentDays: function(uuid, year, month, unit_id, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetUnitAbsentDays&UUID=" + uuid + "&Year=" + year + "&Month=" + month + "&Unit_Id=" + unit_id + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetUnitAbsentDays&UUID=" + uuid + "&Year=" + year + "&Month=" + month + "&Unit_Id=" + unit_id + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Gets all the localized strings that are stored remotely
@@ -159,8 +352,28 @@ angular.module('myApp.services', []).
                  */
                 getLanguageStrings: function(language_Id, listOfPidsSids, server_url) {
                     $rootScope.requestCounter++;
-                    console.log(server_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids + "&count=" + $rootScope.requestCounter);
-                    return $http.get(server_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetLanguageStrings&Language_Id=" + language_Id + "&ListOfPidsSids=" + listOfPidsSids + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Registers a new patient using the kiosk service
@@ -179,7 +392,28 @@ angular.module('myApp.services', []).
                  */
                 getLogin: function(USER_NAME, USER_REGNO, USER_EMAIL, USER_MOB, LanguageId, Update_NameEmailTel, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetLogin&USER_NAME=" + USER_NAME + "&USER_REGNO=" + USER_REGNO + "&USER_EMAIL=" + USER_EMAIL + "&USER_MOB=" + USER_MOB + "&LANGUAGE_ID=" + LanguageId + "&Update_NameEmailTel=" + Update_NameEmailTel + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetLogin&USER_NAME=" + USER_NAME + "&USER_REGNO=" + USER_REGNO + "&USER_EMAIL=" + USER_EMAIL + "&USER_MOB=" + USER_MOB + "&LANGUAGE_ID=" + LanguageId + "&Update_NameEmailTel=" + Update_NameEmailTel + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Gets all the possible reservation types of the given unit and department
@@ -195,8 +429,28 @@ angular.module('myApp.services', []).
                  */
                 getTypes: function(UUID, Unit_Id, Dep_Id, GlobalTypes, The_Online, Language_Id, server_url) {
                     $rootScope.requestCounter++;
-                    console.log("types requested for unit: " + Unit_Id + " dep: " + Dep_Id);
-                    return $http.get(server_url + "method=GetTypesOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&GlobalTypes=" + GlobalTypes + "&The_Online=" + The_Online + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetTypesOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&GlobalTypes=" + GlobalTypes + "&The_Online=" + The_Online + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Get proposals for placing a reservation.
@@ -218,7 +472,28 @@ angular.module('myApp.services', []).
                  */
                 getProposals: function(server_url, UUID, Unit_Id, Dep_Id, UnitType_Id, STitle, Additional_Info, GlobalTypes, Start_Date, Start_Time, Active_Days, Include_Today, Language_id) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days + "&Include_Today=" + Include_Today + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetProposals&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&UnitType_Id=" + UnitType_Id + "&STitle=" + STitle + "&Additional_Info=" + Additional_Info + "&GlobalTypes=" + GlobalTypes + "&Start_Date=" + Start_Date + "&Start_Time=" + Start_Time + "&Active_Days=" + Active_Days + "&Include_Today=" + Include_Today + "&Language_id=" + Language_id + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Deleted preserved proposals so the slots are free again.
@@ -231,7 +506,28 @@ angular.module('myApp.services', []).
                  */
                 getProposalsRemoved: function(server_url, UUID, Unit_Id, Dep_Id) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetProposalsRemoved&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetProposalsRemoved&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Get the basic questions for the user to create an appointment.
@@ -244,7 +540,28 @@ angular.module('myApp.services', []).
                  */
                 getActiveFieldsOnUnit: function(UUID, Unit_Id, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetActiveFieldsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetActiveFieldsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Get the information about the patient to fill out the fields
@@ -259,7 +576,28 @@ angular.module('myApp.services', []).
                  */
                 getPatientLookup: function(UUID, Unit_Id, Reg_No, Language_Id, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetPatientLookup&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Reg_No=" + Reg_No + "&Language_Id=" + Language_Id);
+                    var requestString = server_url + "method=GetPatientLookup&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Reg_No=" + Reg_No + "&Language_Id=" + Language_Id;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Get the extra questions the doctor has configured for the patient
@@ -274,7 +612,28 @@ angular.module('myApp.services', []).
                  */
                 getQuestionsOnUnit: function(UUID, Unit_Id, UnitType_Id, Language_Id, server_url) {
                     $rootScope.requestCounter++;
-                    return ($http.get(server_url + "method=GetQuestionsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&UnitType_Id=" + UnitType_Id + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter));
+                    var requestString = server_url + "method=GetQuestionsOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&UnitType_Id=" + UnitType_Id + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Confirm the choosen proposal resulting in creating an appointment.
@@ -301,7 +660,28 @@ angular.module('myApp.services', []).
                  */
                 getAppointmentConfirmed: function(UUID, Proposal_Id, pName, pFirstName, pBDate, pGender, pTel1, pTel2, pAddress, Reg_No, pEmail, pMemo, pUnique_PID, pDoctor, pUnique_GPID, pReferring_doctor, pReferring_GPID, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=GetAppointmentConfirmed&UUID=" + UUID + "&Proposal_Id=" + Proposal_Id + "&pName=" + pName + "&pFirstName=" + pFirstName + "&pBDate=" + pBDate + "&pGender=" + pGender + "&pTel1=" + pTel1 + "&pTel2=" + pTel2 + "&pAddress=" + pAddress + "&pReg_No=" + Reg_No + "&pEmail=" + pEmail + "&pMemo=" + pMemo + "&pUnique_PID=" + pUnique_PID + "&pDoctor=" + pDoctor + "&pUnique_GPID=" + pUnique_GPID + "&pReferring_doctor=" + pReferring_doctor + "&pReferring_GPID=" + pReferring_GPID + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=GetAppointmentConfirmed&UUID=" + UUID + "&Proposal_Id=" + Proposal_Id + "&pName=" + pName + "&pFirstName=" + pFirstName + "&pBDate=" + pBDate + "&pGender=" + pGender + "&pTel1=" + pTel1 + "&pTel2=" + pTel2 + "&pAddress=" + pAddress + "&pReg_No=" + Reg_No + "&pEmail=" + pEmail + "&pMemo=" + pMemo + "&pUnique_PID=" + pUnique_PID + "&pDoctor=" + pDoctor + "&pUnique_GPID=" + pUnique_GPID + "&pReferring_doctor=" + pReferring_doctor + "&pReferring_GPID=" + pReferring_GPID + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 },
                 /**
                  * Confirm the answers of the extra questions of the proposal.
@@ -314,7 +694,28 @@ angular.module('myApp.services', []).
                  */
                 postAnswers: function(UUID, Reservation_Id, Unit_Id, AnswersXML, server_url) {
                     $rootScope.requestCounter++;
-                    return $http.get(server_url + "method=PostAnswers&UUID=" + UUID + "&Reservation_id=" + Reservation_Id + "&Unit_id=" + Unit_Id + "&AnswersXML=" + AnswersXML + "&count=" + $rootScope.requestCounter);
+                    var requestString = server_url + "method=PostAnswers&UUID=" + UUID + "&Reservation_id=" + Reservation_Id + "&Unit_id=" + Unit_Id + "&AnswersXML=" + AnswersXML + "&count=" + $rootScope.requestCounter;
+                    var queryResults = $q.defer();
+                    function doQuery() {
+                        console.log("doQuery")
+                        $http({method: 'GET', url: requestString})
+                                .success(function(body) {
+                                    queryResults.resolve(body);
+                                })
+                                .error(function() {
+                                    if (count !== 4) {
+                                        $timeout(function() {
+                                            doQuery(requestString);
+                                        }, 1000);
+                                        count++;
+                                    } else {
+                                        count = 0;
+                                        queryResults.reject('Can not connect to server');
+                                    }
+                                });
+                    }
+                    doQuery();
+                    return queryResults.promise;
                 }
             };
         }).
@@ -342,8 +743,9 @@ angular.module('myApp.services', []).
                  */
                 setHolidays: function(responses) {
                     var defer = $q.defer();
+                    console.log(responses);
                     for (var i = 0; i < responses.length; i++) {
-                        var json = parseJson(responses[i].data);
+                        var json = parseJson(responses[i]);
                         if (json.PublicHolidays.Header.StatusCode == 1) {
                             if (!angular.isUndefined(json.PublicHolidays.Detail)) {
                                 $rootScope.publicHolidays.push(json.PublicHolidays.Detail.PublicHoliday);
@@ -364,7 +766,7 @@ angular.module('myApp.services', []).
                  */
                 setSearchUnits: function(response, server) {
                     var defer = $q.defer();
-                    var json = parseJson(response.data);
+                    var json = parseJson(response);
                     if (json.UnitsAndDeps.Header.StatusCode == 1) {
                         var units = json.UnitsAndDeps.Detail.Unit;
                         for (var i = 0; i < units.length; i++) {
@@ -392,7 +794,7 @@ angular.module('myApp.services', []).
 
                     $q.all(promises).then(function(responses) {
                         for (var j = 0; j < responses.length; j++) {
-                            var json = parseJson(responses[j].data);
+                            var json = parseJson(responses[j]);
                             if (json.UnitAbsentdays.Header.StatusCode == 1) {
                                 if (!angular.isUndefined(json.UnitAbsentdays.Detail)) {
                                     for (var a = 0; a < json.UnitAbsentdays.Detail.AbsentDay.length; a++) {
@@ -441,8 +843,8 @@ angular.module('myApp.services', []).
                     }
                     $q.all(promises).then(function(responses) {
                         for (var l = 0; l < responses.length; l++) {
-                            console.log(responses[l].data);
-                            var json = parseJson(responses[l].data);
+                            console.log(responses[l]);
+                            var json = parseJson(responses[l]);
                             var reservation;
                             console.log(json);
                             if (json) {
@@ -614,7 +1016,7 @@ angular.module('myApp.services', []).
                             return self.searchReservations(server);
                         }, error).then(function(reservations) {
                             addReservations(reservations);
-                        });
+                        }, error);
                     }
 
                     function addReservations(reservations) {
@@ -653,9 +1055,7 @@ angular.module('myApp.services', []).
                     }
 
                     function error(data) {
-                        var loggingIn = false;
-                        var error = true;
-                        var errormessage = data;
+                        
                     }
                 }
             };
@@ -692,7 +1092,7 @@ angular.module('myApp.services', []).
 
             $q.all(promises).then(function(responses) {
                 for (var j = 0; j < responses.length; j++) {
-                    var json = parseJson(responses[j].data),
+                    var json = parseJson(responses[j]),
                             languageString = json.LanguageStrings.Detail.LanguageString;
 
                     if (json.LanguageStrings.Header.StatusCode === "1") {
