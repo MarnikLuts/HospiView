@@ -3733,21 +3733,38 @@ angular.module('myApp.controllers', []).
                     extraQuestionsJson = parseJson(responses[1]);
 
                     console.log(standardQuestionsJson);
-
-                    var appendString = '<table ng-form="subform" class="appointmentFormTable" id="questionTable">';
+                    
+                    
+                    $scope.disableRegno = true;
+                    var regNoField = "";
+                    
+                    var appendString = '<table ng-form="subform" class="appointmentFormTable" id="questionTable"><tbody>';
 
                     if (standardQuestionsJson.ActiveFieldsOnUnit.Header.StatusCode == 1 && standardQuestionsJson.ActiveFieldsOnUnit.Detail) {
                         var activeFieldsArray = standardQuestionsJson.ActiveFieldsOnUnit.Detail.ActiveFields.split(",");
                         console.log(activeFieldsArray);
                         var mustField;
-
+                        
                         if (activeFieldsArray.indexOf("26") !== -1) {
                             mustField = checkMustField("26");
+                            
+                            /**
+                            * Enable the possibility to edit the national number
+                            * if the user is a doctor.
+                            */
+                            if ($rootScope.type === 3 || $rootScope.type === 0 || $rootScope.type === 1){
+                                $scope.disableRegno = false;
+                                
+                                regNoField = '<button class="btn btn-primary btn-sm" ng-click="doPatientLookup()" style="width: 10%;" ><span class="glyphicon glyphicon-search"></span></button>'
+                                       + '<input type="number" name="reg_no"  class="form-control form-control-light input-sm" ng-model="nationalRegister" ng-disabled="disableRegno" checknational/>'
+                                       + '<label><input type="checkbox"  ng-model="disableRegno"/>Onbekend nummer</label>';
+                            }else{
+                                regNoField = '<input type="text" name="reg_no"  class="form-control input-sm" ng-model="nationalRegister" ' + mustField[1] + ' ng-disabled="disableRegno" checknational/>';
+                            }
+                            
                             appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('reg_no') + mustField[0] + '</b></p>'
-                                    + '</td><td><input type="text" name="reg_no" class="form-control" ng-model="nationalRegister" ' + mustField[1] + ' ' + disableRegno + ' checknational/>';
-
-                            appendString += lookupButton;
-
+                                    + '</td><td>' + regNoField;
+                            
                             if (mustField[1] === 'required')
                                 appendString = appendString + '<div class="alert alert-danger" ng-show="showInvalidFields && subform.reg_no.$error.required">'
                                         + $rootScope.getLocalizedString('isRequired') + '</div>';
@@ -4011,7 +4028,7 @@ angular.module('myApp.controllers', []).
 
                     }
 
-                    appendString = appendString + '</table><p class="formLabel">' + $rootScope.getLocalizedString('createAppointmentStep4FieldsRequired') + '</p>'
+                    appendString = appendString + '</tbody></table><p class="formLabel">' + $rootScope.getLocalizedString('createAppointmentStep4FieldsRequired') + '</p>'
                             + '<div class="text-center">'
                             + '<button type="submit" class="btn btn-xl" ng-click="next(subform.$valid)" ' + '">'
                             + $rootScope.getLocalizedString('createAppointmentNext') + '</button></div>';
@@ -4020,20 +4037,10 @@ angular.module('myApp.controllers', []).
                     $compile(compiledHtml)($scope);
                 }, error);
             }
-
-            /**
-             * Disable to the possibility to edit the national number
-             * if the user is a patiënt.
-             */
-            var disableRegno = "disabled",
-                    lookupButton = "";
-            if ($rootScope.type === 3 || $rootScope.type === 0 || $rootScope.type === 1) {
-                disableRegno = "";
-                lookupButton = "<button class=\"btn btn-default\" ng-click=\"doPatientLookup()\"><span class=\"glyphicon glyphicon-search\"></span></button>";
-            } else if ($rootScope.type === 2) {
+            
+            if($rootScope.type === 2){
                 $scope.doPatientLookup();
             }
-
             setQuestions();
 
             /**
@@ -4075,8 +4082,7 @@ angular.module('myApp.controllers', []).
                             radioButtonBooleanChecks = false;
                     }
                 }
-
-
+                
                 if (formValid && radioButtonBooleanChecks) {
                     var confirmed = [];
                     $rootScope.newAppointment.patientInfo.reg_no = $scope.nationalRegister;
