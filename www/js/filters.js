@@ -26,9 +26,17 @@ angular.module('myApp.filters', []).
             };
         }).
         filter('orderProposals', function() {
-            return function(proposals, filters) {
-                console.log("filters: " + JSON.stringify(filters));
+            return function(proposals, filters, updateDay) {
                 var filtered = [];
+                if(filters&&!filters.updateDay){
+                   filters["0"] = true;
+                    filters["1"] = true;
+                    filters["2"] = true;
+                    filters["3"] = true;
+                    filters["4"] = true;
+                    filters["5"] = true;
+                    filters["6"] = true; 
+                }
                 for (var proposal in proposals) {
                     for (var i = 0; i <= 6; i++) {
                         if (proposals[proposal].setDayNumber === i && filters[i] === true &&
@@ -49,9 +57,8 @@ angular.module('myApp.filters', []).
                         }
                     }
                 }
-                
                 //Disables the day buttons when the day is not in the list
-                if(filters){
+                if(filters&&!filters.updateDay){
                     filters["0"] = false;
                     filters["1"] = false;
                     filters["2"] = false;
