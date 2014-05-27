@@ -2,7 +2,7 @@ var dutchStrings = {
         //Login screen
         loginGreeting: "Welkom",
         loginUserSelectDefault: "Selecteer een gebruiker",
-        loginServerSelectDefault: "Selecteer een ziekenhuis",
+        loginServerSelectDefault: "Selecteer een instelling",
         loginAutomaticallyEnterPassword: "Wachtwoord automatisch invullen?",
         loginUsername: "Gebruikersnaam",
         loginPassword: "Wachtwoord",
@@ -158,7 +158,7 @@ var dutchStrings = {
         patientAppointmentsViewFacility: "Instelling",
         
         //patient/step1
-        createAppointmentStep1Server: "Ziekenhuis",
+        createAppointmentStep1Server: "Instelling",
         createAppointmentStep1SelectDoctor: "Selecteer een dokter",
         createAppointmentStep1SelectSection: "Selecteer een afdeling",
                 

@@ -2,7 +2,7 @@ var englishStrings = {
         //Login screen
         loginGreeting: "Welcome",
         loginUserSelectDefault: "Choose a user",
-        loginServerSelectDefault: "Choose a hospital",
+        loginServerSelectDefault: "Choose a facility",
         loginAutomaticallyEnterPassword: "Automatically enter password?",
         loginUsername: "Username",
         loginPassword: "Password",
@@ -158,7 +158,7 @@ var englishStrings = {
         patientAppointmentsViewFacility: "Facility",
         
         //patient/step1
-        createAppointmentStep1Server: "Hospital",
+        createAppointmentStep1Server: "Facility",
         createAppointmentStep1SelectDoctor: "Select a doctor",
         createAppointmentStep1SelectSection: "Select a section",
                 

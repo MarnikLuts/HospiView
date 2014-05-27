@@ -721,7 +721,7 @@ angular.module('myApp.controllers', []).
              * @returns {Boolean}           true will make the reservation visible
              */
             $scope.unitAndDepFilterFunction = function(reservation) {
-                if ($rootScope.unitFilter === '') {
+                if (!$rootScope.unitFilter) {
                     return true;
                 } else {
                     if ($rootScope.unitFilter.type === "group") {
@@ -733,8 +733,11 @@ angular.module('myApp.controllers', []).
                         return false;
                     } else {
                         if (reservation.unit_name.indexOf($rootScope.unitFilter.Header.name) != -1) {
-                            if (reservation.dep_name.indexOf($rootScope.depFilter.dep_name) != -1 || $rootScope.depFilter === '')
+                            if(!$rootScope.depFilter)
                                 return true;
+                            else
+                                if(reservation.dep_name.indexOf($rootScope.depFilter.dep_name) != -1)
+                                    return true;
                         }
                         return false;
                     }
@@ -1175,7 +1178,6 @@ angular.module('myApp.controllers', []).
              * 25.03.2014 Stijn Ceunen
              * Gets the servers the user saved and puts them in the scope.
              */
-            var user = JSON.parse(localStorage.getItem($rootScope.user));
             $scope.servers = $rootScope.currentServers;
 
             /**
@@ -1303,22 +1305,23 @@ angular.module('myApp.controllers', []).
                     $scope.disableUnits = false;
                     $scope.units = $rootScope['allUnitsAndGroups' + $scope.serverFilter.id];
                     var unitOfServer = false;
-                    if (angular.isDefined($rootScope.unitFilter.Header))
-                        for (var i = 0; i < $scope.units.length; i++) {
-                            if ($rootScope.unitFilter.Header.name === $scope.units[i].Header.name) {
-                                if ($scope.units[i].type === "group") {
-                                    if ($rootScope.unitFilter.Header.group_id == $scope.units[i].Header.group_id) {
-                                        unitOfServer = true;
-                                        break;
-                                    }
-                                } else {
-                                    if ($rootScope.unitFilter.Header.unit_id == $scope.units[i].Header.unit_id) {
-                                        unitOfServer = true;
-                                        break;
+                    if ($rootScope.unitFilter)
+                        if ($rootScope.unitFilter.Header)
+                            for (var i = 0; i < $scope.units.length; i++) {
+                                if ($rootScope.unitFilter.Header.name === $scope.units[i].Header.name) {
+                                    if ($scope.units[i].type === "group") {
+                                        if ($rootScope.unitFilter.Header.group_id == $scope.units[i].Header.group_id) {
+                                            unitOfServer = true;
+                                            break;
+                                        }
+                                    } else {
+                                        if ($rootScope.unitFilter.Header.unit_id == $scope.units[i].Header.unit_id) {
+                                            unitOfServer = true;
+                                            break;
+                                        }
                                     }
                                 }
                             }
-                        }
                     if (!unitOfServer) {
                         $scope.unitFilter = '';
                         unitOfServer = false;
@@ -1354,7 +1357,8 @@ angular.module('myApp.controllers', []).
                     $scope.departments = $scope.unitFilter.Detail.Dep;
                     var departmentOfUnit = false;
 
-                    if (angular.isDefined($rootScope.depFilter))
+                    console.log($rootScope.depFilter);
+                    if ($rootScope.depFilter)
                         for (var i = 0; i < $scope.departments.length; i++) {
                             if ($rootScope.depFilter.dep_name === $scope.departments[i].dep_name && $rootScope.depFilter.dep_id == $scope.departments[i].dep_id) {
                                 departmentOfUnit = true;
@@ -2628,7 +2632,7 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('patient/appointmentsView');
             };
-            
+
             $scope.images = ["img/TEMPlogos/BZIO.jpg", "img/TEMPlogos/SOMEDI.jpg", "img/TEMPlogos/RUSTENBURG.JPG"];
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory, $q) {
@@ -3261,7 +3265,7 @@ angular.module('myApp.controllers', []).
                     $rootScope.newAppointment.locations = [];
                     for (var i = 0; i < $scope.locations.length; i++) {
 //                        if ($scope.locations[i].checked)
-                        if($scope.locations[i].location_name)
+                        if ($scope.locations[i].location_name)
                             $rootScope.newAppointment.locations.push($scope.locations[i]);
                     }
                     $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
@@ -3739,38 +3743,38 @@ angular.module('myApp.controllers', []).
                     extraQuestionsJson = parseJson(responses[1]);
 
                     console.log(standardQuestionsJson);
-                    
-                    
+
+
                     $scope.disableRegno = true;
                     var regNoField = "";
-                    
+
                     var appendString = '<table ng-form="subform" class="appointmentFormTable" id="questionTable"><tbody>';
 
                     if (standardQuestionsJson.ActiveFieldsOnUnit.Header.StatusCode == 1 && standardQuestionsJson.ActiveFieldsOnUnit.Detail) {
                         var activeFieldsArray = standardQuestionsJson.ActiveFieldsOnUnit.Detail.ActiveFields.split(",");
                         console.log(activeFieldsArray);
                         var mustField;
-                        
+
                         if (activeFieldsArray.indexOf("26") !== -1) {
                             mustField = checkMustField("26");
-                            
+
                             /**
-                            * Enable the possibility to edit the national number
-                            * if the user is a doctor.
-                            */
-                            if ($rootScope.type === 3 || $rootScope.type === 0 || $rootScope.type === 1){
+                             * Enable the possibility to edit the national number
+                             * if the user is a doctor.
+                             */
+                            if ($rootScope.type === 3 || $rootScope.type === 0 || $rootScope.type === 1) {
                                 $scope.disableRegno = false;
-                                
+
                                 regNoField = '<div class="input-group" style="margin-right: -19px;"><span class="input-group-btn"><button type="button" class="btn btn-primary step4-search" ng-click="doPatientLookup()" ><span class="glyphicon glyphicon-search"></span></button></span>'
-                                       + '<input type="number" name="reg_no"  class="form-control form-control-step4" ng-model="nationalRegister" ng-disabled="disableRegno" checknational/></div>'
-                                       + '<label class="icasaCheckbox icasaCheckbox-normal" ng-class="{\'icasaCheckboxChecked\':disableRegno, \'icasaCheckboxUnChecked\':!disableRegno}"><input type="checkbox" ng-model="disableRegno" class="invisible" />{{ getLocalizedString(\'createAppointmentStep4UnknownRegno\') }}</label>';
-                            }else{
+                                        + '<input type="number" name="reg_no"  class="form-control form-control-step4" ng-model="nationalRegister" ng-disabled="disableRegno" checknational/></div>'
+                                        + '<label class="icasaCheckbox icasaCheckbox-normal" ng-class="{\'icasaCheckboxChecked\':disableRegno, \'icasaCheckboxUnChecked\':!disableRegno}"><input type="checkbox" ng-model="disableRegno" class="invisible" />{{ getLocalizedString(\'createAppointmentStep4UnknownRegno\') }}</label>';
+                            } else {
                                 regNoField = '<input type="text" name="reg_no"  class="form-control input-sm" ng-model="nationalRegister" ' + mustField[1] + ' ng-disabled="disableRegno" checknational/>';
                             }
-                            
+
                             appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('reg_no') + mustField[0] + '</b></p>'
                                     + '</td><td>' + regNoField;
-                            
+
                             if (mustField[1] === 'required')
                                 appendString = appendString + '<div class="alert alert-danger" ng-show="showInvalidFields && subform.reg_no.$error.required">'
                                         + $rootScope.getLocalizedString('isRequired') + '</div>';
@@ -4043,8 +4047,8 @@ angular.module('myApp.controllers', []).
                     $compile(compiledHtml)($scope);
                 }, error);
             }
-            
-            if($rootScope.type === 2){
+
+            if ($rootScope.type === 2) {
                 $scope.doPatientLookup();
             }
             setQuestions();
@@ -4088,7 +4092,7 @@ angular.module('myApp.controllers', []).
                             radioButtonBooleanChecks = false;
                     }
                 }
-                
+
                 if (formValid && radioButtonBooleanChecks) {
                     var confirmed = [];
                     $rootScope.newAppointment.patientInfo.reg_no = $scope.nationalRegister;
@@ -4119,7 +4123,7 @@ angular.module('myApp.controllers', []).
                     $q.all(confirmed).then(function(response) {
                         var json = parseJson(response[0]);
                         console.log(json);
-                        if(angular.isDefined($scope.PostAnswers)){
+                        if (angular.isDefined($scope.PostAnswers)) {
                             $scope.PostAnswers.PostAnswers.Header.Reservation_Id = json.AppointmentConfirmed.Detail.id;
                             $scope.PostAnswers.PostAnswers.Header.Unit_Id = json.AppointmentConfirmed.Detail.unit_id;
                             console.log($scope.PostAnswers);
