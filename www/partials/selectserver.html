@@ -99,8 +99,10 @@
                 <option value="">- {{ getLocalizedString('newFunctionSelectDefault') }} -</option>
             </select>
         </div>
-        
-        <div class="form-group" ng-show="userFunctionSelected&&accountFalse">
+        <div class="form-group" ng-show="userFunctionSelected&&userFunctionSelect!==getLocalizedString('newFunctionPatient')&&accountFalse">
+            <p>{{getLocalizedString('newUserFunctionNotSupported')}}</p>
+        </div>
+        <div class="form-group" ng-show="userFunctionSelected&&userFunctionSelect===getLocalizedString('newFunctionPatient')&&accountFalse">
             <p>{{ getLocalizedString('newUserEnterDetails') }}</p>
             <form name="createAccountForm" novalidate ng-submit="requestAccount()">
                 <div class="form-group">
@@ -198,7 +200,7 @@
                 </div>
                
                 <div class="form-group text-center">
-                    <button type="submit" ng-disabled="createAccountForm.$invalid" class="btn btn-xl">{{ getLocalizedString('newUserRequest') }}</button>
+                    <button type="submit" ng-disabled="createAccountForm.$invalid||requestingUser" class="btn btn-xl has-spinner"><span id="newUserRequestSpinner" class="glyphicon glyphicon-refresh hiddenBlock"></span>{{ getLocalizedString('newUserRequest') }}</button>
                 </div>
             </form>
         </div>

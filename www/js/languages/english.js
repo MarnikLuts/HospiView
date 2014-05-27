@@ -2,7 +2,7 @@ var englishStrings = {
         //Login screen
         loginGreeting: "Welcome",
         loginUserSelectDefault: "Choose a user",
-        loginServerSelectDefault: "Choose a facility",
+        loginServerSelectDefault: "Choose an institution",
         loginAutomaticallyEnterPassword: "Automatically enter password?",
         loginUsername: "Username",
         loginPassword: "Password",
@@ -56,12 +56,12 @@ var englishStrings = {
         
         //Selectserver/new
         newGreeting: "Welcome to HospiView",
-        newInfo: "Select the facility you want to connect with:_"
+        newInfo: "Select the institution you want to connect with:_"
                 +"To use our demoserver, select \"Agendaview Demo\" and use the following credentials:_"
                 +"Username:_apple-user_"
                 +"Password:_apple-user",
         newServerSelectDefault: "Click here to select",
-        newServerHasAccount: "Do you have an account with this facility?",
+        newServerHasAccount: "Do you have an account with this institution?",
         newServerEnterAccount: "Enter your login details:",
         
         newFunctionSelectDefault: "Select a function",
@@ -93,6 +93,7 @@ var englishStrings = {
         newUserRizivIncorrect: "RIZIV number is not correct.",
         newUserRequest: "Request account",
         newUserRequestMessage: "You will recieve an email with your login details shortly.",
+        newUserFunctionNotSupported: "You must call the institution to request a username and password",
         
         //Validation
         isRequired: "This field is required",
@@ -155,10 +156,10 @@ var englishStrings = {
         patientAppointmentsViewNoReservations: "You don't have any appointments the next 90 days.",
         patientAppointmentsViewType: "Appointment Type",
         patientAppointmentsViewUnit: "With",
-        patientAppointmentsViewFacility: "Facility",
+        patientAppointmentsViewFacility: "Institution",
         
         //patient/step1
-        createAppointmentStep1Server: "Facility",
+        createAppointmentStep1Server: "Institution",
         createAppointmentStep1SelectDoctor: "Select a doctor",
         createAppointmentStep1SelectSection: "Select a section",
                 
@@ -192,5 +193,6 @@ var englishStrings = {
         //patient/step5
         createAppointmentStep5Info: "You can find your appointment if you click on the \"Look at appointments\" button in the main menu",
         createAppointmentStep5Thanks: " thanks you for using this app",
-        createAppointmentStep5End: "End"
+        createAppointmentStep5End: "End",
+        createAppointmentStep5AtLocation: "at"
 };

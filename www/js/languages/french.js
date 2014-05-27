@@ -93,6 +93,7 @@ var frenchStrings = {
         newUserRizivIncorrect: "Nombre de RIZIV n'est pas correct.",
         newUserRequest: "Demandez un compte",
         newUserRequestMessage: "Vous aurez reçu un courrier avec vos données de connextion.",
+        newUserFunctionNotSupported: "Vous devez appeler l' institution pour demander un nom d'utilisateur et mot de passe",
         
         //Validation
         isRequired: "Ce champ est obligatoire",
@@ -192,5 +193,6 @@ var frenchStrings = {
         //patient/step5
         createAppointmentStep5Info: "Vous pouvez trouver votre rendez-vous si vous cliquez sur le bouton \"Regarder les rendez-vous\" dans le menu principal",
         createAppointmentStep5Thanks: "vous remercie pour utiliser cette app",
-        createAppointmentStep5End: "Fin"
+        createAppointmentStep5End: "Fin",
+        createAppointmentStep5AtLocation: "à"
 };
