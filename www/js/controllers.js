@@ -3629,6 +3629,7 @@ angular.module('myApp.controllers', []).
              * valid.
              */
             $scope.showInvalidFields = false;
+            $scope.loadingStep5 = false;
 
             /**
              * The value of the model for radiobuttons will not change automatically.
@@ -4036,7 +4037,7 @@ angular.module('myApp.controllers', []).
 
                     appendString = appendString + '</tbody></table><p class="formLabel">' + $rootScope.getLocalizedString('createAppointmentStep4FieldsRequired') + '</p>'
                             + '<div class="text-center">'
-                            + '<button type="submit" class="btn btn-xl" ng-click="next(subform.$valid)" ' + '">'
+                            + '<button type="submit" ng-disabled="loadingStep5" class="btn btn-xl has-spinner" ng-click="next(subform.$valid)" "><span id="step4Spinner" class="glyphicon glyphicon-refresh hiddenBlock"></span> '
                             + $rootScope.getLocalizedString('createAppointmentNext') + '</button></div>';
 
                     var compiledHtml = $(appendString).appendTo("#step4Form");
@@ -4090,6 +4091,8 @@ angular.module('myApp.controllers', []).
                 }
                 
                 if (formValid && radioButtonBooleanChecks) {
+                    $("#step4Spinner").removeClass("hiddenBlock");
+                    $scope.loadingStep5 = true;
                     var confirmed = [];
                     $rootScope.newAppointment.patientInfo.reg_no = $scope.nationalRegister;
                     $rootScope.newAppointment.patientInfo.dateOfBirth = $scope.dateOfBirth;
@@ -4145,6 +4148,8 @@ angular.module('myApp.controllers', []).
                     }, error);
 
                 } else {
+                    $scope.loadingStep5 = false;
+                    $("#step4Spinner").addClass("hiddenBlock");
                     console.log($scope.PostAnswers);
                     $scope.showInvalidFields = true;
                     $scope.displayError = true;
@@ -4157,6 +4162,8 @@ angular.module('myApp.controllers', []).
              * @param {type} data   
              */
             function error(data) {
+                $scope.loadingStep5 = false;
+                $("#step4Spinner").addClass("hiddenBlock");
                 if (!$rootScope.isOffline) {
                     alert($rootScope.getLocalizedString("appointmentsViewPatientNoConnectionCreateAppointment"));
                     $rootScope.isOffline = true;

@@ -49,6 +49,8 @@ angular.module('myApp.filters', []).
                         }
                     }
                 }
+                
+                //Disables the day buttons when the day is not in the list
                 if(filters){
                     filters["0"] = false;
                     filters["1"] = false;
