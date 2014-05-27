@@ -871,11 +871,12 @@ angular.module('myApp.services', []).
                                             reservation.step_buttons = getSteps(reservation.unit_id);
                                             reservations.push(reservation);
                                         } else {
-                                            for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
-                                                reservation = json.ReservationsOnUnit.Detail.Reservation[s];
-                                                reservation.step_buttons = getSteps(reservation.unit_id);
-                                                reservations.push(reservation);
-                                            }
+                                            if(json.ReservationsOnUnit.Header.TotalRecords !== "0")
+                                                for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
+                                                    reservation = json.ReservationsOnUnit.Detail.Reservation[s];
+                                                    reservation.step_buttons = getSteps(reservation.unit_id);
+                                                    reservations.push(reservation);
+                                                }
                                         }
                                     } else {
                                         defer.reject($rootScope.getLocalizedString('internalError'));
