@@ -2648,13 +2648,16 @@ angular.module('myApp.controllers', []).
                 $location.path('patient/appointmentsView');
             };
 
-            $scope.images = [];
+            /*$scope.imagesAndUrls = [];
             $scope.imageUrls = ["","",""];
-            /*for(var i; i < $rootScope.currentServers.length; i++)
-                if($rootScope.currentServers.hosp_logo_url)
-                    $scope.images.push($rootScope.currentServers.hosp_logo_url);
-                if($rootScope.currentServers.hosp_promo_url)
-                    $scope.imageUrls.push($rootScope.currentServers.hosp_promo_url);*/
+            for(var i; i < $rootScope.currentServers.length; i++)
+                if($rootScope.currentServers[i].hosp_logo_url){
+                    $scope.imagesAndUrls.img.push($rootScope.currentServers[i].hosp_logo_url);
+                    if($rootScope.currentServers[i].hosp_promo_url){
+                        $scope.imagesAndUrls.url.push($rootScope.currentServers[i].hosp_promo_url);
+                        $scope.imagesAndUrls.push($rootScope.currentServers[i].hosp_logo_url)
+                    }              
+                }*/
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory, $q) {
             var searchStart = new Date(),
@@ -3234,11 +3237,7 @@ angular.module('myApp.controllers', []).
                                     }
 
                                     depTypeRequested++;
-                                    if ($rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length)
-                                        var depLength = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length;
-                                    else
-                                        var depLength = 1;
-                                    if (depTypeRequested == depLength) {
+                                    if (depTypeRequested == $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length) {
                                         depTypeRequested = 0;
                                         unitTypesRequested++;
                                     }
@@ -3372,17 +3371,9 @@ angular.module('myApp.controllers', []).
                 var unitLength = $rootScope.newAppointment.units.length;
             
             for (var i = 0; i < unitLength; i++) {
-                if(!$rootScope.newAppointment.units[i].Detail.Dep.length)
-                    var depLength = 1;
-                else
-                    var depLength = $rootScope.newAppointment.units[i].Detail.Dep.length;
-                for (var j = 0; j < depLength; j++) {
+                for (var j = 0; j < $rootScope.newAppointment.units[i].Detail.Dep.length; j++) {
                     var duplicate = false;
-                    if(depLength === 1)
-                        var depIdValue = $rootScope.newAppointment.units[i].Detail.Dep.dep_id;
-                    else
-                        var depIdValue = $rootScope.newAppointment.units[i].Detail.Dep[j].dep_id;
-                    
+                    var depIdValue = $rootScope.newAppointment.units[i].Detail.Dep[j].dep_id;
                     if ($rootScope.newAppointment.type.dep_id.indexOf(depIdValue) != -1) {
                         for (var k = 0; k < $scope.unitList.length; k++) {
                             if ($scope.unitList[k].Header.unit_id === $rootScope.newAppointment.units[i].Header.unit_id)
@@ -3434,6 +3425,7 @@ angular.module('myApp.controllers', []).
                 }
                 for (var i = 0; i < $rootScope.newAppointment.type.unit_id.length; i++) {
                     for (var j = 0; j < unitLength; j++) {
+                        console.log($rootScope.newAppointment.units);
                         if ($rootScope.newAppointment.type.unit_id[i] == $rootScope.newAppointment.units[j].Header.unit_id) {
                             globalTypes = $rootScope.newAppointment.units[j].Header.globaltypes;
                         }
@@ -3569,10 +3561,11 @@ angular.module('myApp.controllers', []).
                              }*/
                         }
                     }
-
+                    console.log(new Date(proposals[proposal].the_date).getDay());
                     $scope.proposals.push(proposals[proposal]);
                     $scope.filters[new Date(proposals[proposal].the_date).getDay()] = true;
                 }
+                console.log($scope.filters);
             }
             /**
              * Triggered for every proposal in the list. Gets the day of the proposal.
