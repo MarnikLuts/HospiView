@@ -89,7 +89,7 @@ var frenchStrings = {
         newUserEmailIncorrect: "Le courrier n'a pas le format correct.",
         newUserEmailConfirmRequired: "Vous devez confirmer votre courrier",
         newUserEmailConfirmIncorrect: "Les courriers ne sont pas la même.",
-        newUserNatRegIncorrect: "Numéro de registre national n'est pas correct.",
+        newUserNatRegIncorrect: "Numéro de registre national ne correspond pas avec la date de né.",
         newUserRizivIncorrect: "Nombre de RIZIV n'est pas correct.",
         newUserRequest: "Demandez un compte",
         newUserRequestMessage: "Vous aurez reçu un courrier avec vos données de connextion.",

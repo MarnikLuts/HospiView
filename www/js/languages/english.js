@@ -89,7 +89,7 @@ var englishStrings = {
         newUserEmailIncorrect: "Email address has a wrong format.",
         newUserEmailConfirmRequired: "Confirming your email address is required",
         newUserEmailConfirmIncorrect: "Email addresses do not match.",
-        newUserNatRegIncorrect: "National register number is not correct.",
+        newUserNatRegIncorrect: "National register number does not match birthday.",
         newUserRizivIncorrect: "RIZIV number is not correct.",
         newUserRequest: "Request account",
         newUserRequestMessage: "You will recieve an email with your login details shortly.",

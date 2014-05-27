@@ -89,7 +89,7 @@ var dutchStrings = {
         newUserEmailIncorrect: "E-mailadres heeft een fout formaat.",
         newUserEmailConfirmRequired: "E-mail bevestigen is verplicht",
         newUserEmailConfirmIncorrect: "E-mailadressen komen niet overeen.",
-        newUserNatRegIncorrect: "Rijksregisternummer is niet correct.",
+        newUserNatRegIncorrect: "Opgegeven rijksregisternummer komt niet overeen met de geboortedatum.",
         newUserRizivIncorrect: "RIZIV nummer is niet correct.",
         newUserRequest: "Vraag account aan",
         newUserRequestMessage: "U ontvangt dadelijk een e-mail met uw logingegevens.",

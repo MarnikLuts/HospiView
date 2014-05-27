@@ -2109,9 +2109,10 @@ angular.module('myApp.controllers', []).
                         then(function(data) {
                             var json = parseJson(data);
                             $scope.servers = json.HospiviewServerList.Detail.Server;
+                            console.log(json);
                         }, function() {
                             alert($rootScope.getLocalizedString('connectionErrorSelectServer'));
-                        });
+                        });    
             };
             $scope.refreshServerList();
 
@@ -2271,6 +2272,8 @@ angular.module('myApp.controllers', []).
                                     "hosp_short_name": $rootScope.currentServer.hosp_short_name,
                                     "hosp_full_name": $rootScope.currentServer.hosp_full_name,
                                     "hosp_url": $rootScope.currentServer.hosp_url,
+                                    //"hosp_logo_url": $rootScope.currentServer.hosp_logo_url,
+                                    //"hosp_promo_url": $rootScope.currentServer.hosp_promo_url,
                                     "user_password": $scope.password,
                                     "user_login": $scope.username,
                                     "reg_no": json.Detail.reg_no,
@@ -2329,6 +2332,8 @@ angular.module('myApp.controllers', []).
                                 "hosp_short_name": $scope.server.hosp_short_name,
                                 "hosp_full_name": $scope.server.hosp_full_name,
                                 "hosp_url": $scope.server.hosp_url,
+                                //"hosp_logo_url": $rootScope.currentServer.hosp_logo_url,
+                                //"hosp_promo_url": $rootScope.currentServer.hosp_promo_url,
                                 "user_password": $scope.password,
                                 "user_login": $scope.username,
                                 "reg_no": json.Detail.reg_no,
@@ -2357,6 +2362,8 @@ angular.module('myApp.controllers', []).
                                     "hosp_short_name": $scope.server.hosp_short_name,
                                     "hosp_full_name": $scope.server.hosp_full_name,
                                     "hosp_url": $scope.server.hosp_url,
+                                    //"hosp_logo_url": $rootScope.currentServer.hosp_logo_url,
+                                    //"hosp_promo_url": $rootScope.currentServer.hosp_promo_url,
                                     "user_password": $scope.password,
                                     "user_login": $scope.username,
                                     "reg_no": json.Detail.reg_no,
@@ -2641,7 +2648,13 @@ angular.module('myApp.controllers', []).
                 $location.path('patient/appointmentsView');
             };
 
-            $scope.images = ["img/TEMPlogos/BZIO.jpg", "img/TEMPlogos/SOMEDI.jpg", "img/TEMPlogos/RUSTENBURG.JPG"];
+            $scope.images = [];
+            $scope.imageUrls = ["","",""];
+            /*for(var i; i < $rootScope.currentServers.length; i++)
+                if($rootScope.currentServers.hosp_logo_url)
+                    $scope.images.push($rootScope.currentServers.hosp_logo_url);
+                if($rootScope.currentServers.hosp_promo_url)
+                    $scope.imageUrls.push($rootScope.currentServers.hosp_promo_url);*/
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory, $q) {
             var searchStart = new Date(),
