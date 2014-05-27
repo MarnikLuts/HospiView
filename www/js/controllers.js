@@ -2067,7 +2067,6 @@ angular.module('myApp.controllers', []).
              * If it's the first time a user uses the application, the back button
              * has to be hidden so the user is foreced to select a server.
              */
-            console.log($rootScope.getLocalizedString('createAppointmentStep4Phone'));
             if ($routeParams.action === "new")
                 $scope.newBoolean = true;
             else
