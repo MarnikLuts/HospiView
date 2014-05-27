@@ -173,6 +173,7 @@ var frenchStrings = {
         createAppointmentStep3AfternoonShort: "PM",
         createAppointmentStep3Selected: "Vous avez choisi cette rendez-vous:",
         createAppointmentStep3SelectDate: "la date de début",
+        createAppointmentCampus: "Lieu",
         
         //patient/step4
         createAppointmentStep4MakeYourChoice: "choisissez ici",

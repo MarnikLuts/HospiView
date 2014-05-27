@@ -173,6 +173,7 @@ var dutchStrings = {
         createAppointmentStep3AfternoonShort: "NM",
         createAppointmentStep3Selected: "U selecteerde volgende afspraak:",
         createAppointmentStep3SelectDate: "startdatum",
+        createAppointmentCampus: "Locatie",
                         
         //patient/step4
         createAppointmentStep4MakeYourChoice: "maak hier uw keuze",
