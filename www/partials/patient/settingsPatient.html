@@ -40,8 +40,8 @@
                         <td class="widthSettingsTabelLabel"><label class="tableLabel">{{getLocalizedString('settingsAddDelete')}}</label></td>
                         
                         <td class="width25Percent"><button type="button" class="btn btn-sm-add btn-default" ng-click="addOrEditServer('newLocalUser')"><span class="glyphicon glyphicon-plus"></span></button></td>
-                        <td class="width25Percent"><button type="button" class="btn btn-sm-add btn-default" ng-click="changeCurrentUser()"><span class="glyphicon glyphicon-transfer"></span></button></td>
-                        <td class="width25Percent"><button type="button" class="btn btn-sm-add btn-danger" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-minus"></span></button></td>   
+                        <!--<td class="width25Percent"><button type="button" class="btn btn-sm-add btn-default" ng-click="changeCurrentUser()"><span class="glyphicon glyphicon-transfer"></span></button></td>
+                        --><td class="width25Percent"><button type="button" class="btn btn-sm-add btn-danger" ng-click="deleteCurrentUser()"><span class="glyphicon glyphicon-minus"></span></button></td>   
                     </tr>
                 </table>
             </div>
@@ -62,9 +62,9 @@
                 </div>
                 <div class="input-group form-group widthPercent">
                     <span class="input-group-addon widthSettingsLabels settingsLabels">{{getLocalizedString('settingsUser')}}:</span>
-                    <input id="username" class="form-control input-lg" type="text" ng-model="serverRadio.user_login" ng-disabled="true"/>
+                    <input id="username" class=rol input-lg" type="text" ng-model="serverRadio.user_login" ng-disabled="true"/>
                 </div>
-                <div class="input-group form-group widthPercent">
+                <div class="input-group form-group widthPercent""form-cont>
                     <span class="input-group-addon widthSettingsLabels settingsLabels">{{getLocalizedString('loginPassword')}}:</span>
                     <input id="password" class="form-control input-lg" type="password" ng-model="serverRadio.user_password" ng-disabled="true"/>
                 </div>

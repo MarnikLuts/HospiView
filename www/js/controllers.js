@@ -545,7 +545,7 @@ angular.module('myApp.controllers', []).
             var l = $rootScope.$on('stopLoadingEvent', function() {
                 $scope.loggingIn = false;
             });
-            
+
             /**
              * Check if the select box CSS needs to be changed.
              */
@@ -1277,7 +1277,7 @@ angular.module('myApp.controllers', []).
                                     $scope.errormessage = "Fout in de ingevoerde login gegevens.";
                                 }
                             }
-                        }, function(){
+                        }, function() {
                             alert("De lijst kon niet worden opgehaald. Controleer uw internetconnectie of probeer later opnieuw");
                         });
             }
@@ -1679,8 +1679,8 @@ angular.module('myApp.controllers', []).
         controller('DoctorViewappointmentDetailCtrl', function($scope, $location, $rootScope) {
             $scope.reservation = $rootScope.reservationDetail;
             console.log($scope.reservation);
-            
-            $scope.getDate = function(date){
+
+            $scope.getDate = function(date) {
                 return formatShowDate(date, $rootScope.languageID);
             };
             /**
@@ -2103,7 +2103,9 @@ angular.module('myApp.controllers', []).
                         then(function(data) {
                             var json = parseJson(data);
                             $scope.servers = json.HospiviewServerList.Detail.Server;
-                        }, function() {alert($rootScope.getLocalizedString('connectionErrorSelectServer'));});
+                        }, function() {
+                            alert($rootScope.getLocalizedString('connectionErrorSelectServer'));
+                        });
             };
             $scope.refreshServerList();
 
@@ -2225,7 +2227,8 @@ angular.module('myApp.controllers', []).
                                     $scope.error = true;
                                     $scope.errormessage = $rootScope.getLocalizedString('loginError');
                                 }
-                            }, function(){$scope.loggingIn = false;
+                            }, function() {
+                                $scope.loggingIn = false;
                                 alert($rootScope.getLocalizedString('connectionError'));
                             });
                 }
@@ -2625,6 +2628,8 @@ angular.module('myApp.controllers', []).
                 $rootScope.pageClass = 'right-to-left';
                 $location.path('patient/appointmentsView');
             };
+            
+            $scope.images = ["img/TEMPlogos/BZIO.jpg", "img/TEMPlogos/SOMEDI.jpg", "img/TEMPlogos/RUSTENBURG.JPG"];
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory, $q) {
             var searchStart = new Date(),
@@ -3707,12 +3712,12 @@ angular.module('myApp.controllers', []).
 
             var standardQuestionsJson,
                     extraQuestionsJson;
-                    
+
             /**
              * radioButtonValueCheck is used to validatie the radiobutton models.
              */
             var radioButtonValueCheck = [];
-            
+
             /**
              * Does the needed requests that gets the fields for the form.
              * If all requests are done, depending on the content, a string
@@ -4114,11 +4119,19 @@ angular.module('myApp.controllers', []).
                     $q.all(confirmed).then(function(response) {
                         var json = parseJson(response[0]);
                         console.log(json);
-                        $scope.PostAnswers.PostAnswers.Header.Reservation_Id = json.AppointmentConfirmed.Detail.id;
-                        $scope.PostAnswers.PostAnswers.Header.Unit_Id = json.AppointmentConfirmed.Detail.unit_id;
-                        console.log($scope.PostAnswers);
-                        var xml = parseXml($scope.PostAnswers);
-                        console.log(xml);
+                        if(angular.isDefined($scope.PostAnswers)){
+                            $scope.PostAnswers.PostAnswers.Header.Reservation_Id = json.AppointmentConfirmed.Detail.id;
+                            $scope.PostAnswers.PostAnswers.Header.Unit_Id = json.AppointmentConfirmed.Detail.unit_id;
+                            console.log($scope.PostAnswers);
+                            var xml = parseXml($scope.PostAnswers);
+                            console.log(xml);
+                            hospiviewFactory.postAnswers(
+                                    $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
+                                    json.AppointmentConfirmed.Detail.id,
+                                    json.AppointmentConfirmed.Detail.unit_id,
+                                    xml,
+                                    $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
+                        }
                         for (var i = 0; i < $rootScope.newAppointment.type.type_id.length; i++) {
                             hospiviewFactory.getProposalsRemoved(
                                     $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url,
@@ -4126,16 +4139,11 @@ angular.module('myApp.controllers', []).
                                     $rootScope.newAppointment.type.unit_id[i],
                                     $rootScope.newAppointment.type.dep_id[i]);
                         }
-                        hospiviewFactory.postAnswers(
-                                $rootScope.currentServers[$rootScope.newAppointment.server].uuid,
-                                json.AppointmentConfirmed.Detail.id,
-                                json.AppointmentConfirmed.Detail.unit_id,
-                                xml,
-                                $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url);
+
                         $rootScope.pageClass = 'right-to-left';
                         $location.path('patient/step5');
                     }, error);
-                    
+
                 } else {
                     console.log($scope.PostAnswers);
                     $scope.showInvalidFields = true;
