@@ -733,11 +733,11 @@ angular.module('myApp.controllers', []).
                         return false;
                     } else {
                         if (reservation.unit_name.indexOf($rootScope.unitFilter.Header.name) != -1) {
-                            if(!$rootScope.depFilter)
+                            if (!$rootScope.depFilter)
                                 return true;
                             else
-                                if(reservation.dep_name.indexOf($rootScope.depFilter.dep_name) != -1)
-                                    return true;
+                            if (reservation.dep_name.indexOf($rootScope.depFilter.dep_name) != -1)
+                                return true;
                         }
                         return false;
                     }
@@ -2984,11 +2984,37 @@ angular.module('myApp.controllers', []).
 
             $scope.locations = [];
             $scope.blank_locations = 0;
+            console.log($rootScope.newAppointment);
             for (var i = 0; i < $rootScope.newAppointment.units.length; i++) {
                 var unit = $rootScope.newAppointment.units[i];
-                for (var j = 0; j < unit.Detail.Dep.length; j++) {
-                    var dep = unit.Detail.Dep[j],
+                if (unit.Detail.Dep.length)
+                    for (var j = 0; j < unit.Detail.Dep.length; j++) {
+                        var dep = unit.Detail.Dep[j],
+                                duplicate = false;
+                        for (var h = 0; h < $scope.locations.length; h++) {
+                            if ($scope.locations[h].location_id == dep.location_id) {
+                                duplicate = true;
+                                break;
+                            }
+
+                        }
+                        if (dep.location_name === "")
+                            $scope.blank_locations++;
+                        if (!duplicate || dep.location_name === "") {
+                            $scope.locations.push({
+                                checked: true,
+                                disabled: false,
+                                location_id: dep.location_id,
+                                location_name: dep.location_name,
+                                dep_id: dep.dep_id
+                            });
+                        }
+                    }
+                else {
+                    if (unit.Detail.Dep)
+                        var dep = unit.Detail.Dep,
                             duplicate = false;
+                    console.log($scope.locations);
                     for (var h = 0; h < $scope.locations.length; h++) {
                         if ($scope.locations[h].location_id == dep.location_id) {
                             duplicate = true;
@@ -3050,7 +3076,7 @@ angular.module('myApp.controllers', []).
                 if ($scope.type.public_msg)
                     $("#extraInfo").append("<a style=\"color: red;\"><b>" + $scope.type.type_title + ":</b></a> " + $scope.type.public_msg);
             };
-            
+
             /*
              * If the patient came back to step 2 from step 3 the type is remembered
              */
@@ -3078,9 +3104,12 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function getTypes() {
-                var unit_id = $rootScope.newAppointment.units[unitTypesRequested].Header.unit_id,
-                        dep_id = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].dep_id,
-                        duplicate = false;
+                var unit_id = $rootScope.newAppointment.units[unitTypesRequested].Header.unit_id;
+                if ($rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length)
+                    var dep_id = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].dep_id;
+                else
+                    var dep_id = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.dep_id;
+                duplicate = false;
                 if ($rootScope.newAppointment.units[unitTypesRequested].Header.extern_step2 === "0") {
                     for (var d = 0; d < $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length; d++) {
                         var dep_no_step2 = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[d],
@@ -3150,12 +3179,16 @@ angular.module('myApp.controllers', []).
                                          * there should be a unique combination to form a request for a proposal when you combine the values of unit_id, type_id and dep_id for a given index
                                          * 
                                          */
+                                        console.log(json.TypesOnUnit.Detail.Type.length);
                                         for (var t = 0; t < json.TypesOnUnit.Detail.Type.length; t++) {
                                             duplicate = false;
                                             json.TypesOnUnit.Detail.Type[t].dep_id = [dep_id];
                                             json.TypesOnUnit.Detail.Type[t].unit_id = [unit_id];
                                             json.TypesOnUnit.Detail.Type[t].type_id = [json.TypesOnUnit.Detail.Type[t].type_id];
-                                            json.TypesOnUnit.Detail.Type[t].location_id = [$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].location_id];
+                                            if ($rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length)
+                                                json.TypesOnUnit.Detail.Type[t].location_id = [$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].location_id];
+                                            else
+                                                json.TypesOnUnit.Detail.Type[t].location_id = [$rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.location_id];
                                             for (var u = 0; u < $scope.typeList.length; u++) {
                                                 if (json.TypesOnUnit.Detail.Type[t].type_title === $scope.typeList[u].type_title) {
                                                     duplicate = true;
@@ -3175,7 +3208,11 @@ angular.module('myApp.controllers', []).
                                     }
 
                                     depTypeRequested++;
-                                    if (depTypeRequested == $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length) {
+                                    if ($rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length)
+                                        var depLength = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length;
+                                    else
+                                        var depLength = 1;
+                                    if (depTypeRequested == depLength) {
                                         depTypeRequested = 0;
                                         unitTypesRequested++;
                                     }
@@ -3260,16 +3297,20 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.next = function(formValid) {
+                console.log($scope.locations);
                 $("#loadingStep3Spinner").removeClass("hiddenBlock");
                 $scope.loadingStep3 = true;
                 if (formValid && $scope.locationIsChecked()) {
                     $rootScope.newAppointment.type = $scope.type;
                     $rootScope.newAppointment.locations = [];
-                    for (var i = 0; i < $scope.locations.length; i++) {
-//                        if ($scope.locations[i].checked)
-                        if (!$scope.locations[i].disabled&&$scope.locations[i].location_name)
-                            $rootScope.newAppointment.locations.push($scope.locations[i]);
-                    }
+                    if($scope.locations.length)
+                        for (var i = 0; i < $scope.locations.length; i++) {
+    //                        if ($scope.locations[i].checked)
+                            if (!$scope.locations[i].disabled && $scope.locations[i].location_name)
+                                $rootScope.newAppointment.locations.push($scope.locations[i]);
+                        }
+                    else
+                        $rootScope.newAppointment.locations.push($scope.locations);
                     $rootScope.newAppointment.reservationInfo = $scope.reservationInfo;
                     $rootScope.pageClass = 'right-to-left';
                     $location.path('/patient/step3');
@@ -3297,10 +3338,24 @@ angular.module('myApp.controllers', []).
             $scope.loadingStep4 = false;
 
             console.log($rootScope.newAppointment.units);
-            for (var i = 0; i < $rootScope.newAppointment.units.length; i++) {
-                for (var j = 0; j < $rootScope.newAppointment.units[i].Detail.Dep.length; j++) {
+            if(!$rootScope.newAppointment.units.length)
+                var unitLength = 1
+            else
+                var unitLength = $rootScope.newAppointment.units.length;
+            
+            for (var i = 0; i < unitLength; i++) {
+                if(!$rootScope.newAppointment.units[i].Detail.Dep.length)
+                    var depLength = 1;
+                else
+                    var depLength = $rootScope.newAppointment.units[i].Detail.Dep.length;
+                for (var j = 0; j < depLength; j++) {
                     var duplicate = false;
-                    if ($rootScope.newAppointment.type.dep_id.indexOf($rootScope.newAppointment.units[i].Detail.Dep[j].dep_id) != -1) {
+                    if(depLength === 1)
+                        var depIdValue = $rootScope.newAppointment.units[i].Detail.Dep.dep_id;
+                    else
+                        var depIdValue = $rootScope.newAppointment.units[i].Detail.Dep[j].dep_id;
+                    
+                    if ($rootScope.newAppointment.type.dep_id.indexOf(depIdValue) != -1) {
                         for (var k = 0; k < $scope.unitList.length; k++) {
                             if ($scope.unitList[k].Header.unit_id === $rootScope.newAppointment.units[i].Header.unit_id)
                                 duplicate = true;
@@ -3350,7 +3405,7 @@ angular.module('myApp.controllers', []).
                     searchDate = formatDate($scope.startProposalDate);
                 }
                 for (var i = 0; i < $rootScope.newAppointment.type.unit_id.length; i++) {
-                    for (var j = 0; j < $rootScope.newAppointment.units.length; j++) {
+                    for (var j = 0; j < unitLength; j++) {
                         if ($rootScope.newAppointment.type.unit_id[i] == $rootScope.newAppointment.units[j].Header.unit_id) {
                             globalTypes = $rootScope.newAppointment.units[j].Header.globaltypes;
                         }
@@ -3421,14 +3476,14 @@ angular.module('myApp.controllers', []).
                 console.log(data);
                 $scope.error = true;
             }
-            
+
             /**
              * Initiation of variables needed.
              */
             var setDayNumber;
             var setRespectiveDayNumber;
             $scope.proposals = [];
-                      
+
             /**
              * For each proposal we retrieved, we add following information:
              * 
@@ -3445,7 +3500,7 @@ angular.module('myApp.controllers', []).
              * @param proposals
              */
             function editProposalInfo(proposals) {
-                $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true, unitList: $scope.unitList, locations: $rootScope.newAppointment.locations, updateDay:false};
+                $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true, unitList: $scope.unitList, locations: $rootScope.newAppointment.locations, updateDay: false};
 
                 /**
                  * Sorts the retrieved proposals by date.
@@ -3476,7 +3531,7 @@ angular.module('myApp.controllers', []).
                         proposals[proposal].afternoon = true;
                     proposals[proposal].morning = !proposals[proposal].afternoon;
 
-                    for (var p = 0; p < $rootScope.newAppointment.units.length; p++) {
+                    for (var p = 0; p < unitLength; p++) {
                         if ($rootScope.newAppointment.units[p].Header.unit_id === proposals[proposal].unit_id) {
                             proposals[proposal].unit_name = $rootScope.newAppointment.units[p].Header.unit_name;
                             /*for (var d = 0; d < $rootScope.newAppointment.units[p].Detail.Dep.length; d++) {
@@ -4125,7 +4180,7 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.patientInfo.referringDoctor,
                             $rootScope.newAppointment.patientInfo.referringDoctor_gpid,
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
-                     console.log($rootScope.newAppointment.patientInfo.streetAndNumber
+                    console.log($rootScope.newAppointment.patientInfo.streetAndNumber
                             + ' ' + $rootScope.newAppointment.patientInfo.town
                             + ' ' + $rootScope.newAppointment.patientInfo.postalCode
                             + ' ' + $rootScope.newAppointment.patientInfo.country);
