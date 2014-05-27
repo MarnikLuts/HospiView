@@ -707,15 +707,9 @@ ul li{
     }
 }
 
-.mainmenuImages{
-    text-align: center;
-    position: relative;
-    
-}
-
 .mainmenuImagesContent{
     position: absolute;
-    bottom:10px;
+    bottom:80px;
 }
 
 .mainmenuImage{
