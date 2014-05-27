@@ -27,6 +27,7 @@ angular.module('myApp.filters', []).
         }).
         filter('orderProposals', function() {
             return function(proposals, filters) {
+                console.log("filters: " + JSON.stringify(filters));
                 var filtered = [];
                 for (var proposal in proposals) {
                     for (var i = 0; i <= 6; i++) {
@@ -46,6 +47,18 @@ angular.module('myApp.filters', []).
                                 }
                             }
                         }
+                    }
+                }
+                if(filters){
+                    filters["0"] = false;
+                    filters["1"] = false;
+                    filters["2"] = false;
+                    filters["3"] = false;
+                    filters["4"] = false;
+                    filters["5"] = false;
+                    filters["6"] = false;
+                    for(var proposal in filtered){
+                        filters[new Date(filtered[proposal].the_date).getDay()] = true;
                     }
                 }
                 return filtered;

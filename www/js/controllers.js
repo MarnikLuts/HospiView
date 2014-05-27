@@ -3410,14 +3410,14 @@ angular.module('myApp.controllers', []).
                 console.log(data);
                 $scope.error = true;
             }
-
+            
             /**
              * Initiation of variables needed.
              */
             var setDayNumber;
             var setRespectiveDayNumber;
             $scope.proposals = [];
-
+                      
             /**
              * For each proposal we retrieved, we add following information:
              * 
