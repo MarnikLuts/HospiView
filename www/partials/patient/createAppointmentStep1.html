@@ -55,7 +55,7 @@
                 </tr>
             </table>
             <div class="text-center">
-                <button type="submit" class="btn btn-xl" ng-click="next()" ng-disabled="step1Form.$invalid">{{getLocalizedString('createAppointmentNext')}}</button>
+                <button type="submit" class="btn btn-xl has-spinner" ng-click="next()" ng-disabled="step1Form.$invalid||loadingStep2"><span id="step2LoadingSpinner" class="glyphicon glyphicon-refresh hiddenBlock"></span> {{getLocalizedString('createAppointmentNext')}}</button>
             </div>
         </form>
     </div>

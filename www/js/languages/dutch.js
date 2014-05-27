@@ -93,6 +93,7 @@ var dutchStrings = {
         newUserRizivIncorrect: "RIZIV nummer is niet correct.",
         newUserRequest: "Vraag account aan",
         newUserRequestMessage: "U ontvangt dadelijk een e-mail met uw logingegevens.",
+        newUserFunctionNotSupported: "U dient een gebruikersnaam en wachtwoord telefonisch aan te vragen bij deze instelling",
         
         //Validation
         isRequired: "Dit veld is verplicht.",        
@@ -192,5 +193,6 @@ var dutchStrings = {
         //patient/step5
         createAppointmentStep5Info: "U kan uw afspraak terugvinden als u op \"Afspraak Bekijken\" drukt in het hoofdmenu",
         createAppointmentStep5Thanks: "dankt u om dit systeem te gebruiken",
-        createAppointmentStep5End: "Einde"
+        createAppointmentStep5End: "Einde",
+        createAppointmentStep5AtLocation: "bij"
 };

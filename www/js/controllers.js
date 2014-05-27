@@ -2072,7 +2072,9 @@ angular.module('myApp.controllers', []).
                 $scope.newBoolean = true;
             else
                 $("#selectServerButton").removeClass("invisible");
-
+            
+            $scope.requestingUser = false;
+            
             /**
              * Redirects the user back to the settings screen.
              */
@@ -2178,6 +2180,8 @@ angular.module('myApp.controllers', []).
              * TODO: implement webservice request
              */
             $scope.requestAccount = function() {
+                $("#newUserRequestSpinner").removeClass("hiddenBlock");
+                $scope.requestingUser = true;
                 if ($scope.userFunctionSelect === $rootScope.getLocalizedString('newFunctionPatient')) {
                     hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, $scope.phone, $rootScope.languageID, 1, $scope.server.hosp_url)
                             .then(function(response) {
@@ -2194,6 +2198,8 @@ angular.module('myApp.controllers', []).
                     $scope.accountRadio = $rootScope.getLocalizedString('yes');
                     $scope.accountTrue = true;
                     $scope.accountFalse = false;
+                    $scope.requestingUser = false;
+                    $("#newUserRequestSpinner").addClass("hiddenBlock");
                 }
             };
 
@@ -2443,6 +2449,8 @@ angular.module('myApp.controllers', []).
                 $scope.error = true;
                 $scope.errormessage = "Geen afspraken gevonden";
 //                $scope.errormessage = data;
+                $scope.requestingUser = false;
+                $("#newUserRequestSpinner").addClass("hiddenBlock");
             }
 
             /**
@@ -2750,7 +2758,9 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location, $q) {
-
+            
+            $scope.loadingStep2 = false;
+            
             /**
              * The unit and department list is requested from the server
              * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
@@ -2936,6 +2946,8 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             $scope.next = function() {
+                $("#step2LoadingSpinner").removeClass("hiddenBlock");
+                $scope.loadingStep2 = true;
                 var units = [],
                         unitOrGroupName;
                 //standardize data for next steps
@@ -3149,6 +3161,8 @@ angular.module('myApp.controllers', []).
                     } else {
                         $scope.typesLoaded = true;
                         $scope.rememberType();
+                        if($scope.typeList.length==1)
+                            $scope.type = $scope.typelist[0];
                         console.log($scope.typeList);
                     }
                 } else {
@@ -3221,6 +3235,8 @@ angular.module('myApp.controllers', []).
                                     } else {
                                         $scope.typesLoaded = true;
                                         $scope.rememberType();
+                                        if($scope.typeList.length==1)
+                                            $scope.type = $scope.typelist[0];
                                         console.log($scope.typeList);
                                     }
                                 } else {
