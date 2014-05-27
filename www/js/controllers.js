@@ -3700,7 +3700,7 @@ angular.module('myApp.controllers', []).
                                     $rootScope.newAppointment.patientInfo.postalCode = address[4];
                                     $rootScope.newAppointment.patientInfo.town = address[2];
                                     $rootScope.newAppointment.patientInfo.country = address[5];
-                                    $scope.nationalRegister = answersJson.PatientLookup.Detail.pReg_No;
+                                    $scope.nationalRegister = parseInt(answersJson.PatientLookup.Detail.pReg_No);
                                     $rootScope.newAppointment.patientInfo.email = answersJson.PatientLookup.Detail.pEmail;
                                     $rootScope.newAppointment.patientInfo.extraInformation = answersJson.PatientLookup.Detail.pMemo;
                                     $rootScope.newAppointment.patientInfo.unique_pid = answersJson.PatientLookup.Detail.pUnique_pid;
