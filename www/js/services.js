@@ -1098,7 +1098,7 @@ angular.module('myApp.services', []).
                 for (var j = 0; j < responses.length; j++) {
                     var json = parseJson(responses[j]),
                             languageString = json.LanguageStrings.Detail.LanguageString;
-
+                            
                     if (json.LanguageStrings.Header.StatusCode === "1") {
                         var remoteDict = {
                             reg_no: getStringByPidAndSid(languageString, -99, 44),
@@ -1109,7 +1109,7 @@ angular.module('myApp.services', []).
                             createAppointmentStep4Referring: getStringByPidAndSid(languageString, 92, 96),
                             createAppointmentNotDetermined: getStringByPidAndSid(languageString, 93, 43),
                             createAppointmentSection: getStringByPidAndSid(languageString, 93, 55),
-                            createAppointmentCampus: getStringByPidAndSid(languageString, 93, 56),
+//                            createAppointmentCampus: getStringByPidAndSid(languageString, 93, 56), //This string is made local
                             createAppointmentDoctor: getStringByPidAndSid(languageString, 93, 57).split('/')[0],
                             createAppointmentStep2ReservationInfo: getStringByPidAndSid(languageString, 93, 60),
                             createAppointmentType: getStringByPidAndSid(languageString, 94, 10),
