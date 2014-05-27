@@ -21,9 +21,11 @@
     <button type="submit" class="btn btn-xl widthPercent" ng-click="viewAppointments()">{{getLocalizedString('createAppointmentView')}}</button>
 </div>
 <div class="mainmenuImages">
-    <span ng-repeat="image in images">
-        <img ng-src="{{image}}" width="30%"/>
-    </span>
+    <div class="mainmenuImagesContent">
+        <span class="" ng-repeat="image in images">
+            <img ng-src="{{image}}" class="mainmenuImage"/>
+        </span>
+    </div>
 </div>
 <div class="nav navbar-fixed-bottom">
     <div class="text-center">

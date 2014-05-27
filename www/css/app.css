@@ -709,6 +709,16 @@ ul li{
 
 .mainmenuImages{
     text-align: center;
-    margin-top: 50px;
-    margin-bottom: 80px;
+    position: relative;
+    
+}
+
+.mainmenuImagesContent{
+    position: absolute;
+    bottom:10px;
+}
+
+.mainmenuImage{
+    max-width: 30%;
+    max-height: 100px;
 }

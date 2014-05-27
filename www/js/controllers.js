@@ -2178,7 +2178,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.requestAccount = function() {
                 if ($scope.userFunctionSelect === $rootScope.getLocalizedString('newFunctionPatient')) {
-                    hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, $scope.phone, $rootScope.languageID, 0, $scope.server.hosp_url)
+                    hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $scope.nationalRegister, $scope.emailAddress, $scope.phone, $rootScope.languageID, 1, $scope.server.hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response);
                                 $scope.accountTrue = true;
@@ -2724,11 +2724,15 @@ angular.module('myApp.controllers', []).
                 $location.path('/patient/mainmenu');
             };
         }).
-        controller("ChangeUserCtrl", function($rootScope, $scope, $routeParams, $location, hospiviewFactory) {
-
+        /**
+         * This controller was planned to be used to change the personal information
+         * of a user (email, phonenumber, password, ...). Not implemented because
+         * webservice was not ready yet.
+         */
+        controller("ChangeUserCtrl", function($rootScope, $scope, $location, hospiviewFactory) {
             $scope.save = function() {
                 for (var server in $rootScope.currentServers) {
-                    hospiviewFactory.getLogin($scope.firstName, $rootScope.currentServers[server].reg_no, $scope.emailAddress, '021545214', $rootScope.languageID, 0, $scope.server.hosp_url)
+                    hospiviewFactory.getLogin($scope.firstName + " " + $scope.lastName, $rootScope.currentServers[server].reg_no, $scope.emailAddress, $scope.phone, $rootScope.languageID, 1, $scope.server.hosp_url)
                             .then(function(response) {
                                 var json = parseJson(response);
                                 $scope.accountTrue = true;
@@ -3012,6 +3016,44 @@ angular.module('myApp.controllers', []).
             var unitTypesRequested = 0,
                     depTypeRequested = 0;
 
+
+            /**
+             * is called when a new type has been selected
+             * 
+             * disables and unchecks the locations that aren't linked to the selected type
+             * and enables and checks the locations that are
+             * 
+             * if there is extra info on the department that the selected type is linked to it is displayed in the extra info field
+             */
+            $scope.updateFormData = function() {
+                $("#extraInfo").empty();
+                for (var i = 0; i < $scope.locations.length; i++) {
+                    if ($scope.type && $scope.type.location_id.indexOf($scope.locations[i].location_id) == -1) {
+                        $scope.locations[i].disabled = true;
+                        $scope.locations[i].checked = false;
+                    } else {
+                        $scope.locations[i].disabled = false;
+                        $scope.locations[i].checked = true;
+                    }
+                }
+
+                if ($scope.type) {
+                    for (var j = 0; j < $scope.newAppointment.units.length; j++) {
+                        for (var h = 0; h < $scope.newAppointment.units[j].Detail.Dep.length; h++) {
+                            var dep = $scope.newAppointment.units[j].Detail.Dep[h];
+                            for (var k = 0; k < $scope.type.dep_id.length; k++) {
+                                if (dep.dep_id == $scope.type.dep_id[k] && dep.msg_extern_step2) {
+                                    $("#extraInfo").append("<a style=\"color: red;\"><b>" + dep.location_name + ":</b></a> " + dep.msg_extern_step2 + "<br>");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ($scope.type.public_msg)
+                    $("#extraInfo").append("<a style=\"color: red;\"><b>" + $scope.type.type_title + ":</b></a> " + $scope.type.public_msg);
+            };
+            
             /*
              * If the patient came back to step 2 from step 3 the type is remembered
              */
@@ -3187,43 +3229,6 @@ angular.module('myApp.controllers', []).
                 }
                 return false;
             }
-
-            /**
-             * is called when a new type has been selected
-             * 
-             * disables and unchecks the locations that aren't linked to the selected type
-             * and enables and checks the locations that are
-             * 
-             * if there is extra info on the department that the selected type is linked to it is displayed in the extra info field
-             */
-            $scope.updateFormData = function() {
-                $("#extraInfo").empty();
-                for (var i = 0; i < $scope.locations.length; i++) {
-                    if ($scope.type && $scope.type.location_id.indexOf($scope.locations[i].location_id) == -1) {
-                        $scope.locations[i].disabled = true;
-                        $scope.locations[i].checked = false;
-                    } else {
-                        $scope.locations[i].disabled = false;
-                        $scope.locations[i].checked = true;
-                    }
-                }
-
-                if ($scope.type) {
-                    for (var j = 0; j < $scope.newAppointment.units.length; j++) {
-                        for (var h = 0; h < $scope.newAppointment.units[j].Detail.Dep.length; h++) {
-                            var dep = $scope.newAppointment.units[j].Detail.Dep[h];
-                            for (var k = 0; k < $scope.type.dep_id.length; k++) {
-                                if (dep.dep_id == $scope.type.dep_id[k] && dep.msg_extern_step2) {
-                                    $("#extraInfo").append("<a style=\"color: red;\"><b>" + dep.location_name + ":</b></a> " + dep.msg_extern_step2 + "<br>");
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if ($scope.type.public_msg)
-                    $("#extraInfo").append("<a style=\"color: red;\"><b>" + $scope.type.type_title + ":</b></a> " + $scope.type.public_msg);
-            };
 
             /**
              * Loaded if request can not be executed. Sets the user offline
@@ -4122,7 +4127,10 @@ angular.module('myApp.controllers', []).
                             $rootScope.newAppointment.patientInfo.referringDoctor,
                             $rootScope.newAppointment.patientInfo.referringDoctor_gpid,
                             $rootScope.currentServers[$rootScope.newAppointment.server].hosp_url));
-
+                     console.log($rootScope.newAppointment.patientInfo.streetAndNumber
+                            + ' ' + $rootScope.newAppointment.patientInfo.town
+                            + ' ' + $rootScope.newAppointment.patientInfo.postalCode
+                            + ' ' + $rootScope.newAppointment.patientInfo.country);
                     $q.all(confirmed).then(function(response) {
                         var json = parseJson(response[0]);
                         console.log(json);
@@ -4146,7 +4154,7 @@ angular.module('myApp.controllers', []).
                                     $rootScope.newAppointment.type.unit_id[i],
                                     $rootScope.newAppointment.type.dep_id[i]);
                         }
-
+                        console.log(response[0]);
                         $rootScope.pageClass = 'right-to-left';
                         $location.path('patient/step5');
                     }, error);
