@@ -2,7 +2,7 @@ var frenchStrings = {
         //Login screen
         loginGreeting: "Bienvenue",
         loginUserSelectDefault: "Choisissez un utilisatuer",
-        loginServerSelectDefault: "Choisissez votre hôpital",
+        loginServerSelectDefault: "Choisissez votre institution",
         loginAutomaticallyEnterPassword: "Mémoriser mes codes d'accès",
         loginUsername: "Nom d'utilisateur",
         loginPassword: "Mot de passe",
@@ -158,7 +158,7 @@ var frenchStrings = {
         patientAppointmentsViewFacility: "Institution",
                 
         //patient/step1
-        createAppointmentStep1Server: "Hôpital",
+        createAppointmentStep1Server: "Institution",
         createAppointmentStep1SelectDoctor: "Choisissez un médecin",
         createAppointmentStep1SelectSection: "Choisissez un service",
         
