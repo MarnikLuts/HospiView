@@ -20,36 +20,36 @@
             </div>
             <div class="btn-group btn-group-justified day-filter-group">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-md" ng-model="filters[1]" btn-checkbox>{{days[1]}}</button>
+                    <button type="button" class="btn btn-default btn-md" ng-model="filters[1]" ng-click="filters.updateDay=true" btn-checkbox>{{days[1]}}</button>
                 </div>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-md" ng-model="filters[2]" btn-checkbox>{{days[2]}}</button>
+                    <button type="button" class="btn btn-default btn-md" ng-model="filters[2]" ng-click="filters.updateDay=true" btn-checkbox>{{days[2]}}</button>
                 </div>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-md" ng-model="filters[3]" btn-checkbox>{{days[3]}}</button>
+                    <button type="button" class="btn btn-default btn-md" ng-model="filters[3]" ng-click="filters.updateDay=true" btn-checkbox>{{days[3]}}</button>
                 </div>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-md" ng-model="filters[4]" btn-checkbox>{{days[4]}}</button>
+                    <button type="button" class="btn btn-default btn-md" ng-model="filters[4]" ng-click="filters.updateDay=true" btn-checkbox>{{days[4]}}</button>
                 </div>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-md" ng-model="filters[5]" btn-checkbox>{{days[5]}}</button>
+                    <button type="button" class="btn btn-default btn-md" ng-model="filters[5]" ng-click="filters.updateDay=true" btn-checkbox>{{days[5]}}</button>
                 </div>
             </div><br/>
             <div class="btn-group btn-group-justified">
                 <div class="day-filter-group btn-group btn-group-justified day-filter-group">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-md" ng-model="filters[6]" btn-checkbox>{{days[6]}}</button>
+                        <button type="button" class="btn btn-default btn-md" ng-model="filters[6]" ng-click="filters.updateDay=true" btn-checkbox>{{days[6]}}</button>
                     </div>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-md" ng-model="filters[0]" btn-checkbox>{{days[0]}}</button>
+                        <button type="button" class="btn btn-default btn-md" ng-model="filters[0]" ng-click="filters.updateDay=true" btn-checkbox>{{days[0]}}</button>
                     </div>
                 </div>
                 <div style="left: 10px; padding-right: 10px;" class="day-filter-group btn-group btn-group-justified">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-md" ng-model="filters.morning" btn-checkbox>{{getLocalizedString('createAppointmentStep3Morning' + shortName)}}</button>
+                        <button type="button" class="btn btn-default btn-md" ng-model="filters.morning" ng-click="filters.updateDay=true" btn-checkbox>{{getLocalizedString('createAppointmentStep3Morning' + shortName)}}</button>
                     </div>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-md" ng-model="filters.afternoon" btn-checkbox>{{getLocalizedString('createAppointmentStep3Afternoon' + shortName)}}</button>
+                        <button type="button" class="btn btn-default btn-md" ng-model="filters.afternoon" ng-click="filters.updateDay=true" btn-checkbox>{{getLocalizedString('createAppointmentStep3Afternoon' + shortName)}}</button>
                     </div>
                 </div>
             </div><br/>
@@ -58,7 +58,7 @@
                     {{getLocalizedString("createAppointmentCampus")}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu list-group" role="menu">
-                    <li ng-repeat="location in newAppointment.locations track by $index"><label class="widthPercent list-group-item icasaCheckbox icasaCheckbox-step2" ng-class="{'list-group-item-success':location.checked, 'icasaCheckboxChecked': location.checked, 'icasaCheckboxUnChecked': !location.checked}" ><input type="checkbox" class="invisible" ng-model="location.checked"/>{{location.location_name}}</label></li>
+                    <li ng-repeat="location in newAppointment.locations track by $index"><label class="widthPercent list-group-item icasaCheckbox icasaCheckbox-step2" ng-class="{'list-group-item-success':location.checked, 'icasaCheckboxChecked': location.checked, 'icasaCheckboxUnChecked': !location.checked}" ><input type="checkbox" class="invisible" ng-model="location.checked" ng-click="filters.updateDay=false"/>{{location.location_name}}</label></li>
                 </ul>
             </div>
             <div class="btn-group">
@@ -66,7 +66,7 @@
                     {{getLocalizedString("createAppointmentDoctor")}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdow-step3 list-group" role="menu">
-                    <li ng-repeat="unit in unitList track by $index"><label class="widthPercent list-group-item icasaCheckbox icasaCheckbox-step2" ng-class="{'list-group-item-success':unit.checked, 'icasaCheckboxChecked': unit.checked, 'icasaCheckboxUnChecked': !unit.checked}" ><input type="checkbox" class="invisible" ng-model="unit.checked"/>{{unit.Header.unit_name}}</label></li>
+                    <li ng-repeat="unit in unitList track by $index"><label class="widthPercent list-group-item icasaCheckbox icasaCheckbox-step2" ng-class="{'list-group-item-success':unit.checked, 'icasaCheckboxChecked': unit.checked, 'icasaCheckboxUnChecked': !unit.checked}" ><input type="checkbox" class="invisible" ng-model="unit.checked" ng-click="filters.updateDay=false"/>{{unit.Header.unit_name}}</label></li>
                 </ul>
             </div>
             <br><br><br><br>
@@ -100,7 +100,7 @@
             <div class="form-control" ng-class="{proposalInfoText: selectedProposal}">{{proposalInfo}}</div>            
             <br/>
             <div class="text-center">
-                <button class="btn btn-xl has-spinner" ng-click="next()" ng-disabled="!proposalInfo || proposalInfo === '' || loadingStep4" type="submit"><span class="glyphicon glyphicon-refresh" ng-show="loadingStep4"></span> {{getLocalizedString('createAppointmentNext')}}</button>
+                <button class="btn btn-xl has-spinner" ng-click="next()" ng-disabled="!proposalInfo || proposalInfo === '' || loadingStep4" type="submit"><span id="step4LoadingSpinner" class="glyphicon glyphicon-refresh hiddenBlock"></span> {{getLocalizedString('createAppointmentNext')}}</button>
             </div>
         </div>
     </div>

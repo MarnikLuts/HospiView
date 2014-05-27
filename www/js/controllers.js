@@ -2958,7 +2958,7 @@ angular.module('myApp.controllers', []).
             changeSelect();
 
         }).
-        controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location, $q, hospiviewFactory) {
+        controller("CreateAppointmentStep2Ctrl", function($rootScope, $scope, $location, hospiviewFactory) {
 
             $scope.typeList = [];
             $scope.type = null;
@@ -3439,7 +3439,7 @@ angular.module('myApp.controllers', []).
              * @param proposals
              */
             function editProposalInfo(proposals) {
-                $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true, unitList: $scope.unitList, locations: $rootScope.newAppointment.locations};
+                $scope.filters = {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, morning: true, afternoon: true, unitList: $scope.unitList, locations: $rootScope.newAppointment.locations, updateDay:false};
 
                 /**
                  * Sorts the retrieved proposals by date.
@@ -3560,6 +3560,7 @@ angular.module('myApp.controllers', []).
              */
             $scope.next = function() {
                 $scope.loadingStep4 = true;
+                $("#step4LoadingSpinner").removeClass("hiddenBlock");
                 $rootScope.newAppointment.proposal = $scope.selectedProposal;
                 $rootScope.pageClass = 'right-to-left';
 
