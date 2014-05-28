@@ -3,39 +3,26 @@
 /* Filters */
 
 angular.module('myApp.filters', []).
-        filter('ServerFilter', function() {
-            return function(items, server) {
-                var filtered = [];
-                if (!angular.isUndefined(server)) {
-                    angular.forEach(items, function(item) {
-                        if (item.name.toLowerCase().indexOf(server) >= 0)
-                            filtered.push(item);
-                    });
-                }
-                return filtered;
-            };
-        }).
-        filter('DateFilter', function() {
-            return function(reservations, date) {
-                var filtered = [];
-                angular.forEach(reservations, function(reservation) {
-                    if (date.getTime() === reservation.the_date.getTime())
-                        filtered.push(reservation);
-                });
-                return filtered;
-            };
-        }).
+        /**
+         * This filter is used to turn off the unneeded days on step 3 of
+         * creating an appointment. (e.g. if there are no proposals on Monday,
+         * the Monday filter will be automatically set to false). Filters is passed
+         * as a variable and is an array containing all filters used on step 3. 
+         * Each number in the array represents a day of the week.
+         * For each proposal, we check if it fulfills any of the prerequisits 
+         * of the set filters and set the needed days to true.
+         */
         filter('orderProposals', function() {
-            return function(proposals, filters, updateDay) {
+            return function(proposals, filters) {
                 var filtered = [];
-                if(filters&&!filters.updateDay){
-                   filters["0"] = true;
+                if (filters && !filters.updateDay) {
+                    filters["0"] = true;
                     filters["1"] = true;
                     filters["2"] = true;
                     filters["3"] = true;
                     filters["4"] = true;
                     filters["5"] = true;
-                    filters["6"] = true; 
+                    filters["6"] = true;
                 }
                 for (var proposal in proposals) {
                     for (var i = 0; i <= 6; i++) {
@@ -58,7 +45,7 @@ angular.module('myApp.filters', []).
                     }
                 }
                 //Disables the day buttons when the day is not in the list
-                if(filters&&!filters.updateDay){
+                if (filters && !filters.updateDay) {
                     filters["0"] = false;
                     filters["1"] = false;
                     filters["2"] = false;
@@ -66,7 +53,7 @@ angular.module('myApp.filters', []).
                     filters["4"] = false;
                     filters["5"] = false;
                     filters["6"] = false;
-                    for(var proposal in filtered){
+                    for (var proposal in filtered) {
                         filters[new Date(filtered[proposal].the_date).getDay()] = true;
                     }
                 }
