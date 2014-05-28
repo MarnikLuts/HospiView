@@ -18,7 +18,7 @@
 
 <div class="mainMenuButtonArea">
     <button type="submit" class="btn btn-xl widthPercent" ng-click="createAppointment()">{{getLocalizedString('createAppointmentRequest')}}</button><br><br><br><br>
-    <button type="submit" class="btn btn-xl widthPercent" ng-click="viewAppointments()">{{getLocalizedString('createAppointmentView')}}</button>
+    <button type="submit" class="btn btn-xl widthPercent" ng-show="type===2" ng-click="viewAppointments()">{{getLocalizedString('createAppointmentView')}}</button>
 </div>
 <div class="mainmenuImages">
     <div class="mainmenuImagesContent">

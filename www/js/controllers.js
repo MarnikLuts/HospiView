@@ -174,6 +174,7 @@ angular.module('myApp.controllers', []).
                         authFailed = true;
                     for (var r = 0; r < responses.length; r++) {
                         var json = parseJson(responses[r]);
+                        console.log(json);
                         if (json.Authentication.Header.StatusCode != 1) {
                             $scope.failedServers.push(validServers[r].hosp_short_name);
                             if ($scope.failedServers.length === $scope.selectedUser.servers.length)
@@ -208,8 +209,9 @@ angular.module('myApp.controllers', []).
                                 postLoginDoctor();
                                 break;
                             case 2:
-                                //Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
-                            case 3:
+                            case 3://Application for general practitioner is about the same as a patient, so the in general the same functions will be used.
+                            case 4:
+                            case 5:
                                 postLoginPatient();
                                 break;
 
@@ -2307,9 +2309,10 @@ angular.module('myApp.controllers', []).
                                 postLoginDoctor();
                                 break;
                             case 2:
-                                postLoginPatient();
-                                break;
                             case 3:
+                            case 4:
+                            case 5:
+                                postLoginPatient();
                                 postLoginPatient();
                                 break;
                         }
@@ -2807,8 +2810,11 @@ angular.module('myApp.controllers', []).
                                             $scope.unitList.splice(unitAmount, 1);
 //                                            console.log("unit deleted, no departments");
                                         }
+                                        //Further steps require 'Dep' to b an array
+                                        if(!$scope.unitList[unitAmount].Detail.Dep.length)
+                                            $scope.unitList[unitAmount].Detail.Dep = [$scope.unitList[unitAmount].Detail.Dep];
                                     }
-
+                                    
                                     if ($scope.unitList.length == 1)
                                         $scope.unit = $scope.unitList[0];
                                 }
@@ -2890,6 +2896,8 @@ angular.module('myApp.controllers', []).
                             break;
                         case 2:
                         case 3:
+                        case 4:
+                        case 5:
                             $location.path('/patient/mainmenu');
                             break;
                     }
@@ -3131,6 +3139,7 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function getTypes() {
+                console.log("requested: " + unitTypesRequested + " length " + $rootScope.newAppointment.units.length);
                 var unit_id = $rootScope.newAppointment.units[unitTypesRequested].Header.unit_id;
                 if ($rootScope.newAppointment.units[unitTypesRequested].Detail.Dep.length)
                     var dep_id = $rootScope.newAppointment.units[unitTypesRequested].Detail.Dep[depTypeRequested].dep_id;
@@ -3171,13 +3180,13 @@ angular.module('myApp.controllers', []).
                         depTypeRequested = 0;
                         unitTypesRequested++;
                     }
-                    if (unitTypesRequested != $rootScope.newAppointment.units.length) {
+                    if (unitTypesRequested == $rootScope.newAppointment.units.length-1) {
                         getTypes();
                     } else {
                         $scope.typesLoaded = true;
                         $scope.rememberType();
                         if($scope.typeList.length==1)
-                            $scope.type = $scope.typelist[0];
+                            $scope.type = $scope.typeList[0];
                         console.log($scope.typeList);
                     }
                 } else {
@@ -3241,13 +3250,13 @@ angular.module('myApp.controllers', []).
                                         depTypeRequested = 0;
                                         unitTypesRequested++;
                                     }
-                                    if (unitTypesRequested != $rootScope.newAppointment.units.length) {
+                                    if (unitTypesRequested == $rootScope.newAppointment.units.length-1) {
                                         getTypes();
                                     } else {
                                         $scope.typesLoaded = true;
                                         $scope.rememberType();
                                         if($scope.typeList.length==1)
-                                            $scope.type = $scope.typelist[0];
+                                            $scope.type = $scope.typeList[0];
                                         console.log($scope.typeList);
                                     }
                                 } else {
@@ -3842,14 +3851,20 @@ angular.module('myApp.controllers', []).
                              * Enable the possibility to edit the national number
                              * if the user is a doctor.
                              */
-                            if ($rootScope.type === 3 || $rootScope.type === 0 || $rootScope.type === 1) {
-                                $scope.disableRegno = false;
-
-                                regNoField = '<div class="input-group" style="margin-right: -19px;"><span class="input-group-btn"><button type="button" class="btn btn-primary step4-search" ng-click="doPatientLookup()" ><span class="glyphicon glyphicon-search"></span></button></span>'
-                                        + '<input type="number" name="reg_no"  class="form-control form-control-step4" ng-model="nationalRegister" ng-disabled="disableRegno" checknational/></div>'
-                                        + '<label class="icasaCheckbox icasaCheckbox-normal" ng-class="{\'icasaCheckboxChecked\':disableRegno, \'icasaCheckboxUnChecked\':!disableRegno}"><input type="checkbox" ng-model="disableRegno" class="invisible" />{{ getLocalizedString(\'createAppointmentStep4UnknownRegno\') }}</label>';
-                            } else {
-                                regNoField = '<input type="text" name="reg_no"  class="form-control input-sm" ng-model="nationalRegister" ' + mustField[1] + ' ng-disabled="disableRegno" checknational/>';
+                            switch($rootScope.type){
+                                case 0:
+                                case 1:
+                                case 3:
+                                case 5:
+                                    $scope.disableRegno = false;
+                                    regNoField = '<div class="input-group" style="margin-right: -19px;"><span class="input-group-btn"><button type="button" class="btn btn-primary step4-search" ng-click="doPatientLookup()" ><span class="glyphicon glyphicon-search"></span></button></span>'
+                                            + '<input type="number" name="reg_no"  class="form-control form-control-step4" ng-model="nationalRegister" ng-disabled="disableRegno" checknational/></div>'
+                                            + '<label class="icasaCheckbox icasaCheckbox-normal" ng-class="{\'icasaCheckboxChecked\':disableRegno, \'icasaCheckboxUnChecked\':!disableRegno}"><input type="checkbox" ng-model="disableRegno" class="invisible" />{{ getLocalizedString(\'createAppointmentStep4UnknownRegno\') }}</label>';
+                                    break;
+                                case 2:
+                                case 4:
+                                    regNoField = '<input type="text" name="reg_no"  class="form-control input-sm" ng-model="nationalRegister" ' + mustField[1] + ' ng-disabled="disableRegno" checknational/>';
+                                    break;
                             }
 
                             appendString = appendString + '<tr><td><p class="formLabel"><b>' + $rootScope.getLocalizedString('reg_no') + mustField[0] + '</b></p>'
@@ -4287,6 +4302,8 @@ angular.module('myApp.controllers', []).
                         break;
                     case 2:
                     case 3:
+                    case 4:
+                    case 5:
                         $location.path('/patient/mainmenu');
                         break;
                 }
