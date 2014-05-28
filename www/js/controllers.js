@@ -1766,6 +1766,7 @@ angular.module('myApp.controllers', []).
              * todays date.
              */
             $scope.today = function() {
+                $rootScope.displayMonthDate = months[current.getMonth()] + " " + current.getFullYear();
                 $('#doctorCalendar').fullCalendar('today');
             };
 
@@ -2315,6 +2316,7 @@ angular.module('myApp.controllers', []).
                                 postLoginPatient();
                                 postLoginPatient();
                                 break;
+                                
                         }
                     } else {
                         $scope.loggingIn = false;
