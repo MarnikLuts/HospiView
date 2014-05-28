@@ -17,7 +17,7 @@
                     btn-radio="3">English<br/><img src="img/flag_uk.png" alt="flag_uk" width="60" height="38"></button>
         </div>
         <h2 ng-show="languageSelected">{{ getLocalizedString('newGreeting') }}</h2>
-        <div class="form-group" ng-show="languageSelected">
+        <div style="font-size: 14px;" class="form-group" ng-show="languageSelected">
             <p>
                 {{ getLocalizedString('newInfo').split("_")[0] }}<br/><br/>
                 {{ getLocalizedString('newInfo').split("_")[1] }}
