@@ -3124,7 +3124,7 @@ angular.module('myApp.controllers', []).
                     for (var i = 0; i < $scope.typeList.length; i++) {
                         if ($scope.typeList[i].type_title === $rootScope.newAppointment.type.type_title) {
                             $scope.type = $scope.typeList[i];
-                            $scope.updateFormData();
+                            
                         }
                     }
                 }
@@ -3182,13 +3182,16 @@ angular.module('myApp.controllers', []).
                         depTypeRequested = 0;
                         unitTypesRequested++;
                     }
-                    if (unitTypesRequested == $rootScope.newAppointment.units.length-1) {
+                    if (unitTypesRequested < $rootScope.newAppointment.units.length) {
                         getTypes();
                     } else {
                         $scope.typesLoaded = true;
                         $scope.rememberType();
                         if($scope.typeList.length==1)
                             $scope.type = $scope.typeList[0];
+                            
+                        if($scope.type)
+                            $scope.updateFormData();
                         console.log($scope.typeList);
                     }
                 } else {
@@ -3252,13 +3255,16 @@ angular.module('myApp.controllers', []).
                                         depTypeRequested = 0;
                                         unitTypesRequested++;
                                     }
-                                    if (unitTypesRequested == $rootScope.newAppointment.units.length-1) {
+                                    if (unitTypesRequested < $rootScope.newAppointment.units.length) {
                                         getTypes();
                                     } else {
                                         $scope.typesLoaded = true;
                                         $scope.rememberType();
                                         if($scope.typeList.length==1)
-                                            $scope.type = $scope.typeList[0];
+                                           $scope.type = $scope.typeList[0];
+                                        
+                                        if($scope.type)
+                                            $scope.updateFormData(); 
                                         console.log($scope.typeList);
                                     }
                                 } else {
