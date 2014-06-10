@@ -481,42 +481,6 @@ ul li{
     width: 10%;
 }
 
-@-webkit-keyframes slideInRight {
-    from {-webkit-transform: translate3d(100%,0,0); }
-    to {-webkit-transform: translate3d(0,0,0); }
-}
-
-@keyframes slideInRight {
-    from {transform: translate3d(100%,0,0); }
-    to {transform: translate3d(0,0,0); }
-}
-
-@-webkit-keyframes slideInLeft {
-    from {-webkit-transform: translate3d(-100%,0,0); }
-    to {-webkit-transform: translate3d(0,0,0); }
-}
-
-@keyframes slideInLeft {
-    from {transform: translate3d(-100%,0,0); }
-    to {transform: translate3d(0,0,0); }
-}
-
-@-webkit-keyframes slideOutLeft {
-    to { -webkit-transform: translate3d(-100%,0,0); }
-}
-
-@keyframes slideOutLeft {
-    to { transform: translate3d(-100%,0,0); }
-}
-
-@-webkit-keyframes slideOutRight {
-    to { -webkit-transform: translate3d(100%,0,0); }
-}
-
-@keyframes slideOutRight {
-    to { transform: translate3d(100%,0,0); }
-}
-
 .page{
 	bottom:0; 
 	position:absolute; 

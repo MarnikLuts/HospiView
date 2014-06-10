@@ -774,7 +774,8 @@ angular.module('myApp.services', []).
                     var defer = $q.defer();
                     var json = parseJson(response);
                     if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                        var units = json.UnitsAndDeps.Detail.Unit;
+                        var units = [];
+                        units.push(json.UnitsAndDeps.Detail.Unit);
                         for (var i = 0; i < units.length; i++) {
                             $rootScope.searchUnits.push(units[i]);
                         }
@@ -794,11 +795,11 @@ angular.module('myApp.services', []).
                 setAbsentDays: function(year, server) {
                     var defer = $q.defer(),
                             promises = [];
-
+                    
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
                         promises.push(hospiviewFactory.getUnitAbsentDays(server.uuid, year, '00', $rootScope.searchUnits[i].Header.unit_id, server.hosp_url));
                     }
-
+                    
                     $q.all(promises).then(function(responses) {
                         for (var j = 0; j < responses.length; j++) {
                             var json = parseJson(responses[j]);
@@ -835,7 +836,9 @@ angular.module('myApp.services', []).
                     var defer = $q.defer(),
                             reservations = [],
                             promises = [];
+                    console.log($rootScope.searchUnits.length);
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
+                        console.log($rootScope.searchUnits.length);
                         var depIds = [];
                         var unitId = $rootScope.searchUnits[i].Header.unit_id;
 
@@ -846,11 +849,13 @@ angular.module('myApp.services', []).
                                 depIds.push($rootScope.searchUnits[i].Detail.Dep[j].dep_id);
                             }
                         }
+                        console.log(depIds.length);
                         for (var k = 0; k < depIds.length; k++) {
                             promises.push(hospiviewFactory.getReservationsOnUnit(server.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, server.hosp_url));
                         }
                     }
                     $q.all(promises).then(function(responses) {
+                        console.log(responses);
                         for (var l = 0; l < responses.length; l++) {
                             console.log(responses[l]);
                             var json = parseJson(responses[l]);
