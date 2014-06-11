@@ -735,8 +735,8 @@ angular.module('myApp.services', []).
                     }
                 }
             }
-            
-            function error(){
+
+            function error() {
                 $rootScope.$emit('stopLoadingEvent', {});
             }
 
@@ -796,11 +796,12 @@ angular.module('myApp.services', []).
                 setAbsentDays: function(year, server) {
                     var defer = $q.defer(),
                             promises = [];
-                    
+
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
-                        promises.push(hospiviewFactory.getUnitAbsentDays(server.uuid, year, '00', $rootScope.searchUnits[i].Header.unit_id, server.hosp_url));
+                        if ($rootScope.searchUnits[i].Header)
+                            promises.push(hospiviewFactory.getUnitAbsentDays(server.uuid, year, '00', $rootScope.searchUnits[i].Header.unit_id, server.hosp_url));
                     }
-                    
+
                     $q.all(promises).then(function(responses) {
                         for (var j = 0; j < responses.length; j++) {
                             var json = parseJson(responses[j]);
@@ -839,20 +840,22 @@ angular.module('myApp.services', []).
                             promises = [];
                     console.log($rootScope.searchUnits.length);
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
-                        console.log($rootScope.searchUnits.length);
-                        var depIds = [];
-                        var unitId = $rootScope.searchUnits[i].Header.unit_id;
+                        if ($rootScope.searchUnits[i].Header) {
+                            console.log($rootScope.searchUnits.length);
+                            var depIds = [];
+                            var unitId = $rootScope.searchUnits[i].Header.unit_id;
 
-                        if ($rootScope.searchUnits[i].Header.perm === "1") {
-                            depIds.push($rootScope.searchUnits[i].Detail.Dep[0].dep_id);
-                        } else {
-                            for (var j = 0; j < $rootScope.searchUnits[i].Detail.Dep.length; j++) {
-                                depIds.push($rootScope.searchUnits[i].Detail.Dep[j].dep_id);
+                            if ($rootScope.searchUnits[i].Header.perm === "1") {
+                                depIds.push($rootScope.searchUnits[i].Detail.Dep[0].dep_id);
+                            } else {
+                                for (var j = 0; j < $rootScope.searchUnits[i].Detail.Dep.length; j++) {
+                                    depIds.push($rootScope.searchUnits[i].Detail.Dep[j].dep_id);
+                                }
                             }
-                        }
-                        console.log(depIds.length);
-                        for (var k = 0; k < depIds.length; k++) {
-                            promises.push(hospiviewFactory.getReservationsOnUnit(server.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, server.hosp_url));
+                            console.log(depIds.length);
+                            for (var k = 0; k < depIds.length; k++) {
+                                promises.push(hospiviewFactory.getReservationsOnUnit(server.uuid, unitId, depIds[k], $rootScope.startDate, $rootScope.endDate, server.hosp_url));
+                            }
                         }
                     }
                     $q.all(promises).then(function(responses) {
@@ -877,7 +880,7 @@ angular.module('myApp.services', []).
                                             reservation.step_buttons = getSteps(reservation.unit_id);
                                             reservations.push(reservation);
                                         } else {
-                                            if(json.ReservationsOnUnit.Header.TotalRecords !== "0")
+                                            if (json.ReservationsOnUnit.Header.TotalRecords !== "0")
                                                 for (var s = 0; s < json.ReservationsOnUnit.Detail.Reservation.length; s++) {
                                                     reservation = json.ReservationsOnUnit.Detail.Reservation[s];
                                                     reservation.step_buttons = getSteps(reservation.unit_id);
@@ -889,7 +892,7 @@ angular.module('myApp.services', []).
                                         error();
                                     }
                                 }
-                            } 
+                            }
                         }
                         console.log(reservations);
                         console.log("end get reservations");
@@ -1105,7 +1108,7 @@ angular.module('myApp.services', []).
                 for (var j = 0; j < responses.length; j++) {
                     var json = parseJson(responses[j]),
                             languageString = json.LanguageStrings.Detail.LanguageString;
-                            
+
                     if (json.LanguageStrings.Header.StatusCode === "1") {
                         var remoteDict = {
                             reg_no: getStringByPidAndSid(languageString, -99, 44),

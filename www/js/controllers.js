@@ -1191,7 +1191,7 @@ angular.module('myApp.controllers', []).
              */
             var startIndex = 0;
             for (var i = 0; i < $rootScope.currentServers.length; i++) {
-                if (!$rootScope['allUnitsAndGroups' + $rootScope.currentServers[i].id]) {
+                if (!$rootScope['allUnitsAndGroups' + $rootScope.currentServers[i].id + $rootScope.currentServers[i].user_login]) {
                     var checkSavedServersUnitsAndGroups = true;
                 }
             }
@@ -1199,13 +1199,12 @@ angular.module('myApp.controllers', []).
                 checkSavedServersUnitsAndGroups = false;
                 $rootScope.serverChanged = false;
                 $rootScope.serverAdded = false;
-                var unitsandgroups = [];
                 startSearchUnitsAndGroups(startIndex);
             }
 
             function startSearchUnitsAndGroups(index) {
+                console.log(index + " " + $rootScope.currentServers.length);
                 if (!(index === $rootScope.currentServers.length)) {
-                    unitsandgroups = [];
                     getUnits(index);
                 } else {
                     startIndex = 0;
@@ -1227,10 +1226,18 @@ angular.module('myApp.controllers', []).
                         then(function(data) {
                             console.log("getunitanddep");
                             var json = parseJson(data);
+                            console.log(json);
                             if (json !== null) {
                                 if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                                    var units = json.UnitsAndDeps.Detail.Unit;
-                                    var rootScopeString = 'allUnitsAndGroups' + selectedServer.id;
+                                    if(json.UnitsAndDeps.Detail.Unit.length)
+                                        var units = json.UnitsAndDeps.Detail.Unit;
+                                    else {
+                                        var units = [];
+                                        units.push(json.UnitsAndDeps.Detail.Unit);
+                                    }
+                                    
+                                    
+                                    var rootScopeString = 'allUnitsAndGroups' + selectedServer.id + selectedServer.user_login;
                                     $rootScope[rootScopeString] = [];
                                     for (var i = 0; i < units.length; i++) {
                                         units[i].type = "doctor";
@@ -1264,14 +1271,17 @@ angular.module('myApp.controllers', []).
                         then(function(data) {
                             console.log("getunitdepgroups");
                             var json = parseJson(data);
+                            console.log(json);
                             if (json !== null) {
                                 if (json.UnitDepGroups.Header.StatusCode == 1) {
-                                    var groups = json.UnitDepGroups.Detail.Group;
-                                    var rootScopeString = 'allUnitsAndGroups' + selectedServer.id;
-                                    for (var i = 0; i < groups.length; i++) {
-                                        groups[i].type = "group";
-                                        groups[i].Header.name = groups[i].Header.group_name;
-                                        $rootScope[rootScopeString].push(groups[i]);
+                                    if (json.UnitDepGroups.Detail) {
+                                        var groups = json.UnitDepGroups.Detail.Group;
+                                        var rootScopeString = 'allUnitsAndGroups' + selectedServer.id + selectedServer.user_login;
+                                        for (var i = 0; i < groups.length; i++) {
+                                            groups[i].type = "group";
+                                            groups[i].Header.name = groups[i].Header.group_name;
+                                            $rootScope[rootScopeString].push(groups[i]);
+                                        }
                                     }
                                     index++;
                                     startSearchUnitsAndGroups(index);
@@ -1305,7 +1315,8 @@ angular.module('myApp.controllers', []).
                 }
                 else {
                     $scope.disableUnits = false;
-                    $scope.units = $rootScope['allUnitsAndGroups' + $scope.serverFilter.id];
+                    console.log($rootScope['allUnitsAndGroups' + $scope.serverFilter.id + $scope.serverFilter.user_login]);
+                    $scope.units = $rootScope['allUnitsAndGroups' + $scope.serverFilter.id + $scope.serverFilter.user_login];
                     var unitOfServer = false;
                     if ($rootScope.unitFilter)
                         if ($rootScope.unitFilter.Header)
@@ -2074,9 +2085,9 @@ angular.module('myApp.controllers', []).
                 $scope.newBoolean = true;
             else
                 $("#selectServerButton").removeClass("invisible");
-            
+
             $scope.requestingUser = false;
-            
+
             /**
              * Redirects the user back to the settings screen.
              */
@@ -2115,7 +2126,7 @@ angular.module('myApp.controllers', []).
                             console.log(json);
                         }, function() {
                             alert($rootScope.getLocalizedString('connectionErrorSelectServer'));
-                        });    
+                        });
             };
             $scope.refreshServerList();
 
@@ -2316,7 +2327,7 @@ angular.module('myApp.controllers', []).
                                 postLoginPatient();
                                 postLoginPatient();
                                 break;
-                                
+
                         }
                     } else {
                         $scope.loggingIn = false;
@@ -2654,15 +2665,15 @@ angular.module('myApp.controllers', []).
             };
 
             /*$scope.imagesAndUrls = [];
-            $scope.imageUrls = ["","",""];
-            for(var i; i < $rootScope.currentServers.length; i++)
-                if($rootScope.currentServers[i].hosp_logo_url){
-                    $scope.imagesAndUrls.img.push($rootScope.currentServers[i].hosp_logo_url);
-                    if($rootScope.currentServers[i].hosp_promo_url){
-                        $scope.imagesAndUrls.url.push($rootScope.currentServers[i].hosp_promo_url);
-                        $scope.imagesAndUrls.push($rootScope.currentServers[i].hosp_logo_url)
-                    }              
-                }*/
+             $scope.imageUrls = ["","",""];
+             for(var i; i < $rootScope.currentServers.length; i++)
+             if($rootScope.currentServers[i].hosp_logo_url){
+             $scope.imagesAndUrls.img.push($rootScope.currentServers[i].hosp_logo_url);
+             if($rootScope.currentServers[i].hosp_promo_url){
+             $scope.imagesAndUrls.url.push($rootScope.currentServers[i].hosp_promo_url);
+             $scope.imagesAndUrls.push($rootScope.currentServers[i].hosp_logo_url)
+             }              
+             }*/
         }).
         controller('PatientViewAppointmentsCtrl', function($scope, $location, $rootScope, hospiviewFactory, $q) {
             var searchStart = new Date(),
@@ -2778,9 +2789,9 @@ angular.module('myApp.controllers', []).
             };
         }).
         controller("CreateAppointmentStep1Ctrl", function($rootScope, $scope, hospiviewFactory, $location, $q) {
-            
+
             $scope.loadingStep2 = false;
-            
+
             /**
              * The unit and department list is requested from the server
              * The variable $scope.unitList is filled with the data from the server and the select boxes are filled automatically
@@ -2800,12 +2811,12 @@ angular.module('myApp.controllers', []).
                                         defer = $q.defer();
                                 console.log(json);
                                 if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail != null) {
-                                    if(json.UnitsAndDeps.Detail.Unit.length){
+                                    if (json.UnitsAndDeps.Detail.Unit.length) {
                                         $scope.unitList = json.UnitsAndDeps.Detail.Unit;
                                     } else {
                                         $scope.unitList.push(json.UnitsAndDeps.Detail.Unit);
                                     }
-                                    
+
                                     /**
                                      * Filter out departments for which there aren't enough permissions
                                      * if the unit has no more departments delete the unit
@@ -2813,13 +2824,13 @@ angular.module('myApp.controllers', []).
                                     var unitAmount = $scope.unitList.length;
                                     while (unitAmount--) {
                                         filterDepartments($scope.unitList[unitAmount]);
-                                        
+
                                         if ($scope.unitList[unitAmount].Detail.Dep.length == 0) {
                                             $scope.unitList.splice(unitAmount, 1);
 //                                            console.log("unit deleted, no departments");
                                         }
                                         //Further steps require 'Dep' to b an array
-                                        if(!$scope.unitList[unitAmount].Detail.Dep.length)
+                                        if (!$scope.unitList[unitAmount].Detail.Dep.length)
                                             $scope.unitList[unitAmount].Detail.Dep = [$scope.unitList[unitAmount].Detail.Dep];
                                     }
                                 }
@@ -2839,13 +2850,13 @@ angular.module('myApp.controllers', []).
                                         var json = parseJson(response);
                                         console.log(json);
                                         if (json.UnitDepGroups.Header.StatusCode == 1 && json.UnitDepGroups.Detail != null) {
-                                            if(json.UnitDepGroups.Detail.Group.length){
+                                            if (json.UnitDepGroups.Detail.Group.length) {
                                                 $scope.groupList = json.UnitDepGroups.Detail.Group;
                                             } else {
                                                 $scope.groupList = [];
                                                 $scope.groupList.push(json.UnitDepGroups.Detail.Group);
                                             }
-                                            
+
                                             var groupAmount = $scope.groupList.length;
                                             while (groupAmount--) {
                                                 var unitAndDepAmount = $scope.groupList[groupAmount].Detail.UnitAndDep.length;
@@ -2954,20 +2965,20 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function filterDepartments(unit) {
-                if(unit.Header){
-                if (unit.Header.perm === "2") {
-                    var depAmount = unit.Detail.Dep.length;
-                    while (depAmount--) {
-                        var dep = unit.Detail.Dep[depAmount];
+                if (unit.Header) {
+                    if (unit.Header.perm === "2") {
+                        var depAmount = unit.Detail.Dep.length;
+                        while (depAmount--) {
+                            var dep = unit.Detail.Dep[depAmount];
 //                        console.log(unit.Header.perm + "-> " + dep.perm + " (" + dep.dep_id  + ")");
-                        if (dep.perm === "4") {
-                            unit.Detail.Dep.splice(depAmount, 1);
+                            if (dep.perm === "4") {
+                                unit.Detail.Dep.splice(depAmount, 1);
 //                            console.log("Deleted, permission denied");
-                        }
+                            }
 //                        console.log("-----------");
+                        }
                     }
                 }
-            }
             }
 
 
@@ -3131,7 +3142,7 @@ angular.module('myApp.controllers', []).
                     for (var i = 0; i < $scope.typeList.length; i++) {
                         if ($scope.typeList[i].type_title === $rootScope.newAppointment.type.type_title) {
                             $scope.type = $scope.typeList[i];
-                            
+
                         }
                     }
                 }
@@ -3194,10 +3205,10 @@ angular.module('myApp.controllers', []).
                     } else {
                         $scope.typesLoaded = true;
                         $scope.rememberType();
-                        if($scope.typeList.length==1)
+                        if ($scope.typeList.length == 1)
                             $scope.type = $scope.typeList[0];
-                            
-                        if($scope.type)
+
+                        if ($scope.type)
                             $scope.updateFormData();
                         console.log($scope.typeList);
                     }
@@ -3267,11 +3278,11 @@ angular.module('myApp.controllers', []).
                                     } else {
                                         $scope.typesLoaded = true;
                                         $scope.rememberType();
-                                        if($scope.typeList.length==1)
-                                           $scope.type = $scope.typeList[0];
-                                        
-                                        if($scope.type)
-                                            $scope.updateFormData(); 
+                                        if ($scope.typeList.length == 1)
+                                            $scope.type = $scope.typeList[0];
+
+                                        if ($scope.type)
+                                            $scope.updateFormData();
                                         console.log($scope.typeList);
                                     }
                                 } else {
@@ -3354,9 +3365,9 @@ angular.module('myApp.controllers', []).
                 if (formValid && $scope.locationIsChecked()) {
                     $rootScope.newAppointment.type = $scope.type;
                     $rootScope.newAppointment.locations = [];
-                    if($scope.locations.length)
+                    if ($scope.locations.length)
                         for (var i = 0; i < $scope.locations.length; i++) {
-    //                        if ($scope.locations[i].checked)
+                            //                        if ($scope.locations[i].checked)
                             if (!$scope.locations[i].disabled && $scope.locations[i].location_name)
                                 $rootScope.newAppointment.locations.push($scope.locations[i]);
                         }
@@ -3389,11 +3400,11 @@ angular.module('myApp.controllers', []).
             $scope.loadingStep4 = false;
 
             console.log($rootScope.newAppointment.units);
-            if(!$rootScope.newAppointment.units.length)
+            if (!$rootScope.newAppointment.units.length)
                 var unitLength = 1
             else
                 var unitLength = $rootScope.newAppointment.units.length;
-            
+
             for (var i = 0; i < unitLength; i++) {
                 for (var j = 0; j < $rootScope.newAppointment.units[i].Detail.Dep.length; j++) {
                     var duplicate = false;
@@ -3813,7 +3824,7 @@ angular.module('myApp.controllers', []).
                                     $rootScope.newAppointment.patientInfo.referringDoctor_gpid = '';
                                 }
                             } else {
-                                if($scope.nationalRegister == ""){
+                                if ($scope.nationalRegister == "") {
                                     error()
                                 }
                                 error("statuscode not 1");
@@ -3856,7 +3867,7 @@ angular.module('myApp.controllers', []).
                     var regNoField = "";
 
                     var appendString = '<table ng-form="subform" class="appointmentFormTable" id="questionTable"><tbody>';
-                    
+
                     console.log(standardQuestionsJson.ActiveFieldsOnUnit.Header.StatusCode)
                     console.log(standardQuestionsJson.ActiveFieldsOnUnit.Detail)
                     if (standardQuestionsJson.ActiveFieldsOnUnit.Header.StatusCode == 1 && standardQuestionsJson.ActiveFieldsOnUnit.Detail) {
@@ -3871,7 +3882,7 @@ angular.module('myApp.controllers', []).
                              * Enable the possibility to edit the national number
                              * if the user is a doctor.
                              */
-                            switch($rootScope.type){
+                            switch ($rootScope.type) {
                                 case 0:
                                 case 1:
                                 case 3:
