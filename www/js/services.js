@@ -431,6 +431,7 @@ angular.module('myApp.services', []).
                 getTypes: function(UUID, Unit_Id, Dep_Id, GlobalTypes, The_Online, Language_Id, server_url) {
                     $rootScope.requestCounter++;
                     var requestString = server_url + "method=GetTypesOnUnit&UUID=" + UUID + "&Unit_Id=" + Unit_Id + "&Dep_Id=" + Dep_Id + "&GlobalTypes=" + GlobalTypes + "&The_Online=" + The_Online + "&Language_Id=" + Language_Id + "&count=" + $rootScope.requestCounter;
+                    console.log(requestString);
                     var queryResults = $q.defer();
                     function doQuery() {
                         console.log("doQuery")
