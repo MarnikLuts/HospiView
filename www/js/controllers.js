@@ -2800,7 +2800,12 @@ angular.module('myApp.controllers', []).
                                         defer = $q.defer();
                                 console.log(json);
                                 if (json.UnitsAndDeps.Header.StatusCode == 1 && json.UnitsAndDeps.Detail != null) {
-                                    $scope.unitList = json.UnitsAndDeps.Detail.Unit;
+                                    if(json.UnitsAndDeps.Detail.Unit.length){
+                                        $scope.unitList = json.UnitsAndDeps.Detail.Unit;
+                                    } else {
+                                        $scope.unitList.push(json.UnitsAndDeps.Detail.Unit);
+                                    }
+                                    
                                     /**
                                      * Filter out departments for which there aren't enough permissions
                                      * if the unit has no more departments delete the unit
@@ -2808,6 +2813,7 @@ angular.module('myApp.controllers', []).
                                     var unitAmount = $scope.unitList.length;
                                     while (unitAmount--) {
                                         filterDepartments($scope.unitList[unitAmount]);
+                                        
                                         if ($scope.unitList[unitAmount].Detail.Dep.length == 0) {
                                             $scope.unitList.splice(unitAmount, 1);
 //                                            console.log("unit deleted, no departments");
@@ -2816,9 +2822,6 @@ angular.module('myApp.controllers', []).
                                         if(!$scope.unitList[unitAmount].Detail.Dep.length)
                                             $scope.unitList[unitAmount].Detail.Dep = [$scope.unitList[unitAmount].Detail.Dep];
                                     }
-                                    
-                                    if ($scope.unitList.length == 1)
-                                        $scope.unit = $scope.unitList[0];
                                 }
                                 defer.resolve();
                                 return defer.promise;
@@ -2836,8 +2839,13 @@ angular.module('myApp.controllers', []).
                                         var json = parseJson(response);
                                         console.log(json);
                                         if (json.UnitDepGroups.Header.StatusCode == 1 && json.UnitDepGroups.Detail != null) {
-                                            $scope.groupList = json.UnitDepGroups.Detail.Group;
-
+                                            if(json.UnitDepGroups.Detail.Group.length){
+                                                $scope.groupList = json.UnitDepGroups.Detail.Group;
+                                            } else {
+                                                $scope.groupList = [];
+                                                $scope.groupList.push(json.UnitDepGroups.Detail.Group);
+                                            }
+                                            
                                             var groupAmount = $scope.groupList.length;
                                             while (groupAmount--) {
                                                 var unitAndDepAmount = $scope.groupList[groupAmount].Detail.UnitAndDep.length;
@@ -2860,9 +2868,6 @@ angular.module('myApp.controllers', []).
 //                                                       console.log("group deleted, no units");
                                                 }
                                             }
-
-                                            if ($scope.groupList.length == 1 && $scope.unitList.length != 1)
-                                                $scope.group = $scope.groupList[0];
                                         }
                                         $scope.dataLoading = false;
                                         //Not using ng-show/ng-hide because iOS does not cooperate
@@ -2949,6 +2954,7 @@ angular.module('myApp.controllers', []).
              * @returns {undefined}
              */
             function filterDepartments(unit) {
+                if(unit.Header){
                 if (unit.Header.perm === "2") {
                     var depAmount = unit.Detail.Dep.length;
                     while (depAmount--) {
@@ -2961,6 +2967,7 @@ angular.module('myApp.controllers', []).
 //                        console.log("-----------");
                     }
                 }
+            }
             }
 
 
@@ -3800,6 +3807,9 @@ angular.module('myApp.controllers', []).
                                     $rootScope.newAppointment.patientInfo.referringDoctor_gpid = '';
                                 }
                             } else {
+                                if($scope.nationalRegister == ""){
+                                    error()
+                                }
                                 error("statuscode not 1");
                             }
                         }, error);
@@ -3840,7 +3850,9 @@ angular.module('myApp.controllers', []).
                     var regNoField = "";
 
                     var appendString = '<table ng-form="subform" class="appointmentFormTable" id="questionTable"><tbody>';
-
+                    
+                    console.log(standardQuestionsJson.ActiveFieldsOnUnit.Header.StatusCode)
+                    console.log(standardQuestionsJson.ActiveFieldsOnUnit.Detail)
                     if (standardQuestionsJson.ActiveFieldsOnUnit.Header.StatusCode == 1 && standardQuestionsJson.ActiveFieldsOnUnit.Detail) {
                         var activeFieldsArray = standardQuestionsJson.ActiveFieldsOnUnit.Detail.ActiveFields.split(",");
                         console.log(activeFieldsArray);
@@ -4053,6 +4065,7 @@ angular.module('myApp.controllers', []).
                             appendString = appendString + '</td></tr>';
                         }
                     } else {
+                        console.log("fill");
                         error("statuscode not 1");
                     }
 
