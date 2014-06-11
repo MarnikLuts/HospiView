@@ -4092,7 +4092,18 @@ angular.module('myApp.controllers', []).
                         var extraQuestionsModelArray = [];
                         var extraQuestionType;
                         $scope.PostAnswers = {PostAnswers: {Header: {Reservation_Id: "", Unit_Id: ""}, Detail: {Answers: {Answer: []}}}};
-                        for (var question in extraQuestionsJson.QuestionsOnUnit.Detail.Question) {
+                        if(extraQuestionsJson.QuestionsOnUnit.Detail.Question.length)
+                            var extraQuestionsAmount = extraQuestionsJson.QuestionsOnUnit.Detail.Question.length;
+                        else{
+                            var extraQuestion = extraQuestionsJson.QuestionsOnUnit.Detail.Question;
+                            extraQuestionsJson.QuestionsOnUnit.Detail.Question = [];
+                            extraQuestionsJson.QuestionsOnUnit.Detail.Question.push(extraQuestion);
+                            console.log(extraQuestion);
+                            console.log(extraQuestionsJson.QuestionsOnUnit.Detail.Question);
+                            var extraQuestionsAmount = 1;
+                        }
+                        for (var question = 0; question < extraQuestionsAmount; question++) {
+                            console.log(extraQuestionsJson.QuestionsOnUnit.Detail);
                             $scope.PostAnswers.PostAnswers.Detail.Answers.Answer.push({question_id: "", answer_value: ""});
                             console.log($scope.PostAnswers);
                             if (extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_type == 1) {
@@ -4158,9 +4169,9 @@ angular.module('myApp.controllers', []).
                             appendString = appendString + '<tr><td><p class="formLabel"><b>'
                                     + extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_title
                                     + '*</b></p></td><td>' + inputType + '</td></tr>';
-
+                            
+                            
                             $scope.PostAnswers.PostAnswers.Detail.Answers.Answer[question].question_id = extraQuestionsJson.QuestionsOnUnit.Detail.Question[question].question_id;
-
                         }
 
                     }
