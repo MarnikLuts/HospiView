@@ -775,11 +775,12 @@ angular.module('myApp.services', []).
                     var defer = $q.defer();
                     var json = parseJson(response);
                     if (json.UnitsAndDeps.Header.StatusCode == 1) {
-                        var units = [];
-                        units.push(json.UnitsAndDeps.Detail.Unit);
-                        for (var i = 0; i < units.length; i++) {
-                            $rootScope.searchUnits.push(units[i]);
-                        }
+                        if(json.UnitsAndDeps.Detail.Unit.length)
+                            for (var i = 0; i < json.UnitsAndDeps.Detail.Unit.length; i++)
+                                $rootScope.searchUnits.push(json.UnitsAndDeps.Detail.Unit[i]);
+                            
+                        else
+                            $rootScope.searchUnits.push(json.UnitsAndDeps.Detail.Unit);
                         defer.resolve(server);
                     } else {
                         defer.reject($rootScope.getLocalizedString('internalError'));
@@ -840,6 +841,7 @@ angular.module('myApp.services', []).
                             promises = [];
                     console.log($rootScope.searchUnits.length);
                     for (var i = 0; i < $rootScope.searchUnits.length; i++) {
+                        console.log($rootScope.searchUnits[i]);
                         if ($rootScope.searchUnits[i].Header) {
                             console.log($rootScope.searchUnits.length);
                             var depIds = [];
