@@ -181,6 +181,7 @@ var dutchStrings = {
         createAppointmentStep4FieldsRequired: "Velden met een * zijn verplicht in te vullen",
         createAppointmentStep4FirstName: "Voornaam",
         createAppointmentStep4LastName: "Achternaam",
+        createAppointmentStep4Phone: "Telefoon 1",
         createAppointmentStep4Phone2: "Telefoon 2",
         createAppointmentStep4Street: "Straat",
         createAppointmentStep4HouseNumber: "Huisnummer",

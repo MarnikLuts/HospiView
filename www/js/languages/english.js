@@ -181,6 +181,7 @@ var englishStrings = {
         createAppointmentStep4FieldsRequired: "* indicates required fields",
         createAppointmentStep4FirstName: "First name",
         createAppointmentStep4LastName: "Last name",
+        createAppointmentStep4Phone: "Telephone 1",
         createAppointmentStep4Phone2: "Telephone 2",
         createAppointmentStep4Street: "Street",
         createAppointmentStep4HouseNumber: "House number",

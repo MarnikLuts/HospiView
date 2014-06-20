@@ -1140,7 +1140,7 @@ angular.module('myApp.services', []).
                             createAppointmentStep4Gendre: getStringByPidAndSid(languageString, 208, 7),
                             createAppointmentStep4Male: getStringByPidAndSid(languageString, 208, 8),
                             createAppointmentStep4Female: getStringByPidAndSid(languageString, 208, 9),
-                            createAppointmentStep4Phone: getStringByPidAndSid(languageString, 208, 15),
+//                            createAppointmentStep4Phone: getStringByPidAndSid(languageString, 208, 15), this string is made localy 4 some reason it does not work
                             createAppointmentStep4ExtraInformation: getStringByPidAndSid(languageString, 91, 56),
                             createAppointmentStep4Error: getStringByPidAndSid(languageString, 208, 16),
                             createAppointmentStep5: getStringByPidAndSid(languageString, 208, 1),
